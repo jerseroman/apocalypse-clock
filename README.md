@@ -1,5 +1,8 @@
 # Apocalypse Clock PC v1.2.7
 
+Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/
+Official website: https://www.apocalypseclock.com/
+
 Apocalypse Clock is a static, browser-based systemic-risk dashboard for
 exploring interacting global threats across civilizational, biospheric, and
 technological domains. It combines scenario controls, Monte Carlo uncertainty
