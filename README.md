@@ -65,14 +65,17 @@ assets.
 
 ## License
 
-- **Source code** is released under the MIT License with an additional
-  attribution requirement: every source file must keep its header pointing to
-  https://www.apocalypseclock.com/. Forks and derivative works are allowed as
-  long as the header is preserved.
-- **The name "Apocalypse Clock" and the project logo** are NOT covered by the
-  code license. All rights to the name and logo are reserved. Forks must not
-  use the name or logo to identify themselves or to imply affiliation.
-- Third-party libraries in `vendor/` and remote assets remain under their own
-  respective licenses.
+This repository is released under the Apocalypse Clock Source-Available Non-Commercial Fork License.
+
+Forking is permitted for non-commercial purposes, provided that every fork or derivative version clearly credits the original project and includes the official website:
+
+Based on the Apocalypse Clock project by Roman Jerše.  
+Official website: https://www.apocalypseclock.com/
+
+Commercial use is not permitted without prior written permission from Roman Jerše.
+
+The name "Apocalypse Clock", the project logo, visual identity, branding, and official presentation remain reserved. Forks and derivative versions must clearly state that they are unofficial and must not imply affiliation, endorsement, continuity, or official status.
+
+Third-party libraries in `vendor/` and remote assets remain under their own respective licenses.
 
 See [LICENSE](./LICENSE) for the full text.
