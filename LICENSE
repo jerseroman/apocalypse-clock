@@ -1,0 +1,138 @@
+Apocalypse Clock Source-Available Non-Commercial Fork License
+Version 1.0
+
+Copyright © 2026 Roman Jerše. All rights reserved.
+
+Official project website:
+https://www.apocalypseclock.com/
+
+1. Purpose
+
+This repository is made publicly available for transparency, inspection,
+educational reference, independent review, and non-commercial fork-based
+experimentation. Public availability does not mean that the project is released
+as open-source software.
+
+2. Scope of this license
+
+This license applies only to original material created by Roman Jerše for the
+Apocalypse Clock project, including, where applicable, source code, interface
+structure, model logic, documentation, textual material, visual layout, original
+data structures, and JSON-based model input files.
+
+Third-party libraries, fonts, icons, datasets, external reports, embedded
+dependencies, and other externally sourced materials remain governed by their
+own respective licenses and terms. Nothing in this license changes or overrides
+the rights and obligations attached to those third-party materials.
+
+3. Permission granted
+
+You may view this repository.
+
+You may fork this repository through GitHub or a comparable public version
+control platform for non-commercial purposes, provided that every fork,
+modification, adaptation, or derivative repository complies with all conditions
+in this license.
+
+You may modify the forked copy for non-commercial research, review, testing,
+educational, archival, or experimental purposes.
+
+4. Mandatory attribution
+
+Every fork, copy, modification, adaptation, derivative repository, or public
+redistribution must clearly credit the original project and include the official
+website.
+
+The following notice must be retained in the README file, license notice, and
+any public-facing documentation of the fork or derivative work:
+
+    Based on the Apocalypse Clock project by Roman Jerše.
+    Official website: https://www.apocalypseclock.com/
+
+If the fork or derivative version is publicly accessible as a website,
+application, dashboard, repository, demonstration, publication, or public
+interface, the attribution must be reasonably visible to ordinary users or
+readers and must not be hidden only in source comments.
+
+5. Non-commercial restriction
+
+Commercial use is not permitted without prior written permission from Roman
+Jerše.
+
+For the purposes of this license, prohibited commercial use includes, but is not
+limited to:
+
+- selling, licensing, sublicensing, renting, or otherwise monetizing the project
+  or any derivative version;
+- hosting the project or a derivative version as a paid service;
+- integrating the project into a commercial product, paid platform, SaaS tool,
+  client deliverable, subscription service, or commercial dashboard;
+- using the project in paid consulting, professional services, commercial risk
+  analysis, marketing, lead generation, fundraising, investment promotion, or
+  business development;
+- using the project or derivative versions to promote, support, operate, or
+  improve a commercial service or commercial organization.
+
+Non-commercial academic, educational, journalistic, personal, archival, testing,
+review, and research uses are permitted, provided that the attribution and other
+conditions in this license are followed.
+
+6. Forks and derivative versions
+
+Forks and modified versions must clearly state that they are unofficial.
+
+Forks and derivative versions must not represent themselves as the original
+Apocalypse Clock project, as an official continuation of the project, or as
+being endorsed, approved, supervised, or maintained by Roman Jerše unless
+separate written permission has been granted.
+
+Forks and derivative versions must not remove, obscure, or misrepresent the
+required attribution to the original project and official website.
+
+7. Name, branding, and visual identity
+
+No permission is granted to use the name "Apocalypse Clock", the project logo,
+visual identity, distinctive interface presentation, official wording, or
+associated branding in a way that implies affiliation, endorsement, continuity,
+official status, or authorization.
+
+Descriptive attribution is permitted where necessary to identify the original
+source of a fork or derivative work.
+
+8. No warranty
+
+The project is provided "as is", without warranty of any kind, express or
+implied, including but not limited to warranties of accuracy, reliability,
+fitness for a particular purpose, merchantability, non-infringement, or
+availability.
+
+The Apocalypse Clock model is a scenario-based analytical and educational tool.
+It must not be treated as a deterministic forecast, legal advice, financial
+advice, safety assessment, policy directive, or empirically measured probability
+of collapse.
+
+9. Limitation of liability
+
+To the maximum extent permitted by applicable law, Roman Jerše shall not be
+liable for any claim, damage, loss, cost, liability, or consequence arising from
+the use, interpretation, modification, redistribution, or inability to use this
+project or any derivative version.
+
+10. Termination
+
+Any rights granted under this license terminate automatically if you violate its
+conditions. Upon termination, you must stop using, hosting, distributing, or
+making available any unauthorized copy, fork, modification, adaptation, or
+derivative version, except where continued access is required by non-waivable
+law.
+
+11. Additional permissions
+
+Commercial use, official collaboration, reuse without attribution, use of
+branding, or broader licensing permissions require prior written permission from
+Roman Jerše.
+
+Contact or project reference:
+https://www.apocalypseclock.com/
+
+End of license.

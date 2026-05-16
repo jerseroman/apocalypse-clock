@@ -1,0 +1,30 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local environment files
+.env
+.env.*
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Optional local tooling caches
+node_modules/
+.cache/
+.parcel-cache/
+
+# Generated build output, if a future build step is added
+dist/
+build/
