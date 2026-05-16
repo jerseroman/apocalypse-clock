@@ -26,6 +26,16 @@ panels, scenario calculations, network views, and export outputs.
 - `vendor/echarts.bundle.js` - local ECharts runtime.
 - `vendor/cytoscape.bundle.js` - local Cytoscape runtime.
 
+## Dataset
+
+The model uses a structured JSON parameter dataset as its primary input source.
+
+Current public dataset:
+
+- [`data_v1_7_1metadata_revision.json`](./data_v1_7_1metadata_revision.json)
+
+This file contains the Apocalypse Clock parameter dataset v1.7.1. It includes 23 threat categories and 8 metrics per threat, for a total of 184 model parameters excluding metadata. Version 1.7.1 is a metadata-cleanup export and does not perform a scientific recalibration.
+
 ## Local Test
 
 Run from this folder:
