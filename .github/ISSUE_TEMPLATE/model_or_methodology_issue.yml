@@ -1,0 +1,58 @@
+name: Model or methodology issue
+description: Raise a concern about model structure, methodology, assumptions, parameters, or interpretation.
+title: "[Model]: "
+labels:
+  - methodology
+body:
+  - type: input
+    id: affected-model-section
+    attributes:
+      label: Affected model section
+      description: Identify the model section, panel, metric, parameter, threshold, or scenario affected.
+    validations:
+      required: true
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Type of issue
+      description: Select the closest issue category.
+      options:
+        - Interpretation
+        - Parameter
+        - Dependency
+        - Uncertainty
+        - Threshold
+        - Scenario
+        - Aggregation
+        - Source
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: explanation-of-concern
+    attributes:
+      label: Explanation of concern
+      description: Explain the modelling, methodological, or interpretation concern.
+    validations:
+      required: true
+  - type: textarea
+    id: why-it-matters
+    attributes:
+      label: Why it matters
+      description: Describe the effect on model interpretation, transparency, or reasoning.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-correction
+    attributes:
+      label: Suggested correction
+      description: Describe the change you recommend.
+    validations:
+      required: false
+  - type: textarea
+    id: supporting-source-or-reasoning
+    attributes:
+      label: Supporting source or reasoning
+      description: Provide sources, calculations, citations, or reasoning that support the concern.
+    validations:
+      required: true

@@ -1,0 +1,52 @@
+name: Source correction
+description: Report an outdated, broken, questionable, or better source for a model input or reference.
+title: "[Source]: "
+labels:
+  - source
+body:
+  - type: input
+    id: threat-category-or-parameter
+    attributes:
+      label: Threat category or parameter
+      description: Identify the relevant threat category, parameter, metric, or dataset entry.
+    validations:
+      required: true
+  - type: input
+    id: current-source-or-link
+    attributes:
+      label: Current source or link
+      description: Provide the current source title, citation, or URL if known.
+    validations:
+      required: true
+  - type: textarea
+    id: problem-with-source
+    attributes:
+      label: Problem with the source
+      description: Explain whether the source is outdated, broken, questionable, superseded, or otherwise problematic.
+    validations:
+      required: true
+  - type: input
+    id: suggested-replacement-source
+    attributes:
+      label: Suggested replacement source
+      description: Provide the replacement source title, citation, or URL.
+    validations:
+      required: true
+  - type: textarea
+    id: reason-replacement-is-better
+    attributes:
+      label: Reason the replacement is better
+      description: Explain why the suggested source is more current, authoritative, transparent, or relevant.
+    validations:
+      required: true
+  - type: dropdown
+    id: recalibration-impact
+    attributes:
+      label: Recalibration impact
+      description: Indicate whether the replacement affects only source metadata or may require methodological recalibration.
+      options:
+        - Source metadata only
+        - Methodological recalibration may be required
+        - Not sure
+    validations:
+      required: true

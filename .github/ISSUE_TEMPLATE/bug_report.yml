@@ -1,0 +1,67 @@
+name: Technical bug report
+description: Report a technical problem with the website or repository files.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: problem-summary
+    attributes:
+      label: Problem summary
+      description: Briefly describe the technical problem.
+    validations:
+      required: true
+  - type: input
+    id: page-or-section
+    attributes:
+      label: Page or section
+      description: Identify the page, panel, section, chart, or control where the problem appears.
+    validations:
+      required: true
+  - type: input
+    id: browser-operating-system
+    attributes:
+      label: Browser and operating system
+      description: Include browser name, browser version if known, and operating system.
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the steps needed to reproduce the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Describe what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: Describe what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot-or-console-error
+    attributes:
+      label: Screenshot or console error
+      description: Attach screenshots or paste relevant console errors.
+    validations:
+      required: false
+  - type: dropdown
+    id: affected-deployment
+    attributes:
+      label: Where does the problem appear?
+      description: Select whether the issue appears on GitHub Pages, the official website, or both.
+      options:
+        - GitHub Pages
+        - Official website
+        - Both
+        - Not sure
+    validations:
+      required: true

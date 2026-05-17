@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "Apocalypse Clock: Global Systemic Risk Monitor"
+message: "If you use, cite, review, or discuss this project, please cite it as below."
+type: software
+authors:
+  - family-names: "Jerše"
+    given-names: "Roman"
+url: "https://www.apocalypseclock.com/"
+repository-code: "https://github.com/jerseroman/apocalypse-clock"
+version: "1.2.7"
+date-released: "2026-05-16"
+license: "Apocalypse Clock Source-Available Non-Commercial Fork License"
