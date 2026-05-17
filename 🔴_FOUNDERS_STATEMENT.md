@@ -20,11 +20,11 @@ Many of the most serious global threats are not external accidents. They are dir
 
 Apocalypse Clock was created to make those connections more visible.
 
-The goal is not merely to tell people that something is wrong. The goal is to help people see where the pressure comes from, how different threats reinforce one another, and why awareness without discipline is insufficient. A society cannot meaningfully reduce risks it does not understand. And it cannot mature if it treats global danger only as a spectacle, a headline, or a symbol.
+The basic purpose is to make danger intelligible, to help people understand where systemic pressure originates, how individual threats reinforce one another, and why global danger must not remain only a spectacle,  headline, or a simbol. A society cannot move toward a more mature civilizational phase without transforming awareness into smart disciplined responsibility.
 
 Only when people understand the structure of risk can they begin to recognize their own position within it: as citizens, voters, consumers, creators, leaders, institutions, and participants in a shared planetary system.
 
-In that sense, Apocalypse Clock is not just a warning device. It is an attempt to turn warning into understanding, and understanding into responsibility. Its purpose is to support a more disciplined awareness of human-made threats and to encourage a transition toward a more mature civilizational phase, rather than allow unmanaged systemic risk to push humanity toward a future of institutional collapse, social chaos, ecological breakdown, food and water insecurity, mass displacement, and the degradation of the biosphere that makes life on Earth possible, including the vast web of plant and animal life shaped through hundreds of millions of years of evolution, which today supports the stability and diversity of the planet’s living systems.
+In that sense, Apocalypse Clock is not only warning device. It is an attempt to turn warning into understanding, and understanding into responsibility. Its purpose is to support a more disciplined awareness of human-made threats and to encourage a transition toward a more mature civilizational phase, rather than allow unmanaged systemic risk to push humanity toward a future of institutional collapse, social chaos, ecological breakdown, food and water insecurity, mass displacement, and the degradation of the biosphere that makes life on Earth possible, including the vast web of plant and animal life shaped through hundreds of millions of years of evolution, which today supports the stability and diversity of the planet’s living systems.
 
 ## Relationship to the Doomsday Clock
 
