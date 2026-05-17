@@ -1,4 +1,4 @@
-# Apocalypse Clock PC v1.2.7
+# Apocalypse Clock v1.2.7
 
 Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/
 Official website: https://www.apocalypseclock.com/
