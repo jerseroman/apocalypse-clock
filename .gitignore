@@ -24,6 +24,8 @@ desktop.ini
 node_modules/
 .cache/
 .parcel-cache/
+test-results/
+playwright-report/
 
 # Generated build output, if a future build step is added
 dist/

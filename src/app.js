@@ -4,7 +4,6 @@
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
 const MODEL_VERSION = 'Apocalypse Clock v1.2.7';
-const DATASET_VERSION = 'v1.2.7';
 const PRIMARY_DATASET_NAME = 'data_v1_7_1metadata_revision.json';
 const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
 const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
@@ -168,9 +167,19 @@ function normalizeRawUrlForExport(url) {
   const md = raw.match(/^\[[^\]]+\]\((https?:\/\/[^\s)]+)\)$/i);
   return md ? md[1] : raw;
 }
+function normalizeHttpUrl(url) {
+  const raw = normalizeRawUrlForExport(url);
+  if (!/^https?:\/\//i.test(raw)) return '';
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : '';
+  } catch {
+    return '';
+  }
+}
 function getSourceTraceabilityLimitations(sourceMap = ACTIVE_SOURCE_DATA || {}) {
   return Object.entries(sourceMap || {})
-    .filter(([, value]) => value && !normalizeRawUrlForExport(value.url))
+    .filter(([, value]) => value && !normalizeHttpUrl(value.url))
     .map(([key, value]) => ({
       key,
       source: value.source || '',
@@ -552,11 +561,26 @@ const ORD_RANGE = { strong:0.40, moderate:0.65, weak:0.95 };
 const GROWTH_RANGE = { strong:0.22, moderate:0.38, weak:0.60 };
 const THRESH_RANGE = { strong:0.28, moderate:0.42, weak:0.60 };
 const BUNDLED_SOURCE_DATA = JSON.parse(document.getElementById('bundledSources').textContent || '{}');
+function datasetVersionFromSourceMap(sourceMap) {
+  const meta = sourceMap && typeof sourceMap === 'object' ? sourceMap._meta : null;
+  const raw = meta && (meta.schema_version || meta.dataset_version || meta.version);
+  return String(raw || '').trim();
+}
+function currentDatasetVersion() {
+  const base = (ACTIVE_SOURCE_META && ACTIVE_SOURCE_META.datasetVersion)
+    || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA)
+    || 'unknown';
+  if (ACTIVE_EVIDENCE_META && ACTIVE_EVIDENCE_META.active) {
+    const overlayVersion = ACTIVE_EVIDENCE_META.datasetVersion || 'evidence overlay';
+    return `${base} + ${overlayVersion}`;
+  }
+  return base;
+}
 let ACTIVE_SOURCE_DATA = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
 let CUSTOM_SOURCE_DATA = null;
 let ACTIVE_EVIDENCE_DATA = null;
-let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data_v1_7_1metadata_revision.json', message:'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget as the default primary source.', uploaded:false };
-let ACTIVE_EVIDENCE_META = { active:false, fileName:'', message:'', entryCount:0, threatCount:0 };
+let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data_v1_7_1metadata_revision.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget as the default primary source.', uploaded:false };
+let ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
 const cleanSourceText = s => String(s ?? '')
   .replace(/\s*\[(?:cite|web)\s*:[^\]]+\]/gi, '')
   .replace(/\[([^\]\n]{1,160})\]\((https?:\/\/[^\s)]+(?:\([^\)]*\)[^\s)]*)?)\)/gi, '$1')
@@ -643,7 +667,7 @@ function normalizeSourceEntry(entry, fallbackSource, fallbackStrength) {
     lo: entry.lo,
     hi: entry.hi,
     source: cleanSourceText(typeof entry.source === 'string' && entry.source.trim() ? entry.source : fallbackSource),
-    url: typeof entry.url === 'string' ? entry.url : '',
+    url: normalizeHttpUrl(entry.url),
     accessed: typeof entry.accessed === 'string' ? entry.accessed : '',
     strength,
     note: cleanSourceText(typeof entry.note === 'string' ? entry.note : ''),
@@ -1014,7 +1038,7 @@ function normalizeEvidenceEntry(entry, key) {
     obs: clamp(Number(obsRaw), loB, hiB),
     weight: clamp(Number.isFinite(weightRaw) ? Number(weightRaw) : 1, 0.25, 8),
     source: cleanSourceText(typeof entry.source === 'string' && entry.source.trim() ? entry.source : 'uploaded evidence overlay'),
-    url: typeof entry.url === 'string' ? entry.url : '',
+    url: normalizeHttpUrl(entry.url),
     accessed: typeof entry.accessed === 'string' ? entry.accessed : '',
     strength,
     note: cleanSourceText(typeof entry.note === 'string' ? entry.note : ''),
@@ -1128,12 +1152,15 @@ function applySourceMap(sourceMap, meta, rerender) {
   CUSTOM_SOURCE_DATA = meta && meta.mode === 'bundled' ? null : JSON.parse(JSON.stringify(sourceMap || {}));
   if (meta && meta.clearEvidence) {
     ACTIVE_EVIDENCE_DATA = null;
-    ACTIVE_EVIDENCE_META = { active:false, fileName:'', message:'', entryCount:0, threatCount:0 };
+    ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
   }
   rebuildActiveSourceDataFromState();
   ACTIVE_SOURCE_META = {
     mode: meta && meta.mode ? meta.mode : 'bundled',
     fileName: meta && meta.fileName ? meta.fileName : 'data_v1_7_1metadata_revision.json',
+    datasetVersion: meta && meta.datasetVersion
+      ? meta.datasetVersion
+      : ((meta && meta.uploaded) ? 'custom source map' : (datasetVersionFromSourceMap(sourceMap) || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown')),
     message: meta && meta.message ? meta.message : 'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget as the default primary source.',
     uploaded: !!(meta && meta.uploaded),
   };
@@ -1152,6 +1179,7 @@ function applyEvidenceOverlay(evidenceMap, meta, rerender) {
   ACTIVE_EVIDENCE_META = {
     active: true,
     fileName: meta && meta.fileName ? meta.fileName : 'evidence overlay.json',
+    datasetVersion: meta && meta.datasetVersion ? meta.datasetVersion : '',
     message: meta && meta.message ? meta.message : `Evidence overlay adjusted ${stats.entryCount} parameters across ${stats.threatCount} threats by precision-weighted pooling on the current source ranges.`,
     entryCount: stats.entryCount,
     threatCount: stats.threatCount,
@@ -2962,7 +2990,8 @@ function sourceTooltip(rangeObj) {
   if (rangeObj && rangeObj.strength) parts.push(`<div>Strength: ${escapeHtml(rangeObj.strength)}</div>`);
   if (rangeObj && rangeObj.accessed) parts.push(`<div>Accessed: ${escapeHtml(rangeObj.accessed)}</div>`);
   if (rangeObj && rangeObj.note) parts.push(`<div style="margin-top:6px">${escapeHtml(rangeObj.note)}</div>`);
-  if (rangeObj && rangeObj.url) parts.push(`<div style="margin-top:6px"><a class="source-link" href="${escapeHtml(rangeObj.url)}" target="_blank" rel="noopener noreferrer">Open source</a></div>`);
+  const safeUrl = rangeObj ? normalizeHttpUrl(rangeObj.url) : '';
+  if (safeUrl) parts.push(`<div style="margin-top:6px"><a class="source-link" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Open source</a></div>`);
   return parts.join('');
 }
 
@@ -3745,7 +3774,8 @@ function collectThreatSourceLinks(t) {
   const byUrl = new Map();
   fields.forEach(([field, r]) => {
     if (!r || !r.url) return;
-    const url = String(r.url);
+    const url = normalizeHttpUrl(r.url);
+    if (!url) return;
     const existing = byUrl.get(url) || {
       url,
       fields: [],
@@ -4766,7 +4796,6 @@ function initNetwork(enriched) {
     maxZoom: 1.4,
     userZoomingEnabled: false,
     userPanningEnabled: false,
-    wheelSensitivity: 0.15,
     pixelRatio: window.devicePixelRatio || 1,
     style: [
       {
@@ -5034,7 +5063,7 @@ function exportClockJSON() {
   if (!d) { alert('Run simulation first.'); return; }
   const sourceParameters = Object.fromEntries(Object.entries(ACTIVE_SOURCE_DATA || {}).map(([key, value]) => [key, {
     source: value.source || '',
-    url: normalizeRawUrlForExport(value.url || ''),
+    url: normalizeHttpUrl(value.url || ''),
     accessed: value.accessed || '',
     strength: value.strength || '',
     note: value.note || '',
@@ -5043,7 +5072,7 @@ function exportClockJSON() {
   const payload = {
     exportedAt: new Date().toISOString(),
     modelVersion: MODEL_VERSION,
-    datasetVersion: DATASET_VERSION,
+    datasetVersion: currentDatasetVersion(),
     primaryDataset: PRIMARY_DATASET_NAME,
     activeDataset: ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME,
     seed: P.seed || currentMonteCarloSeed(),
@@ -5092,7 +5121,7 @@ function exportClockCSV() {
   const rows = [
     ['metadata_key','metadata_value'],
     ['modelVersion', MODEL_VERSION],
-    ['datasetVersion', DATASET_VERSION],
+    ['datasetVersion', currentDatasetVersion()],
     ['primaryDataset', PRIMARY_DATASET_NAME],
     ['activeDataset', ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME],
     ['monteCarloIterations', P.nSim],
@@ -5222,7 +5251,7 @@ function updateUI(mcRes, scKey, enriched) {
     window._lastInterpretData = {
       scenario: scKey,
       modelVersion: MODEL_VERSION,
-      datasetVersion: DATASET_VERSION,
+      datasetVersion: currentDatasetVersion(),
       primaryDataset: PRIMARY_DATASET_NAME,
       activeDataset: ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME,
       monteCarloIterations: P.nSim,
@@ -6694,6 +6723,7 @@ document.getElementById('sourceFileInput').addEventListener('change', async e =>
       const stats = summarizeSourceMap(sanitized);
       applyEvidenceOverlay(sanitized, {
         fileName: file.name,
+        datasetVersion: datasetVersionFromSourceMap(raw),
         message: `Loaded evidence overlay ${file.name}. ${stats.entryCount} parameters across ${stats.threatCount} threats now update the current source ranges through precision-weighted pooling.`,
       });
     } else {
@@ -6702,6 +6732,7 @@ document.getElementById('sourceFileInput').addEventListener('change', async e =>
       applySourceMap(sanitized, {
         mode: 'custom',
         fileName: file.name,
+        datasetVersion: datasetVersionFromSourceMap(raw) || 'custom source map',
         message: `Loaded ${file.name} and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} threats with the bundled defaults.`,
         uploaded: true,
       });
@@ -7028,6 +7059,7 @@ function applyPresetJsonPayload(raw, preset) {
     const stats = summarizeSourceMap(sanitized);
     applyEvidenceOverlay(sanitized, {
       fileName,
+      datasetVersion: datasetVersionFromSourceMap(raw),
       message: `Loaded ${preset.label} evidence preset from external JSON. ${stats.entryCount} parameters across ${stats.threatCount} threats now update the current source ranges.`,
     });
     return stats;
@@ -7038,6 +7070,7 @@ function applyPresetJsonPayload(raw, preset) {
   applySourceMap(sanitized, {
     mode: 'custom',
     fileName,
+    datasetVersion: datasetVersionFromSourceMap(raw) || `${preset.label} source map`,
     message: `Loaded ${preset.label} preset from external JSON and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} threats with the bundled defaults.`,
     uploaded: true,
   });

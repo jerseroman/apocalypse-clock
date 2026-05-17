@@ -1,0 +1,17 @@
+{
+  "name": "apocalypse-clock",
+  "version": "1.2.7",
+  "private": true,
+  "description": "Static browser-based systemic-risk dashboard.",
+  "scripts": {
+    "check": "npm run check:js && npm run validate:data && npm run check:links",
+    "check:js": "node scripts/check-js.js",
+    "validate:data": "node scripts/validate-data.js",
+    "check:links": "node scripts/check-links.js",
+    "test": "npm run check && npm run test:smoke",
+    "test:smoke": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
