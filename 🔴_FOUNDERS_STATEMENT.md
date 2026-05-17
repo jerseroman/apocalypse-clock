@@ -24,7 +24,7 @@ The goal is not merely to tell people that something is wrong. The goal is to he
 
 Only when people understand the structure of risk can they begin to recognize their own position within it: as citizens, voters, consumers, creators, leaders, institutions, and participants in a shared planetary system.
 
-In that sense, Apocalypse Clock is not only a warning device. It is an attempt to turn warning into understanding, and understanding into responsibility. Its purpose is to support a more disciplined awareness of human-made threats and to encourage a transition toward a more mature civilizational phase.
+In that sense, Apocalypse Clock is not just a warning device. It is an attempt to turn warning into understanding, and understanding into responsibility. Its purpose is to support a more disciplined awareness of human-made threats and to encourage a transition toward a more mature civilizational phase, rather than allow unmanaged systemic risk to push humanity toward a future of institutional collapse, social chaos, ecological breakdown, food and water insecurity, mass displacement, and the degradation of the biosphere that makes life on Earth possible, including the vast web of plant and animal life shaped through hundreds of millions of years of evolution, which today supports the stability and diversity of the planet’s living systems.
 
 ## Relationship to the Doomsday Clock
 
