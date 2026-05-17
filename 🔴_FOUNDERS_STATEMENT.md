@@ -2,7 +2,7 @@
 
 ## Why I Created Apocalypse Clock
 
-I created **Apocalypse Clock** because I believe that symbolic warnings, even powerful ones such as the **Doomsday Clock**, are no longer sufficient on their own for the complexity of the risks humanity is facing.
+I created **Apocalypse Clock** because I believe that symbolic warnings, even powerful ones such as the **Doomsday Clock**, are no longer sufficient on their own for the complexity of the risks humanity is facing. The Doomsday Clock can tell us that time is short. But it cannot explain why.
 
 The deepest limitation of the Doomsday Clock is not that it is wrong. Its symbolic power is real, and its institutional authority is substantial. For decades, it has served as one of the clearest public symbols of global danger. But a single symbolic clock can hardly capture the full complexity of modern global risks.
 
@@ -23,9 +23,6 @@ The basic purpose is to make danger intelligible, to help people understand wher
 Only when people understand the structure of risk can they begin to recognize their own position within it: as citizens, voters, consumers, creators, leaders, institutions, and participants in a shared planetary system.
 
 In that sense, Apocalypse Clock is not only warning device. It is an attempt to turn warning into understanding, and understanding into responsibility. Its purpose is to support a more disciplined awareness of human-made threats and to encourage a transition toward a more mature civilizational phase, rather than allow unmanaged systemic risk to push humanity toward a future of institutional collapse, social chaos, ecological breakdown, food and water insecurity, mass displacement, and the degradation of the biosphere that makes life on Earth possible, including the vast web of plant and animal life shaped through hundreds of millions of years of evolution, which today supports the stability and diversity of the planet’s living systems.
-
-The Doomsday Clock can tell us that time is short.
-But it cannot explain why!?  
 
 ## Relationship to the Doomsday Clock
 
