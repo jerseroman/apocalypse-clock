@@ -1,4 +1,4 @@
-# 🔴 Founder’s Statement
+# Founder’s Statement
 
 ---
 
@@ -6,7 +6,7 @@
 
 I created **Apocalypse Clock** because I believe that symbolic warnings, even powerful ones such as the **Doomsday Clock**, are no longer sufficient on their own for the complexity of the risks humanity is facing.
 
-The deepest limitation of the Doomsday Clock is not that it is wrong. Its symbolic power is real, and its institutional authority is substantial. For decades, it has served as one of the clearest public symbols of global danger. But a symbolic clock can become too compressed for the complexity it represents.
+The deepest limitation of the Doomsday Clock is not that it is wrong. Its symbolic power is real, and its institutional authority is substantial. For decades, it has served as one of the clearest public symbols of global danger. But a single symbolic clock can hardly capture the full complexity of modern global risks.
 
 If people only hear that the world is “closer to midnight,” the message may create anxiety, fatalism, or a short burst of media attention. It can warn, but it does not necessarily explain. It tells us that danger is high, but not enough about which threats are intensifying, which systems are failing, which risks are connected, and which human choices are making the situation worse.
 
