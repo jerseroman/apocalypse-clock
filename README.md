@@ -8,13 +8,13 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 > 🔴 **Founder’s Statement**  
 > Apocalypse Clock was created to move beyond symbolic warning alone and make the structure of global systemic risk more visible.  
 >  
-> [Read the Founder’s Statement](FOUNDERS_STATEMENT.md)
+> [Read the Founder’s Statement](🔴_FOUNDERS_STATEMENT.md)
 
 The dashboard is driven by a structured JSON dataset that acts as the primary information carrier for the model. At runtime, the browser reads the JSON data, normalizes threat-level parameter entries, applies evidence metadata and uncertainty ranges, and uses those inputs to populate the risk model, source panels, scenario calculations, network views, and export outputs.
 
 ## Project Structure
 
-- [🔴 Founder’s Statement](FOUNDERS_STATEMENT.md)
+- [🔴 Founder’s Statement](🔴_FOUNDERS_STATEMENT.md)
 - `index.html` - application entry point and page shell.
 - `404.html` - GitHub Pages fallback route.
 - `src/styles.css` - application styles.
