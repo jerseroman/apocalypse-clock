@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.2.7 — 2026-05-16
+## v1.2.7 2026-05-16
 
 First public GitHub release of the Apocalypse Clock.
 
