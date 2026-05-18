@@ -45,7 +45,7 @@ This file contains the Apocalypse Clock parameter dataset v1.7.1. It includes 23
 
 Version 1.7.1 is a metadata-cleanup export and does not perform a scientific recalibration.
 
-**Important note:** The JSON dataset was created entirely with AI assistance and checked repeatedly with different AI tools. These AI-assisted checks should not be understood as scientific peer review. Independent source verification, methodological audit, and domain-expert assessment are required before any serious use!
+**⚠ Important note:** The JSON dataset was created entirely with AI assistance and checked repeatedly with different AI tools many times. These AI-assisted checks should not be understood as scientific peer review. <ins>Independent source verification, methodological audit, and domain-expert assessment are required before any serious use!</ins>
 
 ## Model Scope
 
