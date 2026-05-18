@@ -5,16 +5,16 @@ Official website: https://www.apocalypseclock.com/
 
 Apocalypse Clock is a static, browser-based systemic-risk dashboard for exploring interacting global threats across civilizational, biospheric, and technological domains. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs in a client-side application.
 
-> 🔴 **Founder’s Statement**  
+> **Statement**  
 > Apocalypse Clock was created to move beyond symbolic warning alone and make the structure of global systemic risk more visible.  
 >  
-> [Read the Founder’s Statement](🔴_FOUNDERS_STATEMENT.md)
+> [Read the Statement](Statement.md)
 
 The dashboard is driven by a structured JSON dataset that acts as the primary information carrier for the model. At runtime, the browser reads the JSON data, normalizes threat-level parameter entries, applies evidence metadata and uncertainty ranges, and uses those inputs to populate the risk model, source panels, scenario calculations, network views, and export outputs.
 
 ## Project Structure
 
-- [🔴 Founder’s Statement](🔴_FOUNDERS_STATEMENT.md)
+- `Statement.md` - project statement.
 - `index.html` - application entry point and page shell.
 - `404.html` - GitHub Pages fallback route.
 - `src/styles.css` - application styles.
@@ -45,6 +45,8 @@ This file contains the Apocalypse Clock parameter dataset v1.7.1. It includes 23
 
 Version 1.7.1 is a metadata-cleanup export and does not perform a scientific recalibration.
 
+**Important note:** The JSON dataset was created entirely with AI assistance and checked repeatedly with different AI tools. These AI-assisted checks should not be understood as scientific peer review. Independent source verification, methodological audit, and domain-expert assessment are required before any serious use!
+
 ## Model Scope
 
 Apocalypse Clock is a scenario-based analytical model for exploring systemic stress, uncertainty, dependencies, and scenario sensitivity across interacting global threats.
@@ -54,6 +56,11 @@ It should not be interpreted as:
 - a prophecy;
 - a deterministic forecast;
 - an empirical probability of civilizational collapse;
+- an official scientific consensus;
+- an official risk assessment by any public authority, institution, or government;
+- a prediction of a specific collapse date;
+- a real-time emergency warning system;
+- a substitute for independent source verification, expert review, or methodological audit;
 - a legal, financial, medical, security, or policy recommendation.
 
 The highlighted year represents a model-derived dynamic-cascade horizon under specified assumptions. It is not a predicted collapse date and should not be read as a deterministic endpoint.
