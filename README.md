@@ -3,14 +3,13 @@
 Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/  
 Official website: https://www.apocalypseclock.com/
 
-Apocalypse Clock is a static, browser-based systemic-risk dashboard for exploring interacting global threats across civilizational, biospheric, and technological domains. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs in a client-side application.
+Apocalypse Clock is a static, browser-based systemic-risk dashboard for exploring interacting global threats across civilizational, biospheric, and technological domains. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs in a client-side application. The dashboard is driven by a structured JSON dataset that serves as the primary data input source for the model.
 
 > **Statement**  
-> Apocalypse Clock was created to move beyond symbolic warning alone and make the structure of global systemic risk more visible.  
+> Apocalypse Clock was created to show the broader public not only individual threats, but the wider structure of potential civilizational dangers: their origins, interconnections, and the    possibility that isolated risks may develop into systemic crises.  
 >  
 > [Read the Statement](Statement.md)
 
-The dashboard is driven by a structured JSON dataset that acts as the primary information carrier for the model. At runtime, the browser reads the JSON data, normalizes threat-level parameter entries, applies evidence metadata and uncertainty ranges, and uses those inputs to populate the risk model, source panels, scenario calculations, network views, and export outputs.
 
 ## Project Structure
 
@@ -45,7 +44,27 @@ This file contains the Apocalypse Clock parameter dataset v1.7.1. It includes 23
 
 Version 1.7.1 is a metadata-cleanup export and does not perform a scientific recalibration.
 
-**⚠ Important note:** The JSON dataset was created entirely with AI assistance and checked repeatedly with different AI tools many times. These AI-assisted checks should not be understood as scientific peer review. <ins>Independent source verification, methodological audit, and domain-expert assessment are required before any serious use!</ins>
+**⚠ Important note:** The JSON dataset v1.7.1 was created entirely with AI assistance and checked repeatedly with different AI tools. These AI-assisted checks should not be understood as scientific peer review. <ins>Independent source verification, methodological audit, and domain-expert assessment are required before any serious use!</ins>
+
+Multiple AI model JSON presets are included as comparison and audit inputs. They were used to compare how different AI systems assess the same risk parameters and to observe the average spread between their estimates. These AI-generated estimates have not been independently audited and should not be treated as scientific validation. Notably, the different AI systems produced broadly similar assessments across many parameters, which makes the comparison useful as a consistency check, but not as a substitute for expert review.
+<p align="left">
+  <img src="https://i.ibb.co/zhSrMYGJ/datajson.jpg" alt="JSON dataset overview" width="720">
+</p>
+
+### AI preset transparency
+
+Each AI model preset is documented with two linked records where available: the generated JSON preset and the corresponding shared AI chat or conversation record showing how the preset was produced.
+
+These links are provided for transparency and auditability. They allow reviewers to inspect not only the final JSON output, but also the AI-assisted generation process behind each preset. The presets should be interpreted only as comparison and consistency-check inputs, not as scientific validation, expert consensus, or independently verified risk assessment.
+
+| AI model | JSON preset | Shared chat / conversation |
+|---|---|---|
+| Meta AI | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_9340155ae5684cfab132ff9a1614f69f.json) | [Shared conversation](https://www.meta.ai/share/BJ58mD1g4ib) |
+| DeepSeek | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_d51b457416cf4de69f09ebd823838d37.json) | [Shared conversation](https://chat.deepseek.com/share/z0hekl5ix3yszqlb0q) |
+| Gemini | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_f0b88cfe12684eea98e58a2bc9e3a1a3.json) | [Shared conversation](https://gemini.google.com/share/ba734236ef06) |
+| GPT | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_ed75db20af174949ac02dd6b1c67efbf.json) | [Shared conversation](https://chatgpt.com/share/69f666b6-db54-83eb-aff9-dcc35b0b626e) |
+| Claude | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_3098987023234632b012f237a4522101.json) | [Shared conversation](https://claude.ai/share/33f155da-4c3b-44b9-b6fc-99a7f9dcfa52) |
+| Grok | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_cfeab5d3751b4c99ab67cc7c01d87d34.json) | [Shared conversation](https://grok.com/share/c2hhcmQtMi1jb3B5_be361e2b-dbf1-46b2-ac0c-f2ce6c056b62) |
 
 ## Model Scope
 
