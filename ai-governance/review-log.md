@@ -17,3 +17,4 @@ Do not edit prior entries. Do not delete prior entries. Add new entries at the b
 
 | date | task | class | files | result | note |
 |------|------|-------|-------|--------|------|
+| 2026-05-19 | Headline tooltip and long-note wording revision | COSMETIC | src/app.js (lines 5236, 5243) | accepted | Addresses audit items A4, C2, C5, E1, E2, E3, E4 from methodological-review.md §2. No numerics changed. Validation steps 1-4 and 7 passed. |
