@@ -125,4 +125,73 @@ test.describe('headline determinism under default baseline configuration', () =>
     expect(captured.cascadeP90).toBe(EXPECTED.cascadeP90);
     expect(captured.headlineYearText).toBe(EXPECTED.headlineYearText);
   });
+
+  // Test B — repeatability.
+  // Verifies that two consecutive full runs in the same browser session,
+  // under the same configuration, produce bit-identical Dynamic-cascade
+  // outputs. This test pins no golden value; it compares the two runs only
+  // against each other, so it cannot drift when the model is intentionally
+  // revised. (Golden-value pinning is Test A's responsibility.)
+  test('two consecutive runs in one browser session produce bit-identical Dynamic Cascade outputs', async ({ page }) => {
+    test.setTimeout(60000);
+
+    await page.goto('/index.html');
+
+    // Wait for the initial auto-run to complete.
+    await page.waitForFunction(
+      () =>
+        typeof _running !== 'undefined' && _running === false &&
+        typeof _cdfCurves !== 'undefined' &&
+        _cdfCurves?.baseline?.ensemble?.dynamicCascade &&
+        Number.isFinite(_cdfCurves.baseline.ensemble.dynamicCascade.p90),
+      { timeout: 55000 }
+    );
+
+    // Pre-flight: page's default seed matches the seed pinned in this file.
+    expect(await page.evaluate(() => DEFAULT_MC_SEED)).toBe(GOLDEN_SEED);
+
+    // Explicitly set scenario, weight profile, seed, and nSim — programmatically,
+    // to avoid the scheduleWeightProfileAutoRun path (see Test A).
+    await page.evaluate((seed) => {
+      document.querySelectorAll('.sc-pill').forEach(b => b.classList.remove('active'));
+      document.querySelector('button[data-sc="baseline"]').classList.add('active');
+      P.scenario = 'baseline';
+      applyWeightProfile('expert', false);
+      document.getElementById('mcSeed').value = seed;
+      document.getElementById('simCount').value = '3000';
+      P.nSim = 3000;
+    }, GOLDEN_SEED);
+
+    // Warm-up run absorbs the runSelfTests PRNG contention (see Test A).
+    await page.evaluate(async () => { await runAll(); });
+
+    // Two measured runs, same session, same configuration.
+    const runA = await page.evaluate(async () => {
+      await runAll();
+      const ens = _cdfCurves.baseline.ensemble.dynamicCascade;
+      return {
+        cascadeP10: ens.p10,
+        cascadeP50: ens.p50,
+        cascadeP90: ens.p90,
+        headlineYearText: document.getElementById('cascadeHeadlineYear').textContent,
+      };
+    });
+
+    const runB = await page.evaluate(async () => {
+      await runAll();
+      const ens = _cdfCurves.baseline.ensemble.dynamicCascade;
+      return {
+        cascadeP10: ens.p10,
+        cascadeP50: ens.p50,
+        cascadeP90: ens.p90,
+        headlineYearText: document.getElementById('cascadeHeadlineYear').textContent,
+      };
+    });
+
+    // Strict equality, field by field. No tolerance bands.
+    expect(runB.cascadeP10).toBe(runA.cascadeP10);
+    expect(runB.cascadeP50).toBe(runA.cascadeP50);
+    expect(runB.cascadeP90).toBe(runA.cascadeP90);
+    expect(runB.headlineYearText).toBe(runA.headlineYearText);
+  });
 });
