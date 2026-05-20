@@ -20,16 +20,18 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 - `src/action-delegation.js` - early UI action delegation.
 - `src/aria-status.js` - accessibility status helper.
 - `src/styles.css` - application styles.
-- `tests/` - Playwright smoke, model-contract, and headline-determinism tests.
+- `tests/` - Playwright smoke, unit-contract, and headline-determinism regression tests.
 - `scripts/` - repository validation scripts for JavaScript syntax, dataset integrity, and link format checks.
-- `docs/` - public methodology, scope, validation, limitation, and change-class documentation.
-- `ai-governance/` - internal change policy, protected-path, model-invariant, validation, and review-log records.
+- `docs/` - public methodology, scope, validation, limitations, and change-class documentation.
+- `ai-governance/` - internal change policy, protected paths, model invariants, validation checklist, methodological review, and review log.
 - `.github/ISSUE_TEMPLATE/` - structured GitHub issue templates for bugs, methodology concerns, and source corrections.
+- `.github/pull_request_template.md` - governance-aware pull request checklist.
 - `.github/workflows/validate.yml` - GitHub Actions validation workflow.
 - `vendor/echarts.bundle.js` - local ECharts runtime.
 - `vendor/cytoscape.bundle.js` - local Cytoscape runtime.
 - `Statement.md` - project statement.
 - `CITATION.cff` - citation metadata for academic, public, and review references.
+- `.zenodo.json` - Zenodo archival and release metadata.
 - `NOTICE.md` - attribution, source-availability, and third-party notice.
 - `CHANGELOG.md` - public version and dataset change history.
 - `CONTRIBUTING.md` - contribution and review guidance.
@@ -139,9 +141,11 @@ Structured GitHub issue templates are provided for:
 
 Please use the relevant issue form when reporting problems, proposing corrections, or identifying source-related concerns.
 
-## Citation
+## Citation and Archival Metadata
 
-Citation metadata is provided in [`CITATION.cff`](./CITATION.cff).
+Citation metadata is provided in [`CITATION.cff`](./CITATION.cff). Zenodo archival and release metadata is provided in [`.zenodo.json`](./.zenodo.json). A DOI badge can be added here after Zenodo creates a DOI for an archived release.
+
+These metadata files support citation and archival discovery. They do not imply peer review, scientific validation, or predictive certainty. Apocalypse Clock remains experimental, not peer reviewed, and its model outputs are scenario outputs, not predictions.
 
 If you use, cite, review, or discuss this project, please cite it as:
 
