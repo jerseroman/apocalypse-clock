@@ -1,10 +1,10 @@
-# Apocalypse Clock — Audit Test Results and Impact Summary
+# Apocalypse Clock - Audit Test Results and Impact Summary
 
 **Repository:** https://github.com/jerseroman/apocalypse-clock  
 **Audited commit:** `a9c9bbfbbf6b0ecfd5d6ac4ef337aee2ff190ab9`  
 **Audit date:** 2026-05-20  
 **Audit package:** Audit A, Audit B, Audit C, Audit D  
-**Status:** **YELLOW — internally coherent, no critical headline-path defect found, but not externally scientifically validated**
+**Status:** **YELLOW - internally coherent, no critical headline-path defect found, but not externally scientifically validated**
 
 ---
 
@@ -235,7 +235,7 @@ The correct public framing is therefore:
 
 ---
 
-## 10. Priority fix plan
+## 10. Priority fix plan for v.1.2.8
 
 ### Priority 1 — Reproducibility and headline integrity
 
