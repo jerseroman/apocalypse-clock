@@ -19,6 +19,20 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
   await page.locator('#missionToggle').click();
   await expect(page.locator('#missionMore')).toBeVisible();
 
+  await page.locator('[data-action="toggle-share-menu"]').click();
+  await expect(page.locator('#shareDropdown')).toBeVisible();
+  await page.evaluate(() => {
+    const link = document.createElement('a');
+    link.id = 'share-nav-regression-link';
+    link.href = '#share-nav-regression-target';
+    link.setAttribute('data-action', 'close-share-menu');
+    link.textContent = 'Regression share link';
+    document.getElementById('shareDropdown').appendChild(link);
+  });
+  await page.locator('#share-nav-regression-link').click();
+  await expect(page).toHaveURL(/#share-nav-regression-target$/);
+  await expect(page.locator('#shareDropdown')).toBeHidden();
+
   expect(errors).toEqual([]);
   expect(warnings.filter(text => text.includes('custom wheel sensitivity'))).toEqual([]);
 });

@@ -35,9 +35,14 @@
     catch(e) { console.warn('Clipboard copy failed', e); }
     if(btn){ btn.textContent='✓ Copied!'; setTimeout(()=>{btn.textContent='⧉ Copy link'; closeShareMenu();},800); }
   }
+  function allowsDefaultNavigation(action, el){
+    if(action !== 'close-share-menu' || !el || el.tagName !== 'A') return false;
+    const href = el.getAttribute('href') || '';
+    return href && href !== '#';
+  }
   function runAction(action, el, event){
     if(action) {
-      event.preventDefault();
+      if(!allowsDefaultNavigation(action, el)) event.preventDefault();
       if(action === 'toggle-mission-more') return toggleMissionMore();
       if(action === 'toggle-share-menu') return toggleShareMenu(event);
       if(action === 'close-share-menu') return closeShareMenu();

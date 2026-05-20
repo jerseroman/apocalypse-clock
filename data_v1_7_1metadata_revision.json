@@ -2835,7 +2835,7 @@
     "lo": 3,
     "hi": 4.4,
     "source": "World Bank Logistics Performance Index 2023; OECD 'Risks and Resilience in Global Trade'",
-    "url": "https://lpi.worldbank.org/index.php/report",
+    "url": "https://doi.org/10.1596/39760",
     "accessed": "2026-04-24",
     "strength": "strong",
     "note": "The 2023 Logistics Performance Index finds that, despite severe disruptions during 2020–22, global logistics systems have remained broadly resilient, though port and corridor delays remain significant worldwide. OECD work on trade after multiple shocks emphasizes persistent bottlenecks and high but volatile energy and commodity prices, pointing to substantial though not existential supply-chain stress."
@@ -2865,7 +2865,7 @@
     "lo": 4,
     "hi": 5,
     "source": "World Bank LPI 2023; OECD 'Policies to strengthen the resilience of global value chains'",
-    "url": "https://lpi.worldbank.org/index.php/international/tracking-data",
+    "url": "https://data360.worldbank.org/en/dataset/WB_LPI",
     "accessed": "2026-04-24",
     "strength": "strong",
     "note": "The LPI and OECD resilience reports stress that modern production depends on complex multi-country logistics and just-in-time networks, meaning disruptions in a few hubs can cascade globally."
@@ -2916,7 +2916,7 @@
     "lo": 7.5,
     "hi": 9.3,
     "source": "World Bank LPI 2023; OECD resilience-in-GVCs analysis",
-    "url": "https://lpi.worldbank.org/index.php/report",
+    "url": "https://doi.org/10.1596/39760",
     "accessed": "2026-04-24",
     "strength": "anchored_judgment",
     "note": "Because supply chains have demonstrated significant adaptive capacity since the pandemic yet remain exposed to concentrated chokepoints and climate shocks, I place the systemic breakdown threshold somewhat below that for climate and nuclear risks but still high, reflecting structured expert judgment anchored in these studies. v1.7 score-transparency note: the interval is widened because supply-chain collapse is a cascade model anchor rather than an empirically observed global threshold. v1.7 model-anchor caveat: this threshold is a normalized model anchor for systemic destabilization; it is not an empirically observed tipping point, deterministic forecast or directly measurable physical boundary.",
