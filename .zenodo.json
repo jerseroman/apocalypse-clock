@@ -1,0 +1,37 @@
+{
+  "title": "Apocalypse Clock: Global Systemic Risk Monitor",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Jerše, Roman"
+    }
+  ],
+  "version": "1.2.7",
+  "publication_date": "2026-05-16",
+  "access_right": "open",
+  "description": "Apocalypse Clock is an experimental, browser-based systemic-risk dashboard for exploring interacting global threats through scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs. The project is not peer reviewed. Model outputs are scenario outputs, not predictions.",
+  "keywords": [
+    "systemic risk",
+    "scenario analysis",
+    "civilizational risk",
+    "Monte Carlo simulation",
+    "dependency network",
+    "risk dashboard",
+    "Dynamic Cascade P90"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://www.apocalypseclock.com/",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "other"
+    },
+    {
+      "identifier": "https://github.com/jerseroman/apocalypse-clock",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "software"
+    }
+  ],
+  "notes": "Released under the custom source-available non-commercial fork license. Uses dataset v1.7.1. No scientific recalibration is claimed. The project is not peer reviewed. Model outputs are scenario outputs, not predictions."
+}
