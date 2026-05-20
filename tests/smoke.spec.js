@@ -19,19 +19,64 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
   await page.locator('#missionToggle').click();
   await expect(page.locator('#missionMore')).toBeVisible();
 
-  await page.locator('[data-action="toggle-share-menu"]').click();
-  await expect(page.locator('#shareDropdown')).toBeVisible();
-  await page.evaluate(() => {
-    const link = document.createElement('a');
-    link.id = 'share-nav-regression-link';
-    link.href = '#share-nav-regression-target';
-    link.setAttribute('data-action', 'close-share-menu');
-    link.textContent = 'Regression share link';
-    document.getElementById('shareDropdown').appendChild(link);
+  const shareToggle = page.locator('[data-action="toggle-share-menu"]');
+  const missionActions = page.locator('#missionActions');
+  const actionsBefore = await missionActions.boundingBox();
+  expect(actionsBefore).not.toBeNull();
+
+  await shareToggle.click();
+  const shareDropdown = page.locator('#shareDropdown');
+  await expect(shareDropdown).toBeVisible();
+
+  const actionsAfter = await missionActions.boundingBox();
+  expect(actionsAfter).not.toBeNull();
+  const dropdownMetrics = await shareDropdown.evaluate(el => {
+    const style = window.getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+    return {
+      display: style.display,
+      left: rect.left,
+      position: style.position,
+      top: rect.top,
+      width: rect.width,
+    };
   });
-  await page.locator('#share-nav-regression-link').click();
+  const toggleBox = await shareToggle.boundingBox();
+  expect(toggleBox).not.toBeNull();
+  expect(['absolute', 'fixed']).toContain(dropdownMetrics.position);
+  expect(dropdownMetrics.display).not.toBe('block');
+  expect(dropdownMetrics.width).toBeLessThan(280);
+  expect(dropdownMetrics.top).toBeGreaterThanOrEqual(toggleBox.y + toggleBox.height - 1);
+  expect(Math.abs(actionsAfter.height - actionsBefore.height)).toBeLessThan(2);
+
+  const encodedShareText = 'Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system.';
+  const encodedShareUrl = 'https%3A%2F%2Fwww.apocalypseclock.com%2F';
+  const shareLinks = {
+    '#sh-twitter': ['twitter.com/intent/tweet', 'text='],
+    '#sh-facebook': ['facebook.com/sharer/sharer.php', 'quote='],
+    '#sh-telegram': ['t.me/share/url', 'text='],
+    '#sh-reddit': ['reddit.com/submit', 'title='],
+    '#sh-linkedin': ['linkedin.com/shareArticle', 'summary='],
+  };
+  for (const [selector, expectedParts] of Object.entries(shareLinks)) {
+    const href = await page.locator(selector).getAttribute('href');
+    expect(href).toContain(encodedShareText);
+    expect(href).toContain(encodedShareUrl);
+    for (const part of expectedParts) expect(href).toContain(part);
+  }
+
+  await page.locator('#sh-twitter').evaluate(el => {
+    el.setAttribute('href', '#share-nav-regression-target');
+    el.removeAttribute('target');
+  });
+  await page.locator('#sh-twitter').click();
   await expect(page).toHaveURL(/#share-nav-regression-target$/);
-  await expect(page.locator('#shareDropdown')).toBeHidden();
+  await expect(shareDropdown).toBeHidden();
+
+  await shareToggle.click();
+  await expect(shareDropdown).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(shareDropdown).toBeHidden();
 
   expect(errors).toEqual([]);
   expect(warnings.filter(text => text.includes('custom wheel sensitivity'))).toEqual([]);
