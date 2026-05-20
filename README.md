@@ -13,21 +13,30 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 
 ## Project Structure
 
-- `Statement.md` - project statement.
-- `index.html` - application entry point and page shell.
-- `404.html` - GitHub Pages fallback route.
-- `src/styles.css` - application styles.
-- `src/action-delegation.js` - early UI action delegation.
+- `index.html` - application entry point, page shell, and embedded dataset copy.
+- `404.html` - GitHub Pages fallback route with the same embedded dataset copy.
+- `data_v1_7_1metadata_revision.json` - public structured model dataset.
 - `src/app.js` - model logic, simulation workflow, rendering, exports, and initialization.
+- `src/action-delegation.js` - early UI action delegation.
 - `src/aria-status.js` - accessibility status helper.
+- `src/styles.css` - application styles.
+- `tests/` - Playwright smoke, model-contract, and headline-determinism tests.
+- `scripts/` - repository validation scripts for JavaScript syntax, dataset integrity, and link format checks.
+- `docs/` - public methodology, scope, validation, limitation, and change-class documentation.
+- `ai-governance/` - internal change policy, protected-path, model-invariant, validation, and review-log records.
+- `.github/ISSUE_TEMPLATE/` - structured GitHub issue templates for bugs, methodology concerns, and source corrections.
+- `.github/workflows/validate.yml` - GitHub Actions validation workflow.
 - `vendor/echarts.bundle.js` - local ECharts runtime.
 - `vendor/cytoscape.bundle.js` - local Cytoscape runtime.
-- `data_v1_7_1metadata_revision.json` - public structured model dataset.
+- `Statement.md` - project statement.
 - `CITATION.cff` - citation metadata for academic, public, and review references.
 - `NOTICE.md` - attribution, source-availability, and third-party notice.
 - `CHANGELOG.md` - public version and dataset change history.
-- `docs/MODEL_SCOPE.md` - model scope, limitations, and interpretation guidance.
-- `.github/ISSUE_TEMPLATE/` - structured GitHub issue templates for bugs, methodology concerns, and source corrections.
+- `CONTRIBUTING.md` - contribution and review guidance.
+- `SECURITY.md` - security, integrity, and responsible-reporting guidance.
+- `LICENSE` - source-available non-commercial fork license.
+- `package.json` and `package-lock.json` - Node/Playwright validation dependencies and scripts.
+- `playwright.config.js` - Playwright test-server configuration.
 - `.nojekyll` - disables Jekyll processing on GitHub Pages.
 - `.gitattributes` - line-ending and text-file handling rules.
 - `.gitignore` - ignored local and system files.
