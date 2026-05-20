@@ -1,3 +1,10 @@
+[![DOI](https://zenodo.org/badge/1240618281.svg)](https://doi.org/10.5281/zenodo.20304258)
+[![CI](https://github.com/jerseroman/apocalypse-clock/actions/workflows/validate.yml/badge.svg)](https://github.com/jerseroman/apocalypse-clock/actions/workflows/validate.yml)
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Peer review](https://img.shields.io/badge/peer%20review-not%20peer--reviewed-red)
+![Dataset](https://img.shields.io/badge/dataset-v1.7.1-blue)
+![Model](https://img.shields.io/badge/model-v1.2.7-blue)
+
 # Apocalypse Clock v1.2.7
 
 Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/  
