@@ -20,7 +20,7 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 ## Project Structure
 
 - `index.html` - application entry point, page shell, and embedded dataset copy.
-- `404.html` - GitHub Pages fallback route with the same embedded dataset copy.
+- `404.html` - minimal custom GitHub Pages fallback page with no embedded model dataset copy.
 - `data_v1_7_1metadata_revision.json` - public structured model dataset.
 - `src/app.js` - model logic, simulation workflow, rendering, exports, and initialization.
 - `src/action-delegation.js` - early UI action delegation.
