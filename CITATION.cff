@@ -7,6 +7,7 @@ authors:
     given-names: "Roman"
 url: "https://www.apocalypseclock.com/"
 repository-code: "https://github.com/jerseroman/apocalypse-clock"
+doi: "10.5281/zenodo.20304258"
 version: "1.2.7"
 date-released: "2026-05-16"
-license: "Apocalypse Clock Source-Available Non-Commercial Fork License"
+license-url: "https://github.com/jerseroman/apocalypse-clock/blob/main/LICENSE"
