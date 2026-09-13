@@ -24,7 +24,10 @@ function scopeStylesForShadowRoot(css) {
     // Viewport units escape the Wix element's layout box. Scope horizontal
     // sizing to the custom-element host so the P50/P90 pair cannot be clipped.
     .replace(/100vw/g, '100%')
-    .concat('\n:host{display:block;width:100%;max-width:100%;color-scheme:dark}.ac-body{width:100%;min-height:100%;isolation:isolate}\n');
+    .concat('\n:host{display:block;width:100%;max-width:100%;color-scheme:dark}.ac-body{width:100%;min-height:100%;isolation:isolate}\n')
+    // The hero uses an inline desktop flex row. On a narrow Wix host, stack
+    // the current-stress gauge above the projected P50/P90 clocks.
+    .concat('@media(max-width:520px){#heroAbsoluteClock>div:first-child{flex-direction:column!important;align-items:stretch!important}#heroAbsoluteClock .hero-gauge-card{flex:1 1 auto!important;width:100%!important}}\n');
 }
 
 const html = read('index.html');

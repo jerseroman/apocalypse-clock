@@ -51,6 +51,41 @@ test('Wix Velo custom element renders the audited dual-clock application without
   expect(errors).toEqual([]);
 });
 
+test('Wix Velo custom element keeps both cascade clocks inside a mobile-width host', async ({ page }) => {
+  test.setTimeout(90000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await page.goto('/wix/custom-element-harness.html');
+  const host = page.locator('apocalypse-clock');
+  await expect(host).toHaveAttribute('data-state', 'ready');
+  await expect(host.locator('#cascadeMedianYear')).toHaveText('2036', { timeout: 60000 });
+  await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2043');
+
+  const layout = await host.evaluate(element => {
+    const root = element.shadowRoot;
+    const pair = root.querySelector('#cascadeHorizonPair').getBoundingClientRect();
+    const p90 = root.querySelector('#cascadeHeadlineYear').getBoundingClientRect();
+    const hostBox = element.getBoundingClientRect();
+    return {
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      hostRight: hostBox.right,
+      pairRight: pair.right,
+      p90Right: p90.right,
+    };
+  });
+  expect(layout.clientWidth).toBe(390);
+  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
+  expect(layout.pairRight).toBeLessThanOrEqual(layout.hostRight);
+  expect(layout.p90Right).toBeLessThanOrEqual(layout.hostRight);
+  expect(errors).toEqual([]);
+});
+
 test('Wix Velo document facade does not wrap the live document as its Proxy target', async ({ request }) => {
   const response = await request.get('/wix/apocalypse-clock-element.js');
   expect(response.ok()).toBeTruthy();
