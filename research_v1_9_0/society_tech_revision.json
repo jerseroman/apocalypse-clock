@@ -1,0 +1,997 @@
+{
+  "meta": {
+    "fragment_version": "1.9.0-functional-pressure-proposal",
+    "accessed": "2026-09-09",
+    "scope": "Ten complete growth entry replacements, sixteen growth-class recommendations and functional boundaries; no application edits.",
+    "status": "Evidence-anchored scenario proposal, not empirical calibration or independently validated forecast.",
+    "assembly_instruction": "Replace the ten growth entries wholesale. Do not merge back raw_indicator_growth or old conversion-derived semantics. Use growth_class_recommendations for the remaining six entries, replacing their growth provenance separately. Preserve indicator facts only as context.",
+    "replace_whole_entries": true,
+    "remove_legacy_growth_fields": [
+      "raw_indicator_growth"
+    ],
+    "growth_definition": "g is the directly selected annual relative growth of a latent autonomous pressure index on essential functions, conditional on continued pressure and held apart from additional realized cross-threat cascade transmission. Baseline pressure, conditional functional consequence, event-arrival intensity and g are distinct quantities.",
+    "mathematical_convention": "For an autonomous pressure state P>0, P(t+1)=P(t)*(1+g) before separately modeled cascade additions; g is dimensionless per one-year step. This definition is not a claim that harm, probability or any source indicator follows this equation.",
+    "range_semantics": "lo and hi are epistemic scenario-width anchors under the existing approximate 90-percent positive sampling convention, not empirical confidence bounds or hard observed limits. Shared class rates are transparent analyst conventions.",
+    "scenario_condition": "Continued-pressure, positive-only scenario. No endogenous recovery is represented; observed improvements remain counterevidence and require separate recovery/scenario treatment. Near-flat is not zero pressure, nor is its positive central value observed worsening.",
+    "calibration_horizon": "Use as an explicit structural scenario over the displayed horizon, not as a measured trend persisting through 2100. Re-elicitation at future evidence updates is necessary.",
+    "no_calendar_target": true,
+    "choice_blind_to_new_headline": true,
+    "legacy_caps_retained": true,
+    "legacy_conversion_multipliers_applied": false,
+    "regime_warning": "For AI, autonomous weapons, economic fracture and governance fragmentation, g must act on the new pressure/susceptibility path. It is not an empirically inferred intrinsic transition-arrival rate; do not merely relabel the old static-logistic arrival mechanism.",
+    "criticality_rule": "Tier reflects conditional breadth of essential-function loss and limited substitution, not occurrence probability, urgency, current damage or a desired crossing year. Tiers are not empirical weights; do not multiply by urgency/growth again. Shared service losses must not be treated as independent additive population losses.",
+    "criticality_tiers": {
+      "1": "Primarily a cross-system amplifier; direct essential-function loss is strongly mediated.",
+      "2": "Major but partial or concentrated functional disruption with meaningful context-dependent substitutes.",
+      "3": "Broad essential life-support, health, coordination or infrastructure-function loss with limited timely substitution."
+    },
+    "service_groups": [
+      "food_water",
+      "ecological_life_support",
+      "health_care",
+      "coordination_exchange",
+      "critical_infrastructure"
+    ],
+    "functional_definition_limit": "Definitions are qualitative model boundaries. They neither assert current crossing nor quantify a measured fraction of global essential-service loss; new numerical threshold conventions require separate disclosure."
+  },
+  "growth_intensity_classes": {
+    "near_flat": {
+      "lo": 0.0005,
+      "mu": 0.003,
+      "hi": 0.015,
+      "interpretation": "Approximately stationary to slowly increasing autonomous pressure, conditional on no endogenous recovery."
+    },
+    "slow": {
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "interpretation": "Slow persistent increase, allowing near-flat evolution and appreciably stronger pressure."
+    },
+    "moderate": {
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "interpretation": "Sustained moderate autonomous pressure increase with substantial uncertainty in transfer to essential functions."
+    },
+    "rapid": {
+      "lo": 0.006,
+      "mu": 0.03,
+      "hi": 0.05,
+      "interpretation": "Rapid capability or exposure change capable of increasing autonomous functional pressure; uncertain transfer remains explicit."
+    }
+  },
+  "entryoverrides": {
+    "authoritarian.growth_rate": {
+      "mu": 0.01,
+      "lo": 0.001,
+      "hi": 0.025,
+      "source": "V-Dem Institute, Democracy Report 2026: Unraveling the Democratic Era?",
+      "url": "https://www.v-dem.net/documents/75/V-Dem_Institute_Democracy_Report_2026_lowres.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "V-Dem documents long-run autocratization and restrictions on corrective information. These mechanisms support the slow conditional pressure class, not a CAGR of the population living under autocracy. Democratization and country variation remain counterevidence. The directly selected range describes autonomous institutional pressure; it is not a measured probability of service failure.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'slow' class: lo/mu/hi=0.001/0.01/0.025. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.04; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.04,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "debt.growth_rate": {
+      "mu": 0.01,
+      "lo": 0.001,
+      "hi": 0.025,
+      "source": "IMF, Fiscal Monitor April 2026: Fiscal Policy under Pressure: High Debt, Rising Risks",
+      "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2026/april/english/text.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "IMF evidence identifies refinancing and fiscal constraints, but debt quantities do not determine service failure. The slow conditional class represents continued pressure on essential-service financing and shock absorption. Restructuring, growth and heterogeneous debt structures limit the mapping. The selected annual range is an analyst scenario, not the growth of debt or default probability.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'slow' class: lo/mu/hi=0.001/0.01/0.025. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.03; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.03,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "displacement.growth_rate": {
+      "mu": 0.003,
+      "lo": 0.0005,
+      "hi": 0.015,
+      "source": "UNHCR South Africa, World Refugee Day 2026: solidarity and solutions",
+      "url": "https://southafrica.un.org/en/317906-unhcr-marks-world-refugee-message-solidarity-and-solutions-refugees",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "UNHCR reports historically high and often protracted displacement alongside a slight refugee-stock decline, and emphasizes essential services and livelihoods. The near-flat positive range is a conditional no-recovery scenario for unmet protection and service needs, not observed displacement growth. Successful return and inclusion can reduce actual pressure and remain outside this release's endogenous dynamics.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'near_flat' class: lo/mu/hi=0.0005/0.003/0.015. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.04; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.04,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "economic.growth_rate": {
+      "mu": 0.01,
+      "lo": 0.001,
+      "hi": 0.025,
+      "source": "IMF, World Economic Outlook Update July 2026: Global Economy in Crosscurrents of War and Technology",
+      "url": "https://www.imf.org/en/publications/weo/issues/2026/07/08/world-economic-outlook-update-july-2026?cid=ca-com-homepage-WEOET2026004",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "IMF assessments describe amplification vulnerabilities alongside continuing economic activity and adjustment. The slow conditional class represents pressure on payments, livelihoods and essential production, not GDP growth or asset-price changes. Stabilization and substitution can offset stresses. Its numerical range is a directly chosen scenario prior, without a measured global fragility-growth series.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'slow' class: lo/mu/hi=0.001/0.01/0.025. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.03; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.03,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "epistemic.growth_rate": {
+      "mu": 0.02,
+      "lo": 0.003,
+      "hi": 0.04,
+      "source": "Reuters Institute, Digital News Report 2026: Overview and key findings",
+      "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "The evidence concerns weakened trust and information integrity rather than a measured rate of collective failure. A moderate conditional class represents pressure on verification, warning and coordinated decisions. Alternative trusted channels and adaptation limit transfer. The annual range is an explicit scenario judgment, not growth in false beliefs, news distrust or collapse probability.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'moderate' class: lo/mu/hi=0.003/0.02/0.04. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.04; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.04,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "fragmentation_gov.growth_rate": {
+      "mu": 0.02,
+      "lo": 0.003,
+      "hi": 0.04,
+      "source": "United Nations Security Council, Highlights of Security Council Practice 2025",
+      "url": "https://main.un.org/securitycouncil/en/content/highlights-2025",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "UN practice shows continued cooperation as well as persistent coordination gaps. The moderate conditional class concerns growing difficulty sustaining cross-border essential functions, not veto-count growth. Successful agreements remain counterevidence. For the retained regime process, this parameter must affect pressure or cascade susceptibility, not be presented as an empirical intrinsic transition-arrival rate.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'moderate' class: lo/mu/hi=0.003/0.02/0.04. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.04; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.04,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "geopolitics.growth_rate": {
+      "mu": 0.02,
+      "lo": 0.003,
+      "hi": 0.04,
+      "source": "SIPRI, Global military spending rise continues as European and Asian expenditures surge",
+      "url": "https://www.sipri.org/media/press-release/2026/global-military-spending-rise-continues-european-and-asian-expenditures-surge",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "Conflict and security assessments support concern about escalation and containment gaps. The moderate conditional class represents autonomous escalation pressure rather than the percentage increase in military spending or conflict counts. Deterrence and de-escalation can counter it. The rate is a scenario prior, with additional realized cross-threat effects reserved for the cascade mechanism.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'moderate' class: lo/mu/hi=0.003/0.02/0.04. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.045; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.045,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "nuclear.growth_rate": {
+      "mu": 0.01,
+      "lo": 0.001,
+      "hi": 0.025,
+      "source": "Kristensen and Korda, SIPRI Yearbook 2026 chapter 8: World nuclear forces",
+      "url": "https://www.sipri.org/sites/default/files/YB26%2008%20World%20Nuclear%20Forces.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "SIPRI documents modernization and reduced arms-control transparency, while much of the Russian stockpile estimate increase reflects reassessment. The slow conditional class therefore represents pressure on nuclear-risk containment, not inventory growth or war probability. Deterrence and crisis management limit the inference. Event-arrival assumptions must remain separate from this uncalibrated pressure-growth judgment.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'slow' class: lo/mu/hi=0.001/0.01/0.025. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.035; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.035,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "supply.growth_rate": {
+      "mu": 0.02,
+      "lo": 0.003,
+      "hi": 0.04,
+      "source": "OECD, Supply Chain Resilience Review: Navigating Risks",
+      "url": "https://www.oecd.org/en/publications/2025/06/oecd-supply-chain-resilience-review_9930d256.html",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "OECD identifies concentrated dependencies but also diversification, adaptability and substitution as resilience mechanisms. The moderate conditional class concerns pressure on continuity of essential energy, food, medicine and inputs. It does not extrapolate tariff coverage into shortage growth. Its range is a directly chosen scenario prior; additional realized disruptions from other threats enter separately through the cascade.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'moderate' class: lo/mu/hi=0.003/0.02/0.04. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.04; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.04,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    },
+    "cyber.growth_rate": {
+      "mu": 0.02,
+      "lo": 0.003,
+      "hi": 0.04,
+      "source": "UK AISI, How fast is autonomous AI cyber capability advancing?",
+      "url": "https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "note": "AISI documents rapid autonomous cyber capability gains but explicitly limits inference to defended real-world systems and notes benefits for defenders. The moderate conditional class represents pressure on digital continuity, not benchmark growth or FBI complaint CAGR. Backups, defense and restoration constrain transfer. The numerical range is a scenario prior for autonomous pressure.",
+      "growth_kind": "conditional_autonomous_functional_pressure_growth",
+      "risk_conversion": 1,
+      "effective_growth_calibrated": true,
+      "calibration_note": "Direct effective annual functional-pressure range selected from shared 'moderate' class: lo/mu/hi=0.003/0.02/0.04. No raw-indicator CAGR, log1p transform or legacy multiplier generates these values. Preserve cap=0.045; do not reconvert. This is a continued-pressure scenario with positive-only sampling and no endogenous recovery, not an observed harm or event-probability trend.",
+      "threat_specific_cap": 0.045,
+      "do_not_reconvert_mu_lo_hi": true,
+      "capped_hi": false
+    }
+  },
+  "growthrationale": {
+    "authoritarian": {
+      "intensity_class": "slow",
+      "direct_effective_range": {
+        "lo": 0.001,
+        "mu": 0.01,
+        "hi": 0.025
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Long-run autocratization and expression restrictions support persistent institutional pressure, but a population share is bounded and changes discontinuously with regime classification. The slow class represents continuation of institutional lock-in, not annual growth in autocracy exposure.",
+      "counterevidence_and_limits": "Democratization, institutional adaptation and country heterogeneity prevent identifying a universal net trend.",
+      "retired_indicator_interpretation": "The 2005-2025 CAGR of population living in autocracies is historical contextual evidence only.",
+      "cap_retained": 0.04,
+      "do_not_reconvert": true,
+      "source_url": "https://www.v-dem.net/documents/75/V-Dem_Institute_Democracy_Report_2026_lowres.pdf"
+    },
+    "debt": {
+      "intensity_class": "slow",
+      "direct_effective_range": {
+        "lo": 0.001,
+        "mu": 0.01,
+        "hi": 0.025
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Refinancing exposure and debt-service trade-offs support slow conditional pressure, while growing nominal output, restructuring and functioning markets limit a stronger baseline. The pressure variable concerns capacity to finance essential functions, not public-debt volume.",
+      "counterevidence_and_limits": "Debt ratios can fall, debt can fund productive capacity, and maturity/currency/institutional conditions strongly alter consequences.",
+      "retired_indicator_interpretation": "World government debt moving from 92.0 to 93.9 percent of GDP is not a calibrated default or functional-failure growth rate.",
+      "cap_retained": 0.03,
+      "do_not_reconvert": true,
+      "source_url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2026/april/english/text.pdf"
+    },
+    "displacement": {
+      "intensity_class": "near_flat",
+      "direct_effective_range": {
+        "lo": 0.0005,
+        "mu": 0.003,
+        "hi": 0.015
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "The decline in displacement stock does not establish disappearance of unmet service needs, while protracted displacement supports persistence rather than a clear rising baseline. Near-flat is the least intensifying shared class under the release's explicitly positive, continued-pressure scenario.",
+      "counterevidence_and_limits": "Observed stock declines, successful returns and inclusion can lower pressure. This release cannot represent such recovery endogenously; no positive empirical trend is asserted.",
+      "retired_indicator_interpretation": "The observed decline must remain in evidence. Replacing it with zero and then a positive compatibility floor did not identify functional-pressure dynamics.",
+      "cap_retained": 0.04,
+      "do_not_reconvert": true,
+      "source_url": "https://southafrica.un.org/en/317906-unhcr-marks-world-refugee-message-solidarity-and-solutions-refugees"
+    },
+    "economic": {
+      "intensity_class": "slow",
+      "direct_effective_range": {
+        "lo": 0.001,
+        "mu": 0.01,
+        "hi": 0.025
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "IMF assessments identify amplification vulnerabilities alongside continuing growth and orderly adjustment. A slow autonomous-pressure class preserves this mixed evidence without treating positive GDP growth or every financial-market correction as systemic deterioration.",
+      "counterevidence_and_limits": "Stabilization, market adaptation and continuing output growth can improve capacity; the direction and persistence of net fragility are not measured.",
+      "retired_indicator_interpretation": "The previous raw fragility rate and damping factor were model assumptions, not independent observations.",
+      "cap_retained": 0.03,
+      "do_not_reconvert": true,
+      "source_url": "https://www.imf.org/en/publications/weo/issues/2026/07/08/world-economic-outlook-update-july-2026?cid=ca-com-homepage-WEOET2026004"
+    },
+    "epistemic": {
+      "intensity_class": "moderate",
+      "direct_effective_range": {
+        "lo": 0.003,
+        "mu": 0.02,
+        "hi": 0.04
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Information manipulation and erosion of trusted verification can impair coordinated responses, supporting a moderate conditional pressure class. Survey trust and content volumes are not functional-output measures; independent information channels and adaptation constrain transfer.",
+      "counterevidence_and_limits": "Effects are heterogeneous, and reliable institutions, verification and improved literacy can reduce functional impairment.",
+      "retired_indicator_interpretation": "A change in the fraction trusting news is neither a misinformation-growth rate nor annual growth in coordination failure.",
+      "cap_retained": 0.04,
+      "do_not_reconvert": true,
+      "source_url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary"
+    },
+    "fragmentation_gov": {
+      "intensity_class": "moderate",
+      "direct_effective_range": {
+        "lo": 0.003,
+        "mu": 0.02,
+        "hi": 0.04
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Persistent coordination gaps and implementation difficulties justify a moderate class conditional on their continuation. Because governance fragmentation is a regime process in the retained engine, this g is appropriate to the autonomous pressure/susceptibility path, not a newly inferred intrinsic transition-arrival probability.",
+      "counterevidence_and_limits": "Vetoes declined and agreements and resolutions continued; such successes refute any universal observed increase in institutional failure.",
+      "retired_indicator_interpretation": "Annual veto counts and trade-policy coverage are contextual institutional indicators, not the latent pressure-growth variable.",
+      "cap_retained": 0.04,
+      "do_not_reconvert": true,
+      "source_url": "https://main.un.org/securitycouncil/en/content/highlights-2025"
+    },
+    "geopolitics": {
+      "intensity_class": "moderate",
+      "direct_effective_range": {
+        "lo": 0.003,
+        "mu": 0.02,
+        "hi": 0.04
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Conflict diffusion, confrontation and weakened containment motivate moderate conditional autonomous escalation pressure. Military budgets and conflict counts provide context only; resources can improve deterrence as well as increase destructive capability.",
+      "counterevidence_and_limits": "De-escalation, deterrence and slower spending growth prevent interpreting expenditure as a monotonic measure of risk.",
+      "retired_indicator_interpretation": "The 2.9 percent real military-expenditure increase is not annual growth in conflict probability or essential-service disruption.",
+      "cap_retained": 0.045,
+      "do_not_reconvert": true,
+      "source_url": "https://www.sipri.org/media/press-release/2026/global-military-spending-rise-continues-european-and-asian-expenditures-surge"
+    },
+    "nuclear": {
+      "intensity_class": "slow",
+      "direct_effective_range": {
+        "lo": 0.001,
+        "mu": 0.01,
+        "hi": 0.025
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Modernization, operational readiness and weakened arms-control transparency support continuing pressure on containment. Neither stockpile estimates nor their reassessment identify risk growth, so the slow class is selected directly with a wide range rather than calculated from inventory change.",
+      "counterevidence_and_limits": "Deterrence, crisis management and uncertain capability-to-use relationships can stabilize or reduce actual risk; such reductions are not endogenous here.",
+      "retired_indicator_interpretation": "The 9745/9614 estimate ratio is removed from growth calibration. SIPRI attributes much of the Russian estimate change to reassessment, not identified physical production.",
+      "cap_retained": 0.035,
+      "do_not_reconvert": true,
+      "source_url": "https://www.sipri.org/sites/default/files/YB26%2008%20World%20Nuclear%20Forces.pdf"
+    },
+    "supply": {
+      "intensity_class": "moderate",
+      "direct_effective_range": {
+        "lo": 0.003,
+        "mu": 0.02,
+        "hi": 0.04
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "Concentrated dependencies and logistical bottlenecks support moderate conditional pressure. OECD evidence also emphasizes adaptability and broadly diversified trade, so a trade-restriction spike must not mechanically force the highest growth cap.",
+      "counterevidence_and_limits": "Diversification, trade facilitation, inventory and substitution can preserve service delivery despite trade-policy changes.",
+      "retired_indicator_interpretation": "The 19.7/12.6 trade-policy coverage ratio does not measure growth in physical shortages; it no longer determines g.",
+      "cap_retained": 0.04,
+      "do_not_reconvert": true,
+      "source_url": "https://www.oecd.org/en/publications/2025/06/oecd-supply-chain-resilience-review_9930d256.html"
+    },
+    "cyber": {
+      "intensity_class": "moderate",
+      "direct_effective_range": {
+        "lo": 0.003,
+        "mu": 0.02,
+        "hi": 0.04
+      },
+      "raw_basis": "conditional_anchored_model_judgment",
+      "evidence_for_class": "AISI documents rapid autonomous cyber capability progress with uncertain transfer to defended systems. A moderate, not benchmark-CAGR, class accounts for attacker pressure and increased digital dependence while acknowledging defense improvements.",
+      "counterevidence_and_limits": "AI also strengthens defenders, benchmark coverage is narrow, and redundancy and rapid restoration can prevent incidents becoming essential-service failure.",
+      "retired_indicator_interpretation": "The CAGR of FBI ransomware complaints is reporting-context evidence, not global incident incidence or growth in infrastructure-failure risk.",
+      "cap_retained": 0.045,
+      "do_not_reconvert": true,
+      "source_url": "https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing"
+    }
+  },
+  "functionaldefinition": {
+    "authoritarian": {
+      "functional_failure": "Sustained suppression of accountable decision-making and corrective information prevents affected societies from maintaining equitable essential-service access and coordinating recovery. Autocratic classification alone is not functional failure.",
+      "service_groups": [
+        "coordination_exchange"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "debt": {
+      "functional_failure": "Debt-service or refinancing disruption persistently constrains essential public services, working capital and payments across linked economies after feasible restructuring and substitution are insufficient. A high debt-to-GDP ratio alone is not failure.",
+      "service_groups": [
+        "coordination_exchange",
+        "health_care",
+        "critical_infrastructure"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "displacement": {
+      "functional_failure": "Protection, shelter, food, water, health care and livelihood systems cannot provide sustained basic access to forcibly displaced people and affected communities after feasible inclusion and assistance. People seeking safety are not themselves the threat.",
+      "service_groups": [
+        "food_water",
+        "health_care",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "economic": {
+      "functional_failure": "Interacting payment, credit, employment and production disruptions persist across major connected economies such that normal substitution and stabilization cannot maintain essential goods and services. A recession or asset-price correction alone is not this boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure",
+        "food_water",
+        "health_care"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "epistemic": {
+      "functional_failure": "Reliable warning, verification and trusted coordination channels become inadequate for sustained collective response to essential-service threats. Low trust, disagreement or misinformation volume alone does not establish functional failure.",
+      "service_groups": [
+        "coordination_exchange"
+      ],
+      "criticality_tier": 1,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "fragmentation_gov": {
+      "functional_failure": "Cross-border institutions and implementation arrangements cannot sustain coordinated protection of essential functions during interacting crises, and feasible national or issue-specific substitutes are insufficient. Vetoes and policy disagreement alone do not satisfy this boundary.",
+      "service_groups": [
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "geopolitics": {
+      "functional_failure": "Escalating interstate confrontation persistently disrupts essential supply, infrastructure and coordinated crisis response across connected regions beyond available rerouting and de-escalation capacity. Military expenditure increases alone are not the failure boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure",
+        "food_water"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "nuclear": {
+      "functional_failure": "A severe nuclear-conflict pathway produces sustained, widespread loss of food, health care, physical safety and infrastructure beyond feasible substitution or timely recovery. This boundary is not an increase in warhead inventories or any isolated nuclear-related incident.",
+      "service_groups": [
+        "food_water",
+        "health_care",
+        "critical_infrastructure",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "supply": {
+      "functional_failure": "Essential energy, food, medicine or critical production inputs remain unavailable across connected regions after feasible inventory drawdown, rerouting and substitution, impairing multiple essential services. Tariffs or nominal trade changes alone are not functional failure.",
+      "service_groups": [
+        "critical_infrastructure",
+        "food_water",
+        "health_care",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "cyber": {
+      "functional_failure": "Sustained, coordinated or common-mode loss of digital control, communications or payments prevents essential-service delivery across connected regions beyond practical backups and timely restoration. Complaint counts, data breaches or monetary losses alone do not establish this boundary.",
+      "service_groups": [
+        "critical_infrastructure",
+        "health_care",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "ai": {
+      "functional_failure": "Loss of effective human control or correlated deployment failures persistently impair multiple essential decision, communication or infrastructure functions beyond practical human fallback. Benchmark performance or AI adoption alone is not this boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "amr": {
+      "functional_failure": "Loss of effective infection prevention and treatment undermines routine, emergency and invasive care across linked health systems, with inadequate therapeutic substitutes and persistent excess burden. Selected resistance prevalence alone is not the boundary.",
+      "service_groups": [
+        "health_care",
+        "food_water"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "autonomousw": {
+      "functional_failure": "Inadequately controlled autonomous targeting or decision support causes sustained escalation and civilian protection failures that impair essential functions beyond practical human override. Deployment counts or any use of autonomy do not establish this boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "bioengineered": {
+      "functional_failure": "A severe engineered biological event overwhelms prevention, treatment and continuity arrangements across linked populations, causing persistent disruption of health care and other essential services beyond feasible containment. Research output or technical capability alone is not failure.",
+      "service_groups": [
+        "health_care",
+        "food_water",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "pandemics": {
+      "functional_failure": "Widespread epidemic disease exceeds treatment, workforce and continuity capacity across connected regions for a sustained period despite feasible containment, impairing health care and essential services. Detection of an outbreak alone is not this boundary.",
+      "service_groups": [
+        "health_care",
+        "coordination_exchange",
+        "food_water"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    },
+    "space": {
+      "functional_failure": "Sustained loss of essential satellite navigation, timing, communication or observation cannot be covered by terrestrial or orbital substitutes, impairing linked infrastructure and coordination. Growth in tracked objects or loss of isolated satellites alone is not this boundary.",
+      "service_groups": [
+        "critical_infrastructure",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true
+    }
+  },
+  "growth_class_recommendations": {
+    "authoritarian": {
+      "intensity_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Long-run autocratization and expression restrictions support persistent institutional pressure, but a population share is bounded and changes discontinuously with regime classification. The slow class represents continuation of institutional lock-in, not annual growth in autocracy exposure.",
+      "counterevidence_and_limits": "Democratization, institutional adaptation and country heterogeneity prevent identifying a universal net trend.",
+      "functional_failure": "Sustained suppression of accountable decision-making and corrective information prevents affected societies from maintaining equitable essential-service access and coordinating recovery. Autocratic classification alone is not functional failure.",
+      "service_groups": [
+        "coordination_exchange"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://www.v-dem.net/documents/75/V-Dem_Institute_Democracy_Report_2026_lowres.pdf"
+    },
+    "debt": {
+      "intensity_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.03,
+      "capped_hi": false,
+      "reason": "Refinancing exposure and debt-service trade-offs support slow conditional pressure, while growing nominal output, restructuring and functioning markets limit a stronger baseline. The pressure variable concerns capacity to finance essential functions, not public-debt volume.",
+      "counterevidence_and_limits": "Debt ratios can fall, debt can fund productive capacity, and maturity/currency/institutional conditions strongly alter consequences.",
+      "functional_failure": "Debt-service or refinancing disruption persistently constrains essential public services, working capital and payments across linked economies after feasible restructuring and substitution are insufficient. A high debt-to-GDP ratio alone is not failure.",
+      "service_groups": [
+        "coordination_exchange",
+        "health_care",
+        "critical_infrastructure"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2026/april/english/text.pdf"
+    },
+    "displacement": {
+      "intensity_class": "near_flat",
+      "lo": 0.0005,
+      "mu": 0.003,
+      "hi": 0.015,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "The decline in displacement stock does not establish disappearance of unmet service needs, while protracted displacement supports persistence rather than a clear rising baseline. Near-flat is the least intensifying shared class under the release's explicitly positive, continued-pressure scenario.",
+      "counterevidence_and_limits": "Observed stock declines, successful returns and inclusion can lower pressure. This release cannot represent such recovery endogenously; no positive empirical trend is asserted.",
+      "functional_failure": "Protection, shelter, food, water, health care and livelihood systems cannot provide sustained basic access to forcibly displaced people and affected communities after feasible inclusion and assistance. People seeking safety are not themselves the threat.",
+      "service_groups": [
+        "food_water",
+        "health_care",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://southafrica.un.org/en/317906-unhcr-marks-world-refugee-message-solidarity-and-solutions-refugees"
+    },
+    "economic": {
+      "intensity_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.03,
+      "capped_hi": false,
+      "reason": "IMF assessments identify amplification vulnerabilities alongside continuing growth and orderly adjustment. A slow autonomous-pressure class preserves this mixed evidence without treating positive GDP growth or every financial-market correction as systemic deterioration.",
+      "counterevidence_and_limits": "Stabilization, market adaptation and continuing output growth can improve capacity; the direction and persistence of net fragility are not measured.",
+      "functional_failure": "Interacting payment, credit, employment and production disruptions persist across major connected economies such that normal substitution and stabilization cannot maintain essential goods and services. A recession or asset-price correction alone is not this boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure",
+        "food_water",
+        "health_care"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "Use autonomous pressure/cascade susceptibility; retained intrinsic regime arrival is separately specified and is not empirically calibrated by g.",
+      "source_ids": [],
+      "source_url": "https://www.imf.org/en/publications/weo/issues/2026/07/08/world-economic-outlook-update-july-2026?cid=ca-com-homepage-WEOET2026004"
+    },
+    "epistemic": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Information manipulation and erosion of trusted verification can impair coordinated responses, supporting a moderate conditional pressure class. Survey trust and content volumes are not functional-output measures; independent information channels and adaptation constrain transfer.",
+      "counterevidence_and_limits": "Effects are heterogeneous, and reliable institutions, verification and improved literacy can reduce functional impairment.",
+      "functional_failure": "Reliable warning, verification and trusted coordination channels become inadequate for sustained collective response to essential-service threats. Low trust, disagreement or misinformation volume alone does not establish functional failure.",
+      "service_groups": [
+        "coordination_exchange"
+      ],
+      "criticality_tier": 1,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary"
+    },
+    "fragmentation_gov": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Persistent coordination gaps and implementation difficulties justify a moderate class conditional on their continuation. Because governance fragmentation is a regime process in the retained engine, this g is appropriate to the autonomous pressure/susceptibility path, not a newly inferred intrinsic transition-arrival probability.",
+      "counterevidence_and_limits": "Vetoes declined and agreements and resolutions continued; such successes refute any universal observed increase in institutional failure.",
+      "functional_failure": "Cross-border institutions and implementation arrangements cannot sustain coordinated protection of essential functions during interacting crises, and feasible national or issue-specific substitutes are insufficient. Vetoes and policy disagreement alone do not satisfy this boundary.",
+      "service_groups": [
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "Use autonomous pressure/cascade susceptibility; retained intrinsic regime arrival is separately specified and is not empirically calibrated by g.",
+      "source_ids": [],
+      "source_url": "https://main.un.org/securitycouncil/en/content/highlights-2025"
+    },
+    "geopolitics": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.045,
+      "capped_hi": false,
+      "reason": "Conflict diffusion, confrontation and weakened containment motivate moderate conditional autonomous escalation pressure. Military budgets and conflict counts provide context only; resources can improve deterrence as well as increase destructive capability.",
+      "counterevidence_and_limits": "De-escalation, deterrence and slower spending growth prevent interpreting expenditure as a monotonic measure of risk.",
+      "functional_failure": "Escalating interstate confrontation persistently disrupts essential supply, infrastructure and coordinated crisis response across connected regions beyond available rerouting and de-escalation capacity. Military expenditure increases alone are not the failure boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure",
+        "food_water"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://www.sipri.org/media/press-release/2026/global-military-spending-rise-continues-european-and-asian-expenditures-surge"
+    },
+    "nuclear": {
+      "intensity_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.035,
+      "capped_hi": false,
+      "reason": "Modernization, operational readiness and weakened arms-control transparency support continuing pressure on containment. Neither stockpile estimates nor their reassessment identify risk growth, so the slow class is selected directly with a wide range rather than calculated from inventory change.",
+      "counterevidence_and_limits": "Deterrence, crisis management and uncertain capability-to-use relationships can stabilize or reduce actual risk; such reductions are not endogenous here.",
+      "functional_failure": "A severe nuclear-conflict pathway produces sustained, widespread loss of food, health care, physical safety and infrastructure beyond feasible substitution or timely recovery. This boundary is not an increase in warhead inventories or any isolated nuclear-related incident.",
+      "service_groups": [
+        "food_water",
+        "health_care",
+        "critical_infrastructure",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://www.sipri.org/sites/default/files/YB26%2008%20World%20Nuclear%20Forces.pdf"
+    },
+    "supply": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Concentrated dependencies and logistical bottlenecks support moderate conditional pressure. OECD evidence also emphasizes adaptability and broadly diversified trade, so a trade-restriction spike must not mechanically force the highest growth cap.",
+      "counterevidence_and_limits": "Diversification, trade facilitation, inventory and substitution can preserve service delivery despite trade-policy changes.",
+      "functional_failure": "Essential energy, food, medicine or critical production inputs remain unavailable across connected regions after feasible inventory drawdown, rerouting and substitution, impairing multiple essential services. Tariffs or nominal trade changes alone are not functional failure.",
+      "service_groups": [
+        "critical_infrastructure",
+        "food_water",
+        "health_care",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://www.oecd.org/en/publications/2025/06/oecd-supply-chain-resilience-review_9930d256.html"
+    },
+    "cyber": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.045,
+      "capped_hi": false,
+      "reason": "AISI documents rapid autonomous cyber capability progress with uncertain transfer to defended systems. A moderate, not benchmark-CAGR, class accounts for attacker pressure and increased digital dependence while acknowledging defense improvements.",
+      "counterevidence_and_limits": "AI also strengthens defenders, benchmark coverage is narrow, and redundancy and rapid restoration can prevent incidents becoming essential-service failure.",
+      "functional_failure": "Sustained, coordinated or common-mode loss of digital control, communications or payments prevents essential-service delivery across connected regions beyond practical backups and timely restoration. Complaint counts, data breaches or monetary losses alone do not establish this boundary.",
+      "service_groups": [
+        "critical_infrastructure",
+        "health_care",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [],
+      "source_url": "https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing"
+    },
+    "ai": {
+      "intensity_class": "rapid",
+      "lo": 0.006,
+      "mu": 0.03,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": true,
+      "reason": "Rapid demonstrated capability change supports the rapid class, but incomplete real-world transfer and dual-use defensive gains require near-flat lower pressure and cap-limited upper pressure. It is not benchmark CAGR, an AGI date, or intrinsic regime-arrival calibration.",
+      "counterevidence_and_limits": "Control, human intervention, deployment limits and defense improvements can reduce actual pressure. A positive conditional scenario excludes endogenous recovery.",
+      "functional_failure": "Loss of effective human control or correlated deployment failures persistently impair multiple essential decision, communication or infrastructure functions beyond practical human fallback. Benchmark performance or AI adoption alone is not this boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "Use growth in the autonomous pressure/cascade-susceptibility path. Do not reinterpret it as the static regime model's intrinsic annual arrival probability.",
+      "source_ids": [
+        "tech_aisi_trends_2026",
+        "tech_aisi_incident_2026"
+      ],
+      "source_url": "https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing"
+    },
+    "amr": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.035,
+      "threat_specific_cap": 0.035,
+      "capped_hi": true,
+      "reason": "Persistent selection pressures, heterogeneous increasing resistance and limited replacements support moderate conditional pressure on treatment capacity. The class is not the average growth of surveillance isolates, resistance prevalence or deaths.",
+      "counterevidence_and_limits": "Prevention, appropriate use, access improvements and new treatment options can lower actual pressure.",
+      "functional_failure": "Loss of effective infection prevention and treatment undermines routine, emergency and invasive care across linked health systems, with inadequate therapeutic substitutes and persistent excess burden. Selected resistance prevalence alone is not the boundary.",
+      "service_groups": [
+        "health_care",
+        "food_water"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [
+        "tech_who_amr_2026",
+        "tech_who_amr_2025"
+      ],
+      "source_url": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance"
+    },
+    "autonomousw": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Military AI diffusion and control gaps justify moderate conditional pressure. Evidence does not identify a global deployment rate or functional-harm growth; transfer from capability to escalation is too uncertain to select rapid solely from technology uptake.",
+      "counterevidence_and_limits": "Human control, restrictive deployment and emerging governance can contain pressure.",
+      "functional_failure": "Inadequately controlled autonomous targeting or decision support causes sustained escalation and civilian protection failures that impair essential functions beyond practical human override. Deployment counts or any use of autonomy do not establish this boundary.",
+      "service_groups": [
+        "coordination_exchange",
+        "critical_infrastructure"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "Use growth in the autonomous pressure/cascade-susceptibility path, not to relabel a measured intrinsic regime-arrival rate.",
+      "source_ids": [
+        "tech_sipri_aws_2025"
+      ],
+      "source_url": "https://www.sipri.org/publications/2025/other-publications/autonomous-weapon-systems-and-ai-enabled-decision-support-systems-military-targeting-comparison-and"
+    },
+    "bioengineered": {
+      "intensity_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Dual-use diffusion and lifecycle oversight gaps justify moderate conditional pressure, while operational transfer, prevention and event occurrence are too uncertain for a capability-count CAGR or a claim of rising observed event frequency.",
+      "counterevidence_and_limits": "Responsible research, screening, oversight and public-health capability can constrain consequences and occurrence.",
+      "functional_failure": "A severe engineered biological event overwhelms prevention, treatment and continuity arrangements across linked populations, causing persistent disruption of health care and other essential services beyond feasible containment. Research output or technical capability alone is not failure.",
+      "service_groups": [
+        "health_care",
+        "food_water",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [
+        "tech_who_biosecurity_2024",
+        "tech_who_dualuse_2022"
+      ],
+      "source_url": "https://www.who.int/publications/i/item/9789240095113"
+    },
+    "pandemics": {
+      "intensity_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.05,
+      "capped_hi": false,
+      "reason": "Persistent emergence and exposure pathways support slow conditional pressure, but WHO documents faster containment and preparedness gains as well as fragility. These competing facts do not justify estimating a universal pandemic-frequency growth rate.",
+      "counterevidence_and_limits": "Improved surveillance, vaccination, response and containment can lower actual pressure and are not represented as endogenous recovery in this release.",
+      "functional_failure": "Widespread epidemic disease exceeds treatment, workforce and continuity capacity across connected regions for a sustained period despite feasible containment, impairing health care and essential services. Detection of an outbreak alone is not this boundary.",
+      "service_groups": [
+        "health_care",
+        "coordination_exchange",
+        "food_water"
+      ],
+      "criticality_tier": 3,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [
+        "tech_who_preparedness_2026",
+        "tech_who_covid_mortality_2022"
+      ],
+      "source_url": "https://www.who.int/news/item/02-02-2026-six-years-after-covid-19-s-global-alarm-is-the-world-better-prepared-for-the-next-pandemic"
+    },
+    "space": {
+      "intensity_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "reason": "Congestion and long-lived debris support persistent pressure, but replacement, redundancy and improved mitigation restrict translation to service loss. The slow class is selected directly rather than from an approximate inventory CAGR.",
+      "counterevidence_and_limits": "Mitigation compliance, controlled re-entry, backup systems and alternative architectures can reduce functional vulnerability.",
+      "functional_failure": "Sustained loss of essential satellite navigation, timing, communication or observation cannot be covered by terrestrial or orbital substitutes, impairing linked infrastructure and coordination. Growth in tracked objects or loss of isolated satellites alone is not this boundary.",
+      "service_groups": [
+        "critical_infrastructure",
+        "coordination_exchange"
+      ],
+      "criticality_tier": 2,
+      "criticality_kind": "conditional_functional_consequence_judgment",
+      "not_probability": true,
+      "not_current_failure_claim": true,
+      "regime_growth_role": "A pressure-trend assumption; occurrence hazards, functional losses and cascade additions are distinct quantities.",
+      "source_ids": [
+        "tech_esa_stats_2026",
+        "tech_esa_2025"
+      ],
+      "source_url": "https://sdup.esoc.esa.int/discosweb/statistics/"
+    }
+  },
+  "primary_sources_reopened": [
+    {
+      "id": "unhcr2026",
+      "url": "https://southafrica.un.org/en/317906-unhcr-marks-world-refugee-message-solidarity-and-solutions-refugees",
+      "published": "2026-06-20",
+      "accessed": "2026-09-09",
+      "fact_location": "Paragraphs on essential-service inclusion, historically high displacement and protracted exile.",
+      "finding": "A stock decline does not establish restoration of protection, services or livelihoods.",
+      "verification_method": "web_open"
+    },
+    {
+      "id": "sipri_nuclear_forces_chapter_2026",
+      "url": "https://www.sipri.org/sites/default/files/YB26%2008%20World%20Nuclear%20Forces.pdf",
+      "published": "2026",
+      "accessed": "2026-09-09",
+      "fact_location": "Introduction pp.251-253; table 8A.1 footnote j, p.279.",
+      "finding": "Modernization and loss of arms-control transparency are relevant mechanisms; inventory estimate reassessment is not identified physical growth or war-probability growth.",
+      "verification_method": "web_open"
+    },
+    {
+      "id": "tech_aisi_trends_2026",
+      "url": "https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing",
+      "published": "2026-05-13",
+      "accessed": "2026-09-09",
+      "fact_location": "Cyber Time Horizons Results and Implications.",
+      "finding": "Rapid benchmark progress has uncertain transfer to defended systems; AI can improve attackers and defenders.",
+      "verification_method": "web_open"
+    },
+    {
+      "id": "oecdsupply",
+      "url": "https://www.oecd.org/en/publications/2025/06/oecd-supply-chain-resilience-review_9930d256.html",
+      "published": "2025-06-02",
+      "accessed": "2026-09-09",
+      "fact_location": "Most global trade remains diversified; agility, adaptability and alignment; essential transport, logistics, financial and digital services.",
+      "finding": "Concentration matters, but diversification, substitution and adaptability constrain translation from policy or trade changes to functional loss.",
+      "verification_method": "web_open"
+    }
+  ],
+  "research_limits": [
+    "Other named evidence is reused from the previously verified 1.8.0 source registry; no broad new source search was performed.",
+    "None of the cited sources supplies the shared growth-class numbers or criticality tiers.",
+    "Signed recovery, separate empirical event-hazard calibration and aggregation overlap treatment remain methodological limitations for the integrating model."
+  ]
+}

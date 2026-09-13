@@ -3,8 +3,8 @@
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
-const MODEL_VERSION = 'Apocalypse Clock v1.2.7';
-const PRIMARY_DATASET_NAME = 'data_v1_7_1metadata_revision.json';
+const MODEL_VERSION = 'Apocalypse Clock v1.2.8';
+const PRIMARY_DATASET_NAME = 'data_v1_9_0_functional.json';
 const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
 const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
 
@@ -66,6 +66,7 @@ function quantile(sorted, q) {
 
 const DEFAULT_MC_SEED = 'AC-1.2.6-2026';
 const DEFAULT_MC_SEED_HASH = 0x27db295a;
+const RNG_VERSION = 'mulberry32-v1';
 let _mcSeedString = DEFAULT_MC_SEED;
 let _mcRng = null;
 
@@ -94,6 +95,25 @@ function makeSeededRandom(seed) {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function createRngContext(seed) {
+  const normalizedSeed = normalizeMonteCarloSeed(seed);
+  const next = makeSeededRandom(normalizedSeed);
+  const random = () => next();
+  const gaussian = () => {
+    let u = 0, v = 0;
+    while (!u) u = random();
+    while (!v) v = random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+  return Object.freeze({
+    seed: normalizedSeed,
+    version: RNG_VERSION,
+    random01: random,
+    randn: gaussian,
+    normalSample: (mean, sd) => mean + gaussian() * sd,
+  });
 }
 
 function resetMonteCarloSeed(seed) {
@@ -409,7 +429,7 @@ function computeHorizon(priority, growthRate, threshold) {
   if (priority >= threshold) return NOW;        // already critical
   if (growthRate <= 0) return YE + 1;           // static no crossing
   const t = NOW + Math.log(threshold / priority) / Math.log(1 + growthRate);
-  return isFinite(t) ? Math.round(t) : YE + 1;
+  return isFinite(t) ? Math.min(YE + 1, Math.ceil(t)) : YE + 1;
 }
 
 const SC = {
@@ -455,21 +475,6 @@ const SC = {
   },
 };
 
-
-const SCENARIO_BRIEFS = {
-  baseline: 'Neutral reference case. No extra cooperation dividend or extra polycrisis amplification is imposed beyond the active dataset and current control settings.',
-  coordination: "Assumes stronger cooperation, somewhat lower cross-domain stress, and lower uncertainty. It is the model's coordination-improves-risk-management scenario.",
-  cascade: "Assumes simultaneous intensification across multiple domains, wider uncertainty, and stronger cross-threat amplification. It is the model's polycrisis stress-test scenario.",
-  techaccel: 'Tilts risk growth and domain multipliers toward technological drivers such as AI, cyber systems, autonomous weapons, and epistemic disruption.',
-  fragmentation: 'Assumes weaker coordination, more geopolitical strain, and more civilizational stress transmission through conflict, governance breakdown, and displacement.'
-};
-
-function renderScenarioBrief(scKey) {
-  const el = document.getElementById('scenarioBrief');
-  if (!el) return;
-  const sc = SC[scKey] || SC.baseline;
-  el.innerHTML = `<strong>${escapeHtml(sc.label)}:</strong> ${escapeHtml(SCENARIO_BRIEFS[scKey] || SCENARIO_BRIEFS.baseline)}`;
-}
 
 function buildProfileParams(profileKey) {
   const key = WEIGHT_PROFILES[profileKey] ? profileKey : 'expert';
@@ -555,7 +560,7 @@ function computeWeightProfileRobustness(scKey, currentEnriched) {
   };
 }
 
-/* MCDA inputs use 1-5 ordinal ranges; growth_rate and threshold remain calibrated model fields. */
+/* MCDA inputs use 1-5 ordinal ranges; growth_rate and threshold remain judgment-based model fields. */
 const PARAM_FIELDS = ['scale','urgency','acceleration','interdependence','irreversibility','gov_failure','growth_rate','threshold'];
 const ORD_RANGE = { strong:0.40, moderate:0.65, weak:0.95 };
 const GROWTH_RANGE = { strong:0.22, moderate:0.38, weak:0.60 };
@@ -579,7 +584,7 @@ function currentDatasetVersion() {
 let ACTIVE_SOURCE_DATA = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
 let CUSTOM_SOURCE_DATA = null;
 let ACTIVE_EVIDENCE_DATA = null;
-let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data_v1_7_1metadata_revision.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget as the default primary source.', uploaded:false };
+let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data_v1_9_0_functional.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data_v1_9_0_functional.json parameter map embedded in widget as the default primary source.', uploaded:false };
 let ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
 const cleanSourceText = s => String(s ?? '')
   .replace(/\s*\[(?:cite|web)\s*:[^\]]+\]/gi, '')
@@ -623,6 +628,7 @@ function rangeMetaOf(x) {
     risk_conversion: Number.isFinite(meta.risk_conversion) ? meta.risk_conversion : null,
     raw_indicator_growth: Number.isFinite(meta.raw_indicator_growth) ? meta.raw_indicator_growth : null,
     effective_growth_calibrated: meta.effective_growth_calibrated === true,
+    threat_specific_cap: Number.isFinite(meta.threat_specific_cap) ? Math.max(0, meta.threat_specific_cap) : null,
     calibration_note: typeof meta.calibration_note === 'string' ? meta.calibration_note : '',
   };
 }
@@ -692,8 +698,33 @@ function normalizeSourceEntry(entry, fallbackSource, fallbackStrength) {
     normalized.effective_growth_calibrated = true;
   }
 
+  if (Number.isFinite(entry.threat_specific_cap)) {
+    normalized.threat_specific_cap = Math.max(0, entry.threat_specific_cap);
+  }
+
   if (typeof entry.calibration_note === 'string' && entry.calibration_note.trim()) {
     normalized.calibration_note = cleanSourceText(entry.calibration_note);
+  }
+
+  if (entry.functional_weight != null) {
+    if (!Number.isFinite(entry.functional_weight) || entry.functional_weight < 0) throw new Error('Invalid functional weight.');
+    normalized.functional_weight = entry.functional_weight;
+  }
+  if (entry.critical_services != null) {
+    if (!Array.isArray(entry.critical_services) || !entry.critical_services.every(x => typeof x === 'string' && /^[a-z_]+$/.test(x))) throw new Error('Invalid critical services.');
+    normalized.critical_services = [...new Set(entry.critical_services)];
+  }
+  if (entry.dependency_weights != null) {
+    const edges = entry.dependency_weights;
+    if (!edges || typeof edges !== 'object' || Array.isArray(edges) || !Object.entries(edges).every(([id, weight]) => /^[a-z0-9_]+$/.test(id) && Number.isFinite(weight) && weight >= 0) || Object.values(edges).reduce((s, v) => s + v, 0) > 1 + 1e-10) throw new Error('Invalid fixed dependency weights.');
+    normalized.dependency_weights = { ...edges };
+  }
+  if (typeof entry.functional_failure === 'string') normalized.functional_failure = cleanSourceText(entry.functional_failure);
+  if (typeof entry.functional_overlap_group === 'string' && /^[a-z0-9_]+$/.test(entry.functional_overlap_group)) normalized.functional_overlap_group = entry.functional_overlap_group;
+  if (typeof entry.functional_inducible === 'boolean') normalized.functional_inducible = entry.functional_inducible;
+  if (entry.dependency_lags != null) {
+    if (!entry.dependency_lags || typeof entry.dependency_lags !== 'object' || Array.isArray(entry.dependency_lags) || !Object.values(entry.dependency_lags).every(x => Number.isInteger(x) && x >= 0 && x <= 100)) throw new Error('Invalid dependency lag.');
+    normalized.dependency_lags = { ...entry.dependency_lags };
   }
 
   return normalized;
@@ -719,8 +750,19 @@ function sourceBackedRange(spec, field) {
 }
 
 function makeThreat(spec) {
+  const threshold = sourceBackedRange(spec, 'threshold');
+  const fallback = BUNDLED_SOURCE_DATA._meta?.functional_model?.nodes?.[spec.id] || {};
+  const dependencyWeights = threshold.dependency_weights || fallback.dependency_weights;
   return {
     ...spec,
+    deps: dependencyWeights ? Object.keys(dependencyWeights) : [...(spec.deps || [])],
+    dependency_weights: dependencyWeights ? { ...dependencyWeights } : Object.fromEntries((spec.deps || []).map(id => [id, 1 / spec.deps.length])),
+    functional_weight: threshold.functional_weight ?? fallback.functional_weight ?? 1,
+    critical_services: [...(threshold.critical_services || fallback.critical_services || [])],
+    functional_failure: threshold.functional_failure || fallback.functional_failure || 'Standalone normalized functional-failure anchor; not a measured physical tipping point.',
+    functional_overlap_group: threshold.functional_overlap_group || fallback.functional_overlap_group || spec.id,
+    functional_inducible: threshold.functional_inducible ?? fallback.functional_inducible ?? true,
+    dependency_lags: { ...(threshold.dependency_lags || fallback.dependency_lags || {}) },
     scale: sourceBackedRange(spec, 'scale'),
     urgency: sourceBackedRange(spec, 'urgency'),
     acceleration: sourceBackedRange(spec, 'acceleration'),
@@ -728,7 +770,7 @@ function makeThreat(spec) {
     irreversibility: sourceBackedRange(spec, 'irreversibility'),
     gov_failure: sourceBackedRange(spec, 'gov_failure'),
     growth_rate: sourceBackedRange(spec, 'growth_rate'),
-    threshold: sourceBackedRange(spec, 'threshold'),
+    threshold,
   };
 }
 
@@ -981,6 +1023,12 @@ function validateModelConfig() {
     });
   });
 
+  try {
+    normalizedDomainWeights(P.domW);
+  } catch (err) {
+    issues.push(err.message);
+  }
+
   if (issues.length) {
     throw new Error(`Invalid Apocalypse Clock configuration. ${issues.join(' | ')}`);
   }
@@ -1139,12 +1187,12 @@ function renderSourceRegistry() {
   const overlayActive = !!(ACTIVE_EVIDENCE_META && ACTIVE_EVIDENCE_META.active);
   if (badge) badge.textContent = overlayActive ? 'Evidence overlay active' : ACTIVE_SOURCE_META.uploaded ? 'Custom source map active' : 'Bundled source map active';
   if (fileName) fileName.textContent = overlayActive
-    ? `${ACTIVE_SOURCE_META.fileName || 'data_v1_7_1metadata_revision.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
-    : (ACTIVE_SOURCE_META.fileName || 'data_v1_7_1metadata_revision.json');
+    ? `${ACTIVE_SOURCE_META.fileName || 'data_v1_9_0_functional.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
+    : (ACTIVE_SOURCE_META.fileName || 'data_v1_9_0_functional.json');
   if (entryCount) entryCount.textContent = `${summary.entryCount}/${THREAT_SPECS.length * PARAM_FIELDS.length}`;
   if (threatCoverage) threatCoverage.textContent = `${summary.threatCount}/${THREAT_SPECS.length} threats`;
   if (mode) mode.textContent = overlayActive ? (ACTIVE_SOURCE_META.uploaded ? 'Custom + Evidence' : 'Bundled + Evidence') : (ACTIVE_SOURCE_META.uploaded ? 'Custom merge' : 'Bundled');
-  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget as the default primary source.');
+  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data_v1_9_0_functional.json parameter map embedded in widget as the default primary source.');
   if (jsonView) jsonView.textContent = serializeActiveSourceMap();
 }
 
@@ -1157,11 +1205,11 @@ function applySourceMap(sourceMap, meta, rerender) {
   rebuildActiveSourceDataFromState();
   ACTIVE_SOURCE_META = {
     mode: meta && meta.mode ? meta.mode : 'bundled',
-    fileName: meta && meta.fileName ? meta.fileName : 'data_v1_7_1metadata_revision.json',
+    fileName: meta && meta.fileName ? meta.fileName : 'data_v1_9_0_functional.json',
     datasetVersion: meta && meta.datasetVersion
       ? meta.datasetVersion
       : ((meta && meta.uploaded) ? 'custom source map' : (datasetVersionFromSourceMap(sourceMap) || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown')),
-    message: meta && meta.message ? meta.message : 'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget as the default primary source.',
+    message: meta && meta.message ? meta.message : 'Bundled data_v1_9_0_functional.json parameter map embedded in widget as the default primary source.',
     uploaded: !!(meta && meta.uploaded),
   };
   rebuildThreatState();
@@ -1283,61 +1331,11 @@ function normalizedWeightProfileWeights(profileKey) {
   return Object.fromEntries(keys.map(k => [k, Number(raw[k] || 0) / sum]));
 }
 
-function weightProfileCellsHtml(weights) {
-  const labels = {
-    scale:'Scale', urgency:'Urgency', acceleration:'Acceleration', interdependence:'Interdependence', irreversibility:'Irreversibility', gov_failure:'Gov. failure'
-  };
-  return Object.keys(labels).map(k => `<div class="weight-profile-cell"><span>${labels[k]}</span><strong>${Math.round((weights[k] || 0) * 100)}%</strong></div>`).join('');
-}
-
-function weightProfileDomainCellsHtml(domW) {
-  const labels = { civilization:'Civilization', biosphere:'Biosphere', technology:'Technology' };
-  return Object.keys(labels).map(k => `<div class="weight-profile-cell"><span>${labels[k]}</span><strong>${Number(domW[k] || 1).toFixed(2)}×</strong></div>`).join('');
-}
-
-function setDomainControlsFromWeightProfile(domW) {
-  const map = { ctrlDwC:'civilization', ctrlDwB:'biosphere', ctrlDwT:'technology' };
-  const valMap = { ctrlDwC:'vDwC', ctrlDwB:'vDwB', ctrlDwT:'vDwT' };
-  Object.entries(map).forEach(([id, key]) => {
-    const v = Number.isFinite(domW && domW[key]) ? domW[key] : 1;
-    const el = document.getElementById(id);
-    const lbl = document.getElementById(valMap[id]);
-    if (el) el.value = String(v);
-    if (lbl) lbl.textContent = v.toFixed(2);
-  });
-}
-
-function renderWeightProfileInfo(profileKey) {
-  const profile = WEIGHT_PROFILES[profileKey] || WEIGHT_PROFILES.expert;
-  const weights = normalizedWeightProfileWeights(profileKey);
-  const info = document.getElementById('weightProfileInfo');
-  const label = document.getElementById('vWeightProfile');
-  const buttons = document.querySelectorAll('[data-weight-profile]');
-  if (label) label.textContent = profile.label;
-  buttons.forEach(btn => {
-    const active = btn.getAttribute('data-weight-profile') === profileKey;
-    btn.classList.toggle('active', active);
-    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-  });
-  if (!info) return;
-  const links = (profile.sources || []).map(([name, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)}</a>`).join('');
-  info.innerHTML = `<div class="weight-profile-title">${escapeHtml(profile.label)}</div>
-    <div class="weight-profile-sub">${escapeHtml(profile.method)}</div>
-    <div>${escapeHtml(profile.summary)}</div>
-    <div class="weight-profile-grid">${weightProfileCellsHtml(weights)}</div>
-    <div class="weight-profile-sub">Domain priors used by this weighting model</div>
-    <div class="weight-profile-grid">${weightProfileDomainCellsHtml(profile.domainWeights || WEIGHT_PROFILES.expert.domainWeights)}</div>
-    <div>${escapeHtml(profile.logic)}</div>
-    <div class="weight-profile-links">${links}</div>`;
-}
-
 function applyWeightProfile(profileKey, refresh = true) {
   const key = WEIGHT_PROFILES[profileKey] ? profileKey : 'expert';
   P.weightProfile = key;
   P.weights = normalizedWeightProfileWeights(key);
   P.domW = { ...(WEIGHT_PROFILES[key].domainWeights || WEIGHT_PROFILES.expert.domainWeights) };
-  setDomainControlsFromWeightProfile(P.domW);
-  renderWeightProfileInfo(key);
   if (refresh) {
     invalidateCachedResults();
     refreshCurrentView(null);
@@ -1364,27 +1362,29 @@ function scalePositiveRange(x, mult, loBound, hiBound) {
   );
 }
 
-function sampleGamma(shape) {
+function sampleGamma(shape, rng) {
+  const random = rng ? rng.random01 : random01;
+  const gaussian = rng ? rng.randn : randn;
   if (shape < 1) {
-    const u = random01();
-    return sampleGamma(shape + 1) * Math.pow(u, 1 / shape);
+    const u = random();
+    return sampleGamma(shape + 1, rng) * Math.pow(u, 1 / shape);
   }
   const d = shape - 1 / 3;
   const c = 1 / Math.sqrt(9 * d);
   while (true) {
-    const x = randn();
+    const x = gaussian();
     let v = 1 + c * x;
     if (v <= 0) continue;
     v = v * v * v;
-    const u = random01();
+    const u = random();
     if (u < 1 - 0.0331 * x ** 4) return d * v;
     if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
   }
 }
 
-function sampleBeta(alpha, beta) {
-  const g1 = sampleGamma(alpha);
-  const g2 = sampleGamma(beta);
+function sampleBeta(alpha, beta, rng) {
+  const g1 = sampleGamma(alpha, rng);
+  const g2 = sampleGamma(beta, rng);
   return g1 / (g1 + g2);
 }
 
@@ -1409,36 +1409,36 @@ function fitScaledBeta(rangeObj, min, max, spreadMult) {
  * Sample ordinal MCDA dimensions from a fitted Beta on [1, 5].
  * Beta is the formal bounded alternative to Gaussian + clamping for ordinal-like bounded scores. (Ferreri 2005 Beta scaling practice)
  */
-function sampleOrdinalRange(rangeObj, spreadMult) {
+function sampleOrdinalRange(rangeObj, spreadMult, rng) {
   const fit = fitScaledBeta(rangeObj, 1, 5, spreadMult);
-  if (fit) return 1 + 4 * sampleBeta(fit.alpha, fit.beta);
+  if (fit) return 1 + 4 * sampleBeta(fit.alpha, fit.beta, rng);
   const sigma = ((hiOf(rangeObj) - loOf(rangeObj)) / 3.29) * spreadMult;
-  return clamp(normalSample(muOf(rangeObj), sigma), 1, 5);
+  return clamp(rng ? rng.normalSample(muOf(rangeObj), sigma) : normalSample(muOf(rangeObj), sigma), 1, 5);
 }
 
 /**
  * Sample positive parameters from a fitted log-normal distribution.
  * σ_ln ≈ (ln hi − ln lo) / 3.29 maps a 90% interval to log-space spread. (Aitchison & Brown 1957 log-normal moments)
  */
-function sampleLogNormalRange(rangeObj, spreadMult, loBound, hiBound) {
+function sampleLogNormalRange(rangeObj, spreadMult, loBound, hiBound, rng) {
   const lo = Math.max(loBound, loOf(rangeObj));
   const hi = Math.max(lo * 1.01, hiOf(rangeObj));
   const sigmaLn = Math.max(1e-4, ((Math.log(hi) - Math.log(lo)) / 3.29) * spreadMult);
   const muLn = Math.log(Math.max(loBound, muOf(rangeObj))) - 0.5 * sigmaLn * sigmaLn;
-  return clamp(Math.exp(normalSample(muLn, sigmaLn)), loBound, hiBound);
+  return clamp(Math.exp(rng ? rng.normalSample(muLn, sigmaLn) : normalSample(muLn, sigmaLn)), loBound, hiBound);
 }
 
-function sampleThreatNumerics(scThreat, spreadMult) {
-  const sampledGrowthRate = sampleLogNormalRange(scThreat.growth_rate, spreadMult, 0.0005, 0.25);
+function sampleThreatNumerics(scThreat, spreadMult, rng) {
+  const sampledGrowthRate = sampleLogNormalRange(scThreat.growth_rate, spreadMult, 0.0005, 0.25, rng);
 
   return {
     ...scThreat,
-    scale: sampleOrdinalRange(scThreat.scale, spreadMult),
-    urgency: sampleOrdinalRange(scThreat.urgency, spreadMult),
-    acceleration: sampleOrdinalRange(scThreat.acceleration, spreadMult),
-    interdependence: sampleOrdinalRange(scThreat.interdependence, spreadMult),
-    irreversibility: sampleOrdinalRange(scThreat.irreversibility, spreadMult),
-    gov_failure: sampleOrdinalRange(scThreat.gov_failure, spreadMult),
+    scale: sampleOrdinalRange(scThreat.scale, spreadMult, rng),
+    urgency: sampleOrdinalRange(scThreat.urgency, spreadMult, rng),
+    acceleration: sampleOrdinalRange(scThreat.acceleration, spreadMult, rng),
+    interdependence: sampleOrdinalRange(scThreat.interdependence, spreadMult, rng),
+    irreversibility: sampleOrdinalRange(scThreat.irreversibility, spreadMult, rng),
+    gov_failure: sampleOrdinalRange(scThreat.gov_failure, spreadMult, rng),
 
     // Keep sampled raw/proxy growth and preserve metadata separately.
     // growth_rate remains the sampled numeric value for backward compatibility.
@@ -1446,7 +1446,7 @@ function sampleThreatNumerics(scThreat, spreadMult) {
     growth_rate_raw: sampledGrowthRate,
     growth_meta: rangeMetaOf(scThreat.growth_rate),
 
-    threshold: sampleLogNormalRange(scThreat.threshold, spreadMult, 4.5, 12),
+    threshold: sampleLogNormalRange(scThreat.threshold, spreadMult, 4.5, 12, rng),
   };
 }
 
@@ -1504,17 +1504,17 @@ function effectiveRiskGrowthForThreat(t, rawGrowthRate) {
   const raw = Math.max(0, Number(rawGrowthRate) || 0);
   const meta = growthMetaOfThreat(t);
   const kind = growthKindOfThreat(t);
-  if (meta.effective_growth_calibrated === true || kind === 'effective_risk_growth' || kind === 'direct_risk_proxy') {
-    return clamp(raw, 0.0005, EFFECTIVE_GROWTH_CAP);
-  }
-  // Compress raw indicator growth before systemic-risk use.
-  const conversion = riskConversionOfThreat(t);
-  return clamp(Math.log1p(raw) * conversion, 0.0005, EFFECTIVE_GROWTH_CAP);
+  const specificCap = Number.isFinite(meta.threat_specific_cap) ? Math.max(0, meta.threat_specific_cap) : EFFECTIVE_GROWTH_CAP;
+  const cap = Math.min(EFFECTIVE_GROWTH_CAP, specificCap);
+  const calibrated = meta.effective_growth_calibrated === true || kind === 'effective_risk_growth' || kind === 'direct_risk_proxy';
+  const converted = calibrated ? raw : Math.log1p(raw) * riskConversionOfThreat(t);
+  return clamp(converted, Math.min(0.0005, cap), cap);
 }
 
-function sampleEventHorizon(priority, growthRate, threshold) {
-  const u = clamp(random01(), 1e-9, 1 - 1e-9);
-  const g = Math.max(0.0005, Number(growthRate) || 0.0005);
+function sampleEventHorizon(priority, growthRate, threshold, rng) {
+  const u = clamp(rng ? rng.random01() : random01(), 1e-9, 1 - 1e-9);
+  const g = Math.max(0, Number(growthRate) || 0);
+  // The baseline hazard floor is distinct from the already capped growth rate.
   const lambda0 = Math.max(1e-5, (priority / threshold) * g * 2);
   let cumHazard = 0;
   for (let yr = NOW; yr <= YE; yr++) {
@@ -1529,14 +1529,15 @@ function sampleEventHorizon(priority, growthRate, threshold) {
  * Sample the first-transition year of a regime process from a geometric waiting time.
  * p = logistic((priority − threshold) × 2) converts pressure relative to threshold into an annual transition probability. (discrete-time hazard / logistic link)
  */
-function sampleRegimeHorizon(priority, threshold) {
+function sampleRegimeHorizon(priority, threshold, rng) {
   const p = clamp(logistic((priority - threshold) * 2), 1e-4, 0.999);
-  const u = clamp(random01(), 1e-9, 1 - 1e-9);
+  const u = clamp(rng ? rng.random01() : random01(), 1e-9, 1 - 1e-9);
   return clamp(Math.round(NOW + Math.ceil(Math.log(1 - u) / Math.log(1 - p))), NOW, YE + 1);
 }
 
 function deterministicEventHorizon(priority, growthRate, threshold) {
-  const g = Math.max(0.0005, Number(growthRate) || 0.0005);
+  const g = Math.max(0, Number(growthRate) || 0);
+  // The baseline hazard floor is distinct from the already capped growth rate.
   const lambda0 = Math.max(1e-5, (priority / threshold) * g * 2);
   // Median first-arrival year solves H(t) = ln(2) for the cumulative hazard H(t) of the non-homogeneous Poisson process. (Ross 2014 NHPP cumulative hazard)
   let cumHazard = 0;
@@ -1551,16 +1552,16 @@ function deterministicEventHorizon(priority, growthRate, threshold) {
 function deterministicRegimeHorizon(priority, threshold) {
   const p = clamp(logistic((priority - threshold) * 2), 1e-4, 0.999);
   // Median waiting time of a geometric transition process solves (1 - p)^t = 0.5. (discrete-time hazard / geometric median)
-  return clamp(Math.round(NOW + Math.log(0.5) / Math.log(1 - p)), NOW, YE + 1);
+  return Math.min(YE + 1, NOW + Math.ceil(Math.log(0.5) / Math.log1p(-p)));
 }
 
-function computeThreatHorizon(priority, growthRate, threshold, processType, stochastic) {
+function computeThreatHorizon(priority, growthRate, threshold, processType, stochastic, rng) {
   threshold = Number(threshold);
   if (!Number.isFinite(threshold)) threshold = GLOBAL_THRESHOLD;
   threshold = clamp(threshold, THRESHOLD_MIN, THRESHOLD_MAX);
   if (priority <= 0 || !Number.isFinite(priority)) return YE + 1;
-  if (processType === 'event') return stochastic ? sampleEventHorizon(priority, growthRate, threshold) : deterministicEventHorizon(priority, growthRate, threshold);
-  if (processType === 'regime') return stochastic ? sampleRegimeHorizon(priority, threshold) : deterministicRegimeHorizon(priority, threshold);
+  if (processType === 'event') return stochastic ? sampleEventHorizon(priority, growthRate, threshold, rng) : deterministicEventHorizon(priority, growthRate, threshold);
+  if (processType === 'regime') return stochastic ? sampleRegimeHorizon(priority, threshold, rng) : deterministicRegimeHorizon(priority, threshold);
   return computeHorizon(priority, growthRate, threshold);
 }
 
@@ -1651,11 +1652,17 @@ function calcGSI(enriched) {
 }
 
 function normalizedDomainWeights(domW) {
-  const total = Object.values(domW || {}).reduce((s, v) => s + (Number.isFinite(v) ? v : 0), 0) || 1;
+  const keys = ['civilization', 'biosphere', 'technology'];
+  const values = keys.map(key => domW && domW[key]);
+  if (!values.every(value => Number.isFinite(value) && value >= 0)) {
+    throw new Error('Domain weights must be finite, non-negative numbers.');
+  }
+  const total = values.reduce((s, v) => s + v, 0);
+  if (!(total > 0)) throw new Error('Domain weights cannot all be zero.');
   return {
-    civilization: (domW.civilization || 0) / total,
-    biosphere: (domW.biosphere || 0) / total,
-    technology: (domW.technology || 0) / total,
+    civilization: domW.civilization / total,
+    biosphere: domW.biosphere / total,
+    technology: domW.technology / total,
   };
 }
 
@@ -1663,7 +1670,7 @@ function domainWeightMultiplier(domain, params) {
   const norm = normalizedDomainWeights((params || P).domW || {});
   const domainCount = Object.keys(norm).length || 1;
   const mult = norm[domain] * domainCount;
-  return Number.isFinite(mult) && mult > 0 ? mult : 1;
+  return Number.isFinite(mult) && mult >= 0 ? mult : 1;
 }
 
 function compensatoryShareByYear(enriched, yr) {
@@ -1703,14 +1710,15 @@ function buildCdf(sortedCrossings, n) {
   return cdf;
 }
 
-function summarizeCrossings(crossing, nSim) {
+function summarizeCrossings(crossing, nSim, rng) {
   const sorted = [...crossing].sort((a, b) => a - b);
   const cdf = buildCdf(sorted, nSim);
+  const bootstrapRng = rng || createRngContext(`${DEFAULT_MC_SEED}:bootstrap`);
   const BS = 160;
   const bsP50s = [];
   const bsCdfs = [];
   for (let b = 0; b < BS; b++) {
-    const sample = Array.from({ length: nSim }, () => sorted[0 | random01() * nSim]).sort((a, c) => a - c);
+    const sample = Array.from({ length: nSim }, () => sorted[0 | bootstrapRng.random01() * nSim]).sort((a, c) => a - c);
     bsP50s.push(quantile(sample, 0.5));
     bsCdfs.push(buildCdf(sample, nSim).map(x => x.prob));
   }
@@ -1726,9 +1734,16 @@ function summarizeCrossings(crossing, nSim) {
   const p90 = quantile(sorted, 0.90);
   const mean = sorted.reduce((s, v) => s + v, 0) / sorted.length;
   const samplingSigma = Math.sqrt(sorted.reduce((s, v) => s + (v - mean) ** 2, 0) / sorted.length);
-  const bsIqr = quantile(bsP50s, 0.75) - quantile(bsP50s, 0.25);
-  const parameterSigma = bsIqr / 1.35;
-  return { crossing: sorted, cdf, bLo, bHi, p10, p50, p90, samplingSigma, parameterSigma };
+  const bsMean = bsP50s.reduce((sum, value) => sum + value, 0) / bsP50s.length;
+  const parameterSigma = Math.sqrt(bsP50s.reduce((sum, value) => sum + (value - bsMean) ** 2, 0) / (bsP50s.length - 1));
+  const censorFraction = sorted.filter(year => year > YE).length / sorted.length;
+  return {
+    crossing: sorted, cdf, bLo, bHi, p10, p50, p90, samplingSigma, parameterSigma,
+    censorFraction,
+    medianCensored: p50 > YE,
+    censorCodeYear: YE + 1,
+    estimand: 'horizon-coded crossing times; no crossing by YE is coded as YE + 1; dispersion and bootstrap precision describe these coded times, not unidentified actual crossing times',
+  };
 }
 
 /**
@@ -1751,7 +1766,10 @@ function graphAggregationScoreForYear(enriched, yr) {
   for (let i = 0; i < enriched.length; i++) meanQ += (weights[i] / totalW) * q[i];
   for (let i = 0; i < enriched.length; i++) {
     for (let j = 0; j < enriched.length; j++) {
-      variance += (weights[i] / totalW) * (weights[j] / totalW) * DEP_GRAPH.matrix[i][j];
+      const graphI = DEP_GRAPH.idx[enriched[i].id];
+      const graphJ = DEP_GRAPH.idx[enriched[j].id];
+      const graphWeight = Number.isInteger(graphI) && Number.isInteger(graphJ) ? DEP_GRAPH.matrix[graphI][graphJ] : 0;
+      variance += (weights[i] / totalW) * (weights[j] / totalW) * graphWeight;
     }
   }
   return normCdf(meanQ / Math.sqrt(Math.max(variance, 1e-6)));
@@ -1777,7 +1795,7 @@ function computeCompensatoryCrossing(enriched, threshold) {
  * Dynamic cascade = year-by-year dependency propagation.
  * Running them in parallel exposes model-structure uncertainty rather than parameter uncertainty alone. (multi-model ensemble framing)
  */
-function computeAggregateYears(enriched, params) {
+function computeAggregateYears(enriched, params, cascadeResult) {
   const comp = computeCompensatoryCrossing(enriched, params.threshold);
   let graphWeighted = YE + 1;
   const maxRule = enriched.reduce((m, t) => Math.min(m, t.horizon), YE + 1);
@@ -1785,16 +1803,49 @@ function computeAggregateYears(enriched, params) {
     if (graphWeighted > YE && graphAggregationScoreForYear(enriched, yr) >= params.threshold) graphWeighted = yr;
     if (graphWeighted <= YE) break;
   }
-  const dynamicCascade = computeDynamicCascadeCrossing(enriched, params);
+  const dynamicCascade = cascadeResult ? cascadeResult.year : computeDynamicCascadeCrossing(enriched, params);
   return { comp, maxRule, graphWeighted, dynamicCascade };
 }
 
 function dependencyExposure(target, active, byId) {
-  const deps = (target.deps || []).map(id => byId.get(id)).filter(Boolean);
-  if (!deps.length) return 0;
-  const total = deps.reduce((s, t) => s + Math.max(0.001, t.priority || 1), 0) || 1;
-  const activeWeight = deps.reduce((s, t) => s + (active.has(t.id) ? Math.max(0.001, t.priority || 1) : 0), 0);
-  return activeWeight / total;
+  const deps = (target.deps || []).filter(id => byId.has(id));
+  return clamp(deps.reduce((sum, id) => sum + (active.has(id) ? (target.dependency_weights?.[id] ?? 1 / Math.max(1, deps.length)) : 0), 0), 0, 1);
+}
+
+function cascadeVulnerability(t) {
+  // Ordinal capacity-loss susceptibility, not an estimated probability.
+  return clamp((muOf(t.interdependence) - 1) / 4, 0, 1) * (0.5 + 0.5 * clamp((muOf(t.gov_failure) - 1) / 4, 0, 1));
+}
+
+function cascadePressureRatio(t, year, params) {
+  // Use pre-network base pressure for susceptibility: avoid counting background depFactor again.
+  const base = Number.isFinite(t.bs) ? t.bs * domainWeightMultiplier(t.domain, params || P) : t.priority;
+  const threshold = t.threshold_value ?? getThreatThreshold(t, (params || P).thresholdPolicy);
+  const growth = t.growth_rate_effective ?? effectiveRiskGrowthForThreat(t, muOf(t.growth_rate));
+  return clamp(Math.max(0, base || 0) / threshold * Math.pow(1 + Math.max(0, growth), Math.max(0, year - NOW)), 0, 1);
+}
+
+function functionalCascadeNodes(enriched, params) {
+  const ids = new Set(enriched.map(t => t.id));
+  return enriched.map(t => {
+    const deps = (t.deps || []).filter(id => ids.has(id) && id !== t.id);
+    return { id: t.id, domain: t.domain, weight: t.functional_weight ?? 1, services: [...(t.critical_services || [])], overlapGroup: t.functional_overlap_group || t.id,
+      dependencies: deps.map(id => ({ id, weight: t.dependency_weights?.[id] ?? 1 / Math.max(1, (t.deps || []).length), lag: params?.propagationLagYears ?? t.dependency_lags?.[id] ?? 0 })),
+      inducible: t.functional_inducible ?? true,
+      pressureRatio: cascadePressureRatio(t, NOW, params),
+      growth: t.growth_rate_effective ?? effectiveRiskGrowthForThreat(t, muOf(t.growth_rate)),
+      vulnerability: cascadeVulnerability(t), spontaneousYear: Number.isFinite(t.horizon) ? t.horizon : YE + 1 };
+  });
+}
+
+function simulateFunctionalCascade(enriched, params, options) {
+  params = params || P;
+  const nodes = functionalCascadeNodes(enriched, params);
+  if (params.functionalServiceRule === 'global_only') nodes.forEach(node => { node.services = []; });
+  if (params.functionalWeightRule === 'equal') nodes.forEach(node => { node.weight = 1; });
+  if (Number.isFinite(params.dependencyScale)) nodes.forEach(node => { node.vulnerability = clamp(node.vulnerability * params.dependencyScale, 0, 1); });
+  return FunctionalCascade.simulate({ nodes, startYear: YS, pressureYear: NOW, endYear: YE,
+    threshold: params.cascadeThreshold ?? 0.50, ...(options || {}) });
 }
 
 function activeTransmissionShare(enriched, active) {
@@ -1818,134 +1869,19 @@ function activeTransmissionShare(enriched, active) {
  * A dependency listed on target T is treated as an upstream pressure source for T:
  * once enough upstream dependencies are active, vulnerable targets can be pulled
  * forward before their standalone horizon. The cascade crossing year is the first
- * year where active threat mass, transmitted dependency edges, and induced mass
- * together exceed the selected aggregate threshold across at least two domains.
+ * year where weighted functional loss reaches the chosen threshold globally or
+ * within an essential-service basket. Domains, co-active edges and induced share
+ * are diagnostic, not vetoes. One seed may propagate to initially censored nodes.
  */
 function computeDynamicCascadeCrossing(enriched, params) {
-  // Cascade mass uses base scores for domain consistency.
-  const bsTotal = enriched.reduce((s, t) => s + Math.max(0.001, t.bs || 1), 0) || 1;
-  const byId = new Map(enriched.map(t => [t.id, t]));
-  const active = new Set();
-  const induced = new Set();
-
-  for (let yr = YS; yr <= YE; yr++) {
-    enriched.forEach(t => {
-      if (t.horizon <= yr) active.add(t.id);
-    });
-
-    for (let wave = 0; wave < 3; wave++) {
-      let changed = false;
-      enriched.forEach(t => {
-        if (active.has(t.id)) return;
-        const exposure = dependencyExposure(t, active, byId);
-        if (exposure <= 0) return;
-        const proximity = t.horizon <= YE
-          ? 1 - clamp((t.horizon - yr) / 30, 0, 1)
-          : 0;
-        if (proximity <= 0.05) return;
-        const vulnerability = clamp((muOf(t.interdependence) + muOf(t.acceleration) + muOf(t.gov_failure) - 9) / 6, 0, 1);
-        const triggerScore = 0.55 * exposure + 0.25 * proximity + 0.20 * vulnerability;
-        const triggerThreshold = 0.58 + 0.10 * (1 - vulnerability);
-        if (triggerScore >= triggerThreshold) {
-          active.add(t.id);
-          induced.add(t.id);
-          changed = true;
-        }
-      });
-      if (!changed) break;
-    }
-    // Load mass uses base scores for domain-weight consistency.
-    const activeBs   = enriched.reduce((s, t) => s + (active.has(t.id)   ? Math.max(0.001, t.bs || 1) : 0), 0);
-    const inducedBs  = enriched.reduce((s, t) => s + (induced.has(t.id)  ? Math.max(0.001, t.bs || 1) : 0), 0);
-    const activeMass  = activeBs  / bsTotal;
-    const inducedMass = inducedBs / bsTotal;
-    // Recompute edge weights with base scores for consistency.
-    let tsPossible = 0, tsTransmitted = 0;
-    enriched.forEach(target => {
-      (target.deps || []).forEach(depId => {
-        const dep = byId.get(depId);
-        if (!dep) return;
-        const ew = Math.sqrt(Math.max(0.001, target.bs || 1) * Math.max(0.001, dep.bs || 1));
-        tsPossible += ew;
-        if (active.has(dep.id) && active.has(target.id)) tsTransmitted += ew;
-      });
-    });
-    const transmissionShare = tsPossible ? tsTransmitted / tsPossible : 0;
-    const activeDomains = new Set(enriched.filter(t => active.has(t.id)).map(t => t.domain)).size;
-    // Cascade trigger requires all domains, network transmission, active mass, and induced propagation.
-    const cascadeBoost = 0.18 * transmissionShare + 0.10 * inducedMass;
-    const ct = params.cascadeThreshold ?? 0.50;
-    if (
-      activeDomains >= 3 &&
-      transmissionShare >= 0.25 &&
-      activeMass >= ct &&
-      cascadeBoost >= 0.06
-    ) return yr;
-  }
-
-  return YE + 1;
+  return simulateFunctionalCascade(enriched, params).year;
 }
 
-/**
- * Deterministic cascade explanation utility.
- * Returns the first year where the cascade trigger fires, or why it never fires.
- */
 function explainCascadeCrossing(enriched, params) {
-  params = params || P;
-  const ct = params.cascadeThreshold ?? 0.50;
-  const bsTotal = enriched.reduce((s, t) => s + Math.max(0.001, t.bs || 1), 0) || 1;
-  const byId = new Map(enriched.map(t => [t.id, t]));
-  const active = new Set();
-  const induced = new Set();
-
-  for (let yr = YS; yr <= YE; yr++) {
-    enriched.forEach(t => { if (t.horizon <= yr) active.add(t.id); });
-
-    for (let wave = 0; wave < 3; wave++) {
-      let changed = false;
-      enriched.forEach(t => {
-        if (active.has(t.id)) return;
-        const exposure = dependencyExposure(t, active, byId);
-        if (exposure <= 0) return;
-        const proximity = t.horizon <= YE ? 1 - clamp((t.horizon - yr) / 30, 0, 1) : 0;
-        if (proximity <= 0.05) return;
-        const vulnerability = clamp((muOf(t.interdependence) + muOf(t.acceleration) + muOf(t.gov_failure) - 9) / 6, 0, 1);
-        const triggerScore = 0.55 * exposure + 0.25 * proximity + 0.20 * vulnerability;
-        if (triggerScore >= 0.58 + 0.10 * (1 - vulnerability)) {
-          active.add(t.id); induced.add(t.id); changed = true;
-        }
-      });
-      if (!changed) break;
-    }
-
-    const activeBs  = enriched.reduce((s, t) => s + (active.has(t.id)  ? Math.max(0.001, t.bs || 1) : 0), 0);
-    const inducedBs = enriched.reduce((s, t) => s + (induced.has(t.id) ? Math.max(0.001, t.bs || 1) : 0), 0);
-    const activeMass  = activeBs  / bsTotal;
-    const inducedMass = inducedBs / bsTotal;
-    let tsPossible = 0, tsTransmitted = 0;
-    enriched.forEach(target => {
-      (target.deps || []).forEach(depId => {
-        const dep = byId.get(depId);
-        if (!dep) return;
-        const ew = Math.sqrt(Math.max(0.001, target.bs || 1) * Math.max(0.001, dep.bs || 1));
-        tsPossible += ew;
-        if (active.has(dep.id) && active.has(target.id)) tsTransmitted += ew;
-      });
-    });
-    const transmissionShare = tsPossible ? tsTransmitted / tsPossible : 0;
-    const activeDomains = new Set(enriched.filter(t => active.has(t.id)).map(t => t.domain)).size;
-    const cascadeBoost = 0.18 * transmissionShare + 0.10 * inducedMass;
-    const activeThreats = enriched.filter(t => active.has(t.id)).map(t => t.id);
-    const topDrivers = enriched.filter(t => induced.has(t.id)).map(t => t.id);
-    const fires = activeDomains >= 3 && transmissionShare >= 0.25 && activeMass >= ct && cascadeBoost >= 0.06;
-    if (fires || yr % 5 === 0) {
-      if (window.APocalypseClockDebug) console.log(`[cascade ${yr}] domains=${activeDomains} activeMass=${activeMass.toFixed(3)} ts=${transmissionShare.toFixed(3)} boost=${cascadeBoost.toFixed(3)} threshold=${ct} → ${fires ? 'FIRES' : 'no'}`);
-    }
-    if (fires) {
-      return { year: yr, activeDomains, activeMass, transmissionShare, inducedMass, cascadeBoost, activeThreats, topDrivers };
-    }
-  }
-  return { year: YE + 1, note: 'cascade never triggered within model horizon' };
+  const result = simulateFunctionalCascade(enriched, params, { collectTrace: true });
+  // Compatibility diagnostics only: co-active edges are not proof of causal transmission.
+  return { ...result, transmissionShare: activeTransmissionShare(enriched, new Set(result.activeThreats)),
+    cascadeBoost: result.functionalLoss, cascadeBoostMeaning: 'legacy key: functional-loss score, no additive boost' };
 }
 
 /**
@@ -1963,6 +1899,28 @@ function oatCompositeResponseFromYears(sortedYears, sampleSize) {
   return { p50, p2035, p2050, normalizedHorizon, score };
 }
 
+function pairedOatBootstrapStandardErrors(baseYears, upYears, dnYears, rng) {
+  const n = baseYears.length;
+  if (n < 2) return { upMcSe: 0, dnMcSe: 0 };
+  const upContrasts = [], dnContrasts = [];
+  for (let b = 0; b < 160; b++) {
+    const base = [], up = [], dn = [];
+    for (let i = 0; i < n; i++) {
+      const index = Math.floor(rng.random01() * n);
+      base.push(baseYears[index]); up.push(upYears[index]); dn.push(dnYears[index]);
+    }
+    const score = values => oatCompositeResponseFromYears(values.sort((a, c) => a - c), n).score;
+    const baseScore = score(base);
+    upContrasts.push((score(up) - baseScore) * 100);
+    dnContrasts.push((baseScore - score(dn)) * 100);
+  }
+  const standardDeviation = values => {
+    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+    return Math.sqrt(values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1));
+  };
+  return { upMcSe: standardDeviation(upContrasts), dnMcSe: standardDeviation(dnContrasts) };
+}
+
 function createMonteCarloAccumulator() {
   return {
     compCrossing: [],
@@ -1976,17 +1934,18 @@ function createMonteCarloAccumulator() {
       technology: [],
     },
     threatHorizonSamples: Object.fromEntries(THREATS.map(t => [t.id, []])),
+    functionalHorizonSamples: Object.fromEntries(THREATS.map(t => [t.id, []])),
   };
 }
 
-function enrichMonteCarloThreats(sampled, params) {
+function enrichMonteCarloThreats(sampled, params, rng) {
   return sampled.map(t => {
     const bs = baseScore(t, params.weights);
     const priority = bs * depFactor(t, sampled, params) * domainWeightMultiplier(t.domain, params);
     const threshold = getThreatThreshold(t, params.thresholdPolicy || THRESHOLD_POLICY);
     const rawGrowth = t.growth_rate;
     const effectiveGrowth = effectiveRiskGrowthForThreat(t, rawGrowth);
-    const horizon = computeThreatHorizon(priority, effectiveGrowth, threshold, t.process_type, true);
+    const horizon = computeThreatHorizon(priority, effectiveGrowth, threshold, t.process_type, true, rng);
 
     return {
       ...t,
@@ -2000,13 +1959,13 @@ function enrichMonteCarloThreats(sampled, params) {
   });
 }
 
-function applyGlobalThresholdToSample(enriched) {
+function applyGlobalThresholdToSample(enriched, rng) {
   return enriched.map(t => {
     const threshold = getThreatThreshold(t, 'global');
     return {
       ...t,
       threshold_value: threshold,
-      horizon: computeThreatHorizon(t.priority, t.growth_rate_effective, threshold, t.process_type, true),
+      horizon: computeThreatHorizon(t.priority, t.growth_rate_effective, threshold, t.process_type, true, rng),
     };
   });
 }
@@ -2014,7 +1973,9 @@ function applyGlobalThresholdToSample(enriched) {
 function recordMonteCarloSample(acc, enriched, globalThresholdEnriched, params) {
   enriched.forEach(t => acc.threatHorizonSamples[t.id].push(t.horizon));
 
-  const years = computeAggregateYears(enriched, params);
+  const functional = simulateFunctionalCascade(enriched, params, { collectAll: true });
+  enriched.forEach(t => acc.functionalHorizonSamples[t.id].push(functional.firstActivationYears[t.id]));
+  const years = computeAggregateYears(enriched, params, functional);
   acc.compCrossing.push(years.comp);
   acc.maxCrossing.push(years.maxRule);
   acc.graphCrossing.push(years.graphWeighted);
@@ -2036,25 +1997,47 @@ function summarizeThreatHorizonSamples(threatHorizonSamples) {
       p50: quantile(samples, 0.50),
       p90: quantile(samples, 0.90),
       p2050: samples.length ? samples.filter(s => s <= 2050).length / samples.length : 0,
+      censorFraction: samples.length ? samples.filter(s => s > YE).length / samples.length : 0,
     };
   });
   return threatStats;
 }
 
-function summarizeMonteCarloAccumulator(acc, nSim) {
-  const compSummary = summarizeCrossings(acc.compCrossing, nSim);
-  const maxSummary = summarizeCrossings(acc.maxCrossing, nSim);
-  const graphSummary = summarizeCrossings(acc.graphCrossing, nSim);
-  const cascadeSummary = summarizeCrossings(acc.cascadeCrossing, nSim);
-  const globalThresholdCascadeSummary = summarizeCrossings(acc.globalThresholdCascadeCrossing, nSim);
+function pairedQuantileContrastStandardError(baseYears, alternativeYears, q, rng) {
+  const n = baseYears.length;
+  if (n < 2) return 0;
+  const contrasts = [];
+  for (let b = 0; b < 160; b++) {
+    const base = [], alternative = [];
+    for (let i = 0; i < n; i++) {
+      const index = Math.floor(rng.random01() * n);
+      base.push(baseYears[index]); alternative.push(alternativeYears[index]);
+    }
+    contrasts.push(quantile(alternative.sort((a, c) => a - c), q) - quantile(base.sort((a, c) => a - c), q));
+  }
+  const mean = contrasts.reduce((sum, value) => sum + value, 0) / contrasts.length;
+  return Math.sqrt(contrasts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (contrasts.length - 1));
+}
+
+function summarizeMonteCarloAccumulator(acc, nSim, seed, thresholdPolicy = THRESHOLD_POLICY) {
+  const summaryRng = label => createRngContext(`${normalizeMonteCarloSeed(seed)}:bootstrap:${label}`);
+  const thresholdMcStandardError = pairedQuantileContrastStandardError(acc.cascadeCrossing,
+    acc.globalThresholdCascadeCrossing, 0.90, summaryRng('paired-threshold-contrast'));
+  const compSummary = summarizeCrossings(acc.compCrossing, nSim, summaryRng('compensatory'));
+  const maxSummary = summarizeCrossings(acc.maxCrossing, nSim, summaryRng('max-rule'));
+  const graphSummary = summarizeCrossings(acc.graphCrossing, nSim, summaryRng('graph'));
+  const cascadeSummary = summarizeCrossings(acc.cascadeCrossing, nSim, summaryRng('cascade'));
+  const globalThresholdCascadeSummary = summarizeCrossings(acc.globalThresholdCascadeCrossing, nSim, summaryRng('global-threshold-cascade'));
   const domainStats = Object.fromEntries(
-    Object.entries(acc.domainCrossing).map(([domain, crossing]) => [domain, summarizeCrossings(crossing, nSim)])
+    Object.entries(acc.domainCrossing).map(([domain, crossing]) => [domain, summarizeCrossings(crossing, nSim, summaryRng(`domain:${domain}`))])
   );
   const structuralSigma = Math.max(compSummary.p50, maxSummary.p50, graphSummary.p50, cascadeSummary.p50) - Math.min(compSummary.p50, maxSummary.p50, graphSummary.p50, cascadeSummary.p50);
 
   return {
     ...compSummary,
     threatStats: summarizeThreatHorizonSamples(acc.threatHorizonSamples),
+    functionalStats: summarizeThreatHorizonSamples(acc.functionalHorizonSamples),
+    functionalStatsMeaning: 'First functional-threshold activation, spontaneous or induced. Not extinction, permanent failure or completion of collapse.',
     domainStats,
     structuralSigma,
     ensemble: {
@@ -2065,17 +2048,26 @@ function summarizeMonteCarloAccumulator(acc, nSim) {
     },
     thresholdRobustness: {
       label: 'Threshold robustness check — diagnostic only, does not overwrite the main clock date.',
-      policy: THRESHOLD_POLICY,
+      policy: thresholdPolicy,
       globalThreshold: GLOBAL_THRESHOLD,
       perThreatHeadline: cascadeSummary.p90,
       globalHeadline: globalThresholdCascadeSummary.p90,
       deltaYears: globalThresholdCascadeSummary.p90 - cascadeSummary.p90,
+      mcStandardErrorYears: thresholdMcStandardError,
+      mcErrorMethod: 'paired bootstrap standard deviation of the P90 contrast; 160 resamples',
+      pairedRandomInputs: true,
+      estimand: 'global minus current-policy P90 of horizon-coded times; not an identified actual-time contrast when either P90 is censored',
+      currentP90Censored: cascadeSummary.p90 > YE,
+      globalP90Censored: globalThresholdCascadeSummary.p90 > YE,
+      currentCensorFraction: cascadeSummary.censorFraction,
+      globalCensorFraction: globalThresholdCascadeSummary.censorFraction,
     },
   };
 }
 
 async function runMC(scKey, nSim, onProg, params) {
   params = params || P;
+  const runRng = createRngContext(params.seed || DEFAULT_MC_SEED);
   const sc = SC[scKey] || SC.baseline;
   const spreadMult = params.uncMult * sc.uncWidthMult;
   const scenarioThreats = THREATS.map(t => applyScenario(t, scKey));
@@ -2086,9 +2078,19 @@ async function runMC(scKey, nSim, onProg, params) {
   while (done < nSim) {
     const n = Math.min(CHUNK, nSim - done);
     for (let i = 0; i < n; i++) {
-      const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult));
-      const enriched = enrichMonteCarloThreats(sampled, params);
-      const globalThresholdEnriched = applyGlobalThresholdToSample(enriched);
+      const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult, runRng));
+      const processDraws = [];
+      const enriched = enrichMonteCarloThreats(sampled, params, { random01: () => {
+        const draw = runRng.random01();
+        processDraws.push(draw);
+        return draw;
+      } });
+      let replayIndex = 0;
+      const globalThresholdEnriched = applyGlobalThresholdToSample(enriched, { random01: () => {
+        if (replayIndex >= processDraws.length) throw new Error('Threshold-policy process draw pairing mismatch.');
+        return processDraws[replayIndex++];
+      } });
+      if (replayIndex !== processDraws.length) throw new Error('Threshold-policy process draw pairing mismatch.');
       recordMonteCarloSample(acc, enriched, globalThresholdEnriched, params);
     }
     done += n;
@@ -2096,7 +2098,7 @@ async function runMC(scKey, nSim, onProg, params) {
     await new Promise(r => setTimeout(r, 0));
   }
 
-  return summarizeMonteCarloAccumulator(acc, nSim);
+  return summarizeMonteCarloAccumulator(acc, nSim, params.seed, params.thresholdPolicy || THRESHOLD_POLICY);
 }
 
 /* One-at-a-time growth-rate sensitivity diagnostic. */
@@ -2143,7 +2145,7 @@ const CALC_STEPS = [
   { id:'montecarlo', kind:'mc', label:'Monte Carlo crossing simulation', pending:'Monte Carlo crossing simulation has not started yet.' },
   { id:'compensatory', kind:'exact', label:'Compensatory aggregation', pending:'Weighted-share threshold aggregation is pending.' },
   { id:'maxrule', kind:'exact', label:'Non-compensatory max-rule aggregation', pending:'Earliest single-threat crossing aggregation is pending.' },
-  { id:'graph', kind:'heuristic', label:'Graph-weighted aggregation', pending:'Dependency-linked graph aggregation is pending.' },
+  { id:'graph', kind:'heuristic', label:'Graph-weighted heuristic index', pending:'Dependency-linked heuristic index is pending.' },
   { id:'cascade', kind:'heuristic', label:'Dynamic cascade propagation', pending:'Year-by-year dependency propagation is pending.' },
   { id:'domainmc', kind:'mc', label:'Domain crossing distributions', pending:'Domain-specific Monte Carlo crossing summaries are pending.' },
   { id:'structural', kind:'exact', label:'Structural ensemble spread', pending:'Cross-aggregator structural spread has not yet been computed.' },
@@ -2364,63 +2366,41 @@ async function runSensitivity(params, baseN) {
   const GR_DELTA = 0.20;
   const spreadMult = params.uncMult * sc.uncWidthMult;
   const scenarioThreats = THREATS.map(t => applyScenario(t, scKey));
-  // OAT uses a composite response because median years can miss tail movement.
-  async function responseSummary(overrideId, grFactor) {
-    const crossingYears = [];
-    for (let i = 0; i < N; i++) {
-      const sampled = scenarioThreats.map(t => {
-        const numeric = sampleThreatNumerics(t, spreadMult);
-        if (t.id === overrideId) {
-          numeric.growth_rate = clamp(numeric.growth_rate * grFactor, 0.0005, 0.25);
-          numeric.growth_rate_raw = numeric.growth_rate;
-        }
-        return numeric;
-      });
-
-      const en = sampled.map(t => {
-        const bs = baseScore(t, params.weights);
-        const priority = bs * depFactor(t, sampled, params) * domainWeightMultiplier(t.domain, params);
-        const threshold = getThreatThreshold(t, params.thresholdPolicy || THRESHOLD_POLICY);
-
-        const rawGrowth = t.growth_rate;
-        const effectiveGrowth = effectiveRiskGrowthForThreat(t, rawGrowth);
-
-        return {
-          ...t,
-          priority,
-          threshold_value: threshold,
-          growth_rate_raw: rawGrowth,
-          growth_rate_effective: effectiveGrowth,
-          horizon: computeThreatHorizon(
-            priority,
-            effectiveGrowth,
-            threshold,
-            t.process_type,
-            true
-          ),
-        };
-      });
-      crossingYears.push(computeAggregateYears(en, params).comp);
-    }
-    crossingYears.sort((a, b) => a - b);
-    return oatCompositeResponseFromYears(crossingYears, N);
-  }
-
-  const base = await responseSummary('__none__', 1);
-
   const results = [];
   for (const t of THREATS) {
-    const [up, dn] = await Promise.all([
-      responseSummary(t.id, 1 + GR_DELTA),
-      responseSummary(t.id, 1 - GR_DELTA),
-    ]);
+    const parameterRng = createRngContext(`${params.seed || DEFAULT_MC_SEED}:oat:parameters`);
+    const baseYears = [], upYears = [], dnYears = [];
+    for (let i = 0; i < N; i++) {
+      const sampled = scenarioThreats.map(sourceThreat => sampleThreatNumerics(sourceThreat, spreadMult, parameterRng));
+      const evaluate = factor => {
+        const adjusted = sampled.map(sampledThreat => sampledThreat.id === t.id ? {
+          ...sampledThreat,
+          growth_rate: clamp(sampledThreat.growth_rate * factor, 0.0005, 0.25),
+          growth_rate_raw: clamp(sampledThreat.growth_rate * factor, 0.0005, 0.25),
+        } : sampledThreat);
+        const processRng = createRngContext(`${params.seed || DEFAULT_MC_SEED}:oat:process:${i}`);
+        return computeAggregateYears(enrichMonteCarloThreats(adjusted, params, processRng), params).comp;
+      };
+      const baseYear = evaluate(1);
+      const upYear = evaluate(1 + GR_DELTA);
+      const dnYear = evaluate(1 - GR_DELTA);
+      baseYears.push(baseYear); upYears.push(upYear); dnYears.push(dnYear);
+      if (i % 40 === 0) await new Promise(resolve => setTimeout(resolve, 0));
+    }
+    const { upMcSe, dnMcSe } = pairedOatBootstrapStandardErrors(baseYears, upYears, dnYears,
+      createRngContext(`${params.seed || DEFAULT_MC_SEED}:oat:bootstrap:${t.id}`));
+    [baseYears, upYears, dnYears].forEach(values => values.sort((a, b) => a - b));
+    const base = oatCompositeResponseFromYears(baseYears, N);
+    const up = oatCompositeResponseFromYears(upYears, N);
+    const dn = oatCompositeResponseFromYears(dnYears, N);
     const upShift = (up.score - base.score) * 100;
     const dnShift = (base.score - dn.score) * 100;
     results.push({
       id: t.id, name: t.name, domain: t.domain,
       upShift,
       dnShift,
-      totalImpact: Math.abs(upShift) + Math.abs(dnShift),
+      totalImpact: Math.max(0, Math.abs(upShift) - 1.96 * upMcSe) + Math.max(0, Math.abs(dnShift) - 1.96 * dnMcSe),
+      rawTotalImpact: Math.abs(upShift) + Math.abs(dnShift),
       baseP50: base.p50,
       upP50: up.p50,
       dnP50: dn.p50,
@@ -2430,6 +2410,11 @@ async function runSensitivity(params, baseN) {
       baseP2050: base.p2050,
       upP2050: up.p2050,
       dnP2050: dn.p2050,
+      upMcSe,
+      dnMcSe,
+      pairedRandomInputs: true,
+      mcErrorMethod: 'paired bootstrap standard deviation of the full OAT composite contrast; 160 resamples',
+      totalImpactDescription: 'heuristic sum of absolute contrasts beyond 1.96 bootstrap standard errors; not a confidence bound',
     });
   }
   results.sort((a, b) => b.totalImpact - a.totalImpact);
@@ -2438,6 +2423,7 @@ async function runSensitivity(params, baseN) {
 
 async function runExploratorySensitivityIndices(params, baseN) {
   params = params || P;
+  const diagnosticRng = createRngContext(`${params.seed || DEFAULT_MC_SEED}:sobol-fit`);
   const scKey = params.scenario;
   const sc = SC[scKey] || SC.baseline;
   const spreadMult = params.uncMult * sc.uncWidthMult;
@@ -2449,7 +2435,7 @@ async function runExploratorySensitivityIndices(params, baseN) {
   const effectiveDistributions = meanThreats.map(t => {
     const samples = [];
     for (let i = 0; i < 160; i++) {
-      const sampled = sampleThreatNumerics(applyScenario(THREATS.find(x => x.id === t.id), scKey), spreadMult);
+      const sampled = sampleThreatNumerics(applyScenario(THREATS.find(x => x.id === t.id), scKey), spreadMult, diagnosticRng);
       const bs = baseScore(sampled, params.weights);
       const priority = Math.max(1e-6, bs * depFactor(t, meanThreats, params) * domainWeightMultiplier(sampled.domain, params));
       samples.push(Math.log(priority));
@@ -2511,7 +2497,13 @@ async function runExploratorySensitivityIndices(params, baseN) {
   const all = [...fA, ...fB];
   const mean = all.reduce((s, v) => s + v, 0) / all.length;
   const variance = all.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, all.length - 1);
-  const varDen = Math.max(1e-9, variance);
+  if (!(variance > 0)) return {
+    rows: [], firstOrderSum: null, variance, status: 'undefined_zero_variance', sampleSize: N,
+    sampler: 'Sobol low-discrepancy A/B/A_Bi design',
+    targetLabel: 'Continuous composite response: Global Stress Index, threshold-share by 2035/2050, and normalized central horizon',
+    warnings: ['The sampled target has zero or invalid variance; Sobol/Jansen indices and ranking are undefined.'],
+  };
+  const varDen = variance;
 
   const rows = [];
   for (let i = 0; i < k; i++) {
@@ -2550,6 +2542,7 @@ async function runExploratorySensitivityIndices(params, baseN) {
     rows,
     firstOrderSum,
     variance,
+    status: 'identified',
     sampleSize: N,
     sampler: 'Sobol low-discrepancy A/B/A_Bi design',
     targetLabel: 'Continuous composite response: Global Stress Index, threshold-share by 2035/2050, and normalized central horizon',
@@ -2649,7 +2642,7 @@ function renderTimelineBar(low, mid, high, uncLow, uncHigh, threatEntryOrShowPer
       </div>
       <div class="bar-track"${amplifierTrackAttrs}>
         <div class="bar-fill" style="width:100%;background:linear-gradient(to right,#d0d0d0 0%,#d4a017 50%,#c94040 100%);opacity:.55"></div>
-        <div class="meta-sub" style="position:absolute;left:10px;top:24px">${isAmplifierRisk ? AMPLIFIER_NO_CROSSING_LABEL : 'No crossing ≤ 2100'}</div>
+        <div class="meta-sub" style="position:absolute;left:10px;top:24px">${!percentilePoints.length ? 'Horizon not identifiable' : isAmplifierRisk ? AMPLIFIER_NO_CROSSING_LABEL : 'No crossing ≤ 2100'}</div>
         <div class="bar-now" style="left:${nowX}%">
           <span class="bar-now-cue bar-now-cue-left" aria-hidden="true">⮞⮞⮞</span>
           <div class="bar-now-lbl">${nowStamp()}</div>
@@ -2837,11 +2830,15 @@ function threatTimelineForMode(t, mcRes, mode, options = {}) {
 
   if (mode === 'weibull') {
     const canShowProbability = !options.requireMcForWeibullProbability || mcRes;
+    const params = weibullParamsForThreat(t, stats);
     return {
       lower: weibullQuantile(t, 0.10, stats),
       mid: weibullQuantile(t, 0.50, stats),
       upper: weibullQuantile(t, 0.90, stats),
       p2050: canShowProbability ? weibullProbability(t, 2050, stats) : null,
+      censored: params.censored,
+      status: params.status,
+      medianLowerBound: params.censored ? YE : null,
     };
   }
 
@@ -2856,12 +2853,26 @@ function threatTimelineForMode(t, mcRes, mode, options = {}) {
 }
 
 function weightedDomainTimeline(items, mcRes, mode) {
+  // A zero-priority member contributes no weight to this diagnostic summary.
+  if (mode === 'weibull') items = items.filter(t => Number.isFinite(t.priority) && t.priority > 0);
   const timelineFor = t => threatTimelineForMode(t, mcRes, mode);
+  const timelines = items.map(timelineFor);
+  const censoredCount = timelines.filter(timeline => timeline.censored).length;
+  const invalidCount = timelines.filter(timeline => timeline.status === 'invalid').length;
+  if (mode === 'weibull' && (!items.length || censoredCount || invalidCount)) {
+    // A member's censored median does not put the weighted domain quantiles beyond YE.
+    return { lower: null, mid: null, upper: null, p2050: null, censored: false, censoredCount, invalidCount, status: 'unidentified' };
+  }
+  const quantileLimit = mode === 'weibull' ? Infinity : YE;
   return {
-    lower: weightedFiniteAverage(items, t => timelineFor(t).lower, { maxValue: YE, fallback: YE + 1 }),
-    mid: weightedFiniteAverage(items, t => timelineFor(t).mid, { maxValue: YE, fallback: YE + 1 }),
-    upper: weightedFiniteAverage(items, t => timelineFor(t).upper, { maxValue: YE, fallback: YE + 1 }),
+    lower: weightedFiniteAverage(items, t => timelineFor(t).lower, { maxValue: quantileLimit, fallback: YE + 1 }),
+    mid: weightedFiniteAverage(items, t => timelineFor(t).mid, { maxValue: quantileLimit, fallback: YE + 1 }),
+    upper: weightedFiniteAverage(items, t => timelineFor(t).upper, { maxValue: quantileLimit, fallback: YE + 1 }),
     p2050: weightedFiniteAverage(items, t => timelineFor(t).p2050, { fallback: null }),
+    censored: false,
+    censoredCount: 0,
+    invalidCount: 0,
+    status: 'identified',
   };
 }
 
@@ -2875,7 +2886,8 @@ function summarizeDomainLayer(items, mcRes, domainKey) {
 
   return {
     ...timeline,
-    source: mode === 'weibull' ? 'Weibull' : 'MC',
+    weightedSummary: mode === 'weibull',
+    source: mode === 'weibull' ? (timeline.status === 'unidentified' ? `Weighted Weibull; ${timeline.censoredCount} censored, ${timeline.invalidCount} invalid` : 'Weighted Weibull') : 'MC',
     ...weightedThreatAverages(items),
   };
 }
@@ -2884,6 +2896,7 @@ function domainDeltaText(agg, systemP50) {
   if (!Number.isFinite(systemP50) || !Number.isFinite(agg.mid)) return '';
 
   const deltaYr = Math.round(agg.mid - systemP50);
+  if (agg.weightedSummary) return `${deltaYr > 0 ? '+' : ''}${deltaYr} yr weighted summary vs system p50`;
   if (deltaYr === 0) return 'same as system p50';
   return deltaYr > 0 ? `+${deltaYr} yr vs system p50` : `−${Math.abs(deltaYr)} yr vs system p50`;
 }
@@ -2893,11 +2906,14 @@ function domainNoDataHtml(dom) {
 }
 
 function domainStatsHtml(agg) {
+  const yearsLabel = year => Number.isFinite(year) ? fmtYearsLeft(year) : 'undefined';
+  const daysLabel = year => Number.isFinite(year) ? daysLeft(year) : '';
+  const weightedQuantileTip = 'Priority-weighted average of the individual threats’ Weibull quantiles. This is a descriptive summary, not a quantile of a domain crossing distribution or mixture. Identified quantiles beyond 2100 remain in the average.';
   return `<div class="agg-stats">
-    <div class="agg-stat" data-tip="<strong>P10 lower estimate</strong>The earlier edge of this domain’s risk window. About 10% of model runs fall earlier than this point; it is not a fixed prediction."><div class="agg-stat-label">To lower  P10</div><div class="agg-stat-val">${fmtYearsLeft(agg.lower)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.lower}">${daysLeft(agg.lower)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P50 middle estimate</strong>The median estimate for this domain. Half of the model runs are earlier and half are later, so this is the central model horizon."><div class="agg-stat-label">To mid  P50</div><div class="agg-stat-val">${fmtYearsLeft(agg.mid)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.mid}">${daysLeft(agg.mid)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P90 upper estimate</strong>The later, more conservative edge of this domain’s window. About 90% of model runs fall earlier than this point; it is not a promise that things stay safe until then."><div class="agg-stat-label">To high  P90</div><div class="agg-stat-val">${fmtYearsLeft(agg.upper)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.upper}">${daysLeft(agg.upper)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P≤2050 (${agg.source})</strong>Mode-specific probability summary for this domain by 2050. MC reads the domain Monte Carlo crossing distribution; Weibull uses the weighted per-threat Weibull crossing probabilities."><div class="agg-stat-label">P≤2050</div><div class="agg-stat-val">${agg.p2050 == null ? 'Run MC' : pct(agg.p2050)}<br><span style="font-size:8px;color:var(--text-3)">(${agg.source})</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P10 lower estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'The earlier edge of this domain’s risk window. About 10% of model runs fall earlier than this point; it is not a fixed prediction.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P10' : 'To lower  P10'}</div><div class="agg-stat-val">${yearsLabel(agg.lower)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.lower}">${daysLabel(agg.lower)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P50 middle estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'The median estimate for this domain. Half of the model runs are earlier and half are later, so this is the central model horizon.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P50' : 'To mid  P50'}</div><div class="agg-stat-val">${yearsLabel(agg.mid)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.mid}">${daysLabel(agg.mid)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P90 upper estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'The later, more conservative edge of this domain’s window. About 90% of model runs fall earlier than this point; it is not a promise that things stay safe until then.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P90' : 'To high  P90'}</div><div class="agg-stat-val">${yearsLabel(agg.upper)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.upper}">${daysLabel(agg.upper)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P≤2050 (${agg.source})</strong>${agg.weightedSummary ? 'Priority-weighted average of individual threat probabilities by 2050, not the probability of a joint domain crossing. Undefined when a contributing median is right-censored or invalid.' : 'Probability from the domain Monte Carlo crossing distribution by 2050.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P≤2050' : 'P≤2050'}</div><div class="agg-stat-val">${agg.status === 'unidentified' ? 'undefined' : agg.p2050 == null ? 'Run MC' : pct(agg.p2050)}<br><span style="font-size:8px;color:var(--text-3)">(${agg.source})</span></div></div>
     <div class="agg-stat" data-tip="<strong>Avg severity</strong>Average damage potential for threats in this domain. 1 means limited damage; 5 means global or systemic damage."><div class="agg-stat-label">Avg severity</div><div class="agg-stat-val">${agg.avgSev.toFixed(1)}/5</div></div>
     <div class="agg-stat" data-tip="<strong>Avg urgency</strong>How soon the threats in this domain are becoming relevant. Higher means the pressure is closer and more active now."><div class="agg-stat-label">Avg urgency</div><div class="agg-stat-val">${agg.avgUrg.toFixed(1)}/5</div></div>
     <div class="agg-stat" data-tip="<strong>Avg cascade</strong>How strongly threats in this domain can amplify each other or pull other systems with them. Higher means more domino-effect potential."><div class="agg-stat-label">Avg cascade</div><div class="agg-stat-val">${agg.avgCas.toFixed(1)}/5</div></div>
@@ -2916,10 +2932,10 @@ function domainLayerCardHtml(dom, enriched, mcRes, systemP50) {
       <span class="agg-bracket-arrow"></span>
       <div class="agg-name" style="display:flex;align-items:center">${dom.icon || ''}${dom.title}</div>
       <div class="agg-desc">${dom.desc}</div>
-      <div class="agg-year-row" data-tip="<strong>Domain P50 horizon</strong>The large year is this domain's median crossing horizon under the current scenario. The delta compares it to the system-wide Dynamic cascade P50 reference: negative means this domain crosses earlier than the system median; positive means later.">
+      <div class="agg-year-row" data-tip="${agg.weightedSummary ? '<strong>Weighted threat P50 summary</strong>Priority-weighted average of the individual Weibull medians, not a domain crossing median. The delta is a descriptive comparison with system Dynamic cascade P50; it is not a difference between equivalent statistics.' : '<strong>Domain P50 horizon</strong>The large year is this domain\'s median crossing horizon under the current scenario. The delta compares it to the system-wide Dynamic cascade P50 reference: negative means this domain crosses earlier than the system median; positive means later.'}">
         <div>
-          <div class="agg-year">${fmtY(agg.mid)}</div>
-          <div class="agg-year-percentile">Domain P50 horizon</div>
+          <div class="agg-year">${Number.isFinite(agg.mid) ? fmtY(agg.mid) : 'undefined'}</div>
+          <div class="agg-year-percentile">${agg.weightedSummary ? 'Weighted threat P50' : 'Domain P50 horizon'}</div>
           ${deltaText ? `<div style="font-family:var(--mono);font-size:9px;color:var(--text-3);letter-spacing:.04em;margin-top:3px;text-transform:none">(${deltaText})</div>` : ''}
         </div>
       </div>
@@ -3009,55 +3025,6 @@ function sourceBadge(value, rangeObj, digits = 1, suffix = '') {
   return `<span class="src-pop">${Number.isFinite(value) ? value.toFixed(digits) : ' '}${suffix}<button class="src-i" type="button" tabindex="0" aria-label="Show parameter source" title="Show parameter source">i</button><span class="src-tip">${sourceTooltip(rangeObj)}</span></span>`;
 }
 
-function renderStructuralCard(mcRes) {
-  const grid = document.getElementById('structuralGrid');
-  const note = document.getElementById('structuralNote');
-  if (!grid || !note) return;
-  if (!mcRes || !mcRes.ensemble) {
-    grid.innerHTML = '';
-    note.textContent = 'Run simulation to compare compensatory, non-compensatory, graph-weighted, and dynamic cascade aggregation rules.';
-    return;
-  }
-  const rows = [
-    ['Compensatory MCDA', mcRes.ensemble.compensatory],
-    ['Non-compensatory max-rule', mcRes.ensemble.maxRule],
-    ['Graph-weighted Gaussian aggregation', mcRes.ensemble.graphWeighted],
-    ['Dynamic cascade propagation', mcRes.ensemble.dynamicCascade],
-  ];
-  const baseHtml = rows.map(([label, row]) => {
-    const p2035 = pct((row.cdf.find(e => e.year === 2035) || { prob: 0 }).prob);
-    const p2050 = pct((row.cdf.find(e => e.year === 2050) || { prob: 0 }).prob);
-    const horizonSummary = describeHorizonBand(row.p50);
-    return `<div class="structural-col">
-      <div class="structural-name">${label}</div>
-      <div class="structural-main">${horizonSummary}</div>
-      <div class="structural-stats">
-        <div>P50 summary statistic: ${fmtY(row.p50)}</div>
-        <div>P(threshold ≤ 2035): ${p2035}</div>
-        <div>P(threshold ≤ 2050): ${p2050}</div>
-        <div>90% width: ${Math.round(row.p90 - row.p10)}y</div>
-      </div>
-    </div>`;
-  }).join('');
-  const robustness = mcRes.thresholdRobustness;
-  const robustnessHtml = robustness ? (() => {
-    const delta = robustness.deltaYears;
-    const deltaText = Number.isFinite(delta) ? `${delta > 0 ? '+' : ''}${Math.round(delta)}y` : 'n/a';
-    return `<div class="structural-col">
-      <div class="structural-name">Threshold robustness check</div>
-      <div class="structural-main">${deltaText}</div>
-      <div class="structural-stats">
-        <div>Current per-threat headline: ${fmtY(robustness.perThreatHeadline)}</div>
-        <div>Global 8.5 headline: ${fmtY(robustness.globalHeadline)}</div>
-        <div>Policy: ${escapeHtml(robustness.policy || THRESHOLD_POLICY)}</div>
-        <div>Diagnostic only; main clock date is unchanged.</div>
-      </div>
-    </div>`;
-  })() : '';
-  grid.innerHTML = baseHtml + robustnessHtml;
-  note.textContent = `Structural σ is the cross-aggregator P50 range: ${Math.round(mcRes.structuralSigma)} years. Dynamic cascade propagation is a year-by-year dependency model; all aggregation rules remain structural assumptions, not empirical truths.${robustness ? ' Threshold robustness check — diagnostic only, does not overwrite the main clock date.' : ''}`;
-}
-
 function weibullCDF(year, t0, eta, beta) {
   if (!Number.isFinite(year) || !Number.isFinite(t0) || !Number.isFinite(eta) || !Number.isFinite(beta) || eta <= 0) return 0;
   if (year <= t0) return 0;
@@ -3075,21 +3042,39 @@ function weibullShapeForThreat(t) {
 }
 
 function weibullParamsForThreat(t, stats) {
-  const rawMid = stats && Number.isFinite(stats.p50) ? stats.p50 : t.horizon;
-  const fallbackMid = Number.isFinite(t.horizon) && t.horizon <= YE ? t.horizon : 2060;
-  const mid = clamp(Number.isFinite(rawMid) && rawMid <= YE ? rawMid : fallbackMid, NOW + 0.5, YE);
+  const rawMid = stats == null ? t.horizon : stats.p50;
   const beta = weibullShapeForThreat(t);
+  if (!Number.isFinite(rawMid) || !Number.isFinite(beta) || beta <= 0) {
+    return { t0: NOW, eta: null, beta, mid: null, censored: false, censorYear: null, status: 'invalid' };
+  }
+  if (rawMid > YE) {
+    return { t0: NOW, eta: null, beta, mid: null, censored: true, censorYear: YE, status: 'right_censored' };
+  }
+  const mid = clamp(rawMid, NOW + 0.5, YE);
   const eta = Math.max(0.25, (mid - NOW) / Math.pow(Math.log(2), 1 / beta));
-  return { t0: NOW, eta, beta, mid };
+  return { t0: NOW, eta, beta, mid, censored: false, censorYear: null, status: 'identified' };
 }
 
 function weibullProbability(t, year, stats) {
   const p = weibullParamsForThreat(t, stats);
+  if (p.status !== 'identified' || !Number.isFinite(year)) return null;
   return weibullCDF(year, p.t0, p.eta, p.beta);
+}
+
+function weibullProbabilityBounds(t, year, stats) {
+  const params = weibullParamsForThreat(t, stats);
+  if (params.status === 'invalid' || !Number.isFinite(year)) return { status: 'invalid', lower: null, upper: null };
+  if (params.censored) {
+    // Only the median's right-censoring is known, not a fitted scale or point probability.
+    return { status: params.status, lower: 0, upper: year <= NOW ? 0 : year <= YE ? 0.5 : 1 };
+  }
+  const p = weibullProbability(t, year, stats);
+  return { status: params.status, lower: p, upper: p };
 }
 
 function weibullQuantile(t, q, stats) {
   const p = weibullParamsForThreat(t, stats);
+  if (p.status !== 'identified' || !Number.isFinite(q)) return null;
   const qc = clamp(q, 0.0001, 0.9999);
   return p.t0 + p.eta * Math.pow(-Math.log(1 - qc), 1 / p.beta);
 }
@@ -3203,6 +3188,34 @@ function poissonAtLeast(pmf, k) {
   return pmf.slice(k).reduce((s, p) => s + p, 0);
 }
 
+function independentFailureReference(enriched, year, threatStats) {
+  const statuses = enriched.map(t => weibullProbabilityBounds(t, year, threatStats ? threatStats[t.id] : null));
+  const censoredCount = statuses.filter(p => p.status === 'right_censored').length;
+  const invalidCount = statuses.filter(p => p.status === 'invalid').length;
+  const unidentifiedCount = censoredCount + invalidCount;
+  if (invalidCount) return { censoredCount, invalidCount, unidentifiedCount, lowerPs: null, upperPs: null, expectedLower: null, expectedUpper: null, lowerPmf: null, upperPmf: null };
+  const lowerPs = statuses.map(p => p.lower);
+  const upperPs = statuses.map(p => p.upper);
+  return {
+    censoredCount,
+    invalidCount,
+    unidentifiedCount,
+    lowerPs,
+    upperPs,
+    expectedLower: lowerPs.reduce((s, p) => s + p, 0),
+    expectedUpper: upperPs.reduce((s, p) => s + p, 0),
+    lowerPmf: poissonBinomialPMF(lowerPs),
+    upperPmf: poissonBinomialPMF(upperPs),
+  };
+}
+
+function correlatedScenarioSpread(ps, rho) {
+  const variances = ps.map(p => p * (1 - p));
+  const sumVariance = variances.reduce((s, v) => s + v, 0);
+  const sumSd = variances.reduce((s, v) => s + Math.sqrt(v), 0);
+  return Math.sqrt(Math.max(0, (1 - rho) * sumVariance + rho * sumSd ** 2));
+}
+
 function effectiveCascadeCorrelation(enriched) {
   if (!enriched.length) return 0;
   const domainCorr = { civilization:0.55, biosphere:0.62, technology:0.48 };
@@ -3226,15 +3239,20 @@ function jointFailureByDecade(enriched, mcRes) {
     k80,
     rho: effectiveCascadeCorrelation(enriched),
     rows: years.map(year => {
-      const ps = enriched.map(t => weibullProbability(t, year, mcRes && mcRes.threatStats ? mcRes.threatStats[t.id] : null));
-      const pmf = poissonBinomialPMF(ps);
+      const ref = independentFailureReference(enriched, year, mcRes && mcRes.threatStats ? mcRes.threatStats : null);
+      const boundedTail = k => ref.invalidCount ? { lower: null, upper: null } : { lower: poissonAtLeast(ref.lowerPmf, k), upper: poissonAtLeast(ref.upperPmf, k) };
+      const at30 = boundedTail(k30), at50 = boundedTail(k50), at70 = boundedTail(k70), at80 = boundedTail(k80);
       return {
         year,
-        expected: ps.reduce((s, p) => s + p, 0),
-        at30: poissonAtLeast(pmf, k30),
-        at50: poissonAtLeast(pmf, k50),
-        at70: poissonAtLeast(pmf, k70),
-        at80: poissonAtLeast(pmf, k80),
+        censoredCount: ref.censoredCount,
+        invalidCount: ref.invalidCount,
+        expected: ref.unidentifiedCount ? null : ref.expectedLower,
+        expectedLower: ref.expectedLower,
+        expectedUpper: ref.expectedUpper,
+        at30: ref.unidentifiedCount ? null : at30.lower, at30Lower: at30.lower, at30Upper: at30.upper,
+        at50: ref.unidentifiedCount ? null : at50.lower, at50Lower: at50.lower, at50Upper: at50.upper,
+        at70: ref.unidentifiedCount ? null : at70.lower, at70Lower: at70.lower, at70Upper: at70.upper,
+        at80: ref.unidentifiedCount ? null : at80.lower, at80Lower: at80.lower, at80Upper: at80.upper,
       };
     }),
   };
@@ -3316,13 +3334,16 @@ function renderAdvancedMethod(enriched, mcRes) {
   const allW = [...enriched].sort((a, b) => b.priority - a.priority).map(t => {
     const stats = threatStats ? threatStats[t.id] : null;
     const wp = weibullParamsForThreat(t, stats);
-    const wP = clamp(weibullProbability(t, CMP, stats), 0, 0.9999);
-    const dtH = Math.max(1, (stats && stats.p50 || t.horizon || 2060) - NOW);
-    const bP = clamp(1 - Math.pow(0.5, Math.max(0, CMP - NOW) / dtH), 0, 0.9999);
-    return { name: t.name, domain: t.domain, beta: wp.beta, wP, bP, delta: wP - bP };
+    const wP = weibullProbability(t, CMP, stats);
+    const bP = wp.status === 'identified' ? clamp(1 - Math.pow(0.5, Math.max(0, CMP - NOW) / Math.max(1, wp.mid - NOW)), 0, 0.9999) : null;
+    return { name: t.name, domain: t.domain, beta: wp.beta, wP, bP, delta: Number.isFinite(wP) && Number.isFinite(bP) ? wP - bP : null, censored: wp.censored, status: wp.status };
   });
   const betaMean = allW.reduce((s, r) => s + r.beta, 0) / Math.max(1, allW.length);
-  const wMeanP = allW.reduce((s, r) => s + r.wP, 0) / Math.max(1, allW.length);
+  const meanRef = independentFailureReference(enriched, CMP, threatStats);
+  const wMeanLower = enriched.length && Number.isFinite(meanRef.expectedLower) ? meanRef.expectedLower / enriched.length : null;
+  const wMeanUpper = enriched.length && Number.isFinite(meanRef.expectedUpper) ? meanRef.expectedUpper / enriched.length : null;
+  const wMeanLabel = !Number.isFinite(wMeanLower) ? 'n/a' : meanRef.censoredCount
+    ? `${Math.round(wMeanLower * 100)}–${Math.round(wMeanUpper * 100)}%` : `${Math.round(wMeanLower * 100)}%`;
   const fastestW = allW.reduce((best, r) => r.beta > (best ? best.beta : 0) ? r : best, null);
   const COL = 'minmax(0,1.6fr) 56px minmax(0,1fr) minmax(0,1fr) 52px';
   const wRight = `
@@ -3336,7 +3357,7 @@ function renderAdvancedMethod(enriched, mcRes) {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       ${[
         {l:'Mean β',v:betaMean.toFixed(2),note:'β > 1 means accelerating hazard',tip:'<b>Mean β shows the average speed of risk acceleration across all threats.</b> A value above 1 means that, on average, hazards are not just present, but are increasing dynamically. Higher values mean the model sees faster escalation pressure.'},
-        {l:`Mean P by ${CMP}`,v:Math.round(wMeanP*100)+'%',note:'Weibull crossing probability',tip:`<b>This is the model’s estimated probability that critical thresholds are crossed by ${CMP}.</b> It does not mean certainty or prediction. It means: under the selected assumptions, how much of the simulated risk distribution reaches the danger zone by that year.`},
+        {l:`Mean P by ${CMP}`,v:wMeanLabel,note:`All ${allW.length} threats; ${meanRef.censoredCount} censored, ${meanRef.invalidCount} invalid`,tip:`<b>This mean retains every threat.</b> Right-censored medians imply probability bounds [0, 0.5] within the horizon. Invalid inputs leave the full-population mean undefined.`},
         {l:'Fastest hazard',v:fastestW?fastestW.beta.toFixed(2):' ',note:fastestW?escapeHtml(fastestW.name):' ',tip:'<b>This shows which threat is currently accelerating fastest in the model.</b> It is not necessarily the biggest threat overall; it is the one whose modeled risk pressure grows fastest under the current settings.'},
       ].map(x=>`<div class="advanced-kpi-tooltip-card" data-tip="${escapeHtml(x.tip || '')}" tabindex="0" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r4);padding:12px 26px 12px 12px;text-align:center;position:relative">
         <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--red);line-height:1">${x.v}</div>
@@ -3357,9 +3378,10 @@ function renderAdvancedMethod(enriched, mcRes) {
       const rowHtml = (r,i) => {
         const dc = r.domain==='biosphere'?'#2a9d6e':r.domain==='technology'?'#3a78c9':'#c94040';
         const bc = r.beta>1.7?'#c94040':r.beta>1.45?'#d67a1c':r.beta>1.2?'#d4a017':'#2a9d6e';
-        const wP = Math.round(r.wP*100), bP = Math.round(r.bP*100);
-        const dTxt = Math.abs(r.delta)<0.005?'≈':(r.delta>0?'+':'')+Math.round(r.delta*100)+'pp';
-        const dCol = r.delta>0.005?'#c94040':r.delta<-0.005?'#2a9d6e':'var(--text-3)';
+        const wP = Number.isFinite(r.wP) ? Math.round(r.wP*100) : null, bP = Number.isFinite(r.bP) ? Math.round(r.bP*100) : null;
+        const unavailable = r.censored ? 'cens.' : 'n/a';
+        const dTxt = !Number.isFinite(r.delta) ? unavailable : Math.abs(r.delta)<0.005?'≈':(r.delta>0?'+':'')+Math.round(r.delta*100)+'pp';
+        const dCol = !Number.isFinite(r.delta) ? 'var(--text-3)' : r.delta>0.005?'#c94040':r.delta<-0.005?'#2a9d6e':'var(--text-3)';
         const bg = i%2===0?'rgba(255,255,255,.013)':'transparent';
         return `<div style="display:grid;grid-template-columns:${COL};gap:10px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);background:${bg}">
           <div style="display:flex;align-items:center;gap:6px;min-width:0">
@@ -3369,15 +3391,15 @@ function renderAdvancedMethod(enriched, mcRes) {
           <div style="text-align:center;font-family:var(--mono);font-size:12px;font-weight:700;color:${bc}">${r.beta.toFixed(2)}</div>
           <div style="display:flex;align-items:center;gap:5px;min-width:0">
             <div style="flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;min-width:0">
-              <div style="height:100%;width:${wP}%;background:${barCol(wP)};border-radius:3px"></div>
+              <div style="height:100%;width:${wP ?? 0}%;background:${r.censored?'var(--text-3)':barCol(wP)};border-radius:3px"></div>
             </div>
-            <span style="font-family:var(--mono);font-size:10px;color:${barCol(wP)};flex-shrink:0;width:32px;text-align:right">${wP}%</span>
+            <span style="font-family:var(--mono);font-size:10px;color:${wP===null?'var(--text-3)':barCol(wP)};flex-shrink:0;width:32px;text-align:right">${wP===null?unavailable:wP+'%'}</span>
           </div>
           <div style="display:flex;align-items:center;gap:5px;min-width:0">
             <div style="flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;min-width:0">
-              <div style="height:100%;width:${bP}%;background:${barCol(bP)};border-radius:3px"></div>
+              <div style="height:100%;width:${bP ?? 0}%;background:${r.censored?'var(--text-3)':barCol(bP)};border-radius:3px"></div>
             </div>
-            <span style="font-family:var(--mono);font-size:10px;color:${barCol(bP)};flex-shrink:0;width:32px;text-align:right">${bP}%</span>
+            <span style="font-family:var(--mono);font-size:10px;color:${bP===null?'var(--text-3)':barCol(bP)};flex-shrink:0;width:32px;text-align:right">${bP===null?unavailable:bP+'%'}</span>
           </div>
           <div style="font-family:var(--mono);font-size:10px;font-weight:600;color:${dCol};text-align:center">${dTxt}</div>
         </div>`;
@@ -3438,18 +3460,24 @@ function renderAdvancedMethod(enriched, mcRes) {
   const jfYears = [2030, 2035, 2040, 2050, 2060, 2070, 2080];
   const fixedTh = [{k:3,col:'#3a78c9',label:'≥3'},{k:5,col:'#d4a017',label:'≥5'},{k:10,col:'#d67a1c',label:'≥10'},{k:15,col:'#c94040',label:'≥15'}];
   const jfRows = jfYears.map(year => {
-    const ps = enriched.map(t => weibullProbability(t, year, threatStats ? threatStats[t.id] : null));
-    const mu = ps.reduce((s, p) => s + p, 0);
-    const pmf = poissonBinomialPMF(ps);
-    const sigma0 = Math.sqrt(ps.reduce((s, p) => s + p * (1 - p), 0));
+    const ref = independentFailureReference(enriched, year, threatStats);
+    if (ref.invalidCount) return {
+      yr: year, mu: 'n/a', muValue: null, sigma: 'n/a', censoredCount: ref.censoredCount,
+      invalidCount: ref.invalidCount, pGe3: null, pGe5: null, pGe10: null, pGe15: null,
+    };
+    const sigmaLower = correlatedScenarioSpread(ref.lowerPs, rhoE);
+    const sigmaUpper = correlatedScenarioSpread(ref.upperPs, rhoE);
+    const tail = k => ({ lower: poissonAtLeast(ref.lowerPmf, k), upper: poissonAtLeast(ref.upperPmf, k) });
     return {
-      yr: year, mu: mu.toFixed(1),
-      sigma: (sigma0 * Math.sqrt(1 + rhoE * (enriched.length - 1))).toFixed(1),
-      pGe3: poissonAtLeast(pmf, 3), pGe5: poissonAtLeast(pmf, 5),
-      pGe10: poissonAtLeast(pmf, 10), pGe15: poissonAtLeast(pmf, 15),
+      yr: year,
+      mu: ref.censoredCount ? `${ref.expectedLower.toFixed(1)}–${ref.expectedUpper.toFixed(1)}` : ref.expectedLower.toFixed(1),
+      muValue: ref.expectedLower,
+      sigma: ref.censoredCount ? `${sigmaLower.toFixed(1)}–${sigmaUpper.toFixed(1)}` : sigmaLower.toFixed(1),
+      censoredCount: ref.censoredCount,
+      pGe3: tail(3), pGe5: tail(5), pGe10: tail(10), pGe15: tail(15),
     };
   });
-  const muMax = Math.max(...jfRows.map(d => parseFloat(d.mu)), 1);
+  const muMax = Math.max(...jfRows.map(d => d.muValue).filter(Number.isFinite), 1);
   const jfRight = `
     <div style="font-family:var(--mono);font-size:9px;color:var(--text-3);margin-bottom:8px;letter-spacing:.06em">
       EXPECTED ACTIVE THRESHOLD CROSSINGS  μ(t) = Σ pᵢ(t)  ρ_eff=${Math.round(rhoE*100)}%
@@ -3460,15 +3488,16 @@ function renderAdvancedMethod(enriched, mcRes) {
           <text x="-4" y="${(y+3).toFixed(1)}" fill="rgba(255,255,255,.2)" font-size="7" font-family="var(--mono)" text-anchor="end">${g}</text>`;}).join('')}
         ${jfRows.map((d,i)=>{
           const x=14+i*(560/jfRows.length), bw=560/jfRows.length-8;
-          const h=(parseFloat(d.mu)/muMax)*56;
-          const col=parseFloat(d.mu)<5?'#3a78c9':parseFloat(d.mu)<10?'#d4a017':parseFloat(d.mu)<15?'#d67a1c':'#c94040';
+          if (!Number.isFinite(d.muValue)) return `<text x="${(x+bw/2).toFixed(1)}" y="58" fill="var(--text-3)" font-size="10" text-anchor="middle">n/a</text><text x="${(x+bw/2).toFixed(1)}" y="72" fill="var(--text-3)" font-size="9" text-anchor="middle">${d.yr}</text>`;
+          const h=(d.muValue/muMax)*56;
+          const col=d.muValue<5?'#3a78c9':d.muValue<10?'#d4a017':d.muValue<15?'#d67a1c':'#c94040';
           return `<rect x="${x.toFixed(1)}" y="${(62-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${col}" opacity=".75" rx="3"/>
             <text x="${(x+bw/2).toFixed(1)}" y="${(62-h-4).toFixed(1)}" fill="${col}" font-size="10" font-family="var(--mono)" font-weight="bold" text-anchor="middle">${d.mu}</text>
             <text x="${(x+bw/2).toFixed(1)}" y="72" fill="rgba(255,255,255,.3)" font-size="9" font-family="var(--mono)" text-anchor="middle">${d.yr}</text>`;
         }).join('')}
       </svg>
     </div>
-    <div style="font-family:var(--mono);font-size:9px;color:var(--text-3);margin-bottom:8px;letter-spacing:.06em">PROBABILITY P(Xₜ ≥ k) ACTIVE THRESHOLD CROSSINGS  exact Poisson-binomial PMF convolution</div>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--text-3);margin-bottom:8px;letter-spacing:.06em">INDEPENDENT REFERENCE P(Xₜ ≥ k)  Poisson-binomial PMF convolution; ranges retain right-censored threats</div>
     <div style="overflow-x:auto;max-width:100%">
       <table style="width:100%;min-width:480px;border-collapse:collapse;font-family:var(--mono);font-size:9.5px">
         <thead><tr style="border-bottom:2px solid var(--border2)">
@@ -3479,10 +3508,12 @@ function renderAdvancedMethod(enriched, mcRes) {
           ${fixedTh.map(th=>`<tr style="border-bottom:1px solid var(--border)">
             <td style="padding:6px 8px;color:${th.col};font-weight:700">${th.label} threats</td>
             ${jfRows.map(d=>{
-              const val = d[`pGe${th.k}`] || 0;
-              const pct2 = Math.round(val*100);
+              const val = d[`pGe${th.k}`];
+              if (!val) return '<td style="text-align:center;padding:6px 8px;color:var(--text-3)">n/a</td>';
+              const pctLo = Math.round(val.lower*100), pctHi = Math.round(val.upper*100);
+              const pct2 = pctLo;
               const bg = pct2>80?'rgba(201,64,64,.12)':pct2>50?'rgba(212,160,23,.10)':pct2>20?'rgba(58,120,201,.08)':'transparent';
-              return `<td style="text-align:center;padding:6px 8px;color:${th.col};background:${bg}">${pct2}%</td>`;
+              return `<td style="text-align:center;padding:6px 8px;color:${th.col};background:${bg}">${pctLo===pctHi?pctLo+'%':pctLo+'–'+pctHi+'%'}</td>`;
             }).join('')}
           </tr>`).join('')}
           <tr style="border-bottom:1px solid var(--border);opacity:.5">
@@ -3498,7 +3529,7 @@ function renderAdvancedMethod(enriched, mcRes) {
       <span><span style="color:#d67a1c">■</span> μ 10–15  high</span>
       <span><span style="color:#c94040">■</span> μ&gt;15  critical</span>
       <span style="color:var(--border2)">|</span>
-      <span>σ shown as correlated diagnostic spread with ρ_eff=${Math.round(rhoE*100)}%; tail probabilities use exact PMF</span>
+      <span>σ is a separate scenario spread using Var=(1−ρ)Σvᵢ+ρ(Σ√vᵢ)² with ρ_eff=${Math.round(rhoE*100)}%; it does not define a joint Bernoulli model or correlated tails</span>
     </div>`;
   const sh = shannonEntropyRisk(enriched);
   const shC = sh.concentration;
@@ -3551,21 +3582,21 @@ function renderAdvancedMethod(enriched, mcRes) {
     <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);border-left:3px solid var(--blue)">
       <div>
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:5px">Advanced Methodology  Quantitative Science Layer</div>
-        <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">4 Independent Quantitative Algorithms</div>
+        <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">4 Internal Quantitative Diagnostics</div>
         <div style="font-size:11px;color:var(--text-3);line-height:1.7;max-width:820px">
-          Each method approaches systemic risk from a distinct mathematical framework. Together they form a convergent multi-method validation of the primary MCDA model. Read as an <strong style="color:var(--text-2)">optional scientific layer</strong>, not as a calibrated forecast.
+          These methods compare different internal summaries of the same model inputs and assumptions. Agreement is an internal diagnostic comparison; it does not independently validate the primary MCDA model. Read as an <strong style="color:var(--text-2)">optional diagnostic layer</strong>.
           <span style="color:var(--text-3)">  Active threats: ${enriched.length}  Evidence: ${evidence.strong}× strong / ${evidence.moderate}× moderate / ${evidence.weak}× weak</span>
         </div>
       </div>
-      <div style="flex-shrink:0;text-align:right" data-tip="<strong>ρ_eff (Domain Coupling)</strong>Effective correlation across the active threats  how strongly grouped failures move together. 0% means threats are fully independent: one failure does not affect the others. 100% means perfect co-occurrence: all threats fail together. Higher values mean that if one threat crosses its critical threshold, the others are likely to follow. This is typical for systemic risk in an interconnected world of economy, climate and technology.">
+      <div style="flex-shrink:0;text-align:right" data-tip="<strong>ρ_eff (scenario coupling)</strong>A graph-derived scenario assumption used only for the displayed spread formula. It is not an estimated Bernoulli correlation and does not determine joint failures or correlated tails. A value of 0 recovers the independent-reference variance; larger values increase the assumed spread without defining a joint distribution.">
         <div style="font-family:var(--mono);font-size:9px;color:var(--text-3)">ρ_eff (domain coupling)</div>
         <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--blue);line-height:1">${Math.round(rhoE*100)}%</div>
-        <div style="font-family:var(--mono);font-size:8px;color:var(--text-3)">effective correlation</div>
+        <div style="font-family:var(--mono);font-size:8px;color:var(--text-3)">scenario spread assumption</div>
       </div>
     </div>
     ${card('var(--red)','01','Weibull Survival Analysis  Accelerating Hazard',
-      '\\(m_i=\\operatorname{clamp}(p50_i\\;\\text{or}\\;H_i,t_0+0.5,2100);\\; S_i(t)=\\exp\\!\\left[-\\left(\\dfrac{t-t_0}{\\eta_i}\\right)^{\\beta_i}\\right];\\; F_i(t)=1-S_i(t);\\; h_i(t)=\\dfrac{\\beta_i}{\\eta_i}\\left(\\dfrac{t-t_0}{\\eta_i}\\right)^{\\beta_i-1};\\; \\eta_i=\\dfrac{m_i-t_0}{(\\ln 2)^{1/\\beta_i}};\\; \\beta_i=\\operatorname{clamp}(b_{proc}+0.10(a_i-3)+0.08(I_i-3)+0.07(u_i-3)+0.05(g_i-3)+e_i,0.75,3.20)\\)',
-      'Diagnostic survival layer. It estimates time-varying crossing probability from each threat horizon, process type, urgency, acceleration, interdependence, governance failure, and evidence strength. The displayed F is the Weibull cumulative crossing probability; S is survival/non-crossing probability. The hazard accelerates only when β > 1, is constant at β = 1, and decelerates when β < 1. The scale η is solved analytically so that P(T ≤ midYear) = 0.5.',
+      '\\(m_i\\le2100:\\;\\eta_i=\\dfrac{m_i-t_0}{(\\ln 2)^{1/\\beta_i}},\\;F_i(t)=1-\\exp[-((t-t_0)/\\eta_i)^{\\beta_i}];\\quad m_i>2100:\\;\\text{right-censored, }\\eta_i\\text{ undefined}\\)',
+      'Diagnostic survival layer. It estimates time-varying crossing probability only where the threat median is identifiable within the model horizon. A median beyond 2100 remains right-censored: η and point probabilities are not manufactured from a fallback year. The hazard accelerates only when β > 1, is constant at β = 1, and decelerates when β < 1.',
       'Weibull (1951) J. Appl. Mech.  Cox &amp; Oakes (1984)  Kousky &amp; Cooke (2009)',wRight)}
     ${card('var(--green)','02','Network Eigenvector Centrality  Dependency Hubs',
       '\\(D=\\{(i,j):j\\in deps_i\\};\\; A_{ij}=A_{ji}\\mathrel{+}=0.70+0.06I_i+0.04I_j\\;\\forall(i,j)\\in D;\\; v_i^{(0)}=1/\\sqrt{N};\\; \\mathbf{v}^{(k+1)}=\\dfrac{A\\mathbf{v}^{(k)}+\\varepsilon\\mathbf{1}}{\\lVert A\\mathbf{v}^{(k)}+\\varepsilon\\mathbf{1}\\rVert_2},\\; \\varepsilon=10^{-3};\\; c_i=\\dfrac{v_i}{\\sum_j v_j};\\; \\tilde c_i=c_i\\max(P_i,10^{-3})\\)',
@@ -3573,7 +3604,7 @@ function renderAdvancedMethod(enriched, mcRes) {
       'Bonacich (1972) J. Math. Sociology  Newman (2010) Networks ch.7  Helbing (2013) Nature 497',ecRight)}
     ${card('#d4a017','03','Concurrent Threshold Crossings  Poisson-Binomial Distribution',
       '\\(p_i(t)=\\operatorname{clamp}(F_i(t),0,0.9999);\\; X_t=\\sum_{i=1}^{N}B_i(t),\\; B_i\\sim\\mathrm{Bernoulli}(p_i(t));\\; f_0^{(0)}=1,\\; f_{k<0}^{(i)}=0;\\; f_k^{(i)}=(1-p_i)f_k^{(i-1)}+p_i f_{k-1}^{(i-1)};\\; P(X_t\\ge k)=\\sum_{j=k}^{N} f_j^{(N)};\\; \\mu(t)=\\sum_i p_i(t)\\)',
-      'The scientifically meaningful quantity is μ(t), the expected number of active threshold crossings by year t. Tail probabilities are computed by exact dynamic-programming convolution of unequal Bernoulli threat probabilities. ρ_eff is used only to display a correlated diagnostic σ, not to approximate P(Xₜ ≥ k).',
+      'Poisson-binomial tail probabilities are an independence reference, computed by dynamic-programming convolution of unequal Bernoulli probabilities. Right-censored Weibull medians remain explicit and produce bounds rather than artificial zero probabilities. The separately displayed correlated spread is a scenario assumption using Var=(1−ρ)Σvᵢ+ρ(Σ√vᵢ)²; this variance formula alone does not specify a valid joint Bernoulli model or correlated tails.',
       'Wang (1993) Poisson binomial  Helbing (2013) Nature 497  Joe (1997) Multivariate Models',jfRight)}
     ${card('#8b5cf6','04','Shannon Entropy of the Risk Landscape',
       `\\(r_i=\\max(10^{-3},P_i);\\; w_i=\\dfrac{r_i}{\\sum_j r_j};\\; H=-\\sum_i w_i\\log_2 w_i;\\; H_{\\max}=\\log_2N=${sh.hMax.toFixed(2)}\\,\\mathrm{bits};\\; C=1-H/H_{\\max};\\; N_{eff}=2^H\\)`,
@@ -3620,8 +3651,9 @@ function buildNarrative(scKey, enriched, mcRes) {
   The three highest-priority threats are ${top3}, with the earliest individual threat horizon at <strong>${earliest}</strong>.
   The <em>compensatory</em> aggregate model (weighted threat-mass crossing) gives a central horizon of <strong>${p50}</strong> (${p50Band}),
   with approximately <strong>${p2050}</strong> probability of compensatory crossing by 2050.
-  The <em>dynamic cascade</em> collapse model requiring all three domains active, high transmission share, and the selected Dynamic cascade active-mass threshold places the cascade P50 at <strong>${cascadeP50}</strong> and the cascade P90 (upper edge, shown as the headline year) at <strong>${cascadeP90}</strong>.
-  <br><br><em style="color:var(--text3);font-size:10px">A narrow P50 to P90 window in the Dynamic cascade model is a structural feature, not a calibration error: the cascade trigger is a tipping-point rule that requires multiple conditions to align at once. Once the system tips, it tips rapidly in most simulations &mdash; consistent with the catastrophic regime-shift literature (Scheffer et al. 2009, <em>Nature</em>), where complex systems often show long tails of stability followed by rapid collapse.</em>
+  The <em>dynamic functional cascade</em> follows directed losses of supporting functions. Its P50 is <strong>${cascadeP50}</strong> and its P90 is <strong>${cascadeP90}</strong>; both are shown in the paired headline clocks. A single initial failure can propagate; simultaneous initial failure in all three domains is not required. The trigger is the selected share of fixed criticality weights globally or within any essential-service basket, not a measured fraction of service output.
+  <br><br><strong>Standalone → propagated functional P50:</strong> ${['oceans','biodiversity','amr','supply'].map(id => { const t = enriched.find(item => item.id === id); return t && mcRes?.functionalStats?.[id] ? `${t.name}: ${fmtY(mcRes.threatStats[id].p50)} → ${fmtY(mcRes.functionalStats[id].p50)}` : ''; }).filter(Boolean).join('; ')}.
+  <br><br><em style="color:var(--text3);font-size:10px">Functional failure can precede disappearance of all organisms. The model records first threshold crossings, not permanent destruction or completion of global collapse. A narrow interval does not establish calibration: common assumptions and threshold structure can create it. P90 is a time-distribution quantile, not a physical tipping threshold.</em>
   <br><br><em style="color:var(--text3);font-size:10px">These are model-generated scenario intervals, not empirical probabilities.
   Results are highly sensitive to risk-growth proxy assumptions and dependency structure.</em>`;
 }
@@ -3751,11 +3783,11 @@ function metricTooltip(label) {
     'Severity': '<strong>Severity</strong>How large the damage could be if this threat unfolds. 1 means limited impact, 5 means global or planetary-scale impact.',
     'Urgency': '<strong>Urgency</strong>How quickly this threat is becoming relevant. A high value means it matters on a near-term timeline, not only in the distant future.',
     'Cascade': '<strong>Cascade</strong>How strongly this threat can speed up itself or pull connected threats forward. High values make the model treat it as an amplifier.',
-    'Interdependence': '<strong>Interdependence</strong>How tightly this threat is connected to other risks. A high value means it can trigger, worsen, or be worsened by other threats.',
+    'Interdependence': '<strong>Incoming functional vulnerability</strong>How strongly this target function depends on upstream systems. It is not the source threat’s outgoing importance. Directed edge weights and fixed criticality tiers are separate model assumptions.',
     'Irreversibility': '<strong>Irreversibility</strong>How hard the damage is to undo. A high value means effects can last for decades, centuries, or become practically permanent.',
     'Gov. failure': '<strong>Governance failure</strong>How poorly institutions, treaties, regulation, or coordination can control this threat. High means society is less prepared to manage it.',
     'Growth proxy': '<strong>Effective risk-growth proxy</strong>Annualized effective systemic risk-growth proxy used by the model. It may be derived from empirical indicators, but it is not necessarily the raw empirical CAGR itself.',
-    'Model threshold': '<strong>Model threshold</strong>Normalized model destabilization threshold. It is a model input calibrated from evidence and judgment, not usually a directly observed empirical boundary.',
+    'Model threshold': '<strong>Model threshold</strong>Normalized model destabilization threshold. It is a judgment-based model input informed by evidence, not usually a directly observed empirical boundary.',
     'P / 2050': '<strong>P / 2050</strong>Model implied probability that the overall threshold is crossed by 2050 under the current scenario. It is a scenario output, not a measured real-world probability.',
     'HILP': '<strong>HILP</strong>High Impact, Low Probability. This marks a threat that may be unlikely in the near term but would be severe enough to keep visible.'
   };
@@ -3861,7 +3893,7 @@ function climateJsonExposureHtml(t) {
 }
 
 function formatYear(y) {
-  if (!Number.isFinite(y)) return '≥2100';
+  if (!Number.isFinite(y)) return 'undefined';
   if (y > YE) return '≥2100';
   return String(Math.round(y));
 }
@@ -3876,7 +3908,7 @@ function climateMethodNotesHtml(t, low, mid, high, p2050) {
       ? `<li>The displayed lower / central / upper horizon is computed from the Weibull diagnostic layer calibrated to the current model horizon after MCDA scoring and dependency amplification.</li>`
       : `<li>The displayed lower / central / upper horizon is computed from the current model run after MCDA scoring, dependency amplification, and Monte Carlo sampling.</li>`,
     `<li>The current model interval for this threat is <strong>${escapeHtml(formatYear(low))}–${escapeHtml(formatYear(high))}</strong>, with central horizon <strong>${escapeHtml(formatYear(mid))}</strong>.</li>`,
-    `<li>P/2050 is read from the current <strong>${escapeHtml(sourceLabel)}</strong> view: <strong>${p2050 == null ? 'Run Monte Carlo' : escapeHtml(pct(p2050))}</strong>. It is Model implied, not an empirical measured probability of collapse.</li>`
+    `<li>P/2050 is read from the current <strong>${escapeHtml(sourceLabel)}</strong> view: <strong>${p2050 == null ? (useWeibull && !Number.isFinite(mid) ? 'undefined (median not identifiable)' : 'Run Monte Carlo') : escapeHtml(pct(p2050))}</strong>. It is Model implied, not an empirical measured probability of collapse.</li>`
   ];
   return `<ul class="detail-list">${lines.join('')}</ul>`;
 }
@@ -4025,7 +4057,7 @@ function threatMethodNotesHtml(t, low, mid, high, p2050) {
       ? `<li>The displayed lower / central / upper horizon is computed from the Weibull diagnostic layer calibrated to the current threat horizon after MCDA scoring, dependency amplification, and threshold calibration.</li>`
       : `<li>The displayed lower / central / upper horizon is computed from the current model run after MCDA scoring, dependency amplification, threshold calibration, and Monte Carlo sampling.</li>`,
     `<li>The current model interval for this threat is <strong>${escapeHtml(formatYear(low))}–${escapeHtml(formatYear(high))}</strong>, with central horizon <strong>${escapeHtml(formatYear(mid))}</strong>.</li>`,
-    `<li>By-2050 risk is shown from the current <strong>${escapeHtml(sourceLabel)}</strong> view under the present scenario assumptions: <strong>${p2050 == null ? 'Run Monte Carlo' : escapeHtml(pct(p2050))}</strong>. It is not a measured empirical probability.</li>`
+    `<li>By-2050 risk is shown from the current <strong>${escapeHtml(sourceLabel)}</strong> view under the present scenario assumptions: <strong>${p2050 == null ? (useWeibull && !Number.isFinite(mid) ? 'undefined (median not identifiable)' : 'Run Monte Carlo') : escapeHtml(pct(p2050))}</strong>. It is not a measured empirical probability.</li>`
   ];
   return `<ul class="detail-list">${lines.join('')}</ul>`;
 }
@@ -4070,6 +4102,8 @@ function priorityThreatViewModel(t, rank, enriched, mcRes) {
     mid: timeline.mid,
     high: timeline.upper,
     p2050: timeline.p2050,
+    censored: timeline.censored === true,
+    weibullStatus: timeline.status,
     useWeibull: mode === 'weibull',
     growthPct: (Number.isFinite(t.growth_rate_effective) ? t.growth_rate_effective : effectiveRiskGrowthForThreat(t, muOf(t.growth_rate))) * 100,
     alert: Number.isFinite(timeline.lower) && (timeline.lower - NOW) <= 10,
@@ -4091,21 +4125,23 @@ function priorityThreatPillsHtml(vm) {
 }
 
 function priorityThreatScoreHtml(vm) {
-  const { t, priorityThreshold, p2050, useWeibull } = vm;
+  const { t, priorityThreshold, p2050, useWeibull, censored, weibullStatus } = vm;
   return `<div class="t-score">
     <div class="t-score-val">${t.priority.toFixed(2)}<span class="t-score-denom">/ ${priorityThreshold.toFixed(2)}</span></div>
     <div class="t-score-lbl">Priority / threshold</div>
     <div style="font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:2px;letter-spacing:.02em">${pct(clamp(t.priority / Math.max(0.001, priorityThreshold), 0, 1.5))} of critical level</div>
-    <div style="font-size:9px;color:var(--text3);margin-top:3px">P≤2050: ${p2050 == null ? 'Run MC' : pct(p2050)} <span style="font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--text-3);opacity:.7">(${useWeibull ? 'Weibull' : 'MC'})</span></div>
+    <div style="font-size:9px;color:var(--text3);margin-top:3px">P≤2050: ${censored ? 'undefined (median right-censored)' : weibullStatus === 'invalid' ? 'undefined (invalid median)' : p2050 == null ? 'Run MC' : pct(p2050)} <span style="font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--text-3);opacity:.7">(${useWeibull ? 'Weibull' : 'MC'})</span></div>
   </div>`;
 }
 
 function priorityThreatMetricsHtml(vm) {
   const { t, low, mid, high, growthPct, priorityThreshold } = vm;
+  const yearsLabel = year => Number.isFinite(year) ? fmtYearsLeft(year) : 'undefined';
+  const daysLabel = year => Number.isFinite(year) ? daysLeft(year) : '';
   return `<div class="meta-grid">
-    ${climateMetric('To lower', fmtYearsLeft(low), daysLeft(low))}
-    ${climateMetric('To mid', fmtYearsLeft(mid), daysLeft(mid))}
-    ${climateMetric('To upper', fmtYearsLeft(high), daysLeft(high))}
+    ${climateMetric('To lower', yearsLabel(low), daysLabel(low))}
+    ${climateMetric('To mid', yearsLabel(mid), daysLabel(mid))}
+    ${climateMetric('To upper', yearsLabel(high), daysLabel(high))}
     ${climateMetric('Severity', `${muOf(t.scale).toFixed(1)}/5`, metricSourceSummary(t.scale))}
     ${climateMetric('Urgency', `${muOf(t.urgency).toFixed(1)}/5`, metricSourceSummary(t.urgency))}
     ${climateMetric('Cascade', `${muOf(t.acceleration).toFixed(1)}/5`, metricSourceSummary(t.acceleration))}
@@ -4200,26 +4236,6 @@ function initClimateDetailControls() {
       return;
     }
   });
-}
-
-function renderControlTransparency(enriched, params) {
-  params = params || P;
-  const norm = normalizedDomainWeights(params.domW);
-  const weightNote = document.getElementById('weightNormNote');
-  const depNote = document.getElementById('dependencyAlphaNote');
-  const thresholdNote = document.getElementById('thresholdPolicyNote');
-  if (weightNote) {
-    weightNote.textContent = `Normalized domain weights: Civilization ${pct(norm.civilization)}  Biosphere ${pct(norm.biosphere)}  Technology ${pct(norm.technology)}. The model applies these as relative multipliers around a neutral equal-weight baseline.`;
-  }
-  if (depNote) {
-    const depVals = enriched.map(t => depFactor(t, enriched, params));
-    const maxDep = depVals.length ? Math.max(...depVals) : 1;
-    const nearCap = depVals.filter(v => v >= maxDep - 0.03 && v > 1).length;
-    depNote.textContent = `Dependency amplification α is a scenario assumption representing interaction strength between threats. Current max amplification: ${maxDep.toFixed(2)}×.${nearCap ? ` ${nearCap} threats are near the current amplification ceiling, so adjusted scores may be saturating.` : ''}`;
-  }
-  if (thresholdNote) {
-    thresholdNote.textContent = `Threshold policy: per-threat calibrated thresholds anchored to a common ${GLOBAL_THRESHOLD.toFixed(1)} destabilization level. Missing or invalid values fall back to ${GLOBAL_THRESHOLD.toFixed(1)}; calibrated thresholds are constrained to ${THRESHOLD_MIN.toFixed(1)}–${THRESHOLD_MAX.toFixed(1)} to avoid hidden over-weighting.`;
-  }
 }
 
 let _chartRegistry = Object.create(null);
@@ -5060,25 +5076,22 @@ function toggleReadMore(bodyId, btnId) {
 
 function exportClockJSON() {
   const d = window._lastInterpretData;
-  if (!d) { alert('Run simulation first.'); return; }
-  const sourceParameters = Object.fromEntries(Object.entries(ACTIVE_SOURCE_DATA || {}).map(([key, value]) => [key, {
-    source: value.source || '',
-    url: normalizeHttpUrl(value.url || ''),
-    accessed: value.accessed || '',
-    strength: value.strength || '',
-    note: value.note || '',
-  }]));
-  const sourceTraceabilityLimitations = getSourceTraceabilityLimitations(ACTIVE_SOURCE_DATA || {});
+  const snapshot = d && d.executionSnapshot;
+  if (!d || !snapshot) { alert('Run simulation first.'); return; }
+  const sourceParameters = snapshot.sourceData;
+  const sourceTraceabilityLimitations = getSourceTraceabilityLimitations(sourceParameters);
   const payload = {
     exportedAt: new Date().toISOString(),
-    modelVersion: MODEL_VERSION,
-    datasetVersion: currentDatasetVersion(),
-    primaryDataset: PRIMARY_DATASET_NAME,
-    activeDataset: ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME,
-    seed: P.seed || currentMonteCarloSeed(),
+    modelVersion: snapshot.codeIdentifier,
+    datasetVersion: snapshot.dataIdentifier,
+    primaryDataset: snapshot.primaryDataset,
+    activeDataset: snapshot.activeDataset,
+    seed: snapshot.seed,
+    rngVersion: snapshot.rngVersion,
     seedPolicy: 'Deterministic seeded Monte Carlo: same dataset, scenario, parameters, and seed reproduce the same sampled uncertainty sequence.',
-    monteCarloIterations: P.nSim,
+    monteCarloIterations: snapshot.parameters.nSim,
     scenario: d.scenario,
+    executionSnapshot: snapshot,
     baselineResult: d.baselineResult || {
       headlineRule: 'Dynamic cascade P90',
       cascadeP10: d.cascadeP10,
@@ -5088,6 +5101,7 @@ function exportClockJSON() {
     diagnostics: d.diagnostics || {
       status: 'Optional scientific diagnostics are separate from the baseline/core model result and do not overwrite the headline result.',
     },
+    functionalResults: d.functionalResults,
     averageExportWarning: AVERAGE_EXPORT_WARNING,
     averageSourcePreservationLimitation: AVERAGE_SOURCE_LIMITATION,
     sourceTraceabilityLimitation: SOURCE_TRACEABILITY_LIMITATION,
@@ -5112,7 +5126,8 @@ function exportClockJSON() {
 
 function exportClockCSV() {
   const d = window._lastInterpretData;
-  if (!d) { alert('Run simulation first.'); return; }
+  const snapshot = d && d.executionSnapshot;
+  if (!d || !snapshot) { alert('Run simulation first.'); return; }
   const csvSafe = value => {
     let s = String(value ?? '');
     if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
@@ -5120,16 +5135,34 @@ function exportClockCSV() {
   };
   const rows = [
     ['metadata_key','metadata_value'],
-    ['modelVersion', MODEL_VERSION],
-    ['datasetVersion', currentDatasetVersion()],
-    ['primaryDataset', PRIMARY_DATASET_NAME],
-    ['activeDataset', ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME],
-    ['monteCarloIterations', P.nSim],
-    ['seed', d.seed || P.seed || currentMonteCarloSeed()],
+    ['functionalResultsJson', JSON.stringify(d.functionalResults || {})],
+    ['executedAt', snapshot.executedAt],
+    ['modelVersion', snapshot.codeIdentifier],
+    ['codeHashFNV1a32', snapshot.codeHashFNV1a32],
+    ['codeHashAlgorithm', snapshot.codeHashAlgorithm],
+    ['codeHashScope', snapshot.codeHashScope],
+    ['codeHashFunctionsJson', JSON.stringify(snapshot.codeHashFunctions)],
+    ['datasetVersion', snapshot.dataIdentifier],
+    ['dataHashFNV1a32', snapshot.dataHashFNV1a32],
+    ['primaryDataset', snapshot.primaryDataset],
+    ['activeDataset', snapshot.activeDataset],
+    ['monteCarloIterations', snapshot.parameters.nSim],
+    ['seed', snapshot.seed],
+    ['rngVersion', snapshot.rngVersion],
+    ['parametersJson', JSON.stringify(snapshot.parameters)],
+    ['scenarioDefinitionJson', JSON.stringify(snapshot.scenarioDefinition)],
+    ['modelConstantsJson', JSON.stringify(snapshot.modelConstants)],
+    ['threatInputsJson', JSON.stringify(snapshot.threatInputs)],
+    ['timeBaselineJson', JSON.stringify(snapshot.timeBaseline)],
+    ['quantileRulesJson', JSON.stringify(snapshot.quantileRules)],
+    ['censoringRulesJson', JSON.stringify(snapshot.censoringRules)],
+    ['uncertaintyLabelsJson', JSON.stringify(snapshot.uncertaintyLabels)],
+    ['diagnosticsJson', JSON.stringify(d.diagnostics || {})],
+    ['sourceDataJson', JSON.stringify(snapshot.sourceData)],
     ['averageExportWarning', AVERAGE_EXPORT_WARNING],
     ['averageSourcePreservationLimitation', AVERAGE_SOURCE_LIMITATION],
     ['sourceTraceabilityLimitation', SOURCE_TRACEABILITY_LIMITATION],
-    ['sourceTraceabilityLimitationCount', getSourceTraceabilityLimitations(ACTIVE_SOURCE_DATA || {}).length],
+    ['sourceTraceabilityLimitationCount', getSourceTraceabilityLimitations(snapshot.sourceData).length],
     [],
     ['baseline_metric','value'],
     ['headlineRule', d.baselineResult?.headlineRule || 'Dynamic cascade P90'],
@@ -5197,17 +5230,16 @@ function updateDominantDriverFromPriority(enriched) {
   setDominantDriverKpi(lead ? lead.name : 'No driver ranked', 'Current priority summary');
 }
 
-function updateUI(mcRes, scKey, enriched) {
+function updateUI(mcRes, scKey, enriched, executionSnapshot) {
   const gsi = calcGSI(enriched);
   drawClock(gsi);
-  renderScenarioBrief(scKey);
-
   const hue = Math.round(120 - gsi * 1.2);
   document.getElementById('kpiGSI').textContent = gsi.toFixed(0);
   document.getElementById('kpiGSI').style.color = `hsl(${hue},65%,52%)`;
   updateDominantDriverFromPriority(enriched);
 
   if (mcRes) {
+    const runSnapshot = executionSnapshot || mcRes.executionSnapshot || null;
     const p2035 = (mcRes.cdf.find(e=>e.year===2035)||{prob:0}).prob;
     const p2050 = (mcRes.cdf.find(e=>e.year===2050)||{prob:0}).prob;
     const lead = [...enriched].sort((a, b) => b.priority - a.priority)[0];
@@ -5225,22 +5257,45 @@ function updateUI(mcRes, scKey, enriched) {
     document.getElementById('hyCascadeP50').textContent = fmtY(mcRes.ensemble.dynamicCascade.p50);
     document.getElementById('hyCascadeP90').textContent = fmtY(mcRes.ensemble.dynamicCascade.p90);
     const cascadeSummary = mcRes.ensemble.dynamicCascade;
+    const cascadeMedianRaw = cascadeSummary.p50;
+    const cascadeMedianYearText = fmtY(cascadeMedianRaw);
+    const cascadeMedianProb = probabilityByDisplayedYear(cascadeSummary, cascadeMedianRaw);
+    const cascadeMedianDisplayYear = cascadeMedianRaw > YE ? '>2100' : String(Math.round(cascadeMedianRaw));
     const cascadeHeadlineRaw = cascadeSummary.p90;
     const cascadeHeadlineYearText = fmtY(cascadeHeadlineRaw);
     const cascadeHeadlineProb = probabilityByDisplayedYear(cascadeSummary, cascadeHeadlineRaw);
     const cascadeHeadlineDisplayYear = cascadeHeadlineRaw > YE ? '>2100' : String(Math.round(cascadeHeadlineRaw));
+    const medianYear = document.getElementById('cascadeMedianYear');
+    if (medianYear) medianYear.textContent = cascadeMedianYearText;
+    const medianProb = document.getElementById('cascadeMedianProb');
+    if (medianProb) {
+      medianProb.textContent = Number.isFinite(cascadeMedianProb) ? pct(cascadeMedianProb) : '';
+      medianProb.setAttribute('data-tip', `<strong>Dynamic cascade P50</strong>${Number.isFinite(cascadeMedianProb) ? pct(cascadeMedianProb) : '—'} of Dynamic cascade Monte Carlo runs cross the critical threshold on or before ${cascadeMedianRaw > YE ? '2100' : cascadeMedianDisplayYear}. P50 is the median of simulated first-crossing times: half of the sampled coded times are earlier and half later. ${cascadeMedianRaw > YE ? 'When P50 is beyond 2100, fewer than half of runs cross within the model horizon, so the actual median crossing time is not identified.' : 'The displayed probability can differ slightly from exactly 50% because a continuous quantile is shown as a rounded calendar year.'} This is a model-derived scenario quantity, not an empirical forecast or the probability of collapse in that exact year.`);
+    }
     document.getElementById('cascadeHeadlineYear').textContent = cascadeHeadlineYearText;
     const _prob = document.getElementById('cascadeHeadlineProb');
     if (_prob) {
       _prob.textContent = Number.isFinite(cascadeHeadlineProb) ? pct(cascadeHeadlineProb) : '';
       _prob.setAttribute('data-tip', `<strong>Model implied cumulative probability</strong>${Number.isFinite(cascadeHeadlineProb) ? pct(cascadeHeadlineProb) : '—'} of Dynamic cascade Monte Carlo runs cross the critical threshold on or before ${cascadeHeadlineRaw > YE ? '2100' : cascadeHeadlineDisplayYear}. The headline statistic is the 90th percentile of the simulated Dynamic-cascade onset-year distribution, not a worst-case bound. ${cascadeHeadlineRaw > YE ? 'When the headline reads >2100, fewer than 90% of simulated runs cross by 2100, so the 90th percentile falls outside the model horizon; the percentage shown is the cumulative crossing probability up to 2100, and the remaining share represents runs that did not cross within the model horizon.' : 'Because the displayed year is rounded to a whole calendar year, this value can be slightly above or slightly below exactly 90%; that small offset is a rounding artefact of mapping a continuous 90th-percentile estimate onto an integer year.'} It is a model-derived scenario probability, not an empirical forecast, prophecy, or measured real-world probability of collapse.`);
     }
+    const _pair = document.getElementById('cascadeHorizonPair');
+    const _mw = document.getElementById('cascadeMedianYearWrap');
     const _yw = document.getElementById('cascadeHeadlineYearWrap');
+    if (_pair) _pair.style.display = '';
+    if (_mw) _mw.style.display = '';
     if (_yw) _yw.style.display = '';
+    const _gap = document.getElementById('cascadeHorizonGap');
+    const _gapUnit = document.getElementById('cascadeHorizonGapUnit');
+    const gapIdentified = Number.isFinite(cascadeMedianRaw) && Number.isFinite(cascadeHeadlineRaw) && cascadeMedianRaw <= YE && cascadeHeadlineRaw <= YE;
+    if (_gap) {
+      _gap.textContent = gapIdentified ? String(Math.max(0, Math.round(cascadeHeadlineRaw - cascadeMedianRaw))) : '—';
+      _gap.setAttribute('title', gapIdentified ? 'Calendar-year distance between the Dynamic cascade P50 and P90 quantiles.' : 'The P50–P90 distance is not identified because at least one quantile lies beyond the 2100 model horizon.');
+    }
+    if (_gapUnit) _gapUnit.textContent = gapIdentified ? 'years' : 'not identified';
     const _csn = document.getElementById('cascadeStabilityNote');
     if (_csn) _csn.style.display = '';
     const _chn = document.getElementById('cascadeHeadlineNote');
-    if (_chn) { _chn.textContent = 'This year is the 90th percentile of the simulated Dynamic-cascade onset-year distribution under the model’s high-risk scenario: the year by which 90% of Monte Carlo runs cross the cascade trigger condition. The remaining 10% cross later, or do not cross within the model horizon. At this stage, systemic threats may no longer behave as separate problems. Civilizational stress, biospheric degradation, and technological destabilization may begin to reinforce one another faster than existing institutions, adaptation systems, and stabilizing mechanisms can realistically contain them. At this point, the model describes a nonlinear cascade of systemic instability. The term refers to a condition in which coordination weakens, predictability declines, ecological systems lose stability, and failures in one domain can trigger or accelerate failures in others. The risk is not a single collapse event, but a feedback-driven process in which systemic breakdown begins to spread across the wider global system. The displayed year marks the onset of the cascade trigger condition, not the completion or peak of any collapse. This should be understood as a 90th-percentile horizon within the model. It is not a median forecast, not a prediction of a specific collapse year, and not a deterministic prophecy.'; _chn.style.display = ''; }
+    if (_chn) { _chn.textContent = `Paired Dynamic functional-cascade horizons under the selected ${SC[scKey].label || scKey} scenario. P50 is the median first-crossing time; P90 is the later 90th percentile of the same distribution. A single initial failure can propagate through directed dependencies and affect essential services; it need not wait for every domain to fail. Neither clock predicts completed global collapse, and P90 is not a physical tipping threshold or worst-case bound. “>2100” means the quantile is not identified inside the model horizon, not safety until then. Growth, criticality weights, propagation strength and service memberships remain explicit scenario assumptions, not empirically calibrated probabilities.`; _chn.style.display = ''; }
     const whyEl = document.getElementById('whyChangedNote');
     if (whyEl) whyEl.textContent = buildWhyChangedSummary(scKey, P.weightProfile || 'expert', enriched);
     const rbEl = document.getElementById('robustnessNote');
@@ -5250,12 +5305,12 @@ function updateUI(mcRes, scKey, enriched) {
     }
     window._lastInterpretData = {
       scenario: scKey,
-      modelVersion: MODEL_VERSION,
-      datasetVersion: currentDatasetVersion(),
-      primaryDataset: PRIMARY_DATASET_NAME,
-      activeDataset: ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME,
-      monteCarloIterations: P.nSim,
-      seed: P.seed || currentMonteCarloSeed(),
+      modelVersion: runSnapshot?.codeIdentifier || MODEL_VERSION,
+      datasetVersion: runSnapshot?.dataIdentifier || currentDatasetVersion(),
+      primaryDataset: runSnapshot?.primaryDataset || PRIMARY_DATASET_NAME,
+      activeDataset: runSnapshot?.activeDataset || ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME,
+      monteCarloIterations: runSnapshot?.parameters?.nSim ?? P.nSim,
+      seed: runSnapshot?.seed || P.seed || DEFAULT_MC_SEED,
       seedPolicy: 'Deterministic seeded Monte Carlo: same dataset, scenario, parameters, and seed reproduce the same sampled uncertainty sequence.',
       baselineResult: {
         headlineRule: 'Dynamic cascade P90',
@@ -5271,42 +5326,79 @@ function updateUI(mcRes, scKey, enriched) {
       diagnostics: {
         status: 'Optional scientific diagnostics are separate from the baseline/core model result and do not overwrite the headline result.',
         structuralSigmaYears: Number.isFinite(mcRes.structuralSigma) ? mcRes.structuralSigma : null,
+        structuralSigmaDescription: 'Legacy public key; value is the cross-aggregator P50 range, not a standard deviation.',
         samplingSigmaYears: Number.isFinite(mcRes.samplingSigma) ? mcRes.samplingSigma : null,
+        samplingSigmaDescription: 'SD of mixed horizon-coded times: no crossing by YE is coded YE + 1. Not exclusively process uncertainty, nor SD of unidentified post-horizon crossing times.',
         parameterSigmaYears: Number.isFinite(mcRes.parameterSigma) ? mcRes.parameterSigma : null,
+        parameterSigmaDescription: 'Legacy public key; bootstrap MC SE of the horizon-coded median, not input uncertainty. Does not identify the actual median or its SE when the median is censored.',
+        censorFraction: mcRes.censorFraction,
+        censorFractionMeaning: 'Legacy field: compensatory aggregate, not Dynamic Cascade.',
+        cascadeCensorFraction: mcRes.ensemble.dynamicCascade.censorFraction,
+        medianCensored: mcRes.medianCensored,
+        actualMedianMcStandardErrorYears: mcRes.medianCensored ? null : mcRes.parameterSigma,
+        thresholdRobustness: mcRes.thresholdRobustness ? freezeDeepCopy(mcRes.thresholdRobustness) : null,
+        central80IntervalWidthYears: Number.isFinite(mcRes.p90 - mcRes.p10) ? mcRes.p90 - mcRes.p10 : null,
+      },
+      functionalResults: {
+        meaning: mcRes.functionalStatsMeaning,
+        standalone: freezeDeepCopy(mcRes.threatStats),
+        propagated: freezeDeepCopy(mcRes.functionalStats),
+        deterministic: explainCascadeCrossing(enriched, runSnapshot?.parameters || P),
       },
       averageExportWarning: AVERAGE_EXPORT_WARNING,
       averageSourcePreservationLimitation: AVERAGE_SOURCE_LIMITATION,
       cascadeP10: fmtY(mcRes.ensemble.dynamicCascade.p10),
       cascadeP50: fmtY(mcRes.ensemble.dynamicCascade.p50),
       cascadeP90: fmtY(mcRes.ensemble.dynamicCascade.p90),
-      enriched: enriched,
+      executionSnapshot: runSnapshot,
+      enriched: JSON.parse(JSON.stringify(enriched)),
     };
     document.getElementById('hyLead').textContent   = fmtY(leadP50);
     if (leadName) leadName.textContent = lead ? `${lead.name} P50` : 'Top threat P50';
     if (leadBox) leadBox.title = lead ? `Top-priority threat: ${lead.name}; individual P50 horizon ${fmtY(leadP50)}` : '';
     document.getElementById('kpiP2035').textContent = pct(p2035);
     document.getElementById('kpiP2050').textContent = pct(p2050);
-    document.getElementById('kpiCI').textContent    = Math.round((mcRes.p90 - mcRes.p10) + mcRes.structuralSigma) + 'y';
+    document.getElementById('kpiCI').textContent    = Math.round(mcRes.p90 - mcRes.p10) + 'y';
     document.getElementById('csP2035').textContent  = pct(p2035);
     document.getElementById('csP2050').textContent  = pct(p2050);
     document.getElementById('csAlea').textContent   = mcRes.samplingSigma.toFixed(1) + 'y';
     document.getElementById('csStruct').textContent = mcRes.structuralSigma.toFixed(1) + 'y';
     setText('uncAlea',   mcRes.samplingSigma.toFixed(1)  + ' years');
-    setText('uncEpis',   mcRes.parameterSigma.toFixed(1)  + ' years');
+    setText('uncEpis',   mcRes.medianCensored ? 'undefined (censored median)' : mcRes.parameterSigma.toFixed(1) + ' years');
     setText('uncStruct', mcRes.structuralSigma.toFixed(1) + ' years');
     document.getElementById('heroP10Mirror').textContent  = fmtY(mcRes.p10);
     document.getElementById('heroP90Mirror').textContent  = fmtY(mcRes.p90);
     document.getElementById('heroAleaMirror').textContent = mcRes.samplingSigma.toFixed(1) + 'y';
-    document.getElementById('heroEpisMirror').textContent = mcRes.parameterSigma.toFixed(1) + 'y';
+    document.getElementById('heroEpisMirror').textContent = mcRes.medianCensored ? 'undefined' : mcRes.parameterSigma.toFixed(1) + 'y';
+    const censorNote = `No crossing by ${YE}: ${pct(mcRes.censorFraction || 0)}. SD and bootstrap values describe horizon-coded times (${YE + 1} for no crossing), not actual post-horizon dates.`;
+    ['csAlea', 'uncAlea', 'uncEpis', 'heroAleaMirror', 'heroEpisMirror'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.title = censorNote;
+    });
   } else {
     // Clear stale headline values until the next stochastic run finishes.
     const headline = document.getElementById('cascadeHeadlineYear');
     if (headline) headline.textContent = '';
+    const median = document.getElementById('cascadeMedianYear');
+    if (median) median.textContent = '';
     const prob = document.getElementById('cascadeHeadlineProb');
     if (prob) {
       prob.textContent = '';
       prob.removeAttribute('data-tip');
     }
+    const medianProb = document.getElementById('cascadeMedianProb');
+    if (medianProb) {
+      medianProb.textContent = '';
+      medianProb.removeAttribute('data-tip');
+    }
+    const gap = document.getElementById('cascadeHorizonGap');
+    if (gap) gap.textContent = '';
+    const pair = document.getElementById('cascadeHorizonPair');
+    const medianWrap = document.getElementById('cascadeMedianYearWrap');
+    const headlineWrap = document.getElementById('cascadeHeadlineYearWrap');
+    if (pair) pair.style.display = 'none';
+    if (medianWrap) medianWrap.style.display = 'none';
+    if (headlineWrap) headlineWrap.style.display = 'none';
     const leadName = document.getElementById('hyLeadName');
     const leadBox = document.getElementById('hyLeadBox');
     if (leadName && !leadName.textContent.trim()) leadName.textContent = 'Top threat P50';
@@ -5330,13 +5422,11 @@ function updateUI(mcRes, scKey, enriched) {
   renderAggregateRow(enriched, mcRes);
   renderPriorityPanel(enriched, mcRes);
   renderOverviewStrip(enriched, mcRes);
-  renderStructuralCard(mcRes);
   try { renderAdvancedMethod(enriched, mcRes); } catch(e) { console.error('renderAdvancedMethod error:', e); }
   renderDomainComp(enriched);
   renderTable(enriched, mcRes);
   renderClimateBreakdownDetail(enriched, mcRes);
   initClimateDetailControls();
-  renderControlTransparency(enriched, P);
   drawBarChart(enriched, mcRes);
   drawCDF();
   drawSensChart();
@@ -5398,10 +5488,14 @@ function buildLoadingMsgHTML(fontSize, step) {
 }
 
 function startLoadingMessages() {
+  const pair = document.getElementById('cascadeHorizonPair');
+  const medianWrap = document.getElementById('cascadeMedianYearWrap');
   const yearWrap = document.getElementById('cascadeHeadlineYearWrap');
   const note     = document.getElementById('cascadeHeadlineNote');
   const stabilityNote = document.getElementById('cascadeStabilityNote');
   const clm      = document.getElementById('cascadeLoadingMsg');
+  if (pair) pair.style.display = 'none';
+  if (medianWrap) medianWrap.style.display = 'none';
   if (yearWrap) yearWrap.style.display = 'none';
   if (note)     note.style.display = 'none';
   if (stabilityNote) stabilityNote.style.display = 'none';
@@ -5417,7 +5511,7 @@ function stopLoadingMessages() {
 }
 
 function snapshotParams(scKey, nSim) {
-  return {
+  const params = {
     scenario: scKey,
     nSim,
     seed: P.seed || DEFAULT_MC_SEED,
@@ -5430,7 +5524,141 @@ function snapshotParams(scKey, nSim) {
     domW: { ...P.domW },
     weights: { ...P.weights },
     weightProfile: P.weightProfile || 'expert',
+    thresholdPolicy: THRESHOLD_POLICY,
   };
+  normalizedDomainWeights(params.domW);
+  return params;
+}
+
+function fnv1aHex(value) {
+  let h = 2166136261 >>> 0;
+  const text = String(value);
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h.toString(16).padStart(8, '0');
+}
+
+function freezeDeepCopy(value) {
+  const copy = JSON.parse(JSON.stringify(value));
+  const freeze = item => {
+    if (!item || typeof item !== 'object' || Object.isFrozen(item)) return item;
+    Object.values(item).forEach(freeze);
+    return Object.freeze(item);
+  };
+  return freeze(copy);
+}
+
+function numericalCodeFingerprint() {
+  // Capture loaded function bodies, never a later network copy of app.js.
+  // This identifies the numerical implementation, not full-file bytes or a cryptographic digest.
+  const functions = {
+    numericalCodeFingerprint, clamp, logistic, quantile, normalizeMonteCarloSeed,
+    hashSeedToUint32, makeSeededRandom, createRngContext, random01, randn, normalSample,
+    erf, normCdf, normInv, muOf, loOf, hiOf, fieldKind, fieldBounds, sourceKey,
+    lowZeroBit, getSobolDirections, generateSobolPoints, getThreatThreshold, computeHorizon,
+    rangeMetaOf, rangedValue, autoRange, normalizeSourceEntry, sourceBackedRange,
+    makeThreat, buildDepGraph, rebuildThreatState, sanitizeSourceMap,
+    normalizeEvidenceEntry, sanitizeEvidenceMap, explicitSourceForSpecField,
+    applyEvidencePosterior, rebuildActiveSourceDataFromState,
+    shiftRange, scalePositiveRange, sampleGamma, sampleBeta, fitScaledBeta,
+    sampleOrdinalRange, sampleLogNormalRange, sampleThreatNumerics,
+    growthMetaOfThreat, growthKindOfThreat, riskConversionOfThreat, effectiveRiskGrowthForThreat,
+    sampleEventHorizon, sampleRegimeHorizon, deterministicEventHorizon,
+    deterministicRegimeHorizon, computeThreatHorizon, baseScore, depFactor,
+    applyScenario, buildEnriched, calcGSI, normalizedDomainWeights, domainWeightMultiplier,
+    compensatoryShareByYear, normalizedHorizonSignal, exploratorySensitivityTarget,
+    buildCdf, summarizeCrossings, pairedQuantileContrastStandardError, graphAggregationScoreForYear, computeCompensatoryCrossing,
+    computeAggregateYears, dependencyExposure,
+    cascadeVulnerability, cascadePressureRatio, functionalCascadeNodes, simulateFunctionalCascade,
+    functionalCoreSimulate: FunctionalCascade.simulate, functionalCorePrepare: FunctionalCascade.prepare,
+    functionalCorePressure: FunctionalCascade.pressureRatio, functionalCoreExposure: FunctionalCascade.exposure,
+    functionalCoreMetrics: FunctionalCascade.metrics,
+    functionalCoreClamp: FunctionalCascade.clamp01,
+    activeTransmissionShare, computeDynamicCascadeCrossing, explainCascadeCrossing,
+    oatCompositeResponseFromYears, pairedOatBootstrapStandardErrors, createMonteCarloAccumulator, enrichMonteCarloThreats,
+    applyGlobalThresholdToSample, recordMonteCarloSample, summarizeThreatHorizonSamples,
+    summarizeMonteCarloAccumulator, runMC, runSensitivity, runExploratorySensitivityIndices,
+    priorityWeight, weightedFiniteAverage, weightedThreatAverages, domainMonteCarloTimeline,
+    threatTimelineForMode, weightedDomainTimeline, summarizeDomainLayer,
+    weibullCDF, weibullShapeForThreat, weibullParamsForThreat, weibullProbability, weibullProbabilityBounds, weibullQuantile,
+    networkEigenvectorCentrality, dependencyEdgeStats, poissonBinomialPMF, poissonAtLeast,
+    independentFailureReference, correlatedScenarioSpread, effectiveCascadeCorrelation,
+    jointFailureByDecade, shannonEntropyRisk,
+    computeVetoCrossingExperimental, computeAggregateYearsExperimental,
+    enrichSampledThreatsForExperimental, sampleLogNormalShockExperimental,
+    sampleTailShockExperimental, applyTailShockToSampledThreatExperimental,
+    randomDirichletWeightsExperimental, perturbWeightsAroundBaseExperimental,
+    runSMAARobustnessExperimental, runTailAndVetoStressExperimental,
+  };
+  const constants = {
+    MODEL_VERSION, RNG_VERSION, DEFAULT_MC_SEED, DEFAULT_MC_SEED_HASH,
+    NOW, YS, YE, YR, SOBOL_JOE_KUO_46, SOBOL_BITS, SOBOL_RECIP,
+    GLOBAL_THRESHOLD, THRESHOLD_POLICY, THRESHOLD_MIN, THRESHOLD_MAX,
+    SC, PARAM_FIELDS, ORD_RANGE, GROWTH_RANGE, THRESH_RANGE, THREAT_SPECS,
+    EFFECTIVE_GROWTH_CAP, GROWTH_KIND_CONVERSION, WEIGHT_PROFILES,
+    GLOBAL_STRESS_CAPACITY, OUT_DEGREES, MAX_OUT_DEGREE, MEAN_OUT_DEGREE, DEP_GRAPH,
+  };
+  const functionNames = Object.keys(functions).sort();
+  const source = functionNames.map(name => [name, Function.prototype.toString.call(functions[name])]);
+  return {
+    codeHashFNV1a32: fnv1aHex(JSON.stringify({ functions: source, constants })),
+    codeHashAlgorithm: 'FNV-1a 32-bit over UTF-16 code units; non-cryptographic',
+    codeHashScope: 'Loaded numerical function bodies listed in codeHashFunctions and their model constants/derived graph state at execution snapshot time; excludes UI, full-file bytes, browser runtime and libraries.',
+    codeHashFunctions: functionNames,
+  };
+}
+
+function createExecutionSnapshot(params) {
+  const sourceData = JSON.parse(JSON.stringify(ACTIVE_SOURCE_DATA || {}));
+  const numericFields = ['scale', 'urgency', 'acceleration', 'interdependence', 'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
+  return freezeDeepCopy({
+    executedAt: new Date().toISOString(),
+    codeIdentifier: MODEL_VERSION,
+    ...numericalCodeFingerprint(),
+    dataIdentifier: currentDatasetVersion(),
+    dataHashFNV1a32: fnv1aHex(JSON.stringify(sourceData)),
+    primaryDataset: PRIMARY_DATASET_NAME,
+    activeDataset: ACTIVE_SOURCE_META.fileName || PRIMARY_DATASET_NAME,
+    seed: params.seed,
+    rngVersion: RNG_VERSION,
+    parameters: params,
+    scenarioDefinition: SC[params.scenario] || SC.baseline,
+    modelConstants: {
+      effectiveGrowthCap: EFFECTIVE_GROWTH_CAP,
+      globalThreshold: GLOBAL_THRESHOLD,
+      thresholdMin: THRESHOLD_MIN,
+      thresholdMax: THRESHOLD_MAX,
+      cascadeWavesPerYear: 'synchronous least fixed point; at most number of threats',
+      cascadeRule: 'max(global fixed-weight loss, essential-service fixed-weight loss) >= cascadeThreshold',
+      cascadeWeightMeaning: 'Fixed criticality judgments, not probability or sampled MCDA priority.',
+      cascadeTimeMeaning: 'Absorbing first functional-threshold crossing; no recovery or physical permanence claim.',
+    },
+    threatInputs: THREATS.map(t => ({
+      id: t.id,
+      process_type: t.process_type,
+      deps: [...(t.deps || [])],
+      dependency_weights: { ...(t.dependency_weights || {}) },
+      functional_weight: t.functional_weight,
+      functional_overlap_group: t.functional_overlap_group,
+      functional_inducible: t.functional_inducible,
+      dependency_lags: { ...(t.dependency_lags || {}) },
+      critical_services: [...(t.critical_services || [])],
+      functional_failure: t.functional_failure,
+      numerics: Object.fromEntries(numericFields.map(field => [field, JSON.parse(JSON.stringify(t[field]))])),
+      threat_specific_cap: growthMetaOfThreat(t).threat_specific_cap ?? null,
+    })),
+    sourceData,
+    timeBaseline: { nowYear: NOW, horizonStartYear: YS, horizonEndYear: YE },
+    quantileRules: { method: 'Type 7 linear interpolation', p10: 0.10, p50: 0.50, p90: 0.90, centralIntervalWidth: 'P90 - P10 (central 80%)' },
+    censoringRules: { noCrossingMarker: YE + 1, display: '>2100', weibullUndefinedMedian: 'Finite median beyond horizon: right_censored; non-finite supplied median: invalid. Both retain null point quantiles/probabilities, without fallback; censored medians imply only probability bounds.' },
+    uncertaintyLabels: {
+      samplingSigma: 'SD of mixed horizon-coded times; no crossing by YE is coded YE + 1, not an actual post-horizon crossing time',
+      parameterSigma: 'legacy key: sample SD of 160 bootstrap horizon-coded medians; actual median and its MC SE remain unidentified when censored',
+      structuralSigma: 'legacy key: cross-aggregator P50 range, not sigma',
+    },
+  });
 }
 
 function resetExploratorySensitivityText() {
@@ -5467,23 +5695,18 @@ async function runAll() {
   if (_running) return;
   const runVersion = ++_resultVersion;
   _running = true;
-  const btn = document.getElementById('runBtn');
-  btn.textContent = '⟳ Running…'; btn.disabled = true;
   startLoadingMessages();
   try {
     const scKey = currentScenario();
-    const nSim = parseInt(document.getElementById('simCount').value) || 3000;
-    const seedInput = document.getElementById('mcSeed');
-    const seed = resetMonteCarloSeed(seedInput ? seedInput.value : (P.seed || DEFAULT_MC_SEED));
-    if (seedInput) seedInput.value = seed;
+    const nSim = parseInt(P.nSim, 10) || 3000;
+    const seed = normalizeMonteCarloSeed(P.seed || DEFAULT_MC_SEED);
     P.scenario = scKey; P.nSim = nSim; P.seed = seed;
-    const seedLabel = document.getElementById('vSeed');
-    if (seedLabel) seedLabel.textContent = seed;
     startCalcConsole(scKey, nSim);
     setDominantDriverKpi('Calculating...', 'Current priority summary');
     setCalcStepStatus('scenario', 'running', 'Applying scenario shifts, domain multipliers, and per-threat modifiers.', 'Preparing mathematical inputs for the next model pass.');
     await yieldForCalcConsole();
     const params = snapshotParams(scKey, nSim);
+    const executionSnapshot = createExecutionSnapshot(params);
     setCalcStepStatus('scenario', 'done', `${SC[scKey].label} scenario conditioning locked with ${nSim.toLocaleString()} Monte Carlo runs.`, 'Deterministic threat scoring is now running.');
 
     const prog = document.getElementById('mcProgress');
@@ -5513,13 +5736,11 @@ async function runAll() {
     renderAggregateRow(enriched, null);
     renderPriorityPanel(enriched, null);
     renderOverviewStrip(enriched, null);
-    renderStructuralCard(null);
     renderAdvancedMethod(enriched, null);
     renderDomainComp(enriched);
     renderTable(enriched, null);
     renderClimateBreakdownDetail(enriched, null);
     initClimateDetailControls();
-    renderControlTransparency(enriched, params);
     drawBarChart(enriched, null);
     await drawSensChart();
     await drawExploratorySensitivityChart();
@@ -5533,7 +5754,7 @@ async function runAll() {
     setCalcStepStatus('montecarlo', 'running', `Simulating ${nSim.toLocaleString()} stochastic futures for threshold crossing.`);
     setCalcStepStatus('compensatory', 'running', 'Compensatory aggregation will be evaluated year by year inside the Monte Carlo pass.');
     setCalcStepStatus('maxrule', 'running', 'Max-rule aggregation will track the earliest single-threat crossing inside the Monte Carlo pass.');
-    setCalcStepStatus('graph', 'running', 'Graph-weighted aggregation will evaluate a dependency-linked latent-normal heuristic inside the Monte Carlo pass.');
+    setCalcStepStatus('graph', 'running', 'Graph-weighted dependency heuristic index will be evaluated inside the Monte Carlo pass; it is not a probability from a validated correlation matrix.');
     setCalcStepStatus('cascade', 'running', 'Dynamic cascade propagation will run a rule-based dependency cascade year by year.');
     setCalcStepStatus('domainmc', 'queued', 'Domain-level crossing distributions will be summarized after the Monte Carlo pass.');
     setCalcStepStatus('structural', 'queued', 'Cross-aggregator structural spread will be computed after all ensemble rules resolve.');
@@ -5554,6 +5775,7 @@ async function runAll() {
         setCalcStepStatus('montecarlo', 'running', `${countLabel} stochastic futures evaluated.`);
       }
     }, params);
+    mcRes.executionSnapshot = executionSnapshot;
 
     if (runVersion !== _resultVersion) return;
 
@@ -5564,11 +5786,11 @@ async function runAll() {
     setCalcStepStatus('montecarlo', 'done', `${nSim.toLocaleString()} stochastic futures completed for threshold crossing.`);
     setCalcStepStatus('compensatory', 'done', `Compensatory aggregation resolved with P50 ${fmtY(mcRes.ensemble.compensatory.p50)}.`);
     setCalcStepStatus('maxrule', 'done', `Non-compensatory max-rule resolved with P50 ${fmtY(mcRes.ensemble.maxRule.p50)}.`);
-    setCalcStepStatus('graph', 'done', `Graph-weighted latent-normal heuristic resolved with P50 ${fmtY(mcRes.ensemble.graphWeighted.p50)}.`);
+    setCalcStepStatus('graph', 'done', `Graph-weighted heuristic index resolved with P50 ${fmtY(mcRes.ensemble.graphWeighted.p50)}; diagnostic only.`);
     setCalcStepStatus('cascade', 'done', `Rule-based dynamic cascade resolved with P50 ${fmtY(mcRes.ensemble.dynamicCascade.p50)} and P90 ${fmtY(mcRes.ensemble.dynamicCascade.p90)}.`);
     setCalcStepStatus('domainmc', 'done', `Domain crossing summaries resolved: civilization P50 ${fmtY(mcRes.domainStats.civilization.p50)}, biosphere P50 ${fmtY(mcRes.domainStats.biosphere.p50)}, technology P50 ${fmtY(mcRes.domainStats.technology.p50)}.`);
-    setCalcStepStatus('structural', 'done', `Structural ensemble spread computed at ${mcRes.structuralSigma.toFixed(1)} years across compensatory, max-rule, graph-weighted, and dynamic cascade models.`);
-    setCalcStepStatus('bootstrap', 'done', `Bootstrap summaries completed: P10 ${fmtY(mcRes.p10)}, P50 ${fmtY(mcRes.p50)}, P90 ${fmtY(mcRes.p90)}.`, 'Main stochastic model outputs are ready. Final core diagnostics are now computing.');
+    setCalcStepStatus('structural', 'done', `Cross-aggregator P50 range (not σ) computed at ${mcRes.structuralSigma.toFixed(1)} years across compensatory, max-rule, graph-weighted heuristic, and dynamic cascade models.`);
+    setCalcStepStatus('bootstrap', 'done', `Bootstrap horizon-coded precision summary completed; central 80% interval is P10 ${fmtY(mcRes.p10)} to P90 ${fmtY(mcRes.p90)}, with P50 ${fmtY(mcRes.p50)}. Censored: ${pct(mcRes.censorFraction)}.${mcRes.medianCensored ? ' Actual median and its MC SE are not identifiable within the horizon.' : ''}`, 'Bootstrap precision concerns the horizon-coded median, not input uncertainty or unidentified post-horizon dates.');
 
     setCalcStepStatus('weibull', 'running', 'Computing Weibull-shaped hazard diagnostics calibrated to model horizons.');
     setCalcStepStatus('eigen', 'running', 'Running power-iteration centrality over the dependency network.');
@@ -5592,12 +5814,12 @@ async function runAll() {
       jointTail = jointFailureByDecade(enriched, mcRes);
       joint2050 = (jointTail && jointTail.rows && jointTail.rows.length) ? (jointTail.rows.find(r => r.year === 2050) || jointTail.rows[jointTail.rows.length - 1]) : { at80: 0 };
     } catch(e) { console.warn('Poisson-binomial tail failed', e); }
-    setCalcStepStatus('poissonbinomial', 'done', jointTail.rows.length ? `Exact Poisson-binomial convolution completed: P(≥${jointTail.k80}/${enriched.length} model-active threats by 2050) = ${advancedPct(joint2050.at80)}.` : 'Exact Poisson-binomial convolution completed.');
+    setCalcStepStatus('poissonbinomial', 'done', jointTail.rows.length ? `Independent Poisson-binomial reference completed: P(≥${jointTail.k80}/${enriched.length} model-active threats by 2050) ${joint2050.censoredCount ? `is bounded by ${advancedPct(joint2050.at80Lower)}–${advancedPct(joint2050.at80Upper)} with ${joint2050.censoredCount} right-censored threats` : `= ${advancedPct(joint2050.at80)}`}.` : 'Independent Poisson-binomial reference completed.');
 
     try { entropyStats = shannonEntropyRisk(enriched); } catch(e) { console.warn('Shannon entropy failed', e); }
     setCalcStepStatus('entropy', 'done', `Shannon entropy completed: H=${entropyStats.h.toFixed(2)} bits, effective N=${entropyStats.effectiveN.toFixed(1)} threats.`);
 
-    try { updateUI(mcRes, scKey, enriched); } catch(uiErr) { console.error('updateUI error (non-fatal):', uiErr); }
+    try { updateUI(mcRes, scKey, enriched, executionSnapshot); } catch(uiErr) { console.error('updateUI error (non-fatal):', uiErr); }
 
     // Scientific diagnostics are triggered manually via the panel button — not run here.
     _sensData = null;
@@ -5622,8 +5844,6 @@ async function runAll() {
     if (runningStep) setCalcStepStatus(runningStep.id, 'error', 'This stage was interrupted by a run failure.', 'Current run failed before all calculation stages could finish.');
   } finally {
     stopLoadingMessages();
-    btn.textContent = '▶ Run Simulation';
-    btn.disabled = false;
     _running = false;
   }
 }
@@ -5655,7 +5875,7 @@ function computeAggregateYearsExperimental(enriched, params) {
   return { ...years, vetoRule: computeVetoCrossingExperimental(enriched, params) };
 }
 
-function enrichSampledThreatsForExperimental(sampled, params) {
+function enrichSampledThreatsForExperimental(sampled, params, rng) {
   return sampled.map(t => {
     const bs = baseScore(t, params.weights);
     const priority = bs * depFactor(t, sampled, params) * domainWeightMultiplier(t.domain, params);
@@ -5667,7 +5887,8 @@ function enrichSampledThreatsForExperimental(sampled, params) {
       effectiveGrowth,
       threshold,
       t.process_type,
-      true
+      true,
+      rng
     );
     return {
       ...t,
@@ -5681,16 +5902,16 @@ function enrichSampledThreatsForExperimental(sampled, params) {
   });
 }
 
-function sampleLogNormalShockExperimental(mu, sigma) {
-  return Math.exp(mu + sigma * randn()) - 1;
+function sampleLogNormalShockExperimental(mu, sigma, rng) {
+  return Math.exp(mu + sigma * (rng ? rng.randn() : randn())) - 1;
 }
 
-function sampleTailShockExperimental(tailProb) {
+function sampleTailShockExperimental(tailProb, rng) {
   const p = Number.isFinite(tailProb) ? tailProb : 0.15;
-  return random01() < clamp(p, 0, 1);
+  return (rng ? rng.random01() : random01()) < clamp(p, 0, 1);
 }
 
-function applyTailShockToSampledThreatExperimental(threat) {
+function applyTailShockToSampledThreatExperimental(threat, rng) {
   const rawGr = typeof threat.growth_rate === 'number' ? threat.growth_rate : muOf(threat.growth_rate);
   const interdependenceSensitivity = clamp(muOf(threat.interdependence) / 5, 0, 1);
   const accelerationSensitivity = clamp(muOf(threat.acceleration) / 5, 0, 1);
@@ -5699,7 +5920,7 @@ function applyTailShockToSampledThreatExperimental(threat) {
     biosphere: 0.65,
     technology: 0.75,
   }[threat.domain] ?? 0.70;
-  const rawBoost = clamp(sampleLogNormalShockExperimental(0.18, 0.28), 0, 1.50);
+  const rawBoost = clamp(sampleLogNormalShockExperimental(0.18, 0.28, rng), 0, 1.50);
   const effectiveBoost = rawBoost * domainSensitivity * (0.50 + 0.30 * interdependenceSensitivity + 0.20 * accelerationSensitivity);
   const shocked = clamp(rawGr * (1 + effectiveBoost), 0.0005, 0.25);
   return {
@@ -5711,19 +5932,27 @@ function applyTailShockToSampledThreatExperimental(threat) {
   };
 }
 
-function randomDirichletWeightsExperimental(keys, concentration) {
-  const alpha = concentration || 8;
-  const gammas = keys.map(() => sampleGamma(alpha));
+function randomDirichletWeightsExperimental(baseWeights, concentration, rng) {
+  const keys = Object.keys(baseWeights);
+  const sumWeights = keys.reduce((sum, key) => sum + baseWeights[key], 0);
+  const kappa = concentration || 8;
+  const gammas = keys.map(key => baseWeights[key] > 0 ? sampleGamma(kappa * baseWeights[key] / sumWeights, rng) : 0);
   const sum = gammas.reduce((s, v) => s + v, 0) || 1;
   return Object.fromEntries(keys.map((k, i) => [k, gammas[i] / sum]));
 }
 
-function perturbWeightsAroundBaseExperimental(baseWeights, nSamples, concentration) {
+function perturbWeightsAroundBaseExperimental(baseWeights, nSamples, concentration, rng) {
   const keys = Object.keys(baseWeights);
-  const baseSum = keys.reduce((s, k) => s + (baseWeights[k] || 0), 0) || 1;
+  if (!keys.length || !keys.every(k => Number.isFinite(baseWeights[k]) && baseWeights[k] >= 0)) {
+    throw new Error('SMAA base weights must be finite and non-negative.');
+  }
+  const baseSum = keys.reduce((s, k) => s + baseWeights[k], 0);
+  if (!(baseSum > 0)) throw new Error('SMAA base weights cannot all be zero.');
   const samples = [];
+  // The previous equal-shape Gamma draws used this concentration per component.
+  const kappa = (concentration || 8) * keys.length;
   for (let i = 0; i < nSamples; i++) {
-    const dir = randomDirichletWeightsExperimental(keys, concentration || 8);
+    const dir = randomDirichletWeightsExperimental(baseWeights, kappa, rng);
     const result = {};
     keys.forEach(k => { result[k] = dir[k] * baseSum; });
     samples.push(result);
@@ -5734,7 +5963,7 @@ function perturbWeightsAroundBaseExperimental(baseWeights, nSamples, concentrati
 async function runSMAARobustnessExperimental(scKey, params, nSamples) {
   const n = nSamples || 96;
   const baselineEnriched = buildEnriched(scKey, params);
-  const weightSamples = perturbWeightsAroundBaseExperimental(params.weights, n, 8);
+  const weightSamples = perturbWeightsAroundBaseExperimental(params.weights, n, 8, createRngContext(`${params.seed || DEFAULT_MC_SEED}:smaa`));
   const compYears = [];
   const cascadeYears = [];
   const vetoYears = [];
@@ -5800,48 +6029,79 @@ async function runTailAndVetoStressExperimental(scKey, params, nSamples) {
   let shockCount = 0;
   let meanBoost = 0;
   let boostN = 0;
+  const tailCascadeDifferences = [];
+  const tailVetoDifferences = [];
+  const forcedTailCascadeDifferences = [];
+  const parameterRng = createRngContext(`${params.seed || DEFAULT_MC_SEED}:stress:parameters`);
+  const mcError = values => {
+    if (values.length < 2) return 0;
+    const mean = values.reduce((s, v) => s + v, 0) / values.length;
+    const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / (values.length - 1);
+    return Math.sqrt(variance / values.length);
+  };
 
   for (let i = 0; i < n; i++) {
-    const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult));
-    const enriched = enrichSampledThreatsForExperimental(sampled, params);
+    const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult, parameterRng));
+    const processSeed = `${params.seed || DEFAULT_MC_SEED}:stress:process:${i}`;
+    const enriched = enrichSampledThreatsForExperimental(sampled, params, createRngContext(processSeed));
     const years = computeAggregateYearsExperimental(enriched, params);
     compYears.push(years.comp);
     cascadeYears.push(years.dynamicCascade);
     vetoYears.push(years.vetoRule);
 
-    const shockFires = sampleTailShockExperimental(params.tailDependence ?? 0.15);
+    const shockRng = createRngContext(`${params.seed || DEFAULT_MC_SEED}:stress:shock:${i}`);
+    const shockFires = sampleTailShockExperimental(params.tailDependence ?? 0.15, shockRng);
     if (shockFires) shockCount++;
-    const tailSampled = shockFires ? sampled.map(applyTailShockToSampledThreatExperimental) : sampled;
+    const tailSampled = shockFires ? sampled.map(threat => applyTailShockToSampledThreatExperimental(threat, shockRng)) : sampled;
     tailSampled.forEach(t => {
       if (t.tailShockApplied && Number.isFinite(t.tailShockBoost)) { meanBoost += t.tailShockBoost; boostN++; }
     });
-    const tailEnriched = enrichSampledThreatsForExperimental(tailSampled, params);
+    const tailEnriched = enrichSampledThreatsForExperimental(tailSampled, params, createRngContext(processSeed));
     const tailYears = computeAggregateYearsExperimental(tailEnriched, params);
     tailCascadeYears.push(tailYears.dynamicCascade);
     tailVetoYears.push(tailYears.vetoRule);
 
-    const forcedTailSampled = sampled.map(applyTailShockToSampledThreatExperimental);
-    const forcedTailEnriched = enrichSampledThreatsForExperimental(forcedTailSampled, params);
+    const forcedShockRng = createRngContext(`${params.seed || DEFAULT_MC_SEED}:stress:forced-shock:${i}`);
+    const forcedTailSampled = sampled.map(threat => applyTailShockToSampledThreatExperimental(threat, forcedShockRng));
+    const forcedTailEnriched = enrichSampledThreatsForExperimental(forcedTailSampled, params, createRngContext(processSeed));
     const forcedYears = computeAggregateYearsExperimental(forcedTailEnriched, params);
     forcedTailCascadeYears.push(forcedYears.dynamicCascade);
+    tailCascadeDifferences.push(tailYears.dynamicCascade - years.dynamicCascade);
+    tailVetoDifferences.push(tailYears.vetoRule - years.vetoRule);
+    forcedTailCascadeDifferences.push(forcedYears.dynamicCascade - years.dynamicCascade);
 
     if (i % 24 === 0) await new Promise(r => setTimeout(r, 0));
   }
 
+  const contrast = (values, baseline, intervention) => ({
+    meanDifferenceYears: values.reduce((s, v) => s + v, 0) / Math.max(1, values.length),
+    mcStandardErrorYears: mcError(values),
+    estimand: 'paired mean contrast of horizon-coded times; no crossing by YE is coded as YE + 1',
+    censorCodeYear: YE + 1,
+    baselineCensorRate: baseline.filter(year => year > YE).length / Math.max(1, baseline.length),
+    interventionCensorRate: intervention.filter(year => year > YE).length / Math.max(1, intervention.length),
+  });
+  const contrasts = {
+    tailCascade: contrast(tailCascadeDifferences, cascadeYears, tailCascadeYears),
+    tailVeto: contrast(tailVetoDifferences, vetoYears, tailVetoYears),
+    forcedTailCascade: contrast(forcedTailCascadeDifferences, cascadeYears, forcedTailCascadeYears),
+  };
   [compYears, cascadeYears, vetoYears, tailCascadeYears, tailVetoYears, forcedTailCascadeYears].forEach(arr => arr.sort((a, b) => a - b));
-  const summarize = arr => summarizeCrossings(arr, arr.length || 1);
+  const summarize = (arr, label) => summarizeCrossings(arr, arr.length || 1, createRngContext(`${params.seed || DEFAULT_MC_SEED}:stress:bootstrap:${label}`));
 
   return {
     nSamples: n,
     tailProbability: params.tailDependence ?? 0.15,
     observedShockRate: shockCount / Math.max(1, n),
     meanAppliedBoost: boostN ? meanBoost / boostN : 0,
-    compSummary: summarize(compYears),
-    cascadeSummary: summarize(cascadeYears),
-    vetoSummary: summarize(vetoYears),
-    tailCascadeSummary: summarize(tailCascadeYears),
-    tailVetoSummary: summarize(tailVetoYears),
-    forcedTailCascadeSummary: summarize(forcedTailCascadeYears),
+    compSummary: summarize(compYears, 'comp'),
+    cascadeSummary: summarize(cascadeYears, 'cascade'),
+    vetoSummary: summarize(vetoYears, 'veto'),
+    tailCascadeSummary: summarize(tailCascadeYears, 'tail-cascade'),
+    tailVetoSummary: summarize(tailVetoYears, 'tail-veto'),
+    forcedTailCascadeSummary: summarize(forcedTailCascadeYears, 'forced-tail-cascade'),
+    contrasts,
+    pairedRandomInputs: true,
     raw: { compYears, cascadeYears, vetoYears, tailCascadeYears, tailVetoYears, forcedTailCascadeYears },
   };
 }
@@ -5859,6 +6119,7 @@ function renderExperimentalSummary(data) {
       <div class="advanced-metric"><div class="advanced-metric-label">Tail cascade P50</div><div class="advanced-metric-value">${fmtY(s.tailCascadeSummary?.p50 ?? YE + 1)}</div><div class="advanced-metric-note">probabilistic tail-shock run</div></div>
       <div class="advanced-metric"><div class="advanced-metric-label">Observed shocks</div><div class="advanced-metric-value">${advancedPct(s.observedShockRate || 0)}</div><div class="advanced-metric-note">configured p=${advancedPct(s.tailProbability || 0)}</div></div>
       <div class="advanced-metric"><div class="advanced-metric-label">Mean boost</div><div class="advanced-metric-value">${advancedPct(s.meanAppliedBoost || 0)}</div><div class="advanced-metric-note">conditional applied growth boost</div></div>
+      <div class="advanced-metric"><div class="advanced-metric-label">Paired tail coded-time contrast</div><div class="advanced-metric-value">${Number.isFinite(s.contrasts?.tailCascade?.meanDifferenceYears) ? s.contrasts.tailCascade.meanDifferenceYears.toFixed(2) + 'y' : '—'}</div><div class="advanced-metric-note">MC SE ${Number.isFinite(s.contrasts?.tailCascade?.mcStandardErrorYears) ? s.contrasts.tailCascade.mcStandardErrorYears.toFixed(2) + 'y' : '—'}; no crossing by ${YE} is coded ${YE + 1}. Censored baseline/tail: ${advancedPct(s.contrasts?.tailCascade?.baselineCensorRate)}/${advancedPct(s.contrasts?.tailCascade?.interventionCensorRate)}. Negative means earlier coded times.</div></div>
     </div>`;
 }
 
@@ -6146,14 +6407,15 @@ function labelAnnotation(x, y, text, color) {
   };
 }
 
-async function drawSensChart() {
+async function drawSensChart(isCurrent = () => true) {
+  if (!isCurrent()) return;
   const data = _sensData;
   if (!data || !data.length) {
     setScientificPlotlyMessage('sensCanvas', 'Run Additional Scientific Calculations to render OAT sensitivity.');
     return;
   }
   const Plotly = await ensureScientificPlotly();
-  if (!Plotly) return;
+  if (!Plotly || !isCurrent()) return;
   const p = scientificPlotlyPalette();
   const top = data.slice(0, Math.min(8, data.length)).reverse();
   const y = top.map(row => shortThreatLabel(row.name, 30));
@@ -6165,18 +6427,20 @@ async function drawSensChart() {
     {
       type: 'bar', orientation: 'h', name: '−20%',
       x: top.map(row => -Math.abs(row.dnShift || 0)), y,
+      error_x: { type: 'data', array: top.map(row => 1.96 * (row.dnMcSe || 0)), visible: true, color: rgba(p.text, 0.65), thickness: 1 },
       marker: { color: rgba(p.blue, 0.44), line: { color: rgba(p.blue, 0.84), width: 0.9 } },
       width: 0.46,
-      customdata: top.map(row => [row.name, row.totalImpact, row.dnShift]),
-      hovertemplate: '<b>%{customdata[0]}</b><br>−20% perturbation: %{x:.2f} pp<br>Total OAT impact: %{customdata[1]:.2f} pp<extra></extra>',
+      customdata: top.map(row => [row.name, row.totalImpact, row.dnShift, row.dnMcSe]),
+      hovertemplate: '<b>%{customdata[0]}</b><br>−20% paired contrast: %{x:.2f} pp<br>Paired bootstrap MC SE: %{customdata[3]:.2f} pp<br>Contrast beyond 1.96 SE (heuristic): %{customdata[1]:.2f} pp<extra></extra>',
     },
     {
       type: 'bar', orientation: 'h', name: '+20%',
       x: top.map(row => Math.abs(row.upShift || 0)), y,
+      error_x: { type: 'data', array: top.map(row => 1.96 * (row.upMcSe || 0)), visible: true, color: rgba(p.text, 0.65), thickness: 1 },
       marker: { color: rgba(p.red, 0.54), line: { color: rgba(p.red, 0.86), width: 0.9 } },
       width: 0.46,
-      customdata: top.map(row => [row.name, row.totalImpact, row.upShift]),
-      hovertemplate: '<b>%{customdata[0]}</b><br>+20% perturbation: +%{x:.2f} pp<br>Total OAT impact: %{customdata[1]:.2f} pp<extra></extra>',
+      customdata: top.map(row => [row.name, row.totalImpact, row.upShift, row.upMcSe]),
+      hovertemplate: '<b>%{customdata[0]}</b><br>+20% paired contrast: +%{x:.2f} pp<br>Paired bootstrap MC SE: %{customdata[3]:.2f} pp<br>Contrast beyond 1.96 SE (heuristic): %{customdata[1]:.2f} pp<extra></extra>',
     },
   ];
 
@@ -6191,15 +6455,20 @@ async function drawSensChart() {
   await Plotly.react(prepareScientificPlotlyPanel('sensCanvas'), traces, layout, scientificPlotlyConfig());
 }
 
-async function drawExploratorySensitivityChart() {
+async function drawExploratorySensitivityChart(isCurrent = () => true) {
+  if (!isCurrent()) return;
   const payload = _exploratoryData && _exploratoryData.rows ? _exploratoryData : null;
+  if (payload && payload.status === 'undefined_zero_variance') {
+    setScientificPlotlyMessage('sobolCanvas', 'Sobol/Jansen indices and ranking are undefined: the sampled target has zero or invalid variance.');
+    return;
+  }
   const rows = payload ? payload.rows : null;
   if (!rows || !rows.length) {
     setScientificPlotlyMessage('sobolCanvas', 'Run Additional Scientific Calculations to render Sobol/Jansen S1/ST indices.');
     return;
   }
   const Plotly = await ensureScientificPlotly();
-  if (!Plotly) return;
+  if (!Plotly || !isCurrent()) return;
   const p = scientificPlotlyPalette();
   const top = rows
     .slice()
@@ -6259,9 +6528,10 @@ function plotlySummaryYear(summary, key) {
   return { raw, clipped: yearChartValue(raw) };
 }
 
-async function drawIntervalLollipopChart(targetId, rows, titleColor) {
+async function drawIntervalLollipopChart(targetId, rows, titleColor, isCurrent = () => true) {
+  if (!isCurrent()) return;
   const Plotly = await ensureScientificPlotly();
-  if (!Plotly) return;
+  if (!Plotly || !isCurrent()) return;
   const p = scientificPlotlyPalette();
   const clean = rows.filter(([, summary]) => summary);
   const vals = [];
@@ -6330,7 +6600,8 @@ async function drawIntervalLollipopChart(targetId, rows, titleColor) {
   await Plotly.react(prepareScientificPlotlyPanel(targetId), traces, layout, scientificPlotlyConfig());
 }
 
-async function drawVetoDiagnosticChart(data) {
+async function drawVetoDiagnosticChart(data, isCurrent = () => true) {
+  if (!isCurrent()) return;
   const stress = data && data.stress;
   if (!stress) {
     setScientificPlotlyMessage('vetoDiagnosticChart', 'Run Additional Scientific Calculations to render the veto stress test.');
@@ -6343,10 +6614,11 @@ async function drawVetoDiagnosticChart(data) {
     ['Veto rule', stress.vetoSummary],
     ['Tail veto', stress.tailVetoSummary],
   ].reverse();
-  await drawIntervalLollipopChart('vetoDiagnosticChart', rows, p.red);
+  await drawIntervalLollipopChart('vetoDiagnosticChart', rows, p.red, isCurrent);
 }
 
-async function drawTailShockChart(data) {
+async function drawTailShockChart(data, isCurrent = () => true) {
+  if (!isCurrent()) return;
   const stress = data && data.stress;
   if (!stress) {
     setScientificPlotlyMessage('tailShockChart', 'Run Additional Scientific Calculations to render the tail-dependence stress test.');
@@ -6358,17 +6630,18 @@ async function drawTailShockChart(data) {
     ['Prob. tail cascade', stress.tailCascadeSummary],
     ['Forced tail cascade', stress.forcedTailCascadeSummary],
   ].reverse();
-  await drawIntervalLollipopChart('tailShockChart', rows, p.purple);
+  await drawIntervalLollipopChart('tailShockChart', rows, p.purple, isCurrent);
 }
 
-async function drawSMAADiagnosticChart(data) {
+async function drawSMAADiagnosticChart(data, isCurrent = () => true) {
+  if (!isCurrent()) return;
   const smaa = data && data.smaa;
   if (!smaa || !smaa.topRankAcceptability || !smaa.topRankAcceptability.length) {
     setScientificPlotlyMessage('smaaDiagnosticChart', 'Run Additional Scientific Calculations to render SMAA robustness.');
     return;
   }
   const Plotly = await ensureScientificPlotly();
-  if (!Plotly) return;
+  if (!Plotly || !isCurrent()) return;
   const p = scientificPlotlyPalette();
   const rows = smaa.topRankAcceptability.slice(0, 8).reverse();
   const y = rows.map(r => shortThreatLabel(r.name, 30));
@@ -6398,24 +6671,30 @@ async function drawSMAADiagnosticChart(data) {
   await Plotly.react(prepareScientificPlotlyPanel('smaaDiagnosticChart'), traces, layout, scientificPlotlyConfig());
 }
 
-async function drawDistributionDiagnosticsPlotly(res) {
+async function drawDistributionDiagnosticsPlotly(res, isCurrent = () => true) {
+  if (!isCurrent()) return;
   const result = res || _cdfCurves[currentScenario()] || null;
   if (!result || !result.crossing || !result.crossing.length) {
     ['plotlyHistogramChart','plotlyBoxplotChart','plotlyHeatmapChart','plotlyCdfChart'].forEach(id => setScientificPlotlyMessage(id, 'Run the main simulation first; this distribution view needs a completed Monte Carlo result.'));
     return;
   }
   const Plotly = await ensureScientificPlotly();
-  if (!Plotly) return;
+  if (!Plotly || !isCurrent()) return;
   const p = scientificPlotlyPalette();
   const scenarioLabel = (SC[currentScenario()] && SC[currentScenario()].name) || currentScenario();
-  const primaryCrossing = clippedYearSeries(result.crossing);
+  const observedYears = values => (values || []).filter(year => Number.isFinite(year) && year <= YE);
+  const censorCount = values => (values || []).filter(year => Number.isFinite(year) && year > YE).length;
+  const primaryCrossing = observedYears(result.crossing);
+  const censored = censorCount(result.crossing);
   const yearRange = scientificYearRangeFromValues(primaryCrossing, 2, 10);
   const p10 = yearChartValue(result.p10);
   const p50 = yearChartValue(result.p50);
   const p90 = yearChartValue(result.p90);
   const vline = (x, color, dash='dot') => ({ type: 'line', x0: x, x1: x, y0: 0, y1: 1, xref: 'x', yref: 'paper', line: { color, width: 1, dash } });
+  const identifiedMarkers = [[p10, 'P10'], [p50, 'P50'], [p90, 'P90']].filter(([year]) => Number.isFinite(year) && year <= YE);
 
-  await Plotly.react(prepareScientificPlotlyPanel('plotlyHistogramChart'), [{
+  if (!primaryCrossing.length) setScientificPlotlyMessage('plotlyHistogramChart', `No observed crossings by ${YE}; ${censored}/${result.crossing.length} runs are right-censored.`);
+  else await Plotly.react(prepareScientificPlotlyPanel('plotlyHistogramChart'), [{
     type: 'histogram',
     x: primaryCrossing,
     nbinsx: Math.min(28, Math.max(9, Math.ceil(Math.sqrt(primaryCrossing.length) * 0.75))),
@@ -6425,15 +6704,12 @@ async function drawDistributionDiagnosticsPlotly(res) {
     margin: { l: 46, r: 18, t: 4, b: 40 },
     showlegend: false,
     bargap: 0.12,
-    xaxis: { range: yearRange, title: `Crossing year  ${scenarioLabel}`, tickformat: 'd' },
+    xaxis: { range: yearRange, title: `Observed crossing year  ${scenarioLabel}; censored ${censored}/${result.crossing.length}`, tickformat: 'd' },
     yaxis: { title: 'Samples', showgrid: true, gridcolor: p.gridSoft },
-    shapes: [vline(p10, rgba(p.text, .20)), vline(p50, rgba(p.text, .52), 'dash'), vline(p90, rgba(p.text, .20))],
-    annotations: [
-      labelAnnotation(p10, 1.02, 'P10', rgba(p.text, .56)),
-      labelAnnotation(p50, 1.02, 'P50', p.text),
-      labelAnnotation(p90, 1.02, 'P90', rgba(p.text, .56)),
-    ],
+    shapes: identifiedMarkers.map(([year, label]) => vline(year, rgba(p.text, label === 'P50' ? .52 : .20), label === 'P50' ? 'dash' : 'dot')),
+    annotations: identifiedMarkers.map(([year, label]) => labelAnnotation(year, 1.02, label, label === 'P50' ? p.text : rgba(p.text, .56))),
   }), scientificPlotlyConfig());
+  if (!isCurrent()) return;
 
   const ensemble = result.ensemble || {};
   const boxDefs = [
@@ -6444,24 +6720,26 @@ async function drawDistributionDiagnosticsPlotly(res) {
   ].filter(([, summary]) => summary && summary.crossing && summary.crossing.length);
   const boxTraces = boxDefs.map(([name, summary, color]) => ({
     type: 'box',
-    name,
-    x: clippedYearSeries(summary.crossing),
+    name: `${name} (${censorCount(summary.crossing)}/${summary.crossing.length} censored)`,
+    x: observedYears(summary.crossing),
     boxpoints: false,
     orientation: 'h',
     fillcolor: rgba(color, 0.12),
     marker: { color: rgba(color, 0.52), size: 3 },
     line: { color: rgba(color, 0.82), width: 1.1 },
     whiskerwidth: 0.65,
-    hovertemplate: `<b>${name}</b><br>Year: %{x}<extra></extra>`,
+    hovertemplate: `<b>${name}</b><br>Year conditional on crossing by ${YE}: %{x}<br>Censored: ${censorCount(summary.crossing)}/${summary.crossing.length}<extra></extra>`,
   }));
-  const allBoxYears = boxDefs.flatMap(([, summary]) => clippedYearSeries(summary.crossing));
-  await Plotly.react(prepareScientificPlotlyPanel('plotlyBoxplotChart'), boxTraces, scientificPlotlyLayout({
+  const allBoxYears = boxDefs.flatMap(([, summary]) => observedYears(summary.crossing));
+  if (!allBoxYears.length) setScientificPlotlyMessage('plotlyBoxplotChart', `No observed crossings by ${YE}; conditional crossing-time boxes are undefined.`);
+  else await Plotly.react(prepareScientificPlotlyPanel('plotlyBoxplotChart'), boxTraces, scientificPlotlyLayout({
     margin: { l: 28, r: 18, t: 4, b: 48 },
     boxmode: 'group',
-    xaxis: { range: scientificYearRangeFromValues(allBoxYears, 2, 10), title: 'Crossing year', tickformat: 'd' },
+    xaxis: { range: scientificYearRangeFromValues(allBoxYears, 2, 10), title: `Crossing year, conditional on crossing by ${YE}`, tickformat: 'd' },
     yaxis: { showgrid: false },
     legend: { orientation: 'h', x: 0, y: -0.18, font: { color: p.text3, size: 8 } },
   }), scientificPlotlyConfig());
+  if (!isCurrent()) return;
 
   const domains = ['civilization', 'biosphere', 'technology'];
   const labels = ['Civilization', 'Biosphere', 'Technology'];
@@ -6491,6 +6769,7 @@ async function drawDistributionDiagnosticsPlotly(res) {
     yaxis: { showgrid: false },
     showlegend: false,
   }), scientificPlotlyConfig());
+  if (!isCurrent()) return;
 
   const cdfTraces = boxDefs.map(([name, summary, color], idx) => ({
     type: 'scatter',
@@ -6513,16 +6792,17 @@ async function drawDistributionDiagnosticsPlotly(res) {
 }
 
 
-async function renderAllExperimentalDiagnostics(data) {
+async function renderAllExperimentalDiagnostics(data, isCurrent = () => true) {
+  if (!isCurrent()) return;
   renderExperimentalSummary(data);
   renderExperimentalAudit(data);
   await Promise.all([
-    drawVetoDiagnosticChart(data),
-    drawTailShockChart(data),
-    drawSMAADiagnosticChart(data),
-    drawDistributionDiagnosticsPlotly(_cdfCurves[currentScenario()] || null),
+    drawVetoDiagnosticChart(data, isCurrent),
+    drawTailShockChart(data, isCurrent),
+    drawSMAADiagnosticChart(data, isCurrent),
+    drawDistributionDiagnosticsPlotly(_cdfCurves[currentScenario()] || null, isCurrent),
   ]);
-  setTimeout(resizeScientificPanelCharts, 80);
+  if (isCurrent()) setTimeout(() => { if (isCurrent()) resizeScientificPanelCharts(); }, 80);
 }
 
 function resetExperimentalScientificPanel() {
@@ -6556,9 +6836,9 @@ async function runAdditionalScientificCalculations() {
   if (_running || _advancedDiagnosticsRunning) return;
 
   const runVersion = _resultVersion;
+  const isCurrent = () => runVersion === _resultVersion;
   const scKey = currentScenario();
-  const nSim = parseInt(document.getElementById('simCount').value, 10) || 3000;
-  resetMonteCarloSeed(P.seed || DEFAULT_MC_SEED);
+  const nSim = parseInt(P.nSim, 10) || 3000;
   const baselineResult = _cdfCurves[scKey] || null;
 
   const btn = document.getElementById('diagBtn');
@@ -6604,7 +6884,8 @@ async function runAdditionalScientificCalculations() {
     if (runVersion !== _resultVersion) return;
 
     _sensData = oat;
-    await drawSensChart();
+    await drawSensChart(isCurrent);
+    if (!isCurrent()) return;
     if (!_exploratoryData && oat && oat.length) {
       setDominantDriverKpi(oat[0].name, 'OAT sensitivity driver');
     }
@@ -6620,13 +6901,15 @@ async function runAdditionalScientificCalculations() {
     if (runVersion !== _resultVersion) return;
 
     _exploratoryData = sobol;
-    await drawExploratorySensitivityChart();
+    await drawExploratorySensitivityChart(isCurrent);
+    if (!isCurrent()) return;
+    const firstOrderSumText = Number.isFinite(sobol.firstOrderSum) ? sobol.firstOrderSum.toFixed(2) : 'undefined';
 
     const warn = document.getElementById('exploratorySensWarn');
     if (warn) {
       warn.textContent = sobol.warnings.length
         ? `Exploratory only: ${sobol.warnings.join(' ')}`
-        : `Exploratory only: Sobol/Jansen indices completed in responsive mode (N=${sobol.sampleSize}, ΣS1=${sobol.firstOrderSum.toFixed(2)}).`;
+        : `Exploratory only: Sobol/Jansen indices completed in responsive mode (N=${sobol.sampleSize}, ΣS1=${firstOrderSumText}).`;
     }
 
     const text = document.getElementById('exploratorySensText');
@@ -6636,7 +6919,9 @@ async function runAdditionalScientificCalculations() {
       setDominantDriverKpi(sobol.rows[0].name, 'Sobol/Jansen sensitivity driver');
     }
 
-    setCalcStepStatus('sobol', 'done', `Sobol/Jansen Monte Carlo estimate completed with N=${sobol.sampleSize} and ΣS1=${sobol.firstOrderSum.toFixed(2)}.`);
+    setCalcStepStatus('sobol', 'done', Number.isFinite(sobol.firstOrderSum)
+      ? `Sobol/Jansen Monte Carlo estimate completed with N=${sobol.sampleSize} and ΣS1=${firstOrderSumText}.`
+      : `Sobol/Jansen indices undefined: the sampled response has zero variance (N=${sobol.sampleSize}); no sensitivity ranking is available.`);
     if (prog) prog.style.width = '42%';
 
     setExperimentalScientificStatus('Running SMAA weight robustness…');
@@ -6655,13 +6940,14 @@ async function runAdditionalScientificCalculations() {
     const stress = await runTailAndVetoStressExperimental(scKey, params, stressSamples);
     if (runVersion !== _resultVersion) return;
     setCalcStepStatus('veto', 'done', `Veto diagnostic completed: P50 ${fmtY(stress.vetoSummary.p50)}, P90 ${fmtY(stress.vetoSummary.p90)}.`);
-    setCalcStepStatus('tailshock', 'done', `Tail-shock diagnostic completed: observed shock rate ${advancedPct(stress.observedShockRate)}, tail-cascade P50 ${fmtY(stress.tailCascadeSummary.p50)}.`);
+    setCalcStepStatus('tailshock', 'done', `Paired tail-shock diagnostic completed: observed shock rate ${advancedPct(stress.observedShockRate)}, mean horizon-coded cascade contrast ${stress.contrasts.tailCascade.meanDifferenceYears.toFixed(2)} ± ${stress.contrasts.tailCascade.mcStandardErrorYears.toFixed(2)} years (MC SE; no crossing by ${YE} coded as ${YE + 1}); censored baseline/tail ${advancedPct(stress.contrasts.tailCascade.baselineCensorRate)}/${advancedPct(stress.contrasts.tailCascade.interventionCensorRate)}.`);
     if (prog) prog.style.width = '86%';
 
     setExperimentalScientificStatus('Rendering additional scientific graphs…');
     setCalcStepStatus('audit', 'running', 'Building compact classification-aware audit summary for optional modules.');
     _experimentalScientificData = { scenario: scKey, params: { ...params }, smaa, stress, generatedAt: new Date().toISOString() };
-    await renderAllExperimentalDiagnostics(_experimentalScientificData);
+    await renderAllExperimentalDiagnostics(_experimentalScientificData, isCurrent);
+    if (!isCurrent()) return;
     setCalcStepStatus('audit', 'done', 'Classification-aware audit and optional diagnostic graphs rendered.');
 
     if (prog) prog.style.width = '100%';
@@ -6671,6 +6957,7 @@ async function runAdditionalScientificCalculations() {
 
   } catch (err) {
     console.error('Additional scientific calculations failed', err);
+    if (!isCurrent()) return;
     setCalcStepStatus('oat', 'error', 'Additional scientific calculations failed. Main Monte Carlo result remains valid.');
     setCalcStepStatus('sobol', 'error', 'Additional scientific calculations failed. Main Monte Carlo result remains valid.');
     setCalcStepStatus('smaa', 'error', 'Additional scientific calculations failed.');
@@ -6685,8 +6972,7 @@ async function runAdditionalScientificCalculations() {
   }
 }
 
-const currentScenario = () =>
-  (document.querySelector('.sc-pill.active') || { dataset:{sc:'baseline'} }).dataset.sc;
+const currentScenario = () => 'baseline';
 
 document.getElementById('calcConsoleToggle').addEventListener('click', () => {
   _calcConsoleExpanded = !_calcConsoleExpanded;
@@ -6705,8 +6991,8 @@ document.getElementById('resetSourcesBtn').addEventListener('click', () => {
   if (fileInput) fileInput.value = '';
   applySourceMap(BUNDLED_SOURCE_DATA, {
     mode: 'bundled',
-    fileName: 'data_v1_7_1metadata_revision.json',
-      message: 'Bundled data_v1_7_1metadata_revision.json parameter map restored. Active parameters now match the embedded data_v1_7_1metadata_revision.json file.',
+    fileName: 'data_v1_9_0_functional.json',
+      message: 'Bundled data_v1_9_0_functional.json parameter map restored. Active parameters now match the embedded data_v1_9_0_functional.json file.',
     uploaded: false,
     clearEvidence: true,
   });
@@ -6745,101 +7031,8 @@ document.getElementById('sourceFileInput').addEventListener('change', async e =>
   }
 });
 
-let _weightProfileAutoRunTimer = null;
-function scheduleWeightProfileAutoRun() {
-  if (_weightProfileAutoRunTimer) clearTimeout(_weightProfileAutoRunTimer);
-  _weightProfileAutoRunTimer = setTimeout(() => {
-    _weightProfileAutoRunTimer = null;
-    if (typeof runAll !== 'function') return;
-    if (_running) {
-      setTimeout(() => { if (!_running) runAll(); }, 350);
-      return;
-    }
-    runAll();
-  }, 120);
-}
-
-document.querySelectorAll('[data-weight-profile]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    applyWeightProfile(btn.getAttribute('data-weight-profile') || 'expert', true);
-    scheduleWeightProfileAutoRun();
-  });
-});
-renderWeightProfileInfo(P.weightProfile || 'expert');
-
-document.getElementById('runBtn').addEventListener('click', runAll);
 const diagBtn = document.getElementById('diagBtn');
 if (diagBtn) diagBtn.addEventListener('click', runAdditionalScientificCalculations);
-
-document.getElementById('resetBtn').addEventListener('click', () => {
-  const defaults = { simCount:'3000', mcSeed:DEFAULT_MC_SEED, ctrlThresh:0.4, ctrlCascadeThresh:0.5, ctrlAlpha:0.22, ctrlUnc:1.0, ctrlDwC:1.0, ctrlDwB:1.0, ctrlDwT:1.0 };
-  Object.entries(defaults).forEach(([id, v]) => { const el=document.getElementById(id); if(el) el.value=v; });
-  P.nSim=3000; P.seed=resetMonteCarloSeed(DEFAULT_MC_SEED); P.threshold=0.4; P.cascadeThreshold=0.50; P.depAlpha=0.22; P.uncMult=1.0;
-  P.domW={civilization:1, biosphere:1, technology:1};
-  applyWeightProfile('expert', false);
-  document.getElementById('vRuns').textContent='3000';
-  document.getElementById('vSeed').textContent=DEFAULT_MC_SEED;
-  document.getElementById('vThresh').textContent='40%';
-  document.getElementById('vCascadeThresh').textContent='50%';
-  document.getElementById('vAlpha').textContent='0.22';
-  document.getElementById('vUnc').textContent='1.0×';
-  document.getElementById('vDwC').textContent='1.00';
-  document.getElementById('vDwB').textContent='1.00';
-  document.getElementById('vDwT').textContent='1.00';
-  invalidateCachedResults();
-  refreshCurrentView(null);
-});
-
-document.querySelectorAll('.sc-pill').forEach(btn => {
-  btn.addEventListener('click', () => {
-    _resultVersion += 1;
-    _sensData = null;
-    _exploratoryData = null;
-    resetExploratorySensitivityText();
-    document.querySelectorAll('.sc-pill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const scKey = btn.dataset.sc;
-    P.scenario = scKey;
-    refreshCurrentView(_cdfCurves[scKey] || null);
-  });
-});
-
-document.getElementById('simCount').addEventListener('change', e => {
-  const nSim = parseInt(e.target.value, 10) || 3000;
-  P.nSim = nSim;
-  document.getElementById('vRuns').textContent = String(nSim);
-  invalidateCachedResults();
-  refreshCurrentView(null);
-});
-
-const mcSeedInput = document.getElementById('mcSeed');
-if (mcSeedInput) mcSeedInput.addEventListener('change', e => {
-  const seed = normalizeMonteCarloSeed(e.target.value);
-  e.target.value = seed;
-  P.seed = seed;
-  const seedLabel = document.getElementById('vSeed');
-  if (seedLabel) seedLabel.textContent = seed;
-  invalidateCachedResults();
-  refreshCurrentView(null);
-});
-
-[
-  ['ctrlThresh',        'vThresh',        v => Math.round(v*100)+'%',        v => P.threshold = parseFloat(v)],
-  ['ctrlCascadeThresh', 'vCascadeThresh', v => Math.round(v*100)+'%',        v => P.cascadeThreshold = parseFloat(v)],
-  ['ctrlAlpha',         'vAlpha',         v => parseFloat(v).toFixed(2),     v => P.depAlpha  = parseFloat(v)],
-  ['ctrlUnc',    'vUnc',     v => parseFloat(v).toFixed(1)+'×',     v => P.uncMult   = parseFloat(v)],
-  ['ctrlDwC',    'vDwC',     v => parseFloat(v).toFixed(2),         v => P.domW.civilization = parseFloat(v)],
-  ['ctrlDwB',    'vDwB',     v => parseFloat(v).toFixed(2),         v => P.domW.biosphere    = parseFloat(v)],
-  ['ctrlDwT',    'vDwT',     v => parseFloat(v).toFixed(2),         v => P.domW.technology   = parseFloat(v)],
-].forEach(([id, vid, fmt, setter]) => {
-  const el = document.getElementById(id); if (!el) return;
-  el.addEventListener('input', e => {
-    setter(e.target.value);
-    document.getElementById(vid).textContent = fmt(e.target.value);
-    invalidateCachedResults();
-    refreshCurrentView(null);
-  });
-});
 
 window.addEventListener('resize', () => {
   const scKey = currentScenario();
@@ -6875,11 +7068,10 @@ function logSelfTestWarning(ok, message) {
 
 async function runSelfTests() {
   try {
-    resetMonteCarloSeed('SELF_TEST_SEED');
     validateModelConfig();
     if (window.ApocalypseClockDebug) console.log('OK: schema validation passed');
 
-    const baselineCheckParams = defaultBaselineParams();
+    const baselineCheckParams = { ...defaultBaselineParams(), seed: 'SELF_TEST_SEED' };
     const baselineCheckRows = buildEnriched('baseline', baselineCheckParams);
     const baselineCheckYears = computeAggregateYears(baselineCheckRows, baselineCheckParams);
     const baselineCheckOk = [baselineCheckYears.comp, baselineCheckYears.maxRule, baselineCheckYears.graphWeighted, baselineCheckYears.dynamicCascade].every(y => Number.isFinite(y) && y <= YE);
@@ -6912,14 +7104,20 @@ async function runSelfTests() {
     const mcCrossingsOk = mc.crossing.every(y => isExplicitHorizon(y));
     const oatOk = Array.isArray(oat) && oat.length === THREATS.length && oat.every(row => [row.upShift, row.dnShift, row.totalImpact].every(Number.isFinite));
     const exploratoryOk = exploratory.rows.every(row => [row.S1, row.ST].every(Number.isFinite));
-    const advWeibullOk = baselineCheckRows.every(t => Number.isFinite(weibullProbability(t, 2035, mc.threatStats[t.id])));
+    const advWeibullOk = baselineCheckRows.every(t => {
+      const wp = weibullParamsForThreat(t, mc.threatStats[t.id]);
+      const probability = weibullProbability(t, 2035, mc.threatStats[t.id]);
+      return wp.censored ? probability === null : Number.isFinite(probability);
+    });
     const advCentral = networkEigenvectorCentrality(baselineCheckRows);
     const advJoint = jointFailureByDecade(baselineCheckRows, mc);
     const advEntropy = shannonEntropyRisk(baselineCheckRows);
     const advancedOk = advWeibullOk
       && advCentral.length === baselineCheckRows.length
       && advJoint.rows.length >= 5
-      && advJoint.rows.every(row => [row.at50, row.at70, row.at80].every(Number.isFinite))
+      && advJoint.rows.every(row => row.censoredCount
+        ? [row.at50Lower, row.at50Upper, row.at70Lower, row.at70Upper, row.at80Lower, row.at80Upper].every(Number.isFinite)
+        : [row.at50, row.at70, row.at80].every(Number.isFinite))
       && Number.isFinite(advEntropy.h)
       && Number.isFinite(advEntropy.effectiveN);
 
@@ -7005,7 +7203,7 @@ const AI_PRESETS = {
     chatUrl: 'https://www.apocalypseclock.com/scoringmethodology',
   },
   primarycalibrated: {
-    label: 'Primary Calibrated JSON',
+    label: 'Primary Functional JSON',
     scenario: 'baseline',
     uncMult: 1.0,
     depAlpha: 1.0,
@@ -7197,18 +7395,18 @@ function initAiPresetSelector() {
         applySourceMap(BUNDLED_SOURCE_DATA, {
           mode: 'bundled',
           fileName: PRIMARY_DATASET_NAME,
-          message: `Primary Calibrated JSON restored from the embedded data_v1_7_1metadata_revision.json source map. Active parameters now match the bundled primary dataset.`,
+          message: `Primary Functional JSON restored from the embedded data_v1_9_0_functional.json source map. Active parameters now match the bundled primary dataset.`,
           uploaded: false,
           clearEvidence: true,
         });
         if (viewer) viewer.open = false;
-        if (msg) msg.textContent = `Primary Calibrated JSON is active. ${stats.entryCount} parameter entries across ${stats.threatCount} threats are now loaded. Running model with primary data...`;
+        if (msg) msg.textContent = `Primary Functional JSON is active. ${stats.entryCount} parameter entries across ${stats.threatCount} threats are now loaded. Running model with primary data...`;
         if (typeof runAll === 'function') {
           try {
             await runAll();
           } catch (runErr) {
-            if (msg) msg.textContent = `Primary Calibrated JSON restored, but model rerun failed: ${runErr.message}`;
-            console.error('Primary Calibrated JSON rerun failed', runErr);
+            if (msg) msg.textContent = `Primary Functional JSON restored, but model rerun failed: ${runErr.message}`;
+            console.error('Primary Functional JSON rerun failed', runErr);
           }
         }
         return;
@@ -7255,8 +7453,8 @@ function orderMissionActions() {
 async function initApp() {
   applySourceMap(BUNDLED_SOURCE_DATA, {
     mode: 'bundled',
-    fileName: 'data_v1_7_1metadata_revision.json',
-    message: 'Bundled data_v1_7_1metadata_revision.json parameter map embedded in widget and used as the default primary parameter source.',
+    fileName: 'data_v1_9_0_functional.json',
+    message: 'Bundled data_v1_9_0_functional.json parameter map embedded in widget and used as the default primary parameter source.',
     uploaded: false,
   }, false);
   renderSourceRegistry();

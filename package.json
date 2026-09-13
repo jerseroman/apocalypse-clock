@@ -1,9 +1,11 @@
 {
   "name": "apocalypse-clock",
-  "version": "1.2.7",
+  "version": "1.2.8",
+  "config": { "primaryDataset": "data_v1_9_0_functional.json", "datasetVersion": "1.9.0" },
   "private": true,
   "description": "Static browser-based systemic-risk dashboard.",
   "scripts": {
+    "build:wix": "node scripts/build-wix-velo-custom-element.js",
     "check": "npm run check:js && npm run validate:data && npm run check:links",
     "check:js": "node scripts/check-js.js",
     "validate:data": "node scripts/validate-data.js",

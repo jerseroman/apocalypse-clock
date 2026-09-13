@@ -1,0 +1,805 @@
+{
+  "scope": "Engineering correctness and sensitivity, not predictive validity",
+  "seed": "AC-1.2.6-2026",
+  "dataset_sha256": "bbb2b77bf488d4b509fc8ef2073a9ab053fadeb708e33ffd6f18c3f10e1652e9",
+  "archivedBaseline": {
+    "model": "Apocalypse Clock v1.2.7",
+    "dataset": "1.7.1",
+    "p10": 2037,
+    "p50": 2041,
+    "p90": 2046,
+    "censorFraction": 0
+  },
+  "current": {
+    "model": "Apocalypse Clock v1.2.8",
+    "dataset": "1.9.0",
+    "params": {
+      "scenario": "baseline",
+      "nSim": 3000,
+      "seed": "AC-1.2.6-2026",
+      "threshold": 0.4,
+      "cascadeThreshold": 0.5,
+      "depAlpha": 0.22,
+      "uncMult": 1,
+      "tailDependence": 0.15,
+      "vetoThreshold": 0.65,
+      "domW": {
+        "civilization": 1,
+        "biosphere": 1,
+        "technology": 1
+      },
+      "weights": {
+        "scale": 0.2,
+        "urgency": 0.18,
+        "acceleration": 0.14,
+        "interdependence": 0.18,
+        "irreversibility": 0.16,
+        "gov_failure": 0.14
+      },
+      "weightProfile": "expert",
+      "thresholdPolicy": "per_threat_anchored"
+    },
+    "nSim": 3000,
+    "summary": {
+      "p10": 2033,
+      "p50": 2036,
+      "p90": 2043,
+      "displayP90": "2043",
+      "censorFraction": 0,
+      "p2050": 0.991
+    },
+    "identicalRepeat": true,
+    "standalone": {
+      "climate": {
+        "p10": 2033,
+        "p50": 2037,
+        "p90": 2048,
+        "p2050": 0.9263333333333333,
+        "censorFraction": 0.0006666666666666666
+      },
+      "biodiversity": {
+        "p10": 2037,
+        "p50": 2050,
+        "p90": 2087,
+        "p2050": 0.5263333333333333,
+        "censorFraction": 0.058666666666666666
+      },
+      "soils": {
+        "p10": 2049,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.11466666666666667,
+        "censorFraction": 0.5313333333333333
+      },
+      "water": {
+        "p10": 2038,
+        "p50": 2052,
+        "p90": 2096,
+        "p2050": 0.4623333333333333,
+        "censorFraction": 0.09
+      },
+      "oceans": {
+        "p10": 2042,
+        "p50": 2057,
+        "p90": 2101,
+        "p2050": 0.37266666666666665,
+        "censorFraction": 0.10533333333333333
+      },
+      "pollution": {
+        "p10": 2042,
+        "p50": 2066,
+        "p90": 2101,
+        "p2050": 0.25466666666666665,
+        "censorFraction": 0.23333333333333334
+      },
+      "pandemics": {
+        "p10": 2035,
+        "p50": 2088,
+        "p90": 2101,
+        "p2050": 0.26033333333333336,
+        "censorFraction": 0.45166666666666666
+      },
+      "amr": {
+        "p10": 2041,
+        "p50": 2059,
+        "p90": 2101,
+        "p2050": 0.3566666666666667,
+        "censorFraction": 0.12933333333333333
+      },
+      "bioengineered": {
+        "p10": 2030,
+        "p50": 2053,
+        "p90": 2101,
+        "p2050": 0.4736666666666667,
+        "censorFraction": 0.18366666666666667
+      },
+      "nuclear": {
+        "p10": 2034,
+        "p50": 2086,
+        "p90": 2101,
+        "p2050": 0.271,
+        "censorFraction": 0.436
+      },
+      "supply": {
+        "p10": 2030,
+        "p50": 2052,
+        "p90": 2101,
+        "p2050": 0.4856666666666667,
+        "censorFraction": 0.17633333333333334
+      },
+      "geopolitics": {
+        "p10": 2029,
+        "p50": 2051,
+        "p90": 2101,
+        "p2050": 0.48633333333333334,
+        "censorFraction": 0.17366666666666666
+      },
+      "fragmentation_gov": {
+        "p10": 2059,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.074,
+        "censorFraction": 0.794
+      },
+      "economic": {
+        "p10": 2094,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.036,
+        "censorFraction": 0.8896666666666667
+      },
+      "debt": {
+        "p10": 2051,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.09633333333333334,
+        "censorFraction": 0.5733333333333334
+      },
+      "displacement": {
+        "p10": 2101,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.006333333333333333,
+        "censorFraction": 0.9226666666666666
+      },
+      "authoritarian": {
+        "p10": 2050,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.10666666666666667,
+        "censorFraction": 0.534
+      },
+      "epistemic": {
+        "p10": 2044,
+        "p50": 2070,
+        "p90": 2101,
+        "p2050": 0.22233333333333333,
+        "censorFraction": 0.24733333333333332
+      },
+      "ai": {
+        "p10": 2045,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.123,
+        "censorFraction": 0.699
+      },
+      "cyber": {
+        "p10": 2030,
+        "p50": 2054,
+        "p90": 2101,
+        "p2050": 0.4623333333333333,
+        "censorFraction": 0.191
+      },
+      "autonomousw": {
+        "p10": 2090,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.04,
+        "censorFraction": 0.885
+      },
+      "minerals": {
+        "p10": 2052,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.08533333333333333,
+        "censorFraction": 0.576
+      },
+      "space": {
+        "p10": 2035,
+        "p50": 2094,
+        "p90": 2101,
+        "p2050": 0.23733333333333334,
+        "censorFraction": 0.47333333333333333
+      }
+    },
+    "propagated": {
+      "climate": {
+        "p10": 2033,
+        "p50": 2037,
+        "p90": 2046,
+        "p2050": 0.959,
+        "censorFraction": 0
+      },
+      "biodiversity": {
+        "p10": 2037,
+        "p50": 2044,
+        "p90": 2058,
+        "p2050": 0.7623333333333333,
+        "censorFraction": 0.0013333333333333333
+      },
+      "soils": {
+        "p10": 2040,
+        "p50": 2047,
+        "p90": 2065,
+        "p2050": 0.6443333333333333,
+        "censorFraction": 0.02
+      },
+      "water": {
+        "p10": 2037,
+        "p50": 2045,
+        "p90": 2060,
+        "p2050": 0.737,
+        "censorFraction": 0.0036666666666666666
+      },
+      "oceans": {
+        "p10": 2034,
+        "p50": 2038,
+        "p90": 2046,
+        "p2050": 0.9676666666666667,
+        "censorFraction": 0
+      },
+      "pollution": {
+        "p10": 2038,
+        "p50": 2044,
+        "p90": 2059,
+        "p2050": 0.744,
+        "censorFraction": 0.006
+      },
+      "pandemics": {
+        "p10": 2035,
+        "p50": 2088,
+        "p90": 2101,
+        "p2050": 0.26033333333333336,
+        "censorFraction": 0.45166666666666666
+      },
+      "amr": {
+        "p10": 2038,
+        "p50": 2048,
+        "p90": 2076,
+        "p2050": 0.5766666666666667,
+        "censorFraction": 0.029
+      },
+      "bioengineered": {
+        "p10": 2030,
+        "p50": 2053,
+        "p90": 2101,
+        "p2050": 0.4736666666666667,
+        "censorFraction": 0.18366666666666667
+      },
+      "nuclear": {
+        "p10": 2034,
+        "p50": 2086,
+        "p90": 2101,
+        "p2050": 0.271,
+        "censorFraction": 0.436
+      },
+      "supply": {
+        "p10": 2030,
+        "p50": 2041,
+        "p90": 2057.1,
+        "p2050": 0.795,
+        "censorFraction": 0.0033333333333333335
+      },
+      "geopolitics": {
+        "p10": 2029,
+        "p50": 2044,
+        "p90": 2070,
+        "p2050": 0.658,
+        "censorFraction": 0.023
+      },
+      "fragmentation_gov": {
+        "p10": 2040,
+        "p50": 2050,
+        "p90": 2070,
+        "p2050": 0.5146666666666667,
+        "censorFraction": 0.014666666666666666
+      },
+      "economic": {
+        "p10": 2037,
+        "p50": 2046,
+        "p90": 2066,
+        "p2050": 0.6463333333333333,
+        "censorFraction": 0.014333333333333333
+      },
+      "debt": {
+        "p10": 2039,
+        "p50": 2048,
+        "p90": 2071,
+        "p2050": 0.5673333333333334,
+        "censorFraction": 0.03
+      },
+      "displacement": {
+        "p10": 2042,
+        "p50": 2055,
+        "p90": 2101,
+        "p2050": 0.38133333333333336,
+        "censorFraction": 0.171
+      },
+      "authoritarian": {
+        "p10": 2042,
+        "p50": 2058,
+        "p90": 2101,
+        "p2050": 0.33166666666666667,
+        "censorFraction": 0.11866666666666667
+      },
+      "epistemic": {
+        "p10": 2042,
+        "p50": 2053,
+        "p90": 2087,
+        "p2050": 0.436,
+        "censorFraction": 0.05733333333333333
+      },
+      "ai": {
+        "p10": 2035,
+        "p50": 2043,
+        "p90": 2057,
+        "p2050": 0.796,
+        "censorFraction": 0.001
+      },
+      "cyber": {
+        "p10": 2030,
+        "p50": 2041,
+        "p90": 2057,
+        "p2050": 0.8046666666666666,
+        "censorFraction": 0.002
+      },
+      "autonomousw": {
+        "p10": 2090,
+        "p50": 2101,
+        "p90": 2101,
+        "p2050": 0.04,
+        "censorFraction": 0.885
+      },
+      "minerals": {
+        "p10": 2040,
+        "p50": 2049,
+        "p90": 2071,
+        "p2050": 0.546,
+        "censorFraction": 0.02666666666666667
+      },
+      "space": {
+        "p10": 2035,
+        "p50": 2058,
+        "p90": 2101,
+        "p2050": 0.388,
+        "censorFraction": 0.23466666666666666
+      }
+    },
+    "variants": [
+      {
+        "label": "reference",
+        "nSim": 1000,
+        "options": {},
+        "summary": {
+          "p10": 2033,
+          "p50": 2037,
+          "p90": 2043,
+          "displayP90": "2043",
+          "censorFraction": 0,
+          "p2050": 0.989
+        }
+      },
+      {
+        "label": "propagation_off",
+        "nSim": 1000,
+        "options": {
+          "dependencyScale": 0
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2037,
+          "p90": 2044,
+          "displayP90": "2044",
+          "censorFraction": 0,
+          "p2050": 0.975
+        }
+      },
+      {
+        "label": "lag_zero",
+        "nSim": 1000,
+        "options": {
+          "propagationLagYears": 0
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2036,
+          "p90": 2043,
+          "displayP90": "2043",
+          "censorFraction": 0,
+          "p2050": 0.991
+        }
+      },
+      {
+        "label": "lag_five",
+        "nSim": 1000,
+        "options": {
+          "propagationLagYears": 5
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2037,
+          "p90": 2044,
+          "displayP90": "2044",
+          "censorFraction": 0,
+          "p2050": 0.981
+        }
+      },
+      {
+        "label": "global_only",
+        "nSim": 1000,
+        "options": {
+          "functionalServiceRule": "global_only"
+        },
+        "summary": {
+          "p10": 2040,
+          "p50": 2047,
+          "p90": 2060,
+          "displayP90": "2060",
+          "censorFraction": 0,
+          "p2050": 0.655
+        }
+      },
+      {
+        "label": "equal_criticality",
+        "nSim": 1000,
+        "options": {
+          "functionalWeightRule": "equal"
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2037,
+          "p90": 2043,
+          "displayP90": "2043",
+          "censorFraction": 0,
+          "p2050": 0.988
+        }
+      },
+      {
+        "label": "lower_trigger",
+        "nSim": 1000,
+        "options": {
+          "cascadeThreshold": 0.35
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2036,
+          "p90": 2043,
+          "displayP90": "2043",
+          "censorFraction": 0,
+          "p2050": 0.993
+        }
+      },
+      {
+        "label": "higher_trigger",
+        "nSim": 1000,
+        "options": {
+          "cascadeThreshold": 0.65
+        },
+        "summary": {
+          "p10": 2034,
+          "p50": 2038,
+          "p90": 2046,
+          "displayP90": "2046",
+          "censorFraction": 0,
+          "p2050": 0.965
+        }
+      },
+      {
+        "label": "seed_A",
+        "nSim": 1000,
+        "options": {
+          "seed": "functional-check-A"
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2036,
+          "p90": 2042,
+          "displayP90": "2042",
+          "censorFraction": 0,
+          "p2050": 0.995
+        }
+      },
+      {
+        "label": "seed_B",
+        "nSim": 1000,
+        "options": {
+          "seed": "functional-check-B"
+        },
+        "summary": {
+          "p10": 2033,
+          "p50": 2036,
+          "p90": 2043,
+          "displayP90": "2043",
+          "censorFraction": 0,
+          "p2050": 0.99
+        }
+      }
+    ],
+    "singleMarineSeed": {
+      "year": 2030,
+      "activeMass": 0.05263157894736842,
+      "inducedMass": 0,
+      "serviceLosses": {
+        "coordination_exchange": 0,
+        "critical_infrastructure": 0,
+        "food_water": 0,
+        "health_care": 0,
+        "ecological_life_support": 0.5
+      },
+      "maxServiceLoss": 0.5,
+      "functionalLoss": 0.5,
+      "activeThreats": [
+        "oceans"
+      ],
+      "topDrivers": [],
+      "activeDomains": 1,
+      "firstActivationYears": {
+        "ai": 2061,
+        "amr": 2062,
+        "authoritarian": 2063,
+        "autonomousw": 2101,
+        "biodiversity": 2063,
+        "bioengineered": 2101,
+        "climate": 2062,
+        "cyber": 2061,
+        "debt": 2062,
+        "displacement": 2064,
+        "economic": 2062,
+        "epistemic": 2062,
+        "fragmentation_gov": 2062,
+        "geopolitics": 2061,
+        "minerals": 2062,
+        "nuclear": 2101,
+        "oceans": 2030,
+        "pandemics": 2101,
+        "pollution": 2064,
+        "soils": 2063,
+        "space": 2062,
+        "supply": 2060,
+        "water": 2062
+      },
+      "activationCauses": {
+        "oceans": "spontaneous",
+        "supply": "induced",
+        "ai": "induced",
+        "cyber": "induced",
+        "geopolitics": "induced",
+        "amr": "induced",
+        "climate": "induced",
+        "debt": "induced",
+        "economic": "induced",
+        "epistemic": "induced",
+        "fragmentation_gov": "induced",
+        "minerals": "induced",
+        "space": "induced",
+        "water": "induced",
+        "authoritarian": "induced",
+        "biodiversity": "induced",
+        "soils": "induced",
+        "displacement": "induced",
+        "pollution": "induced"
+      },
+      "trace": [
+        {
+          "year": 2030,
+          "target": "oceans",
+          "cause": "spontaneous",
+          "sources": []
+        },
+        {
+          "year": 2060,
+          "wave": 1,
+          "target": "supply",
+          "cause": "induced",
+          "sources": [
+            "oceans"
+          ]
+        },
+        {
+          "year": 2061,
+          "wave": 1,
+          "target": "ai",
+          "cause": "induced",
+          "sources": [
+            "supply"
+          ]
+        },
+        {
+          "year": 2061,
+          "wave": 1,
+          "target": "cyber",
+          "cause": "induced",
+          "sources": [
+            "supply"
+          ]
+        },
+        {
+          "year": 2061,
+          "wave": 1,
+          "target": "geopolitics",
+          "cause": "induced",
+          "sources": [
+            "supply"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "amr",
+          "cause": "induced",
+          "sources": [
+            "geopolitics"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "climate",
+          "cause": "induced",
+          "sources": [
+            "geopolitics"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "debt",
+          "cause": "induced",
+          "sources": [
+            "geopolitics",
+            "supply"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "economic",
+          "cause": "induced",
+          "sources": [
+            "cyber",
+            "geopolitics",
+            "supply"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "epistemic",
+          "cause": "induced",
+          "sources": [
+            "ai"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "fragmentation_gov",
+          "cause": "induced",
+          "sources": [
+            "geopolitics"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "minerals",
+          "cause": "induced",
+          "sources": [
+            "geopolitics",
+            "supply"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "space",
+          "cause": "induced",
+          "sources": [
+            "ai",
+            "cyber",
+            "geopolitics"
+          ]
+        },
+        {
+          "year": 2062,
+          "wave": 1,
+          "target": "water",
+          "cause": "induced",
+          "sources": [
+            "geopolitics"
+          ]
+        },
+        {
+          "year": 2063,
+          "wave": 1,
+          "target": "authoritarian",
+          "cause": "induced",
+          "sources": [
+            "economic",
+            "epistemic",
+            "geopolitics"
+          ]
+        },
+        {
+          "year": 2063,
+          "wave": 1,
+          "target": "biodiversity",
+          "cause": "induced",
+          "sources": [
+            "climate",
+            "water"
+          ]
+        },
+        {
+          "year": 2063,
+          "wave": 1,
+          "target": "soils",
+          "cause": "induced",
+          "sources": [
+            "climate",
+            "water"
+          ]
+        },
+        {
+          "year": 2064,
+          "wave": 1,
+          "target": "displacement",
+          "cause": "induced",
+          "sources": [
+            "climate",
+            "geopolitics",
+            "soils",
+            "water"
+          ]
+        },
+        {
+          "year": 2064,
+          "wave": 1,
+          "target": "pollution",
+          "cause": "induced",
+          "sources": [
+            "biodiversity"
+          ]
+        }
+      ],
+      "note": "Functional-loss threshold after directed propagation; not completion of global collapse."
+    },
+    "stressFixtureWarning": "Only oceans forced to 2030; other spontaneous times set after endpoint. This illustrates conditional pathways, not predicted dates."
+  },
+  "sameCodeLegacyData": [
+    {
+      "file": "data_v1_7_1metadata_revision.json",
+      "nSim": 1000,
+      "model": "Apocalypse Clock v1.2.8",
+      "dataset": "1.7.1",
+      "p10": 2031,
+      "p50": 2035,
+      "p90": 2038,
+      "censorFraction": 0
+    },
+    {
+      "file": "data_v1_8_0_evidence_revision.json",
+      "nSim": 1000,
+      "model": "Apocalypse Clock v1.2.8",
+      "dataset": "1.8.0",
+      "p10": 2033,
+      "p50": 2038,
+      "p90": 2044,
+      "censorFraction": 0
+    }
+  ],
+  "visibleHeadline": "2043",
+  "pageErrors": [],
+  "originalDatasetsUnchanged": true,
+  "status": "PASS"
+}

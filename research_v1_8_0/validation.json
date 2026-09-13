@@ -1,0 +1,33 @@
+{
+  "dataset": "data_v1_8_0_evidence_revision.json",
+  "sha256": "159c874c6f721129fedfbae623de37853b362ee6b4274af1dbbf27cf2da8bc64",
+  "parameters": 184,
+  "threats": 23,
+  "unique_source_urls": 58,
+  "strength_counts": {
+    "anchored_judgment": 184
+  },
+  "growth_basis_counts": {
+    "judgmental_proxy": 12,
+    "observed_indicator": 10,
+    "reported_estimate_proxy": 1
+  },
+  "changed_parameters": 183,
+  "changed_central_values": 168,
+  "formula_rounding_adjustments": [
+    {
+      "key": "authoritarian.growth_rate",
+      "field": "mu",
+      "authored": 0.01568,
+      "serialized": 0.01569
+    },
+    {
+      "key": "debt.growth_rate",
+      "field": "mu",
+      "authored": 0.01227,
+      "serialized": 0.01226
+    }
+  ],
+  "structural_validation": "PASS",
+  "scientific_status": "Evidence-informed heuristic inputs; not empirically validated catastrophe probabilities or forecasts"
+}

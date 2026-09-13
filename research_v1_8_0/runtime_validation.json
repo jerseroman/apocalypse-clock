@@ -1,0 +1,649 @@
+{
+  "dataset": "data_v1_8_0_evidence_revision.json",
+  "dataset_sha256": "159c874c6f721129fedfbae623de37853b362ee6b4274af1dbbf27cf2da8bc64",
+  "scope": "Engineering import, computation and reproducibility checks only; no predictive validation",
+  "original_file_hashes": {
+    "src/app.js": "720fe27c8675e343e86d38476b17ed7b09af4712c2d7f22d9232a6065499f444",
+    "index.html": "c673e9a98cbf79e44c560bebbe15f10652b4deb4f9b9901650522995b05517a8",
+    "404.html": "0f4ba9b461aee6503c429e4d1824742a3373e7a8a0f588ca4ab049b542476ea8",
+    "data_v1_7_1metadata_revision.json": "fed56ac7b3958cc18ce52334c4f22ab2dd5a9151a2a8c7a9ccf978b4a69a174d"
+  },
+  "import": {
+    "version": "1.8.0",
+    "entries": 184,
+    "threat_count": 23,
+    "mismatch": [],
+    "conversionMismatch": [],
+    "file": "data_v1_8_0_evidence_revision.json",
+    "message": "Loaded data_v1_8_0_evidence_revision.json and merged 184 valid parameter entries across 23 threats with the bundled defaults."
+  },
+  "bundled_baseline": {
+    "version": "1.7.1",
+    "seed": "AC-1.2.6-2026",
+    "engine_time_origin": 2026,
+    "nSim": 3000,
+    "p10": 2037,
+    "p50": 2041,
+    "p90": 2046,
+    "censorFraction": 0
+  },
+  "new_dataset_runs": {
+    "params": {
+      "scenario": "baseline",
+      "nSim": 3000,
+      "seed": "AC-1.2.6-2026",
+      "threshold": 0.4,
+      "cascadeThreshold": 0.5,
+      "depAlpha": 0.22,
+      "uncMult": 1,
+      "tailDependence": 0.15,
+      "vetoThreshold": 0.65,
+      "domW": {
+        "civilization": 1,
+        "biosphere": 1,
+        "technology": 1
+      },
+      "weights": {
+        "scale": 0.2,
+        "urgency": 0.18,
+        "acceleration": 0.14,
+        "interdependence": 0.18,
+        "irreversibility": 0.16,
+        "gov_failure": 0.14
+      },
+      "weightProfile": "expert",
+      "thresholdPolicy": "per_threat_anchored"
+    },
+    "baseline": {
+      "ensemble": {
+        "compensatory": {
+          "p10": 2049,
+          "p50": 2058,
+          "p90": 2071,
+          "display_p90": "2071",
+          "censorFraction": 0.002
+        },
+        "maxRule": {
+          "p10": 2026,
+          "p50": 2030,
+          "p90": 2036,
+          "display_p90": "2036",
+          "censorFraction": 0
+        },
+        "graphWeighted": {
+          "p10": 2071,
+          "p50": 2085,
+          "p90": 2101,
+          "display_p90": ">2100",
+          "censorFraction": 0.20266666666666666
+        },
+        "dynamicCascade": {
+          "p10": 2051,
+          "p50": 2069,
+          "p90": 2101,
+          "display_p90": ">2100",
+          "censorFraction": 0.16966666666666666
+        }
+      },
+      "threatStats": {
+        "climate": {
+          "p10": 2034,
+          "p50": 2040,
+          "p90": 2052,
+          "p2050": 0.8696666666666667
+        },
+        "biodiversity": {
+          "p10": 2039,
+          "p50": 2050,
+          "p90": 2072,
+          "p2050": 0.5023333333333333
+        },
+        "soils": {
+          "p10": 2101,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.001
+        },
+        "water": {
+          "p10": 2068,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.018
+        },
+        "oceans": {
+          "p10": 2041,
+          "p50": 2052,
+          "p90": 2077,
+          "p2050": 0.442
+        },
+        "pollution": {
+          "p10": 2042,
+          "p50": 2053,
+          "p90": 2072,
+          "p2050": 0.4106666666666667
+        },
+        "pandemics": {
+          "p10": 2031,
+          "p50": 2070,
+          "p90": 2101,
+          "p2050": 0.366
+        },
+        "amr": {
+          "p10": 2043,
+          "p50": 2060,
+          "p90": 2100,
+          "p2050": 0.28633333333333333
+        },
+        "bioengineered": {
+          "p10": 2030,
+          "p50": 2049,
+          "p90": 2101,
+          "p2050": 0.5223333333333333
+        },
+        "nuclear": {
+          "p10": 2033,
+          "p50": 2090,
+          "p90": 2101,
+          "p2050": 0.282
+        },
+        "supply": {
+          "p10": 2028,
+          "p50": 2038,
+          "p90": 2058,
+          "p2050": 0.8083333333333333
+        },
+        "geopolitics": {
+          "p10": 2030,
+          "p50": 2059,
+          "p90": 2101,
+          "p2050": 0.411
+        },
+        "fragmentation_gov": {
+          "p10": 2054,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.08833333333333333
+        },
+        "economic": {
+          "p10": 2086,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.041666666666666664
+        },
+        "debt": {
+          "p10": 2047,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.139
+        },
+        "displacement": {
+          "p10": 2101,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.0003333333333333333
+        },
+        "authoritarian": {
+          "p10": 2043,
+          "p50": 2064,
+          "p90": 2101,
+          "p2050": 0.24333333333333335
+        },
+        "epistemic": {
+          "p10": 2061,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.06066666666666667
+        },
+        "ai": {
+          "p10": 2037,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.19366666666666665
+        },
+        "cyber": {
+          "p10": 2038,
+          "p50": 2100,
+          "p90": 2101,
+          "p2050": 0.192
+        },
+        "autonomousw": {
+          "p10": 2071,
+          "p50": 2101,
+          "p90": 2101,
+          "p2050": 0.054
+        },
+        "minerals": {
+          "p10": 2044,
+          "p50": 2059,
+          "p90": 2087,
+          "p2050": 0.2623333333333333
+        },
+        "space": {
+          "p10": 2031,
+          "p50": 2056,
+          "p90": 2101,
+          "p2050": 0.428
+        }
+      },
+      "domainStats": {
+        "civilization": {
+          "p10": 2048,
+          "p50": 2063,
+          "p90": 2088,
+          "censorFraction": 0.04033333333333333
+        },
+        "biosphere": {
+          "p10": 2044,
+          "p50": 2052,
+          "p90": 2064,
+          "censorFraction": 0
+        },
+        "technology": {
+          "p10": 2044.9,
+          "p50": 2076,
+          "p90": 2101,
+          "censorFraction": 0.314
+        }
+      }
+    },
+    "identical_repeat": true,
+    "alternatives": [
+      {
+        "seed": "AC-v1.8.0-check-A",
+        "nSim": 1000,
+        "summary": {
+          "ensemble": {
+            "compensatory": {
+              "p10": 2049,
+              "p50": 2058,
+              "p90": 2072,
+              "display_p90": "2072",
+              "censorFraction": 0.002
+            },
+            "maxRule": {
+              "p10": 2026,
+              "p50": 2029,
+              "p90": 2036,
+              "display_p90": "2036",
+              "censorFraction": 0
+            },
+            "graphWeighted": {
+              "p10": 2070,
+              "p50": 2085,
+              "p90": 2101,
+              "display_p90": ">2100",
+              "censorFraction": 0.184
+            },
+            "dynamicCascade": {
+              "p10": 2050,
+              "p50": 2069,
+              "p90": 2101,
+              "display_p90": ">2100",
+              "censorFraction": 0.161
+            }
+          },
+          "threatStats": {
+            "climate": {
+              "p10": 2034,
+              "p50": 2040,
+              "p90": 2051,
+              "p2050": 0.893
+            },
+            "biodiversity": {
+              "p10": 2039,
+              "p50": 2051,
+              "p90": 2075.1,
+              "p2050": 0.494
+            },
+            "soils": {
+              "p10": 2101,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0
+            },
+            "water": {
+              "p10": 2067,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.019
+            },
+            "oceans": {
+              "p10": 2041,
+              "p50": 2052,
+              "p90": 2076,
+              "p2050": 0.434
+            },
+            "pollution": {
+              "p10": 2042,
+              "p50": 2053,
+              "p90": 2074,
+              "p2050": 0.411
+            },
+            "pandemics": {
+              "p10": 2031,
+              "p50": 2073.5,
+              "p90": 2101,
+              "p2050": 0.345
+            },
+            "amr": {
+              "p10": 2043,
+              "p50": 2060,
+              "p90": 2098.1,
+              "p2050": 0.286
+            },
+            "bioengineered": {
+              "p10": 2029,
+              "p50": 2050,
+              "p90": 2101,
+              "p2050": 0.511
+            },
+            "nuclear": {
+              "p10": 2034,
+              "p50": 2087.5,
+              "p90": 2101,
+              "p2050": 0.287
+            },
+            "supply": {
+              "p10": 2027,
+              "p50": 2038,
+              "p90": 2058,
+              "p2050": 0.798
+            },
+            "geopolitics": {
+              "p10": 2030,
+              "p50": 2057,
+              "p90": 2101,
+              "p2050": 0.43
+            },
+            "fragmentation_gov": {
+              "p10": 2048,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.115
+            },
+            "economic": {
+              "p10": 2091.9,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.036
+            },
+            "debt": {
+              "p10": 2046,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.158
+            },
+            "displacement": {
+              "p10": 2101,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0
+            },
+            "authoritarian": {
+              "p10": 2043,
+              "p50": 2062,
+              "p90": 2101,
+              "p2050": 0.232
+            },
+            "epistemic": {
+              "p10": 2061,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.049
+            },
+            "ai": {
+              "p10": 2039,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.193
+            },
+            "cyber": {
+              "p10": 2038,
+              "p50": 2099,
+              "p90": 2101,
+              "p2050": 0.193
+            },
+            "autonomousw": {
+              "p10": 2065,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.069
+            },
+            "minerals": {
+              "p10": 2045,
+              "p50": 2059,
+              "p90": 2090,
+              "p2050": 0.259
+            },
+            "space": {
+              "p10": 2029,
+              "p50": 2054,
+              "p90": 2101,
+              "p2050": 0.448
+            }
+          },
+          "domainStats": {
+            "civilization": {
+              "p10": 2047,
+              "p50": 2063,
+              "p90": 2089,
+              "censorFraction": 0.047
+            },
+            "biosphere": {
+              "p10": 2044,
+              "p50": 2053,
+              "p90": 2065,
+              "censorFraction": 0.002
+            },
+            "technology": {
+              "p10": 2043,
+              "p50": 2075.5,
+              "p90": 2101,
+              "censorFraction": 0.303
+            }
+          }
+        }
+      },
+      {
+        "seed": "AC-v1.8.0-check-B",
+        "nSim": 1000,
+        "summary": {
+          "ensemble": {
+            "compensatory": {
+              "p10": 2050,
+              "p50": 2058,
+              "p90": 2071,
+              "display_p90": "2071",
+              "censorFraction": 0.001
+            },
+            "maxRule": {
+              "p10": 2026,
+              "p50": 2029,
+              "p90": 2036,
+              "display_p90": "2036",
+              "censorFraction": 0
+            },
+            "graphWeighted": {
+              "p10": 2072,
+              "p50": 2084,
+              "p90": 2101,
+              "display_p90": ">2100",
+              "censorFraction": 0.181
+            },
+            "dynamicCascade": {
+              "p10": 2051,
+              "p50": 2068,
+              "p90": 2101,
+              "display_p90": ">2100",
+              "censorFraction": 0.158
+            }
+          },
+          "threatStats": {
+            "climate": {
+              "p10": 2034,
+              "p50": 2040,
+              "p90": 2052,
+              "p2050": 0.877
+            },
+            "biodiversity": {
+              "p10": 2039,
+              "p50": 2050,
+              "p90": 2073,
+              "p2050": 0.521
+            },
+            "soils": {
+              "p10": 2101,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0
+            },
+            "water": {
+              "p10": 2066,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.018
+            },
+            "oceans": {
+              "p10": 2041,
+              "p50": 2053,
+              "p90": 2078,
+              "p2050": 0.434
+            },
+            "pollution": {
+              "p10": 2042,
+              "p50": 2053,
+              "p90": 2071,
+              "p2050": 0.407
+            },
+            "pandemics": {
+              "p10": 2031,
+              "p50": 2067.5,
+              "p90": 2101,
+              "p2050": 0.368
+            },
+            "amr": {
+              "p10": 2043,
+              "p50": 2062,
+              "p90": 2101,
+              "p2050": 0.254
+            },
+            "bioengineered": {
+              "p10": 2029,
+              "p50": 2049,
+              "p90": 2101,
+              "p2050": 0.532
+            },
+            "nuclear": {
+              "p10": 2033,
+              "p50": 2090,
+              "p90": 2101,
+              "p2050": 0.286
+            },
+            "supply": {
+              "p10": 2027,
+              "p50": 2037,
+              "p90": 2056,
+              "p2050": 0.822
+            },
+            "geopolitics": {
+              "p10": 2030,
+              "p50": 2057,
+              "p90": 2101,
+              "p2050": 0.428
+            },
+            "fragmentation_gov": {
+              "p10": 2050,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.102
+            },
+            "economic": {
+              "p10": 2087.9,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.049
+            },
+            "debt": {
+              "p10": 2049,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.109
+            },
+            "displacement": {
+              "p10": 2101,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0
+            },
+            "authoritarian": {
+              "p10": 2042,
+              "p50": 2064,
+              "p90": 2101,
+              "p2050": 0.257
+            },
+            "epistemic": {
+              "p10": 2066,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.037
+            },
+            "ai": {
+              "p10": 2037,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.182
+            },
+            "cyber": {
+              "p10": 2039,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.173
+            },
+            "autonomousw": {
+              "p10": 2066,
+              "p50": 2101,
+              "p90": 2101,
+              "p2050": 0.058
+            },
+            "minerals": {
+              "p10": 2044,
+              "p50": 2059,
+              "p90": 2086,
+              "p2050": 0.245
+            },
+            "space": {
+              "p10": 2031,
+              "p50": 2055,
+              "p90": 2101,
+              "p2050": 0.432
+            }
+          },
+          "domainStats": {
+            "civilization": {
+              "p10": 2048,
+              "p50": 2062,
+              "p90": 2089,
+              "censorFraction": 0.041
+            },
+            "biosphere": {
+              "p10": 2044,
+              "p50": 2052.5,
+              "p90": 2065,
+              "censorFraction": 0
+            },
+            "technology": {
+              "p10": 2044,
+              "p50": 2076,
+              "p90": 2101,
+              "censorFraction": 0.301
+            }
+          }
+        }
+      }
+    ],
+    "note": "Alternative seeds are a bounded numerical stability check, not a convergence proof or uncertainty calibration."
+  },
+  "page_errors": [],
+  "original_files_unchanged": true,
+  "status": "PASS"
+}

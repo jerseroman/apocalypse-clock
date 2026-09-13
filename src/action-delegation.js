@@ -64,7 +64,11 @@
   }
   async function copyShareLink(btn){
     try { await navigator.clipboard.writeText(SHARE_URL); }
-    catch(e) { console.warn('Clipboard copy failed', e); }
+    catch(e) {
+      console.warn('Clipboard copy failed', e);
+      if(btn) btn.textContent='Copy failed — try again';
+      return;
+    }
     if(btn){ btn.textContent='✓ Copied!'; setTimeout(()=>{btn.textContent='⧉ Copy link'; closeShareMenu();},800); }
   }
   function allowsDefaultNavigation(action, el){

@@ -1,0 +1,683 @@
+{
+  "fragment_version": "environment_functional_revision_proposal_1",
+  "target_dataset_version": "1.9.0",
+  "accessed": "2026-09-09",
+  "scope": [
+    "climate",
+    "biodiversity",
+    "water",
+    "soils",
+    "oceans",
+    "pollution",
+    "minerals"
+  ],
+  "entry_overrides": {
+    "biodiversity.irreversibility": {
+      "mu": 4.4,
+      "lo": 3.7,
+      "hi": 4.9,
+      "source": "Keith et al. (2013), Scientific Foundations for an IUCN Red List of Ecosystems, PLOS ONE",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062111",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "keith_ecosystem_collapse_2013"
+      ],
+      "note": "Functional disruption can precede species extinction, and recovery depends on the ecosystem and intervention. Lowering the center from 4.8 to 4.4 removes the previous implication that functional failure is equivalent to permanent extinction. Recovery remains difficult; replacement ecosystems do not necessarily restore the original services."
+    },
+    "oceans.irreversibility": {
+      "mu": 4.3,
+      "lo": 3.5,
+      "hi": 4.9,
+      "source": "FAO, Review of the state of world marine fishery resources 2025: official findings",
+      "url": "https://www.fao.org/newsroom/detail/fao-releases-the-most-detailed-global-assessment-of-marine-fish-stocks-to-date",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "fao_marine_2025",
+        "wmo_climate_2025_detail"
+      ],
+      "note": "Documented improvements under fisheries management support some recovery of marine production and population functions. The revised center evaluates functional recovery, not only the persistence of ocean heat. Long-lived physical and habitat changes still justify a high upper bound. Successful regional management cannot establish easy recovery of all marine food webs."
+    },
+    "climate.threshold": {
+      "mu": 8.3,
+      "lo": 7.5,
+      "hi": 9.1,
+      "source": "UNEP, Emissions Gap Report 2025",
+      "url": "https://www.unep.org/resources/emissions-gap-report-2025",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "unep_egr_2025"
+      ],
+      "note": "Persistent climate damage exceeding adaptation across multiple essential functions; this does not require planetary uninhabitability or every impact to become irreversible. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "biodiversity.threshold": {
+      "mu": 8.5,
+      "lo": 7.7,
+      "hi": 9.3,
+      "source": "IPBES, Business and Biodiversity Assessment, Summary for Policymakers, advanced unedited version",
+      "url": "https://www.besnet.world/wp-content/uploads/2026/02/SPM-Business-and-Biodiversity-8-Feb-2026.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "note": "Persistent loss of ecological regulation, renewal and functional redundancy across connected regions; this does not require extinction of all or most species. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "water.threshold": {
+      "mu": 8.1,
+      "lo": 7.3,
+      "hi": 9,
+      "source": "UNESCO/UN-Water, World Water Development Report 2025: Facts and figures",
+      "url": "https://unesdoc.unesco.org/in/rest/annotationSVC/DownloadWatermarkedAttachment/attach_import_633ac6d8-68b2-4c87-a76e-0d95c6301e2a",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "unesco_water_2025"
+      ],
+      "note": "Sustained failure of usable water supply for populations, production and ecosystems across connected basins after feasible storage, treatment and transfer buffers. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "soils.threshold": {
+      "mu": 8.4,
+      "lo": 7.6,
+      "hi": 9.3,
+      "source": "FAO, State of Food and Agriculture 2025 findings",
+      "url": "https://www.fao.org/newsroom/detail/fao-report--1.7-billion-people-experience-lower-crop-yields-due-to-land-degradation/en",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "fao_sofa_2025"
+      ],
+      "note": "Persistent failure of soil water retention, fertility and productive support across connected production regions after feasible restoration and agronomic substitution. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "oceans.threshold": {
+      "mu": 8.6,
+      "lo": 7.8,
+      "hi": 9.4,
+      "source": "Lotze et al. (2019), Global ensemble projections reveal trophic amplification of ocean biomass declines with climate change, PNAS",
+      "url": "https://repository.library.noaa.gov/view/noaa/29201/noaa_29201_DS1.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "lotze_marine_foodweb_2019"
+      ],
+      "note": "Persistent impairment of marine recruitment, trophic transfer and ecological renewal across connected regions, with consequential food or habitat-service losses; not disappearance of marine life. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "pollution.threshold": {
+      "mu": 8.7,
+      "lo": 7.9,
+      "hi": 9.5,
+      "source": "WHO, Ambient (outdoor) air pollution",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "who_air_2024"
+      ],
+      "note": "Broad, sustained exposure and ecosystem-processing burdens that overwhelm feasible prevention, treatment and remediation, not universal lethal contamination. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "minerals.threshold": {
+      "mu": 9,
+      "lo": 8.1,
+      "hi": 9.7,
+      "source": "IEA, Global Critical Minerals Outlook 2026: Executive summary",
+      "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2026/executive-summary",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "iea_minerals_2026"
+      ],
+      "note": "Persistent shortages of suitable materials or processing capacity that disrupt several essential production chains after feasible inventories, substitution, recycling and diversified sourcing. The numerical anchor is retained because the evidence does not identify a different normalized threshold.",
+      "threshold_kind": "model_anchor",
+      "model_anchor_note": "Analyst-selected functional-failure boundary with epistemic uncertainty; not a measured tipping point, physical percentage, or calendar-year target. Rewording does not scientifically calibrate the numeric anchor."
+    },
+    "climate.interdependence": {
+      "mu": 4.2,
+      "lo": 3.4,
+      "hi": 4.8,
+      "source": "IPBES, Business and Biodiversity Assessment, Summary for Policymakers, advanced unedited version",
+      "url": "https://www.besnet.world/wp-content/uploads/2026/02/SPM-Business-and-Biodiversity-8-Feb-2026.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "note": "Assesses vulnerability of climate-regulating functions to loss of ecological regulation and effective mitigation capacity. The revised score is not a count of the many systems harmed by climate change. Carbon-cycle buffering matters, but regional ecological failure does not automatically imply failure of global climate regulation.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    },
+    "biodiversity.interdependence": {
+      "mu": 4.6,
+      "lo": 4,
+      "hi": 5,
+      "source": "Keith et al. (2013), Scientific Foundations for an IUCN Red List of Ecosystems, PLOS ONE",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062111",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "keith_ecosystem_collapse_2013"
+      ],
+      "note": "Assesses susceptibility of ecological functions to abiotic degradation and disrupted biotic interactions. It weights incoming habitat, water and climate stress, rather than the importance of biodiversity to downstream users. Sensitivity varies with redundancy and ecosystem type; the score is not a fitted causal coefficient.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    },
+    "water.interdependence": {
+      "mu": 4.4,
+      "lo": 3.6,
+      "hi": 5,
+      "source": "UNCCD Science-Policy Interface, aridity assessment presented to COP16",
+      "url": "https://www.unccd.int/sites/default/files/2024-08/cst3-unedited%20copy%20.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "unccd_aridity_2024"
+      ],
+      "note": "Assesses sensitivity of usable water provision to climatic water deficits and degraded catchment regulation, alongside treatment and conveyance dependence. It does not infer water-system vulnerability from agricultural demand alone. Infrastructure, hydrogeology, storage and local operating capacity can materially buffer incoming disturbances.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    },
+    "soils.interdependence": {
+      "mu": 4.3,
+      "lo": 3.6,
+      "hi": 4.9,
+      "source": "UNCCD Science-Policy Interface, aridity assessment presented to COP16",
+      "url": "https://www.unccd.int/sites/default/files/2024-08/cst3-unedited%20copy%20.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "unccd_aridity_2024"
+      ],
+      "note": "Assesses dependence of soil functions on moisture regimes and living cover under climatic stress. The target is maintenance of productive and regulating capacity, not soils' downstream importance. Responses can be nonlinear, but management and soil diversity preclude assigning a single universal amplification strength.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    },
+    "oceans.interdependence": {
+      "mu": 4.5,
+      "lo": 3.8,
+      "hi": 5,
+      "source": "Lotze et al. (2019), Global ensemble projections reveal trophic amplification of ocean biomass declines with climate change, PNAS",
+      "url": "https://repository.library.noaa.gov/view/noaa/29201/noaa_29201_DS1.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "lotze_marine_foodweb_2019"
+      ],
+      "note": "Assesses sensitivity of marine food-web functions to altered physical conditions and primary-production support. The score concerns incoming vulnerability, not the size of fisheries or ocean extent. Different trophic structures and regional responses yield substantial uncertainty, and the source does not estimate a dashboard coupling coefficient.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    },
+    "pollution.interdependence": {
+      "mu": 4,
+      "lo": 3.2,
+      "hi": 4.7,
+      "source": "IPBES, Business and Biodiversity Assessment, Summary for Policymakers, advanced unedited version",
+      "url": "https://www.besnet.world/wp-content/uploads/2026/02/SPM-Business-and-Biodiversity-8-Feb-2026.pdf",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "note": "Assesses vulnerability of pollution-control and processing functions to impaired ecological filtration and waste treatment, rather than treating pollution as intrinsically connected to everything. Engineered treatment and source controls provide buffers; a universal rise in pollutant loads cannot be inferred from loss of one processing pathway.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    },
+    "minerals.interdependence": {
+      "mu": 4.4,
+      "lo": 3.7,
+      "hi": 4.9,
+      "source": "IEA, Global Critical Minerals Outlook 2026: Executive summary",
+      "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2026/executive-summary",
+      "accessed": "2026-09-09",
+      "strength": "anchored_judgment",
+      "source_ids": [
+        "iea_minerals_2026"
+      ],
+      "note": "Assesses incoming dependence of mineral availability on specialised equipment, processing capacity, power, water and functioning trade. This differs from the downstream importance of minerals to other sectors. Concentrated capabilities increase vulnerability, but inventories, substitution and new capacity limit the case for near-maximal universal coupling.",
+      "interpretation": "target_incoming_functional_vulnerability",
+      "integration_condition": "Apply only with the new dataset-wide interdependence definition; never mix incoming-vulnerability scores with unchanged outgoing-importance scores."
+    }
+  },
+  "growth_class_recommendations": {
+    "climate": {
+      "growth_class": "rapid",
+      "lo": 0.006,
+      "mu": 0.03,
+      "hi": 0.035,
+      "threat_specific_cap": 0.035,
+      "capped_hi": true,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "wmo_climate_2025_detail",
+        "unep_egr_2025"
+      ],
+      "reason": "Continuing heat accumulation, intensifying disruptive hazards and inadequate mitigation warrant the rapid class for cumulative functional pressure. This selection is a common-scale analyst prior, not a temperature CAGR or an empirical failure rate. Mitigation and adaptation uncertainty motivate the low tail.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    },
+    "biodiversity": {
+      "growth_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.035,
+      "threat_specific_cap": 0.035,
+      "capped_hi": true,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "ipbes_bba_2026",
+        "keith_ecosystem_collapse_2013"
+      ],
+      "reason": "Multiple declining regulatory functions justify sustained functional pressure. Moderate, rather than rapid, allows ecological redundancy, uneven loss and recoveries, while retaining a broad upper tail. Species assessment expansion and extinction counts do not estimate this rate.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    },
+    "water": {
+      "growth_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.035,
+      "threat_specific_cap": 0.035,
+      "capped_hi": true,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "unccd_aridity_2024",
+        "jasechko_groundwater_2024"
+      ],
+      "reason": "Accumulating deficits, depletion and multi-sector dependence justify moderate functional pressure, despite recoveries in some aquifers and substantial infrastructure buffering. This replaces the withdrawal-growth surrogate; demand growth and water-system failure are neither identical nor linked by a verified fixed conversion.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    },
+    "soils": {
+      "growth_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.025,
+      "capped_hi": false,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "fao_sofa_2025",
+        "unccd_aridity_2024"
+      ],
+      "reason": "Chronic loss of productive and regulating capacity is material, but aggregate deterioration combines slowly changing stocks, abrupt local losses and recoverable management deficits. The slow class with a broad upper tail reflects this mixture. Dryland-area change is retained only as contextual evidence, not rate calibration.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    },
+    "oceans": {
+      "growth_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.03,
+      "threat_specific_cap": 0.03,
+      "capped_hi": true,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "lotze_marine_foodweb_2019",
+        "fao_marine_2025",
+        "wmo_climate_2025_detail"
+      ],
+      "reason": "Physical stress and trophic amplification support cumulative functional pressure, while regional biomass responses and managed recovery prevent inferring uniform rapid failure. Moderate remains distinct from climate's rapid class and avoids a central value pinned to the existing ocean cap. No marine collapse year is targeted.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    },
+    "pollution": {
+      "growth_class": "moderate",
+      "lo": 0.003,
+      "mu": 0.02,
+      "hi": 0.04,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "who_air_2024",
+        "ipbes_bba_2026"
+      ],
+      "reason": "Broad health damage and dependence on pollutant processing justify persistent functional pressure. Different chemical persistence, exposure controls and treatment capacities make a single empirical growth fit inappropriate. Moderate is an analyst scenario choice, not the CAGR of plastic production or pollutant mass.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    },
+    "minerals": {
+      "growth_class": "slow",
+      "lo": 0.001,
+      "mu": 0.01,
+      "hi": 0.025,
+      "threat_specific_cap": 0.04,
+      "capped_hi": false,
+      "units": "per year in the model latent-pressure coordinate",
+      "growth_kind": "latent_functional_pressure_prior",
+      "raw_basis": "analyst_judgment",
+      "risk_conversion": "none_direct_effective_prior",
+      "effective_growth_calibrated": true,
+      "do_not_reconvert_mu_lo_hi": true,
+      "source_ids": [
+        "iea_minerals_2026"
+      ],
+      "reason": "Concentrated specialised supply chains can generate abrupt shortages, but growth in demand is not growth in functional failure. Substitution, inventories, recycling and diversification support a slow chronic-drift prior with a broad upper tail; discrete upstream disruption belongs in cascade or shock dynamics.",
+      "calibration_note": "The legacy calibrated flag means already in engine units only. No empirical calibration, indicator CAGR, log1p transform, fixed multiplier or calendar target is used; endpoints are analyst plausibility anchors, not fitted quantiles."
+    }
+  },
+  "functional_profiles": {
+    "climate": {
+      "criticality_tier": 3,
+      "primary_service_group": "ecological_life_support",
+      "service_groups": [
+        "ecological_life_support"
+      ],
+      "functional_failure": "Sustained loss of sufficiently stable climatic conditions for ecological renewal and essential human production across multiple connected regions, beyond feasible adaptation; not global uninhabitability.",
+      "criticality_note": "Broad essential physical conditions have limited substitution; this tier does not assert that all climatic functions fail together."
+    },
+    "biodiversity": {
+      "criticality_tier": 3,
+      "primary_service_group": "ecological_life_support",
+      "service_groups": [
+        "ecological_life_support"
+      ],
+      "functional_failure": "Persistent loss of key regulating, renewal and stabilising ecological functions, including functional abundance and interactions, across connected systems despite remaining species.",
+      "criticality_note": "Many functions have limited large-scale substitutes, although redundancy can delay failure and restoration can recover some functions."
+    },
+    "water": {
+      "criticality_tier": 3,
+      "primary_service_group": "food_water",
+      "service_groups": [
+        "food_water"
+      ],
+      "functional_failure": "Persistent inability to deliver sufficient usable water and environmental flows across connected populations, production systems and ecosystems after feasible treatment, storage and transfers.",
+      "criticality_note": "Water is essential and physically non-substitutable; treatment, transport and demand reduction are buffers, not replacements for the function."
+    },
+    "soils": {
+      "criticality_tier": 3,
+      "primary_service_group": "food_water",
+      "service_groups": [
+        "food_water"
+      ],
+      "functional_failure": "Persistent loss of soil fertility, moisture regulation and productive support across connected food-producing regions, beyond feasible agronomic and restoration buffers.",
+      "criticality_note": "Productive land functions are essential with limited replacement at scale; the tier does not assume every soil degradation episode is irreversible."
+    },
+    "oceans": {
+      "criticality_tier": 3,
+      "primary_service_group": "ecological_life_support",
+      "service_groups": [
+        "ecological_life_support"
+      ],
+      "functional_failure": "Persistent loss of recruitment, trophic transfer and ecological renewal across connected marine systems, compromising habitat maintenance or food provision even while substantial marine biomass remains.",
+      "criticality_note": "The tier applies to broad marine ecological functioning, not to every fishery shortage. Food substitution buffers human exposure but does not replace marine ecological processes."
+    },
+    "pollution": {
+      "criticality_tier": 2,
+      "primary_service_group": "health_care",
+      "service_groups": [
+        "health_care"
+      ],
+      "functional_failure": "Persistent loss of effective exposure control, safe environmental media and pollutant-processing capacity that produces major health or ecosystem impairment beyond feasible treatment and prevention.",
+      "criticality_note": "Major cross-sector damage is plausible, but pollutant-specific source control, treatment and substitution can remain effective; not all media or functions fail together."
+    },
+    "minerals": {
+      "criticality_tier": 2,
+      "primary_service_group": "critical_infrastructure",
+      "service_groups": [
+        "critical_infrastructure"
+      ],
+      "functional_failure": "Persistent inability to supply suitable materials or processing outputs required by multiple essential industrial chains after available inventories, substitution and diversified supply are exhausted.",
+      "criticality_note": "Some applications have few substitutes, but minerals differ greatly and shortages rarely remove every material pathway simultaneously."
+    }
+  },
+  "directed_dependency_recommendations": [
+    {
+      "upstream": "climate",
+      "target": "water",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Persistent climatic deficits reduce dependable basin water availability.",
+      "target_buffer": "Storage, demand reduction, diversified supplies and treatment.",
+      "source_ids": [
+        "unccd_aridity_2024"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "climate",
+      "target": "soils",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Aridification degrades productive land functions and can cause nonlinear ecosystem responses.",
+      "target_buffer": "Soil conservation and adaptive agronomy.",
+      "source_ids": [
+        "unccd_aridity_2024"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "climate",
+      "target": "oceans",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Warming-driven stratification reduces nutrient support; food-web effects amplify at higher trophic levels.",
+      "target_buffer": "Regional ecological responses and fisheries management.",
+      "source_ids": [
+        "lotze_marine_foodweb_2019"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "climate",
+      "target": "biodiversity",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Changing physical conditions threaten persistence and renewal of characteristic biota.",
+      "target_buffer": "Ecological redundancy, refugia and adaptation.",
+      "source_ids": [
+        "keith_ecosystem_collapse_2013"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "water",
+      "target": "soils",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Persistent moisture deficits impair vegetation and productive soil functions.",
+      "target_buffer": "Moisture conservation and carefully managed irrigation.",
+      "source_ids": [
+        "unccd_aridity_2024"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "water",
+      "target": "biodiversity",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Loss of the hydrological regime prevents maintenance of water-dependent ecosystem biota.",
+      "target_buffer": "Environmental flows and hydrological restoration.",
+      "source_ids": [
+        "keith_ecosystem_collapse_2013"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "biodiversity",
+      "target": "water",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Loss of flow regulation and filtration weakens usable-water provision.",
+      "target_buffer": "Engineered storage and treatment; catchment restoration.",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "biodiversity",
+      "target": "soils",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Loss of ecological interactions impairs resource capture and nutrient recycling.",
+      "target_buffer": "Functional redundancy and restoration.",
+      "source_ids": [
+        "keith_ecosystem_collapse_2013"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "pollution",
+      "target": "biodiversity",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Pollution contributes to degradation of ecological functions.",
+      "target_buffer": "Source controls and ecosystem recovery capacity.",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "biodiversity",
+      "target": "pollution",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Lost ecological filtration and microbial waste processing reduce pollution-control capacity.",
+      "target_buffer": "Engineered treatment and source reduction.",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "core"
+    },
+    {
+      "upstream": "biodiversity",
+      "target": "climate",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Loss of ecological climate regulation weakens buffering.",
+      "target_buffer": "Emission reductions and protection of remaining functions.",
+      "source_ids": [
+        "ipbes_bba_2026"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "conditional"
+    },
+    {
+      "upstream": "water",
+      "target": "minerals",
+      "direction": "target_depends_on_upstream",
+      "mechanism": "Water infrastructure constraints limit mineral development and processing capacity.",
+      "target_buffer": "Recycling water, alternative supplies and diversified locations.",
+      "source_ids": [
+        "iea_minerals_2026"
+      ],
+      "evidence_strength": "mechanism_supported",
+      "coefficient_status": "not_empirically_estimated",
+      "priority": "conditional"
+    }
+  ],
+  "source_registry": [
+    {
+      "id": "keith_ecosystem_collapse_2013",
+      "title": "Keith et al. (2013), Scientific Foundations for an IUCN Red List of Ecosystems, PLOS ONE",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062111",
+      "published": "2013-05-08",
+      "accessed": "2026-09-09",
+      "source_type": "peer_reviewed_conceptual_and_methods_paper",
+      "doi": "10.1371/journal.pone.0062111",
+      "findings": "Defines ecosystem collapse through loss of defining features and processes; functions may fail before species are lost. Recovery and thresholds depend on ecosystem and scale.",
+      "fact_location": "Sections Complex relationships among biodiversity, ecosystem functions, and services; Ecosystem Collapse: an Operational Definition; Risk Assessment Model; Disruption of biotic processes and interactions.",
+      "verification_method": "web_open"
+    },
+    {
+      "id": "lotze_marine_foodweb_2019",
+      "title": "Lotze et al. (2019), Global ensemble projections reveal trophic amplification of ocean biomass declines with climate change, PNAS",
+      "url": "https://repository.library.noaa.gov/view/noaa/29201/noaa_29201_DS1.pdf",
+      "published": "2019-06-11",
+      "accessed": "2026-09-09",
+      "source_type": "peer_reviewed_multimodel_projection",
+      "doi": "10.1073/pnas.1900194116",
+      "findings": "Six marine ecosystem models project climate-driven biomass losses and trophic amplification. End-century unfished global biomass changes average about -5% under low and -17% under high emissions; regional variability and fishing assumptions matter. This is not a global-collapse-date estimate.",
+      "fact_location": "PNAS 116:12907-12912; PDF pages 1-3, abstract and sections Ensemble Projections, Climate Change Effects in a Fished and Unfished Ocean, Trophic Amplification.",
+      "verification_method": "web_open"
+    }
+  ],
+  "existing_source_registry_references": [
+    "wmo_climate_2025_detail",
+    "unep_egr_2025",
+    "ipbes_bba_2026",
+    "unccd_aridity_2024",
+    "fao_sofa_2025",
+    "unesco_water_2025",
+    "jasechko_groundwater_2024",
+    "fao_marine_2025",
+    "who_air_2024",
+    "iea_minerals_2026"
+  ],
+  "source_location_addenda": [
+    {
+      "source_id": "ipbes_bba_2026",
+      "fact_location": "Printed pages 15-17, background messages A1-A4: environmental regulation, pollution as driver, sector dependence, filtration and microbial waste processing; advanced unedited version 8 February 2026."
+    },
+    {
+      "source_id": "unccd_aridity_2024",
+      "fact_location": "PDF page 6 / printed page 6, paragraphs 15-17, aridity-water-land-biodiversity mechanisms; printed page 10, paragraphs 37-39, irrigation and water-management buffers."
+    },
+    {
+      "source_id": "iea_minerals_2026",
+      "fact_location": "Executive summary paragraphs on specialised processing capabilities and Latin America/Caribbean power and water infrastructure gaps; diversification and recycling sections."
+    }
+  ],
+  "integration_notes": [
+    "Only this proposal fragment is created; the application and dataset are not modified. It preserves flat metric keys through partial overrides and adds profiles/dependencies as metadata proposals.",
+    "All proposed growth values use the root-approved common prior classes and existing threat caps. They are direct effective latent-pressure parameters, not observed/projection indicator growth. Remove stale raw_indicator_growth, conversion multiplier and raw growth audit claims when integrating.",
+    "All seven thresholds retain their 1.8.0 numerical intervals. Source evidence supports functional mechanisms, not those normalized numbers. No score was adjusted to force P50/P90 before 2060 or 2100.",
+    "Interdependence overrides require a dataset-wide move to target incoming functional vulnerability. The selected number is not a source-importance score or measured edge coefficient. If that global semantic change is not implemented, omit these seven overrides.",
+    "Criticality tiers represent conditional loss of essential functions, not likelihood, urgency, current harm or automatic global-collapse eligibility. Service groups are deliberately not expanded to every downstream consequence.",
+    "Ocean and biodiversity outcomes overlap. The same marine ecological loss must not count twice as two independent service-domain failures; downstream food harm also must not be assumed equal to marine biomass loss.",
+    "A directed mechanism is not a quantified causal weight. Use bounded, monotone incoming influence, explicit lags and target buffers; report network-off sensitivity. Do not multiply source importance, target vulnerability and existing interdependence repeatedly without an explicit non-duplicative definition.",
+    "Climate-related pressure already appears in downstream evidence. Cascade increments must represent conditional amplification beyond the baseline trajectory, not automatically add the same expected climate impact again. Baseline and cascade separation is currently a model convention, not empirically identified residualisation.",
+    "Do not add a generic oceans-to-climate edge on the basis of fisheries biomass alone: this does not quantify carbon-sink failure. Avoid an automatic reciprocal oceans-biodiversity edge for overlapping category definitions.",
+    "Literature supports severe present and projected functional impairment, not a definite global marine collapse in 2060. A right-censored model P90 is not reassurance about climate impacts, and neither literature nor these priors empirically validates a calendar-date forecast.",
+    "Keith's ecosystem-risk framework is relevant conceptual support, not validation of aggregating seven heterogeneous global categories into a universal physical collapse index."
+  ]
+}

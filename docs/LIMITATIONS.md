@@ -1,51 +1,57 @@
 # Limitations
 
-Apocalypse Clock is experimental and not peer reviewed. This document summarizes known boundaries from the public README and `ai-governance/` records.
+Apocalypse Clock 1.2.8 and dataset 1.9.0 are experimental and not peer reviewed. A reproducible numerical implementation is distinct from a valid description of reality.
 
-## Interpretation Limits
+## Evidence does not calibrate the model
 
-The model output is not a prediction. It should not be interpreted as:
+The inputs were assembled with AI assistance and source review. An opened primary source can verify a reported observation or a mechanism without supporting the selected ordinal value, normalized threshold, annual latent-pressure prior or causal weight. Further independent source checking and domain review remain necessary.
 
-- a deterministic forecast;
-- a prophecy;
-- a measured probability of civilizational collapse;
-- a guaranteed timeline;
-- a real-time warning system;
-- expert consensus;
-- legal, financial, medical, security, or policy advice.
+The 184 flat entries are not exact measurements or the complete set of model assumptions. Functional definitions, service membership, criticality tiers, overlap groups, topology, lags and inducibility also affect results. Their uncertainty is incompletely represented by the per-entry lo/mu/hi values. Sources can become outdated or be superseded.
 
-The highlighted year is a model-derived `Dynamic Cascade P90` horizon under specified assumptions. It is not a predicted collapse date.
+## Growth and calendar assumptions
 
-## Dataset Limits
+The four shared growth classes are analyst priors, not empirical fits. Historical threat caps are execution safeguards, not scientific ceilings. The legacy effective_growth_calibrated flag prevents reconversion; it does not mean that a rate has been calibrated against observed functional failures.
 
-The current dataset was created with AI assistance and checked repeatedly with AI tools. These checks may help with consistency, but they do not replace independent source verification, expert review, or scientific peer review.
+Positive-only growth omits endogenous recovery, pressure reduction and successful adaptation. The continued-pressure assumption should not be confused with evidence that every threat is worsening. Maintaining the same g through 2100 is a scenario extrapolation, not a verified trend.
 
-Dataset values and uncertainty ranges are model inputs, not exact measurements. The values are contestable and should be audited before serious use.
+Standalone continuous, event and regime horizon equations remain heuristic. Event intensity still uses the growth parameter and score/threshold ratio. Regime arrival uses a static logistic/geometric construction and does not use growth. Growth affects a regime node's generic pressure path only where induction is enabled; at fixed other inputs, autonomousw's growth does not change its first activation because that regime node is not generically inducible. Relabeling growth does not calibrate these retained arrival mechanisms.
 
-## Source Limits
+Runtime threat thresholds are clamped to [7.8,9.2], although positive-parameter sampling permits a wider interval. Bounds, clipping and the nonlinear score-to-year mapping can materially affect the result. No normalized threshold is an independently measured physical tipping point.
 
-Sources can become outdated, move, redirect, or be superseded. A source can also be relevant without being sufficient to validate a parameter value.
+## Background coupling and directed propagation
 
-Source-refresh changes can repair URLs or metadata. They do not by themselves recalibrate model values unless explicitly reviewed as DATASET or MODEL changes.
+Standalone priorities retain the historical background depFactor. The new susceptibility pressure excludes that factor and adds realized, lagged upstream capacity loss separately. This is an explicit modeling separation, not an empirically identified decomposition: some climate or cross-sector effects may already be present in baseline scores and growth judgments.
 
-## Methodological Limits
+Interdependence now measures target incoming vulnerability. Its transformation together with governance failure into kappa is heuristic. Related evidence may inform both scores; their combination must not be presented as independent statistical evidence.
 
-The current model makes methodological commitments that affect interpretation:
+All current incoming pathways receive equal fixed shares for each target. Mechanism evidence does not establish equal strength, completeness or sign in every context. Some topology is retained rather than newly verified. A sole declared upstream pathway receives weight one, while adding a pathway and renormalizing changes every existing share. Coefficient comparisons are monotone only when existing weights and other inputs are held fixed.
 
-- the public headline uses `Dynamic Cascade P90`;
-- no-crossing-by-2100 cases use a sentinel convention displayed as `>2100`;
-- the cascade output represents modeled onset of a trigger condition, not the full duration of a real-world process;
-- quantiles, thresholds, growth-rate interpretation, and dependency propagation are part of the model identity;
-- changing those semantics requires MODEL governance.
+The standard one-year lag is a resolution assumption. Zero- and five-year alternatives are structural sensitivity cases, not empirical lower and upper delay bounds. Synchronous fixed-point closure handles zero-lag chains without ordering bias, but does not resolve subannual dynamics. Binary activation also suppresses gradual, regional and partial functional losses.
 
-The methodological review notes that some communication issues can be improved without changing model numbers, while changes to sentinel handling, quantile type, headline statistic, bootstrap behavior, or cascade semantics would alter model meaning.
+Nuclear, bioengineered, pandemics and autonomousw cannot be induced by generic capacity loss. This prevents unrelated service failures from being called a war, release, outbreak or targeting escalation. It also leaves additional hazard-specific causal initiation pathways unmodeled. The four threats remain eligible for spontaneous activation, aggregation and onward transmission.
 
-## Validation Limits
+## Aggregation is not physical loss
 
-Repository validation checks syntax, dataset consistency, link formats, UI smoke behavior, pure-function contracts, and headline determinism. These are engineering and regression checks.
+Fixed tiers 1/2/3 are judgments about conditional functional criticality. They are not probabilities, economic shares, population exposure or validated marginal impacts. Basket assignment and threshold choice are consequential structural assumptions.
 
-They do not establish real-world accuracy, source correctness, or scientific validity.
+The maximum of global weighted activation and the largest essential-service activation share is a non-compensatory model trigger, not a measured fraction of worldwide services lost. In particular, ecological_life_support contains two equal-weight overlap groups: climate and ecosystem_integrity. At the default 0.50 threshold, activation of either group alone reaches the service trigger. A Dynamic Cascade crossing therefore need not contain induced propagation or multiple activated groups.
 
-## Use Limits
+Oceans and biodiversity are deduplicated through the maximum weight within ecosystem_integrity, separately in each basket. This addresses one explicit overlap, not all shared ecological mechanisms. Other threats share causes, affected people and services. The model does not turn those overlaps into independent observations or additive mortality estimates. Separate ocean/biodiversity nodes may still influence the network through distinct paths.
 
-Apocalypse Clock can support structured reasoning, critique, comparison, and review. It should not be used as a standalone decision system or as evidence that a specific future event will happen by a specific date.
+There is no all-three-domain requirement, co-active-edge threshold, induced-share threshold or three-wave limit. Removing these administrative gates makes the functional rule consistent with its declared meaning; it does not establish that the resulting trigger forecasts real global collapse.
+
+## First passage, uncertainty and censoring
+
+An activated node stays active because the output concerns first passage. It does not remain active because the model has demonstrated permanent destruction. No explicit repair rate, event duration, replacement, restoration or repeated cycle is modeled. A chronicle of first failures can accumulate even where real systems later recover.
+
+Parameter ranges encode analyst plausibility. Beta and mean-adjusted log-normal sampling use approximate width conventions; lo/hi are not exact fitted 5th/95th percentiles or hard sampled bounds. Clipping can create endpoint concentrations. Parameter uncertainty is distinct from stochastic event draws, and neither spans all structural uncertainty.
+
+No-crossing runs remain right-censored at 2100 and are encoded as sentinel 2101. The displayed >2100 is not a forecast for 2101, an estimate of the unresolved tail, a statement of safety or evidence that severe impacts occur only after 2100. Linear quantile interpolation involving censored samples requires this qualification.
+
+The four aggregators describe different model estimands. Their spread is not a real-world confidence interval. Graph scores, centrality and co-active links are diagnostics rather than a validated causal or correlation model.
+
+## Validation and use
+
+Engineering checks can establish parsing, bounds, matching embeds, deterministic seeds, pure-function behavior, exports and UI contracts. They cannot establish causal coefficients, physical threshold values, calendar calibration or predictive skill. No new numerical run results, goldens or validation passes are claimed here.
+
+Use the dashboard for assumption inspection, scenario comparison and criticism, not as an operational warning system or standalone basis for consequential decisions. Scientific validation would require independently specified outcomes, causal and recovery models, defensible data-to-parameter links and out-of-sample evaluation.

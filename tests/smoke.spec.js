@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test('static dashboard loads and core controls respond', async ({ page }) => {
+  test.setTimeout(60000);
   const errors = [];
   const warnings = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -13,8 +14,15 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
 
   await expect(page).toHaveTitle(/Apocalypse Clock/);
   await expect(page.getByRole('heading', { name: 'Apocalypse Clock' })).toBeVisible();
-  await expect(page.locator('#runBtn')).toBeAttached();
+  await expect(page.locator('.validation-notice')).toContainText('not been scientifically validated');
+  await expect(page.locator('.validation-notice')).toContainText('Astra ULTRA');
+  await expect(page.locator('#controlCard')).toHaveCount(0);
+  await expect(page.locator('#structuralCard')).toHaveCount(0);
   await expect(page.locator('#cascadeHeadlineYear')).toContainText(/\d{4}|>2100/, { timeout: 20000 });
+  await expect(page.locator('#cascadeMedianYear')).toContainText(/\d{4}|>2100/);
+  await expect(page.locator('#cascadeHorizonGap')).toContainText(/\d+|—/);
+  await expect(page.locator('#cascadeMedianYearWrap')).toBeVisible();
+  await expect(page.locator('#cascadeHeadlineYearWrap')).toBeVisible();
 
   await page.locator('#missionToggle').click();
   await expect(page.locator('#missionMore')).toBeVisible();

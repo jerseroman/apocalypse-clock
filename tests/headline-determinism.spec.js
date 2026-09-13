@@ -10,7 +10,8 @@ const { test, expect } = require('@playwright/test');
  *   - Seed: AC-1.2.6-2026 (DEFAULT_MC_SEED)
  *   - Monte Carlo iterations: 3000
  *
- * Golden values recorded against Apocalypse Clock v1.2.7 on 2026-05-19,
+ * Golden values refreshed after the explicitly authorized functional-cascade
+ * model 1.2.8 / dataset 1.9.0 revision on 2026-09-12,
  * Chromium-via-Playwright. If you intentionally change model code, update
  * EXPECTED in a single edit and record the change in
  * ai-governance/review-log.md per change-policy.md §MODEL.
@@ -24,22 +25,22 @@ const GOLDEN_SEED = 'AC-1.2.6-2026';
 const GOLDEN_NSIM = '3000';
 
 const EXPECTED = Object.freeze({
-  pinnedAt: '2026-05-19',
-  modelVersion: 'Apocalypse Clock v1.2.7',
-  datasetVersion: '1.7.1',
+  pinnedAt: '2026-09-09',
+  modelVersion: 'Apocalypse Clock v1.2.8',
+  datasetVersion: '1.9.0',
   scenario: 'baseline',
   weightProfile: 'expert',
   seed: GOLDEN_SEED,
   nSim: 3000,
-  cascadeP10: 2037,
-  cascadeP50: 2040,
-  cascadeP90: 2045,
-  headlineYearText: '2045',
+  cascadeP10: 2033,
+  cascadeP50: 2036,
+  cascadeP90: 2043,
+  headlineYearText: '2043',
 });
 
 test.describe('headline determinism under default baseline configuration', () => {
   test('headline values match recorded golden under Baseline + Expert + AC-1.2.6-2026 + nSim=3000', async ({ page }) => {
-    test.setTimeout(60000);
+    test.setTimeout(90000);
 
     await page.goto('/index.html');
 
@@ -57,37 +58,24 @@ test.describe('headline determinism under default baseline configuration', () =>
     // Pre-flight: page's default seed must match the historical seed
     // pinned in this test.
     expect(await page.evaluate(() => DEFAULT_MC_SEED)).toBe(GOLDEN_SEED);
+    expect(await page.evaluate(() => MODEL_VERSION)).toBe(EXPECTED.modelVersion);
+    expect(await page.evaluate(() => currentDatasetVersion())).toBe(EXPECTED.datasetVersion);
 
-    // Explicitly set scenario, weight profile, seed, and nSim — programmatically.
-    // Going through the click handlers triggers scheduleWeightProfileAutoRun,
-    // which would race with our explicit run. Setting state directly avoids
-    // the auto-run path while leaving the resulting model state identical.
+    // Explicitly set the fixed baseline configuration programmatically.
     await page.evaluate((seed) => {
-      // Scenario state: update .sc-pill.active to match currentScenario()'s reader.
-      document.querySelectorAll('.sc-pill').forEach(b => b.classList.remove('active'));
-      document.querySelector('button[data-sc="baseline"]').classList.add('active');
       P.scenario = 'baseline';
 
       // Weight profile: refresh=false skips invalidate + view refresh.
       applyWeightProfile('expert', false);
 
-      // Seed and nSim inputs: runAll reads from these on the next Run.
-      document.getElementById('mcSeed').value = seed;
-      document.getElementById('simCount').value = '3000';
+      P.seed = seed;
       P.nSim = 3000;
 
     }, GOLDEN_SEED);
 
-    // The page schedules runSelfTests() immediately after its initial
-    // auto-run. runSelfTests reseeds and asynchronously consumes the shared
-    // Monte Carlo PRNG, so it races with the first explicit run after page
-    // load. Empirically only that first run is affected: a 6-run probe gave
-    // run 1 = {2037, 2040, 2046} and runs 2-6 = {2037, 2040, 2045} bit-for-bit.
-    // One warm-up run absorbs the overlap with runSelfTests; the pinned run
-    // that follows has no concurrent PRNG consumer and is fully deterministic.
-    // runAll is async; awaiting inside page.evaluate awaits the full pass.
-    await page.evaluate(async () => { await runAll(); }); // warm-up
-    await page.evaluate(async () => { await runAll(); }); // pinned run
+    // runSelfTests and runAll use isolated RNG contexts, so the first explicit
+    // run is the measured run; no warm-up draw sequence is needed.
+    await page.evaluate(async () => { await runAll(); });
 
     // Capture the four pinned values from the pinned run.
     const captured = await page.evaluate(() => {
@@ -115,15 +103,19 @@ test.describe('headline determinism under default baseline configuration', () =>
     }
 
     // Post-flight: seed was normalised and applied.
-    expect(await page.evaluate(() => currentMonteCarloSeed())).toBe(GOLDEN_SEED);
+    expect(await page.evaluate(() => window._lastInterpretData.executionSnapshot.seed)).toBe(GOLDEN_SEED);
 
     // Strict equality. No tolerance bands.
     // To update EXPECTED after an intentional MODEL change, copy the
     // captured-values block above into EXPECTED and follow change-policy.md §MODEL.
-    expect(captured.cascadeP10).toBe(EXPECTED.cascadeP10);
-    expect(captured.cascadeP50).toBe(EXPECTED.cascadeP50);
-    expect(captured.cascadeP90).toBe(EXPECTED.cascadeP90);
-    expect(captured.headlineYearText).toBe(EXPECTED.headlineYearText);
+    expect(captured).toEqual({
+      cascadeP10: EXPECTED.cascadeP10,
+      cascadeP50: EXPECTED.cascadeP50,
+      cascadeP90: EXPECTED.cascadeP90,
+      headlineYearText: EXPECTED.headlineYearText,
+    });
+    expect(await page.locator('#cascadeMedianYear').textContent()).toBe(String(EXPECTED.cascadeP50));
+    expect(await page.locator('#cascadeHorizonGap').textContent()).toBe(String(EXPECTED.cascadeP90 - EXPECTED.cascadeP50));
   });
 
   // Test B — repeatability.
@@ -133,7 +125,7 @@ test.describe('headline determinism under default baseline configuration', () =>
   // against each other, so it cannot drift when the model is intentionally
   // revised. (Golden-value pinning is Test A's responsibility.)
   test('two consecutive runs in one browser session produce bit-identical Dynamic Cascade outputs', async ({ page }) => {
-    test.setTimeout(60000);
+    test.setTimeout(90000);
 
     await page.goto('/index.html');
 
@@ -150,20 +142,13 @@ test.describe('headline determinism under default baseline configuration', () =>
     // Pre-flight: page's default seed matches the seed pinned in this file.
     expect(await page.evaluate(() => DEFAULT_MC_SEED)).toBe(GOLDEN_SEED);
 
-    // Explicitly set scenario, weight profile, seed, and nSim — programmatically,
-    // to avoid the scheduleWeightProfileAutoRun path (see Test A).
+    // Set the fixed baseline configuration directly; controls are not exposed.
     await page.evaluate((seed) => {
-      document.querySelectorAll('.sc-pill').forEach(b => b.classList.remove('active'));
-      document.querySelector('button[data-sc="baseline"]').classList.add('active');
       P.scenario = 'baseline';
       applyWeightProfile('expert', false);
-      document.getElementById('mcSeed').value = seed;
-      document.getElementById('simCount').value = '3000';
+      P.seed = seed;
       P.nSim = 3000;
     }, GOLDEN_SEED);
-
-    // Warm-up run absorbs the runSelfTests PRNG contention (see Test A).
-    await page.evaluate(async () => { await runAll(); });
 
     // Two measured runs, same session, same configuration.
     const runA = await page.evaluate(async () => {
@@ -173,6 +158,8 @@ test.describe('headline determinism under default baseline configuration', () =>
         cascadeP10: ens.p10,
         cascadeP50: ens.p50,
         cascadeP90: ens.p90,
+        medianYearText: document.getElementById('cascadeMedianYear').textContent,
+        gapText: document.getElementById('cascadeHorizonGap').textContent,
         headlineYearText: document.getElementById('cascadeHeadlineYear').textContent,
       };
     });
@@ -184,6 +171,8 @@ test.describe('headline determinism under default baseline configuration', () =>
         cascadeP10: ens.p10,
         cascadeP50: ens.p50,
         cascadeP90: ens.p90,
+        medianYearText: document.getElementById('cascadeMedianYear').textContent,
+        gapText: document.getElementById('cascadeHorizonGap').textContent,
         headlineYearText: document.getElementById('cascadeHeadlineYear').textContent,
       };
     });
@@ -192,6 +181,8 @@ test.describe('headline determinism under default baseline configuration', () =>
     expect(runB.cascadeP10).toBe(runA.cascadeP10);
     expect(runB.cascadeP50).toBe(runA.cascadeP50);
     expect(runB.cascadeP90).toBe(runA.cascadeP90);
+    expect(runB.medianYearText).toBe(runA.medianYearText);
+    expect(runB.gapText).toBe(runA.gapText);
     expect(runB.headlineYearText).toBe(runA.headlineYearText);
   });
 });

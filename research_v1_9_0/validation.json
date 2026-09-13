@@ -1,0 +1,16 @@
+{
+  "dataset": "data_v1_9_0_functional.json",
+  "sha256": "42ee99ac6060d4ae606397c9299a09715d77d3581852526f1a40b3b81a00b0c2",
+  "schema": "1.9.0",
+  "parameters": 184,
+  "sources": 61,
+  "changed_numeric_parameters_vs1_8_0": 43,
+  "functional_profiles": 23,
+  "growth_classes": {
+    "rapid": 2,
+    "moderate": 12,
+    "slow": 8,
+    "near_flat": 1
+  },
+  "status": "PASS: assembly checks; full application verification recorded separately"
+}

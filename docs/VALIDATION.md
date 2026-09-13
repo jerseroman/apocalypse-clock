@@ -41,7 +41,9 @@ It verifies the current dataset structure and embedded copies, including:
 - 184 dataset parameters;
 - `lo <= mu <= hi` for every parameter;
 - required HTML metadata;
-- byte-equal dataset JSON across `data_v1_7_1metadata_revision.json`, `index.html`, and `404.html`.
+- byte-equal UTF-8 JSON payloads across the configured `data_v1_9_0_functional.json`, `index.html`, and `404.html`, excluding enclosing whitespace;
+- exact agreement of all functional catalog fields with their importable threshold extensions, normalized known dependency IDs, nonnegative integer lags and registered source URLs;
+- direct growth semantics, with no raw observed-indicator CAGR imported as latent pressure.
 
 This protects against accidental drift between the standalone dataset file and the two HTML `bundledSources` copies.
 
@@ -62,6 +64,9 @@ Live link results can be affected by third-party blocking, redirects, or service
 `npm run test:smoke` currently runs the Playwright suite configured in `tests/`.
 
 The suite currently includes:
+
+- `tests/functional-cascade.spec.js`: single-seed directed propagation, censored-target susceptibility, cycles/order independence, monotonicity, essential-service triggers, overlap grouping, initiating-event restrictions and explicit lags.
+- `tests/functional-integration.spec.js`: real uploads, legacy-source fallback, all scenarios/weight profiles, standalone versus propagated first-failure statistics, and actual JSON/CSV downloads through pointer-activated, visibly opened controls.
 
 - `tests/smoke.spec.js`: loads the static dashboard, checks the title and heading, waits for the headline year, exercises the mission and share controls, verifies share-link behavior, and checks for unexpected page errors or warnings.
 - `tests/units.spec.js`: uses Playwright `page.evaluate` against the live page to pin current contracts for `quantile`, `fmtY`, and `probabilityByDisplayedYear`.

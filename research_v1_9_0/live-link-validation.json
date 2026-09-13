@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-09-09T07:33:05.447Z",
+  "checked": 89,
+  "failures": [
+    "https://fonts.gstatic.com: https://fonts.gstatic.com: HTTP 404",
+    "https://fonts.googleapis.com: https://fonts.googleapis.com: HTTP 404",
+    "https://main.un.org/securitycouncil/en/content/highlights-2025: https://main.un.org/securitycouncil/en/content/highlights-2025: HTTP 403",
+    "https://unesdoc.unesco.org/in/rest/annotationSVC/DownloadWatermarkedAttachment/attach_import_633ac6d8-68b2-4c87-a76e-0d95c6301e2a: https://unesdoc.unesco.org/in/rest/annotationSVC/DownloadWatermarkedAttachment/attach_import_633ac6d8-68b2-4c87-a76e-0d95c6301e2a: HTTP 403",
+    "https://unric.org/en/unric-info-point-library-newsletter-july-2026/: https://unric.org/en/unric-info-point-library-newsletter-july-2026/: HTTP 403",
+    "https://www.fbi.gov/news/press-releases/cryptocurrency-and-ai-scams-bilk-americans-of-billions: https://www.fbi.gov/news/press-releases/cryptocurrency-and-ai-scams-bilk-americans-of-billions: HTTP 403",
+    "https://www.imf.org/en/publications/weo/issues/2026/07/08/world-economic-outlook-update-july-2026?cid=ca-com-homepage-WEOET2026004: https://www.imf.org/en/publications/weo/issues/2026/07/08/world-economic-outlook-update-july-2026?cid=ca-com-homepage-WEOET2026004: HTTP 403",
+    "https://www.oecd.org/en/publications/2025/06/oecd-supply-chain-resilience-review_9930d256.html: https://www.oecd.org/en/publications/2025/06/oecd-supply-chain-resilience-review_9930d256.html: HTTP 403",
+    "https://www.oecd.org/en/publications/handbook-on-constructing-composite-indicators-methodology-and-user-guide_9789264043466-en.html: https://www.oecd.org/en/publications/handbook-on-constructing-composite-indicators-methodology-and-user-guide_9789264043466-en.html: HTTP 403",
+    "https://www.oecd.org/en/topics/plastics.html: https://www.oecd.org/en/topics/plastics.html: HTTP 403",
+    "https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fwww.apocalypseclock.com%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2F313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com%2Fugd%2F313d4b_80e0af4eed684bc088fc2256e82eee8a.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F: https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fwww.apocalypseclock.com%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2F313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com%2Fugd%2F313d4b_80e0af4eed684bc088fc2256e82eee8a.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F: HTTP 403",
+    "https://www.unep.org/inc-plastic-pollution/session-5.2: https://www.unep.org/inc-plastic-pollution/session-5.2: HTTP 403",
+    "https://www.unep.org/resources/emissions-gap-report-2025: https://www.unep.org/resources/emissions-gap-report-2025: HTTP 403"
+  ],
+  "status": "EXTERNAL_FAILURES"
+}

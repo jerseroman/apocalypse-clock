@@ -1,51 +1,49 @@
 # Model Scope
 
-Apocalypse Clock is an experimental, scenario-based analytical model for examining global systemic risk under specified assumptions. It is intended to support transparency, inspection, criticism, and structured reasoning under deep uncertainty.
+Apocalypse Clock 1.2.8 with dataset 1.9.0 is an experimental browser-based model for comparing conditional systemic-risk scenarios. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
 
-The model is not peer reviewed. It is not an official scientific consensus, official public-authority risk assessment, or validated emergency-warning system.
+## Represented functions
 
-## What the Model Is
+The model retains 23 threats and eight metric entries per threat. Additional metadata defines functional boundaries, directed dependencies, fixed criticality weights and five essential-service baskets:
 
-The dashboard is a static browser application that combines a structured JSON dataset, scenario controls, uncertainty ranges, dependency-aware aggregation, Monte Carlo sampling, Weibull horizon diagnostics, network analysis, and exportable model outputs.
+- ecological and climatic regulation;
+- food and usable-water provision;
+- infection control and health-care continuity;
+- coordination, information and exchange;
+- essential technical infrastructure.
 
-It is designed to make assumptions inspectable and contestable. It is not designed to claim certainty about future events.
+A functional boundary concerns failure to sustain a specified function despite the modeled allowance for buffers and substitutes. It does not require extinction, zero biomass, destruction of every asset or disappearance of every service. Conversely, the model does not infer current threshold crossing solely from a serious observed burden, rising indicator or high ordinal score.
 
-## What the Model Is Not
+Definitions and assignments are in [data_v1_9_0_functional.json](../data_v1_9_0_functional.json). They are analyst judgments, not observed global capacity fractions.
 
-Apocalypse Clock should not be interpreted as:
+## Two paths to activation
 
-- a prophecy;
-- a deterministic forecast;
-- an empirical probability of civilizational collapse;
-- a prediction of a specific collapse date;
-- a real-time emergency warning system;
-- legal, financial, medical, security, or policy advice;
-- a substitute for independent source verification, methodological audit, or domain-expert review.
+Standalone continuous, event and regime processes supply model-derived activation years. A directed capacity-loss rule can additionally induce eligible targets before their standalone year, including targets whose standalone year is censored beyond 2100. It uses pre-network latent pressure, incoming vulnerability, declared fixed edge weights and propagation lags.
 
-## Highlighted Year
+Nuclear conflict, engineered biological events, pandemics and autonomous-weapons escalation require their initiating event and cannot be created by generic capacity loss. They are not excluded from the model: they retain standalone processes, aggregate eligibility and effects as active upstream sources. Additional event-specific escalation or release mechanisms are outside the current implementation.
 
-The highlighted year represents the `Dynamic Cascade P90` headline rule. It is a model-derived dynamic-cascade horizon under specified assumptions.
+AI includes correlated deployment/control failures rather than only a hypothetical advanced-agent takeover. Space includes loss of navigation, timing, communication or observation rather than only destroyed satellites. These broader functions remain eligible for generic induction.
 
-It is conditioned on the selected inputs, model structure, thresholds, uncertainty ranges, dependency logic, scenario settings, weight profile, and Monte Carlo behavior. It is model output, not prediction.
+First activation is an absorbing first-passage marker. The model does not simulate subsequent duration, repair, restoration, adaptation or repeated failure/recovery cycles.
 
-`Dynamic Cascade P90` should be read as an upper quantile of simulated dynamic-cascade onset years under the current implementation. It should not be read as a guaranteed endpoint, a collapse date, or a claim that the real world will follow the model.
+## Meaning of the headline
 
-## Thresholds and Dataset Values
+Dynamic Cascade P90 is the upper model quantile of the first year that a fixed-criticality functional index reaches its selected threshold globally or within an essential-service basket. The default threshold is 0.50.
 
-Thresholds used by the model are analytical anchors, not physical tipping points.
+The rule takes the maximum of those indices. It does not require all three administrative domains, a particular number of active edges or a minimum induced contribution. It may cross without a multi-node cascade. Oceans and biodiversity are counted once through their shared overlap group within each basket, but remain separate network nodes.
 
-Dataset values and uncertainty ranges are model inputs, not exact real-world measurements. Protected values include `mu`, `lo`, `hi`, thresholds, `growth_rate`, threat taxonomy, normalized metric interpretation, and source-map semantics.
+The headline is conditional on dataset, scoring, prior distributions, scenario, threshold policy, graph, weights, lags and random seed. It is not a physical fraction of lost civilization, an empirical 90-percent probability of collapse, a guaranteed date or a deadline before which serious harm cannot occur. >2100 means that the relevant quantile is unresolved beyond the model horizon, not absence of risk.
 
-Changes to protected values, headline logic, or model functions require explicit review under `ai-governance/change-policy.md`.
+Four aggregation rules remain available. Their differing outputs are structural alternatives, not four independently validated forecasts. Weibull and network diagnostics do not validate the standalone calendar mappings or the cascade mechanism.
 
-## Use Boundary
+## Evidence and scenario boundary
 
-The model can be useful for:
+Growth values are directly selected common-class priors for annual latent functional pressure. They are not transformed CAGRs of emissions, withdrawals, stocks, production, reported cases or technical benchmarks. Positive-only growth and fixed annual rates describe a continued-pressure scenario rather than all possible futures.
 
-- exploring assumptions;
-- comparing scenario sensitivity;
-- inspecting dependency structures;
-- identifying source, methodology, and communication questions;
-- supporting structured public review.
+Sources can support mechanisms and present conditions while leaving normalized scores, fixed tiers 1/2/3, equal incoming weights and one-year propagation lags unidentified. The standard lag has zero- and five-year sensitivity alternatives. Such comparisons test assumptions; they do not estimate real causal delays.
 
-It should not be used as a standalone basis for operational, policy, financial, medical, legal, security, or emergency decisions.
+Model 1.2.8 changes the functional estimand and propagation rules. Older importers may ignore the new metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
+
+## Use boundary
+
+The model can support scenario comparison, structural sensitivity analysis, source review and public methodological criticism. It is not a real-time emergency warning or a standalone basis for legal, financial, medical, security or policy decisions. No new numerical results or validation outcomes are asserted by this scope document.

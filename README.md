@@ -1,11 +1,10 @@
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20304258-blue)](https://doi.org/10.5281/zenodo.20304258)
-[![CI](https://github.com/jerseroman/apocalypse-clock/actions/workflows/validate.yml/badge.svg)](https://github.com/jerseroman/apocalypse-clock/actions/workflows/validate.yml)
-![Status](https://img.shields.io/badge/status-experimental-orange)
-![Peer review](https://img.shields.io/badge/peer%20review-not%20peer--reviewed-red)
-![Dataset](https://img.shields.io/badge/dataset-v1.7.1-blue)
-![Model](https://img.shields.io/badge/model-v1.2.7-blue)
-[![Facebook](https://img.shields.io/badge/Facebook-Follow-1877F2?logo=facebook&logoColor=white)](https://www.facebook.com/profile.php?id=61571359601171)
-# Apocalypse Clock v1.2.7
+# Apocalypse Clock v1.2.8 — functional-cascade revision
+
+Version **1.2.8** uses dataset **1.9.0**, [data_v1_9_0_functional.json](./data_v1_9_0_functional.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). It is prepared locally; the websites below have **not** been updated by this task.
+
+A single initial failure can propagate into initially right-censored targets. Fixed criticality weights, essential-service baskets, one-year dependency lags and explicit overlap grouping replace the former three-domain/transmission veto. Functional failure does not require disappearance of all organisms. The headline is a **functional-disruption threshold after propagation**, not a calibrated prediction of completed global collapse. Parameter scores, growth priors and coupling coefficients remain transparent model judgments.
+
+The original dataset files remain unchanged; the complete pre-change application is preserved in `backups/pre-functional-cascade-2026-09-09`. See [research_v1_9_0/README.md](./research_v1_9_0/README.md) for the implementation report and numerical comparisons.
 
 Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/  
 Official website: https://www.apocalypseclock.com/
@@ -21,8 +20,10 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 ## Project Structure
 
 - `index.html` - application entry point, page shell, and embedded dataset copy.
-- `404.html` - minimal custom GitHub Pages fallback page with no embedded model dataset copy.
-- `data_v1_7_1metadata_revision.json` - public structured model dataset.
+- `404.html` - GitHub Pages fallback route with the same embedded dataset copy.
+- `data_v1_9_0_functional.json` - active local functional-pressure dataset.
+- `data_v1_7_1metadata_revision.json`, `data_v1_8_0_evidence_revision.json` - preserved historical inputs.
+- `src/cascade-model.js` - pure directed functional-cascade engine.
 - `src/app.js` - model logic, simulation workflow, rendering, exports, and initialization.
 - `src/action-delegation.js` - early UI action delegation.
 - `src/aria-status.js` - accessibility status helper.
@@ -54,15 +55,15 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 
 The model uses a structured JSON parameter dataset as its primary input source.
 
-Current public dataset:
+Current local dataset (not publicly deployed):
 
-- [`data_v1_7_1metadata_revision.json`](./data_v1_7_1metadata_revision.json)
+- [`data_v1_9_0_functional.json`](./data_v1_9_0_functional.json)
 
-This file contains the Apocalypse Clock parameter dataset v1.7.1. It includes 23 threat categories and 8 metrics per threat, for a total of 184 model parameters excluding metadata.
+This file contains dataset v1.9.0: 23 threat categories and 8 metrics per threat, 184 parameter entries, 23 functional profiles and a registry of 61 primary/institutional source URLs. The review is targeted, not systematic.
 
-Version 1.7.1 is a metadata-cleanup export and does not perform a scientific recalibration.
+Unlike historical v1.7.1, this is an explicitly authorized numerical and methodological revision. It is not empirical recalibration: growth priors describe conditional latent functional pressure, not observed-indicator CAGR.
 
-**⚠ Important note:** The JSON dataset v1.7.1 was created entirely with AI assistance and checked repeatedly with different AI tools. These AI-assisted checks should not be understood as scientific peer review. <ins>Independent source verification, methodological audit, and domain-expert assessment are required before any serious use!</ins>
+**Important:** This revision is AI-assisted. Source review and passing software tests do not constitute scientific peer review, expert elicitation or predictive validation. Independent domain assessment and calibration remain necessary for consequential use.
 
 Multiple AI model JSON presets are included as comparison and audit inputs. They were used to compare how different AI systems assess the same risk parameters and to observe the average spread between their estimates. These AI-generated estimates have not been independently audited and should not be treated as scientific validation. Notably, the different AI systems produced broadly similar assessments across many parameters, which makes the comparison useful as a consistency check, but not as a substitute for expert review.
 <p align="left">
@@ -156,7 +157,7 @@ These metadata files support citation and archival discovery. They do not imply 
 
 If you use, cite, review, or discuss this project, please cite it as:
 
-Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.2.7.  
+Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.2.8.
 https://www.apocalypseclock.com/
 
 ## Changelog

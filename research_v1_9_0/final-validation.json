@@ -1,0 +1,61 @@
+{
+  "completedAt": "2026-09-12T06:53:11.722Z",
+  "model": "1.2.8",
+  "dataset": "1.9.0",
+  "scope": "Local MODEL + DATASET implementation; no deployment or predictive-validation claim",
+  "hashes": {
+    "src/app.js": "02cbac7a7f9bc4be85b74267f44dcab59da5a5df0cbfc7a0acda44399c76a2f4",
+    "src/cascade-model.js": "feacd011b8641b1bb8ff474ab61069919d879c7e53775e4df539793ac62d0b7f",
+    "index.html": "e4557f02c0ad1bc3d98fb794ff05893b6ae769c5f4732fa7777192a667ab3ec1",
+    "404.html": "586bf5117c90937f73bea95c5240c3a9d64a341e0c6610b1cfdd4eac1a44de2d",
+    "data_v1_9_0_functional.json": "bbb2b77bf488d4b509fc8ef2073a9ab053fadeb708e33ffd6f18c3f10e1652e9",
+    "package.json": "20d38149638fb0d1a98a7d528eb9cb1d25dc2c82cf8624bc3468f19940d86f09",
+    "package-lock.json": "86339c41b88414a925701fb29c3c7d21d34f3cfeebdd04ef0527372403fd5b8f",
+    "data_v1_7_1metadata_revision.json": "fed56ac7b3958cc18ce52334c4f22ab2dd5a9151a2a8c7a9ccf978b4a69a174d",
+    "data_v1_8_0_evidence_revision.json": "159c874c6f721129fedfbae623de37853b362ee6b4274af1dbbf27cf2da8bc64"
+  },
+  "parameterEntriesSha256": "885ddba2ee709be17dc819786ff54910698975ddfa2fbea6badad976c3f18670",
+  "verification": {
+    "syntax": "PASS: 12 JavaScript files",
+    "dataset": "PASS: 184 entries, 23 functional profiles, exact embedded payloads",
+    "urlFormats": "PASS: 89 URLs",
+    "fullSuite": {
+      "command": "npm test",
+      "passed": 40,
+      "failed": 0,
+      "exitCode": 0,
+      "workers": 2,
+      "durationApproxSeconds": 150
+    },
+    "initialFullSuite": {
+      "passed": 38,
+      "failed": 2,
+      "reason": "Startup/repeatability timeouts under five workers; no numerical assertion failure"
+    },
+    "runtime": "PASS: fresh archived baseline; identical 3000-run repeats; ten 1000-run alternatives; legacy imports; first-seed propagation",
+    "golden": {
+      "scenario": "baseline",
+      "profile": "expert",
+      "seed": "AC-1.2.6-2026",
+      "nSim": 3000,
+      "p10": 2033,
+      "p50": 2036,
+      "p90": 2043
+    },
+    "pointerWorkflow": "PASS: panels opened normally, real file chooser, Run click and JSON/CSV downloads",
+    "visual": "Desktop and mobile upper-page screenshots inspected; not a full accessibility/cross-browser audit",
+    "liveLinks": {
+      "status": "EXTERNAL_FAILURES",
+      "checked": 89,
+      "failureCount": 13,
+      "report": "live-link-validation.json"
+    },
+    "runtimeWarnings": [
+      "Node v26.5.0 emitted deprecation/color warnings and a native UV_HANDLE_CLOSING assertion during worker teardown; all 40 tests completed and the parent command exited 0. This is not evidence of browser model failure."
+    ]
+  },
+  "preservedOriginalDatasets": true,
+  "backup": "backups/pre-functional-cascade-2026-09-09",
+  "numericalCaveat": "Growth priors, ordinal thresholds, service baskets, criticality and causal coefficients are uncalibrated scenario judgments. A functional trigger is not completed global collapse.",
+  "evidenceSnapshotNote": "runtime-validation.json records its starting dataset hash. The final JSON differs only in the descriptive growth unit label in _meta; all parameter values and functional profiles are unchanged. Final golden and full suite ran against the final dataset."
+}
