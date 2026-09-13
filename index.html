@@ -155,30 +155,8 @@
   </div>
 
   <div class="panel" id="heroAbsoluteClock" style="padding:16px">
-    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:14px">
-      <div class="clock-panel hero-gauge-card" style="flex:0 0 170px;padding:0">
-        <div class="hero-section-kicker">Current systemic stress</div>
-        <div class="card-title">Global Stress Index gauge</div>
-        <div class="gauge-tooltip-wrap">
-          <div id="clockCanvas" role="img" style="width:200px;height:200px;max-width:100%;margin-top:-12px" aria-label="Global systemic stress gauge"></div>
-          <div class="gauge-tooltip">
-            <strong>Global Stress Index</strong>
-            A composite 0–100 score aggregating all 23 threats after MCDA scoring, dependency amplification and scenario weighting. It measures current systemic load   not a probability of collapse.<br><br>
-            <span style="color:var(--text-3)">0–35</span> Low systemic load &nbsp;·&nbsp; <span style="color:var(--amber)">35–70</span> Elevated &nbsp;·&nbsp; <span style="color:var(--red)">70–100</span> Critical mass
-          </div>
-        </div>
-        <div class="clock-gsi" id="clockGSI" style="color:var(--red)"> </div>
-        <div class="clock-lbl">Current Global Stress Index / 100</div>
-        <div class="hero-separation-note">Current stress and projected horizons are separate outputs: the gauge summarizes present systemic load, while the paired P50/P90 clocks show two quantiles of the same Dynamic cascade distribution.</div>
-        <div class="clock-meta" id="clockMeta" style="display:none"></div>
-        <div class="clock-stats">
-          <div class="cs"><div class="cs-l">Compensatory P10</div><div class="cs-v" id="heroP10Mirror"> </div></div>
-          <div class="cs"><div class="cs-l">Compensatory P90</div><div class="cs-v" id="heroP90Mirror"> </div></div>
-          <div class="cs"><div class="cs-l">Horizon-coded outcome SD</div><div class="cs-v" id="heroAleaMirror"> </div></div>
-          <div class="cs"><div class="cs-l">Median MC SE (if identified)</div><div class="cs-v" id="heroEpisMirror"> </div></div>
-        </div>
-      </div>
-<div style="flex:1;min-width:0;text-align:center">
+    <div class="hero-projected-layout">
+      <div class="hero-projected-content">
         <div class="hero-section-kicker">Projected horizon</div>
         <div class="cascade-headline-label">Dynamic cascade · paired P50/P90 horizon clocks · projected pathway</div>
         <div id="cascadeLoadingMsg" style="display:none;position:relative;height:28px;overflow:hidden;margin:48px 0 0"></div>

@@ -21,6 +21,9 @@ test('Wix Velo custom element renders the audited dual-clock application without
   await expect(host.locator('.validation-notice')).toContainText('Astra ULTRA');
   await expect(host.locator('#controlCard')).toHaveCount(0);
   await expect(host.locator('#structuralCard')).toHaveCount(0);
+  await expect(host.locator('#clockCanvas')).toHaveCount(0);
+  await expect(host.locator('.hero-gauge-card')).toHaveCount(0);
+  await expect(host.getByText('Global Stress Index gauge', { exact: true })).toHaveCount(0);
   await expect(host.locator('#cascadeHorizonPair')).toBeVisible({ timeout: 60000 });
   await expect(host.locator('#cascadeMedianYear')).toHaveText('2036');
   await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2043');
@@ -30,6 +33,7 @@ test('Wix Velo custom element renders the audited dual-clock application without
     const body = element.shadowRoot.querySelector('.ac-body');
     const page = element.shadowRoot.querySelector('.page');
     const pair = element.shadowRoot.querySelector('#cascadeHorizonPair');
+    const p50Clock = element.shadowRoot.querySelector('#cascadeMedianYearWrap');
     const p90 = element.shadowRoot.querySelector('#cascadeHeadlineYear');
     const hostBox = element.getBoundingClientRect();
     const pairBox = pair.getBoundingClientRect();
@@ -38,6 +42,9 @@ test('Wix Velo custom element renders the audited dual-clock application without
       hostClientWidth: element.clientWidth,
       bodyOverflowX: getComputedStyle(body).overflowX,
       pageWidth: page.getBoundingClientRect().width,
+      hostBackground: getComputedStyle(element).backgroundColor,
+      p50ClockWidth: p50Clock.getBoundingClientRect().width,
+      p50FontSize: Number.parseFloat(getComputedStyle(element.shadowRoot.querySelector('#cascadeMedianYear').parentElement).fontSize),
       pairRight: pairBox.right,
       p90Right: p90Box.right,
       hostRight: hostBox.right,
@@ -45,7 +52,10 @@ test('Wix Velo custom element renders the audited dual-clock application without
   });
   expect(horizontalLayout.hostClientWidth).toBe(1165);
   expect(horizontalLayout.bodyOverflowX).toBe('hidden');
+  expect(horizontalLayout.hostBackground).toBe('rgb(20, 24, 30)');
   expect(horizontalLayout.pageWidth).toBeLessThanOrEqual(horizontalLayout.hostClientWidth);
+  expect(horizontalLayout.p50ClockWidth).toBeGreaterThanOrEqual(195);
+  expect(horizontalLayout.p50FontSize).toBeGreaterThanOrEqual(48);
   expect(horizontalLayout.pairRight).toBeLessThanOrEqual(horizontalLayout.hostRight);
   expect(horizontalLayout.p90Right).toBeLessThanOrEqual(horizontalLayout.hostRight);
   expect(errors).toEqual([]);

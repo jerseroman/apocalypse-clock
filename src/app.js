@@ -5366,10 +5366,10 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
     setText('uncAlea',   mcRes.samplingSigma.toFixed(1)  + ' years');
     setText('uncEpis',   mcRes.medianCensored ? 'undefined (censored median)' : mcRes.parameterSigma.toFixed(1) + ' years');
     setText('uncStruct', mcRes.structuralSigma.toFixed(1) + ' years');
-    document.getElementById('heroP10Mirror').textContent  = fmtY(mcRes.p10);
-    document.getElementById('heroP90Mirror').textContent  = fmtY(mcRes.p90);
-    document.getElementById('heroAleaMirror').textContent = mcRes.samplingSigma.toFixed(1) + 'y';
-    document.getElementById('heroEpisMirror').textContent = mcRes.medianCensored ? 'undefined' : mcRes.parameterSigma.toFixed(1) + 'y';
+    setText('heroP10Mirror', fmtY(mcRes.p10));
+    setText('heroP90Mirror', fmtY(mcRes.p90));
+    setText('heroAleaMirror', mcRes.samplingSigma.toFixed(1) + 'y');
+    setText('heroEpisMirror', mcRes.medianCensored ? 'undefined' : mcRes.parameterSigma.toFixed(1) + 'y');
     const censorNote = `No crossing by ${YE}: ${pct(mcRes.censorFraction || 0)}. SD and bootstrap values describe horizon-coded times (${YE + 1} for no crossing), not actual post-horizon dates.`;
     ['csAlea', 'uncAlea', 'uncEpis', 'heroAleaMirror', 'heroEpisMirror'].forEach(id => {
       const el = document.getElementById(id);

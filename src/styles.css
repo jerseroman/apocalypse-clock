@@ -506,12 +506,11 @@ select:focus{border-color:rgba(58,120,201,.5);background:var(--surface2)}
 .clock-gsi{font-family:var(--font-title);font-size:42px;font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:4px}
 .clock-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:12px}
 .clock-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}
-.hero-gauge-card{padding:16px 12px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center}
-.hero-gauge-card #clockCanvas{width:176px;max-width:100%;height:176px;margin:0 auto 6px}
-.hero-gauge-card .clock-gsi{font-size:38px;margin-bottom:2px}
-.hero-gauge-card .clock-lbl{margin-bottom:0}
-.hero-gauge-card .clock-meta{margin-top:6px;margin-bottom:2px;max-width:18ch}
-.hero-gauge-card .clock-stats{display:none}
+.hero-projected-layout{display:flex;align-items:stretch;min-height:520px;margin-bottom:14px}
+.hero-projected-content{flex:1;min-width:0;text-align:center}
+#heroAbsoluteClock .cascade-horizon-pair{width:100%;grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr);gap:12px;margin:18px auto 14px}
+#heroAbsoluteClock .cascade-horizon-clock{max-width:230px;padding:14px}
+#heroAbsoluteClock .cascade-horizon-clock .cascade-headline-year{font-size:clamp(46px,4.4vw,60px)}
 #floatTip{position:fixed;z-index:999;max-width:240px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r8);padding:10px 12px;font-size:10px;color:var(--text-2);line-height:1.65;pointer-events:none;opacity:0;transition:opacity .15s ease;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 #floatTip.visible{opacity:1}
 #floatTip strong{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:5px}
@@ -806,6 +805,10 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   .cascade-prob-line{gap:6px}
   .cascade-prob-label{font-size:7px}
   #cascadeHeadlineProb.cascade-headline-prob,#cascadeMedianProb.cascade-headline-prob{font-size:12px;}
+  #heroAbsoluteClock .cascade-horizon-pair{grid-template-columns:1fr;gap:10px}
+  #heroAbsoluteClock .cascade-horizon-clock{width:min(230px,100%);max-width:230px;padding:20px}
+  #heroAbsoluteClock .cascade-horizon-interval{width:min(230px,100%)}
+  #heroAbsoluteClock .cascade-horizon-clock .cascade-headline-year{font-size:clamp(48px,15vw,64px)}
 }
 .climate-feature-card{
   position:relative;
