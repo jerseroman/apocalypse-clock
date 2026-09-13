@@ -1,6 +1,6 @@
 # Methodology
 
-This document describes Apocalypse Clock model 1.2.8 with dataset 1.9.0. It is an experimental scenario model, not a peer-reviewed or empirically validated forecast. Numerical conventions below describe the implementation; they are not measurements of collapse probability.
+This document describes Apocalypse Clock model 1.2.9 with dataset 1.9.0. It is an experimental scenario model, not a peer-reviewed or empirically validated forecast. Numerical conventions below describe the implementation; they are not measurements of collapse probability.
 
 ## Inputs and implementation
 
@@ -40,9 +40,9 @@ The standalone process families are retained:
 
 - Continuous: when 0<P_i<H_i and g_i>0, the crossing year is ceil(2026 + log(H_i/P_i)/log(1+g_i)), capped at 2101. P_i>=H_i crosses at 2026; nonpositive priority or non-growing subthreshold pressure does not cross within the horizon.
 - Event: annual hazard increments start with lambda_i0=max(0.00001,2*g_i*P_i/H_i), then lambda_it=clamp(lambda_i0*(1+g_i)^(t-2026),0.00001,5). A uniform draw is compared with 1-exp(-sum lambda_it); the deterministic diagnostic uses cumulative hazard log(2).
-- Regime: p_i=clamp(logistic(2*(P_i-H_i)),0.0001,0.999), followed by a geometric waiting time. The deterministic diagnostic uses its median. g_i does not enter this standalone regime-arrival equation.
+- Regime: uses the same first-passage mapping as the continuous family: when 0<P_i<H_i and g_i>0, the crossing year is ceil(2026 + log(H_i/P_i)/log(1+g_i)), capped at 2101. P_i>=H_i crosses at 2026. The regime label retains an abrupt state-transition interpretation but no longer adds an uncalibrated geometric calendar draw.
 
-These calendar mappings, including the event use of g_i, are retained model hypotheses. They are not empirically fitted event frequencies or validated consequences of the new functional-pressure interpretation.
+These calendar mappings, including the event use of g_i and the regime first-passage convention, are model hypotheses. They are not empirically fitted event frequencies or validated consequences of the functional-pressure interpretation. Removing the extra regime draw avoids treating a growth-blind logistic construction as empirical timing; it does not calibrate the remaining equation.
 
 ## Direct growth priors
 
@@ -121,14 +121,20 @@ The default cascadeThreshold is 0.50. There is no requirement for all three admi
 
 S is the maximum of normalized model indices. It is not an additive fraction of the world, and a “Dynamic Cascade” crossing need not include an induced activation. Healthy scores elsewhere cannot compensate away an essential-basket crossing under this rule. Co-active edges, active domains and induced mass are diagnostics, not eligibility vetoes.
 
+## Domain functional horizons
+
+Each domain card now reconstructs a functional first-crossing from the same full-system activation history used by Dynamic Cascade. Propagation is therefore simulated across all three domains first; only the reporting basket and its denominator are restricted to civilization, biosphere or technology. Within that domain basket, the same fixed criticality tiers, overlap grouping, essential-service maximum and default 0.50 threshold are applied.
+
+This corrects the previous domain display, which crossed 40 percent of sampled priority mass from standalone horizons and then compared that different estimand with the system cascade P50. The three domain denominators are separate and are not additive components of a global 100 percent. A domain crossing is a model-defined warning horizon for functional disruption after cross-domain propagation, not a statement that the entire domain has physically collapsed.
+
 ## Monte Carlo, alternative aggregators and headline
 
 Ordinal sampling uses a scaled Beta distribution on [1,5], fitted from the center and approximate width (hi-lo)/3.29, with a clipped-normal fallback. Growth and thresholds use mean-adjusted log-normal sampling with log-space width (log hi-log lo)/3.29, followed by runtime bounds. Scenario and uncertainty multipliers alter these widths. Therefore lo/hi are analyst plausibility anchors with an approximate 90-percent operational role, not empirically fitted confidence intervals, exact recovered quantiles or hard sampling limits.
 
-Parameter uncertainty and stochastic event/regime draws are distinct sources of variation. The cascade propagation is deterministic conditional on those sampled inputs and standalone years. Repeated calculations with the same complete configuration and seed must reproduce the same results; repeatability is not predictive accuracy.
+Parameter uncertainty and stochastic event draws are distinct sources of variation. Regime timing is deterministic conditional on sampled priority, growth and threshold; cascade propagation is deterministic conditional on all sampled inputs and standalone years. Repeated calculations with the same complete configuration and seed must reproduce the same results; repeatability is not predictive accuracy.
 
 Four aggregation outputs remain: compensatory priority-share crossing, earliest standalone crossing (Max-rule), graph-weighted Gaussian heuristic, and Dynamic Cascade. The first three retain their own definitions and do not inherit the new fixed-criticality service rule. Their disagreement indicates structural sensitivity, not an empirically estimated standard deviation of reality. The graph-linked score is not a probability justified by a validated correlation matrix.
 
 The headline remains Dynamic Cascade P90: the 90th percentile of simulated functional-trigger years under the selected configuration. The quantile implementation linearly interpolates at position (n-1)*p in sorted samples. Runs with no trigger by 2100 use sentinel 2101 and display as >2100. Censored samples stay in the unconditional quantiles and by-year denominators; 2101 is not an estimated event date, and >2100 is not safety through 2100.
 
-Standalone horizons and propagated first-activation horizons are recorded separately. Continuing a run to collect all per-threat activations does not change its first aggregate crossing. This document reports the rules, not new run results, goldens or a successful validation campaign.
+Standalone horizons and propagated first-activation horizons are recorded separately. Continuing a run to collect all per-threat activations does not change its first aggregate crossing. Interacting-tipping-system research supports representing cross-system interactions and explicitly testing threshold and timescale uncertainty, but it does not validate this implementation's weights or dates; see Möller et al. (2024), Nature Communications, DOI [10.1038/s41467-024-49863-0](https://doi.org/10.1038/s41467-024-49863-0). This document reports the rules, not predictive validation.

@@ -317,4 +317,27 @@ test.describe('first-functional-failure cascade core', () => {
     expect(anchored.firstActivationYears.b).toBe(2026);
     expect(anchored.year).toBe(2026);
   });
+
+  test('domain crossing reuses full-system propagation but restricts only the reporting denominator', () => {
+    const nodes = [
+      node('civil-source', { domain: 'civilization', weight: 99, services: ['critical_infrastructure'] }),
+      node('tech-a', { domain: 'technology', weight: 1, services: ['critical_infrastructure'] }),
+      node('tech-b', { domain: 'technology', weight: 1, services: ['critical_infrastructure'] }),
+    ];
+    const history = {
+      nodes,
+      activationYears: { 'civil-source': 2029, 'tech-a': 2027, 'tech-b': CENSORED },
+      activationCauses: { 'civil-source': 'spontaneous', 'tech-a': 'induced' },
+      startYear: START,
+      endYear: END,
+      threshold: 0.5,
+    };
+    const technology = FunctionalCascade.firstCrossingFromActivationYears({ ...history, domain: 'technology' });
+    const fullSystem = FunctionalCascade.firstCrossingFromActivationYears(history);
+    expect(technology.year).toBe(2027);
+    expect(technology.activeThreats).toEqual(['tech-a']);
+    expect(technology.inducedMass).toBeCloseTo(0.5, 12);
+    expect(fullSystem.year).toBe(2029);
+    expect(() => FunctionalCascade.firstCrossingFromActivationYears({ ...history, domain: 'missing' })).toThrow(/No cascade nodes/);
+  });
 });

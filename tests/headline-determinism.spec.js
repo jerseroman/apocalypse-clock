@@ -11,7 +11,7 @@ const { test, expect } = require('@playwright/test');
  *   - Monte Carlo iterations: 3000
  *
  * Golden values refreshed after the explicitly authorized functional-cascade
- * model 1.2.8 / dataset 1.9.0 revision on 2026-09-12,
+ * model 1.2.9 / dataset 1.9.0 revision on 2026-09-13,
  * Chromium-via-Playwright. If you intentionally change model code, update
  * EXPECTED in a single edit and record the change in
  * ai-governance/review-log.md per change-policy.md §MODEL.
@@ -25,8 +25,8 @@ const GOLDEN_SEED = 'AC-1.2.6-2026';
 const GOLDEN_NSIM = '3000';
 
 const EXPECTED = Object.freeze({
-  pinnedAt: '2026-09-09',
-  modelVersion: 'Apocalypse Clock v1.2.8',
+  pinnedAt: '2026-09-13',
+  modelVersion: 'Apocalypse Clock v1.2.9',
   datasetVersion: '1.9.0',
   scenario: 'baseline',
   weightProfile: 'expert',
@@ -34,13 +34,22 @@ const EXPECTED = Object.freeze({
   nSim: 3000,
   cascadeP10: 2033,
   cascadeP50: 2036,
-  cascadeP90: 2043,
-  headlineYearText: '2043',
+  cascadeP90: 2042,
+  headlineYearText: '2042',
+  domains: {
+    civilization: { p10: 2037, p50: 2045, p90: 2060 },
+    biosphere: { p10: 2033, p50: 2036, p90: 2042 },
+    technology: { p10: 2030, p50: 2040, p90: 2051 },
+  },
 });
 
 test.describe('headline determinism under default baseline configuration', () => {
   test('headline values match recorded golden under Baseline + Expert + AC-1.2.6-2026 + nSim=3000', async ({ page }) => {
     test.setTimeout(90000);
+    const browserWarnings = [];
+    page.on('console', message => {
+      if (message.type() === 'warning' || message.type() === 'error') browserWarnings.push(message.text());
+    });
 
     await page.goto('/index.html');
 
@@ -86,6 +95,11 @@ test.describe('headline determinism under default baseline configuration', () =>
         cascadeP50: ens.p50,
         cascadeP90: ens.p90,
         headlineYearText: headline,
+        domains: Object.fromEntries(Object.entries(_cdfCurves.baseline.domainStats).map(([domain, stats]) => [domain, {
+          p10: stats.p10,
+          p50: stats.p50,
+          p90: stats.p90,
+        }])),
       };
     });
 
@@ -113,9 +127,16 @@ test.describe('headline determinism under default baseline configuration', () =>
       cascadeP50: EXPECTED.cascadeP50,
       cascadeP90: EXPECTED.cascadeP90,
       headlineYearText: EXPECTED.headlineYearText,
+      domains: EXPECTED.domains,
     });
     expect(await page.locator('#cascadeMedianYear').textContent()).toBe(String(EXPECTED.cascadeP50));
     expect(await page.locator('#cascadeHorizonGap').textContent()).toBe(String(EXPECTED.cascadeP90 - EXPECTED.cascadeP50));
+    expect(await page.locator('body').innerText()).not.toContain('2101');
+    expect(await page.evaluate(() => Number.isFinite(probabilityByDisplayedYear(
+      _cdfCurves.baseline.ensemble.dynamicCascade,
+      _cdfCurves.baseline.ensemble.dynamicCascade.p90,
+    )))).toBe(true);
+    expect(browserWarnings).toEqual([]);
   });
 
   // Test B — repeatability.

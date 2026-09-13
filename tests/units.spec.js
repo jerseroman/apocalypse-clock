@@ -393,6 +393,28 @@ test.describe('pure-function model contracts', () => {
     expect(r.eventMedian).toBe(r.medianFromSameCdf);
   });
 
+  test('regime first passage uses sampled growth and is monotone without an extra random clock', async ({ page }) => {
+    const r = await page.evaluate(() => {
+      const priority = 5.1;
+      const threshold = 8.5;
+      const lowGrowth = deterministicRegimeHorizon(priority, 0.01, threshold);
+      const highGrowth = deterministicRegimeHorizon(priority, 0.03, threshold);
+      const sampled = sampleRegimeHorizon(priority, 0.03, threshold, { random01: () => { throw new Error('Regime rule must not consume an uncalibrated process draw.'); } });
+      return {
+        lowGrowth,
+        highGrowth,
+        sampled,
+        direct: computeHorizon(priority, 0.03, threshold),
+        zeroGrowth: deterministicRegimeHorizon(priority, 0, threshold),
+        alreadyCritical: deterministicRegimeHorizon(threshold, 0.03, threshold),
+      };
+    });
+    expect(r.highGrowth).toBeLessThan(r.lowGrowth);
+    expect(r.sampled).toBe(r.direct);
+    expect(r.zeroGrowth).toBe(2101);
+    expect(r.alreadyCritical).toBe(2026);
+  });
+
   test('targeted follow-up: identical threshold policies have identical paths and zero contrast SE', async ({ page }) => {
     await page.waitForFunction(() => !_running && !!_cdfCurves.baseline);
     const r = await page.evaluate(async () => {
@@ -447,7 +469,9 @@ test.describe('pure-function model contracts', () => {
         let current = true;
         ensureScientificPlotly = async () => { current = false; return { react: async () => { captured.push('stale'); } }; };
         await drawDistributionDiagnosticsPlotly(result, () => current);
-        return { censored: summary.censorFraction, medianCensored: summary.medianCensored, histX: hist.traces[0].x, boxX: box.traces[0].x, histTitle: hist.layout.xaxis.title, boxTitle: box.layout.xaxis.title, noStale: captured.length === count };
+        const domain = domainMonteCarloTimeline({ domainStats: { technology: summary } }, 'technology');
+        const domainHtml = domainStatsHtml({ ...domain, source: 'Dynamic cascade MC', weightedSummary: false, avgSev: 3, avgUrg: 3, avgCas: 3 });
+        return { censored: summary.censorFraction, medianCensored: summary.medianCensored, histX: hist.traces[0].x, boxX: box.traces[0].x, histTitle: hist.layout.xaxis.title, boxTitle: box.layout.xaxis.title, noStale: captured.length === count, domain, domainHtml };
       } finally { ensureScientificPlotly = original; }
     });
     expect(r.censored).toBe(0.75);
@@ -457,6 +481,10 @@ test.describe('pure-function model contracts', () => {
     expect(r.histTitle).toContain('censored 3/4');
     expect(r.boxTitle).toContain('conditional');
     expect(r.noStale).toBe(true);
+    expect(r.domain.status).toBe('unidentified');
+    expect(r.domain.medianCensored).toBe(true);
+    expect(r.domainHtml).toContain('Not identified');
+    expect(r.domainHtml).toContain('75%');
   });
 
   test('targeted follow-up: weighting profiles remain programmatically available without UI controls', async ({ page }) => {

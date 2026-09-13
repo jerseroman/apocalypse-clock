@@ -1,10 +1,12 @@
-# Apocalypse Clock v1.2.8 — functional-cascade revision
+# Apocalypse Clock v1.2.9 — domain functional-horizon correction
 
-Version **1.2.8** uses dataset **1.9.0**, [data_v1_9_0_functional.json](./data_v1_9_0_functional.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). It is prepared locally; the websites below have **not** been updated by this task.
+Version **1.2.9** uses the unchanged dataset **1.9.0**, [data_v1_9_0_functional.json](./data_v1_9_0_functional.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). Domain cards now use the same propagated functional-loss estimand as the headline, restricted only at the reporting basket; regime processes now respond to sampled latent-pressure growth instead of a separate growth-blind geometric clock.
 
 A single initial failure can propagate into initially right-censored targets. Fixed criticality weights, essential-service baskets, one-year dependency lags and explicit overlap grouping replace the former three-domain/transmission veto. Functional failure does not require disappearance of all organisms. The headline is a **functional-disruption threshold after propagation**, not a calibrated prediction of completed global collapse. Parameter scores, growth priors and coupling coefficients remain transparent model judgments.
 
-The original dataset files remain unchanged; the complete pre-change application is preserved in `backups/pre-functional-cascade-2026-09-09`. See [research_v1_9_0/README.md](./research_v1_9_0/README.md) for the implementation report and numerical comparisons.
+The original dataset files remain unchanged. The model-1.2.9 baseline is reproducible with the fixed seed: Dynamic Cascade P10/P50/P90 is 2033/2036/2042; domain functional P50 values are civilization 2045, biosphere 2036 and technology 2040. These are conditional model quantiles, not validated dates of completed collapse. The immediate pre-change files and baseline-commit record are preserved outside the repository in `C:/Users/error/Desktop/Apocalypse Clock backups/pre-domain-functional-fix-20260913`.
+
+The dataset's `_meta.model_compatibility` value remains 1.2.8 because that is the earliest application version implementing its functional fields. Model 1.2.9 changes the calculation engine and presentation, not the dataset payload or dataset version.
 
 Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/  
 Official website: https://www.apocalypseclock.com/
@@ -55,7 +57,7 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 
 The model uses a structured JSON parameter dataset as its primary input source.
 
-Current local dataset (not publicly deployed):
+Current dataset:
 
 - [`data_v1_9_0_functional.json`](./data_v1_9_0_functional.json)
 
@@ -157,7 +159,7 @@ These metadata files support citation and archival discovery. They do not imply 
 
 If you use, cite, review, or discuss this project, please cite it as:
 
-Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.2.8.
+Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.2.9.
 https://www.apocalypseclock.com/
 
 ## Changelog

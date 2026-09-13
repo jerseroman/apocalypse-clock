@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test('static dashboard loads and core controls respond', async ({ page }) => {
-  test.setTimeout(60000);
+  test.setTimeout(90000);
   const errors = [];
   const warnings = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -18,7 +18,9 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
   await expect(page.locator('.validation-notice')).toContainText('Astra ULTRA');
   await expect(page.locator('#controlCard')).toHaveCount(0);
   await expect(page.locator('#structuralCard')).toHaveCount(0);
-  await expect(page.locator('#cascadeHeadlineYear')).toContainText(/\d{4}|>2100/, { timeout: 20000 });
+  // The canonical 3000-run initialization can exceed 20 seconds when the full
+  // suite runs two Monte Carlo-heavy browser workers in parallel.
+  await expect(page.locator('#cascadeHeadlineYear')).toContainText(/\d{4}|>2100/, { timeout: 60000 });
   await expect(page.locator('#cascadeMedianYear')).toContainText(/\d{4}|>2100/);
   await expect(page.locator('#cascadeHorizonGap')).toContainText(/\d+|—/);
   await expect(page.locator('#cascadeMedianYearWrap')).toBeVisible();

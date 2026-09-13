@@ -65,12 +65,12 @@ Live link results can be affected by third-party blocking, redirects, or service
 
 The suite currently includes:
 
-- `tests/functional-cascade.spec.js`: single-seed directed propagation, censored-target susceptibility, cycles/order independence, monotonicity, essential-service triggers, overlap grouping, initiating-event restrictions and explicit lags.
+- `tests/functional-cascade.spec.js`: single-seed directed propagation, censored-target susceptibility, cycles/order independence, monotonicity, essential-service triggers, overlap grouping, initiating-event restrictions, explicit lags and domain reconstruction from full-system activations.
 - `tests/functional-integration.spec.js`: real uploads, legacy-source fallback, all scenarios/weight profiles, standalone versus propagated first-failure statistics, and actual JSON/CSV downloads through pointer-activated, visibly opened controls.
 
 - `tests/smoke.spec.js`: loads the static dashboard, checks the title and heading, waits for the headline year, exercises the mission and share controls, verifies share-link behavior, and checks for unexpected page errors or warnings.
-- `tests/units.spec.js`: uses Playwright `page.evaluate` against the live page to pin current contracts for `quantile`, `fmtY`, and `probabilityByDisplayedYear`.
-- `tests/headline-determinism.spec.js`: pins the Dynamic Cascade headline values under Baseline scenario, Expert weight profile, default seed `AC-1.2.6-2026`, and `nSim=3000`; it also checks two consecutive same-configuration runs for bit-identical Dynamic Cascade outputs.
+- `tests/units.spec.js`: uses Playwright `page.evaluate` against the live page to pin contracts for `quantile`, `fmtY`, `probabilityByDisplayedYear`, growth-responsive regime first passage, and censored domain-card labeling.
+- `tests/headline-determinism.spec.js`: pins the Dynamic Cascade and three domain functional P10/P50/P90 values under Baseline scenario, Expert weight profile, default seed `AC-1.2.6-2026`, and `nSim=3000`; it also checks two consecutive same-configuration runs for bit-identical Dynamic Cascade outputs.
 
 The headline-determinism test protects current behavior. If an intentional MODEL change alters the golden values, the change policy requires a model-version bump, changelog entry, refreshed golden value, and review-log record.
 

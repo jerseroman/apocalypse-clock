@@ -4,7 +4,7 @@ const crypto = require('node:crypto');
 
 const root = path.resolve(__dirname, '..');
 const outputDir = path.join(root, 'dist');
-const outputFile = path.join(outputDir, 'wix-embed-v1.2.8.html');
+const outputFile = path.join(outputDir, 'wix-embed-v1.2.9.html');
 
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
 const inlineScript = relativePath => `<script>\n${read(relativePath).replace(/<\/script/gi, '<\\/script')}\n</script>`;
@@ -30,7 +30,7 @@ const unresolvedLocalAssets = html.match(/(?:src|href)=["']\.\/(?:src|vendor)\//
 if (unresolvedLocalAssets.length) {
   throw new Error(`Unresolved local assets remain: ${unresolvedLocalAssets.length}`);
 }
-if (!html.includes('Model 1.2.8 · Data 1.9.0')) {
+if (!html.includes('Model 1.2.9 · Data 1.9.0')) {
   throw new Error('Expected model and dataset identity is missing from the Wix bundle.');
 }
 if (!html.includes('id="cascadeMedianYear"') || !html.includes('id="cascadeHeadlineYear"')) {

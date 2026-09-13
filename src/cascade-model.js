@@ -71,6 +71,44 @@
       functionalLoss: Math.max(activeMass, maxServiceLoss) };
   }
 
+  /**
+   * Re-score an already propagated activation history for one reporting basket.
+   * The activation history may come from a full-system simulation, so a domain
+   * can include failures induced by nodes outside that domain. Only the loss
+   * numerator and denominator are restricted; the causal propagation is not.
+   */
+  function firstCrossingFromActivationYears(options) {
+    const { startYear, endYear, threshold, activationYears, activationCauses = {}, domain = null } = options;
+    if (![startYear, endYear].every(Number.isInteger) || startYear > endYear) throw new Error('Invalid cascade time axis.');
+    if (!Number.isFinite(threshold) || threshold <= 0 || threshold > 1) throw new Error('Invalid cascade threshold.');
+    if (!activationYears || typeof activationYears !== 'object') throw new TypeError('Activation years must be an object.');
+    const allNodes = prepare(options.nodes);
+    const nodes = domain == null ? allNodes : allNodes.filter(node => node.domain === domain);
+    if (!nodes.length) throw new Error(`No cascade nodes found for domain ${domain}.`);
+    for (const node of nodes) {
+      const year = activationYears[node.id];
+      if (year != null && !Number.isFinite(year)) throw new Error(`Invalid activation year on ${node.id}.`);
+    }
+
+    let latestMetrics = metrics(nodes, new Set(), new Set());
+    for (let year = startYear; year <= endYear; year++) {
+      const active = new Set(nodes.filter(node => (activationYears[node.id] ?? endYear + 1) <= year).map(node => node.id));
+      const induced = new Set([...active].filter(id => activationCauses[id] === 'induced'));
+      latestMetrics = metrics(nodes, active, induced);
+      if (latestMetrics.functionalLoss >= threshold) {
+        return { year, ...latestMetrics, activeThreats: [...active].sort(), domain,
+          note: domain == null
+            ? 'Functional-loss threshold reconstructed from propagated first-activation years.'
+            : `Within-domain functional-loss threshold reconstructed after full-system propagation (${domain}).` };
+      }
+    }
+    const active = new Set(nodes.filter(node => (activationYears[node.id] ?? endYear + 1) <= endYear).map(node => node.id));
+    return { year: endYear + 1, ...latestMetrics, activeThreats: [...active].sort(), domain,
+      note: domain == null
+        ? 'Functional-loss threshold was not reached within the activation-history horizon.'
+        : `Within-domain functional-loss threshold was not reached within the activation-history horizon (${domain}).` };
+  }
+
   function simulate(options) {
     const { startYear, pressureYear, endYear, threshold, collectAll = false, collectTrace = false } = options;
     if (![startYear, pressureYear, endYear].every(Number.isInteger) || startYear > endYear) throw new Error('Invalid cascade time axis.');
@@ -128,5 +166,5 @@
       firstActivationYears, activationCauses, trace,
       note: crossing ? 'Functional-loss threshold after directed propagation; not completion of global collapse.' : 'Functional-loss threshold not crossed within the simulated horizon.' };
   }
-  return Object.freeze({ clamp01, prepare, pressureRatio, exposure, metrics, simulate });
+  return Object.freeze({ clamp01, prepare, pressureRatio, exposure, metrics, firstCrossingFromActivationYears, simulate });
 });

@@ -6,8 +6,8 @@
       "name": "Jerše, Roman"
     }
   ],
-  "version": "1.2.8",
-  "publication_date": "2026-09-12",
+  "version": "1.2.9",
+  "publication_date": "2026-09-13",
   "access_right": "open",
   "description": "Apocalypse Clock is an experimental, browser-based systemic-risk dashboard for exploring interacting global threats through scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs. The project is not peer reviewed. Model outputs are scenario outputs, not predictions.",
   "keywords": [
@@ -33,5 +33,5 @@
       "resource_type": "software"
     }
   ],
-  "notes": "Version 1.2.8 introduces dataset v1.9.0 and the directed functional-cascade model, with explicit dependency lags, critical-function weights, essential-service baskets, overlap-aware aggregation, revised exports, validation checks, and expanded methodology and limitation documentation. It does not claim empirical calibration or predictive validation. Released under the custom source-available non-commercial fork license; the project is not peer reviewed and outputs remain conditional scenarios, not predictions."
+  "notes": "Version 1.2.9 makes regime first-passage timing responsive to the existing sampled latent-pressure growth and replaces domain priority-mass dates with propagated, fixed-criticality functional horizons. Dataset v1.9.0 numerical values are unchanged. The model does not claim empirical calibration or predictive validation. Released under the custom source-available non-commercial fork license; the project is not peer reviewed and outputs remain conditional scenarios, not predictions."
 }

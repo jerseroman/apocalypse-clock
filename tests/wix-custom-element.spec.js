@@ -13,7 +13,7 @@ test('Wix Velo custom element renders the audited dual-clock application without
 
   const host = page.locator('apocalypse-clock');
   await expect(host).toHaveAttribute('data-integration', 'wix-velo-custom-element');
-  await expect(host).toHaveAttribute('data-model-version', '1.2.8');
+  await expect(host).toHaveAttribute('data-model-version', '1.2.9');
   await expect(host).toHaveAttribute('data-dataset-version', '1.9.0');
   await expect(host).toHaveAttribute('data-state', 'ready');
   await expect(host.locator('iframe')).toHaveCount(0);
@@ -26,8 +26,14 @@ test('Wix Velo custom element renders the audited dual-clock application without
   await expect(host.getByText('Global Stress Index gauge', { exact: true })).toHaveCount(0);
   await expect(host.locator('#cascadeHorizonPair')).toBeVisible({ timeout: 60000 });
   await expect(host.locator('#cascadeMedianYear')).toHaveText('2036');
-  await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2043');
-  await expect(host.locator('#cascadeHorizonGap')).toHaveText('7');
+  await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2042');
+  await expect(host.locator('#cascadeHorizonGap')).toHaveText('6');
+  await expect(host.getByText('Civilizational Functional Horizon', { exact: true })).toBeVisible();
+  await expect(host.getByText('Biosphere Functional Horizon', { exact: true })).toBeVisible();
+  await expect(host.getByText('Technological Functional Horizon', { exact: true })).toBeVisible();
+  expect(await host.locator('#aggregateRow .agg-card .agg-year').allTextContents()).toEqual(['2045', '2036', '2040']);
+  await expect(host.getByText('2068', { exact: true })).toHaveCount(0);
+  await expect(host.getByText('2097', { exact: true })).toHaveCount(0);
 
   const horizontalLayout = await host.evaluate(element => {
     const body = element.shadowRoot.querySelector('.ac-body');
@@ -74,7 +80,7 @@ test('Wix Velo custom element keeps both cascade clocks inside a mobile-width ho
   const host = page.locator('apocalypse-clock');
   await expect(host).toHaveAttribute('data-state', 'ready');
   await expect(host.locator('#cascadeMedianYear')).toHaveText('2036', { timeout: 60000 });
-  await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2043');
+  await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2042');
 
   const layout = await host.evaluate(element => {
     const root = element.shadowRoot;

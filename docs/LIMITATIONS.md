@@ -1,6 +1,6 @@
 # Limitations
 
-Apocalypse Clock 1.2.8 and dataset 1.9.0 are experimental and not peer reviewed. A reproducible numerical implementation is distinct from a valid description of reality.
+Apocalypse Clock 1.2.9 and dataset 1.9.0 are experimental and not peer reviewed. A reproducible numerical implementation is distinct from a valid description of reality.
 
 ## Evidence does not calibrate the model
 
@@ -14,7 +14,7 @@ The four shared growth classes are analyst priors, not empirical fits. Historica
 
 Positive-only growth omits endogenous recovery, pressure reduction and successful adaptation. The continued-pressure assumption should not be confused with evidence that every threat is worsening. Maintaining the same g through 2100 is a scenario extrapolation, not a verified trend.
 
-Standalone continuous, event and regime horizon equations remain heuristic. Event intensity still uses the growth parameter and score/threshold ratio. Regime arrival uses a static logistic/geometric construction and does not use growth. Growth affects a regime node's generic pressure path only where induction is enabled; at fixed other inputs, autonomousw's growth does not change its first activation because that regime node is not generically inducible. Relabeling growth does not calibrate these retained arrival mechanisms.
+Standalone continuous, event and regime horizon equations remain heuristic. Event intensity uses the growth parameter and score/threshold ratio. Regime arrival now uses the same latent-pressure first-passage equation as the continuous family, so sampled growth affects its timing and no extra geometric draw is introduced. That choice removes an internally inconsistent growth-blind clock; it is still not fitted to observed regime-transition frequencies, durations or recovery.
 
 Runtime threat thresholds are clamped to [7.8,9.2], although positive-parameter sampling permits a wider interval. Bounds, clipping and the nonlinear score-to-year mapping can materially affect the result. No normalized threshold is an independently measured physical tipping point.
 
@@ -39,6 +39,8 @@ The maximum of global weighted activation and the largest essential-service acti
 Oceans and biodiversity are deduplicated through the maximum weight within ecosystem_integrity, separately in each basket. This addresses one explicit overlap, not all shared ecological mechanisms. Other threats share causes, affected people and services. The model does not turn those overlaps into independent observations or additive mortality estimates. Separate ocean/biodiversity nodes may still influence the network through distinct paths.
 
 There is no all-three-domain requirement, co-active-edge threshold, induced-share threshold or three-wave limit. Removing these administrative gates makes the functional rule consistent with its declared meaning; it does not establish that the resulting trigger forecasts real global collapse.
+
+Domain functional horizons inherit the full-system propagation path but recompute the functional trigger with a domain-specific node basket and denominator. They should not be summed, averaged as physical shares, or interpreted as independent probabilities. Because service membership and fixed tiers are analyst assignments, domain timing can be especially sensitive to one critical group and to cross-domain links.
 
 ## First passage, uncertainty and censoring
 

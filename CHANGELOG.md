@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.2.9 — 2026-09-13
+
+This MODEL correction makes the domain cards and regime timing internally consistent with the declared functional-pressure model. Dataset 1.9.0, its 184 numerical ranges, thresholds, topology, fixed criticality tiers, service memberships, edge weights and lags are unchanged.
+
+- Replaces the domain cards' former 40-percent standalone sampled-priority-mass crossing with a domain functional first crossing reconstructed from the full-system propagated activation history. Only the reporting node basket and denominator are restricted by domain; fixed criticality, overlap, essential-service and 0.50 trigger rules match the headline engine.
+- Removes the misleading comparison of domain P50 values with the system P50 because the former rule measured a different estimand.
+- Makes regime-process timing use sampled priority, growth and threshold in the same first-passage equation as continuous latent pressure. The previous growth-blind logistic/geometric waiting clock had no empirical calendar calibration and is removed.
+- Adds explicit domain-method, censoring and `>2100` semantics to the UI and JSON/CSV export. Domain denominators are separate and non-additive.
+- Advances the application model to 1.2.9 while keeping the active dataset at 1.9.0.
+
+Fixed-seed baseline comparison (`baseline`, `expert`, seed `AC-1.2.6-2026`, 3000 simulations):
+
+| Output | 1.2.8 | 1.2.9 |
+| --- | ---: | ---: |
+| Dynamic Cascade P10/P50/P90 | 2033 / 2036 / 2043 | 2033 / 2036 / 2042 |
+| Civilizational domain P50 | 2068 | 2045 |
+| Biosphere domain P50 | 2049 | 2036 |
+| Technological domain P50 | 2097 | 2040 |
+
+The new domain values are comparable model-defined functional warning horizons, not empirical probabilities or dates of completed domain collapse. The correction improves internal estimand consistency; it does not scientifically validate the coefficients, thresholds or calendar projections. A verified backup of commit `c39662e630c755706cb384663a9c9cf322b970ce` is at `C:/Users/error/Desktop/Apocalypse Clock backups/pre-domain-functional-fix-20260913`.
+
 ## v1.2.8 — 2026-09-12 (prepared locally, not deployed by this change)
 
 Version 1.2.8 advances the public release sequence from 1.2.7. It incorporates the locally developed functional-cascade revision, previously carrying the provisional local identifier 1.3.0. This release-label alignment does not change numerical parameters or rerun results. The substantive changes from 1.2.7 are:

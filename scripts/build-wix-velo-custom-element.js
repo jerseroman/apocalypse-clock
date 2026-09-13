@@ -43,7 +43,7 @@ for (const requiredText of [
   'id="cascadeMedianYear"',
   'id="cascadeHeadlineYear"',
   'id="cascadeHorizonGap"',
-  'Model 1.2.8',
+  'Model 1.2.9',
   'Data 1.9.0',
 ]) {
   if (!bodyHtml.includes(requiredText)) throw new Error(`Missing required Wix custom-element content: ${requiredText}`);
@@ -142,7 +142,7 @@ ${applicationSources}
     }
 
     async mountApplication() {
-      this.setAttribute('data-model-version', '1.2.8');
+      this.setAttribute('data-model-version', '1.2.9');
       this.setAttribute('data-dataset-version', '1.9.0');
       this.setAttribute('data-integration', 'wix-velo-custom-element');
       this.setAttribute('data-state', 'loading');
@@ -185,7 +185,7 @@ ${applicationSources}
 `;
 
 const output = [
-  '/*! Apocalypse Clock 1.2.8 / Data 1.9.0 — generated Wix Velo Custom Element. See LICENSE. */',
+  '/*! Apocalypse Clock 1.2.9 / Data 1.9.0 — generated Wix Velo Custom Element. See LICENSE. */',
   read('vendor/echarts.bundle.js'),
   read('vendor/cytoscape.bundle.js'),
   runtime,

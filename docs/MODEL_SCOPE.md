@@ -1,6 +1,6 @@
 # Model Scope
 
-Apocalypse Clock 1.2.8 with dataset 1.9.0 is an experimental browser-based model for comparing conditional systemic-risk scenarios. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
+Apocalypse Clock 1.2.9 with dataset 1.9.0 is an experimental browser-based model for comparing conditional systemic-risk scenarios. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
 
 ## Represented functions
 
@@ -36,13 +36,15 @@ The headline is conditional on dataset, scoring, prior distributions, scenario, 
 
 Four aggregation rules remain available. Their differing outputs are structural alternatives, not four independently validated forecasts. Weibull and network diagnostics do not validate the standalone calendar mappings or the cascade mechanism.
 
+The three domain cards are conditional functional horizons, not standalone priority-mass clocks. They use the full-system propagated activation history and apply the same functional scoring rule to a domain-restricted reporting basket. Their separate denominators are not additive and their dates are not directly comparable as physical percentages of civilization, the biosphere or technology.
+
 ## Evidence and scenario boundary
 
 Growth values are directly selected common-class priors for annual latent functional pressure. They are not transformed CAGRs of emissions, withdrawals, stocks, production, reported cases or technical benchmarks. Positive-only growth and fixed annual rates describe a continued-pressure scenario rather than all possible futures.
 
 Sources can support mechanisms and present conditions while leaving normalized scores, fixed tiers 1/2/3, equal incoming weights and one-year propagation lags unidentified. The standard lag has zero- and five-year sensitivity alternatives. Such comparisons test assumptions; they do not estimate real causal delays.
 
-Model 1.2.8 changes the functional estimand and propagation rules. Older importers may ignore the new metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
+Model 1.2.8 introduced the functional estimand and propagation rules. Model 1.2.9 applies sampled growth to regime first passage and makes domain horizons use the propagated functional estimand instead of a separate 40-percent priority-mass rule. Dataset values remain 1.9.0 and unchanged. Older importers may ignore the functional metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
 
 ## Use boundary
 

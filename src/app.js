@@ -3,7 +3,7 @@
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
-const MODEL_VERSION = 'Apocalypse Clock v1.2.8';
+const MODEL_VERSION = 'Apocalypse Clock v1.2.9';
 const PRIMARY_DATASET_NAME = 'data_v1_9_0_functional.json';
 const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
 const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
@@ -1526,13 +1526,13 @@ function sampleEventHorizon(priority, growthRate, threshold, rng) {
 }
 
 /**
- * Sample the first-transition year of a regime process from a geometric waiting time.
- * p = logistic((priority − threshold) × 2) converts pressure relative to threshold into an annual transition probability. (discrete-time hazard / logistic link)
+ * Regime transitions use the same sampled latent-pressure first-passage rule as
+ * continuous threats. The state change may be abrupt, but its arrival is not
+ * assigned an additional uncalibrated geometric clock. Monte Carlo variation
+ * comes from the sampled score, growth and threshold inputs.
  */
-function sampleRegimeHorizon(priority, threshold, rng) {
-  const p = clamp(logistic((priority - threshold) * 2), 1e-4, 0.999);
-  const u = clamp(rng ? rng.random01() : random01(), 1e-9, 1 - 1e-9);
-  return clamp(Math.round(NOW + Math.ceil(Math.log(1 - u) / Math.log(1 - p))), NOW, YE + 1);
+function sampleRegimeHorizon(priority, growthRate, threshold) {
+  return computeHorizon(priority, growthRate, threshold);
 }
 
 function deterministicEventHorizon(priority, growthRate, threshold) {
@@ -1549,10 +1549,8 @@ function deterministicEventHorizon(priority, growthRate, threshold) {
   return YE + 1;
 }
 
-function deterministicRegimeHorizon(priority, threshold) {
-  const p = clamp(logistic((priority - threshold) * 2), 1e-4, 0.999);
-  // Median waiting time of a geometric transition process solves (1 - p)^t = 0.5. (discrete-time hazard / geometric median)
-  return Math.min(YE + 1, NOW + Math.ceil(Math.log(0.5) / Math.log1p(-p)));
+function deterministicRegimeHorizon(priority, growthRate, threshold) {
+  return computeHorizon(priority, growthRate, threshold);
 }
 
 function computeThreatHorizon(priority, growthRate, threshold, processType, stochastic, rng) {
@@ -1561,7 +1559,7 @@ function computeThreatHorizon(priority, growthRate, threshold, processType, stoc
   threshold = clamp(threshold, THRESHOLD_MIN, THRESHOLD_MAX);
   if (priority <= 0 || !Number.isFinite(priority)) return YE + 1;
   if (processType === 'event') return stochastic ? sampleEventHorizon(priority, growthRate, threshold, rng) : deterministicEventHorizon(priority, growthRate, threshold);
-  if (processType === 'regime') return stochastic ? sampleRegimeHorizon(priority, threshold, rng) : deterministicRegimeHorizon(priority, threshold);
+  if (processType === 'regime') return stochastic ? sampleRegimeHorizon(priority, growthRate, threshold, rng) : deterministicRegimeHorizon(priority, growthRate, threshold);
   return computeHorizon(priority, growthRate, threshold);
 }
 
@@ -1838,14 +1836,33 @@ function functionalCascadeNodes(enriched, params) {
   });
 }
 
-function simulateFunctionalCascade(enriched, params, options) {
+function configuredFunctionalCascadeNodes(enriched, params) {
   params = params || P;
   const nodes = functionalCascadeNodes(enriched, params);
   if (params.functionalServiceRule === 'global_only') nodes.forEach(node => { node.services = []; });
   if (params.functionalWeightRule === 'equal') nodes.forEach(node => { node.weight = 1; });
   if (Number.isFinite(params.dependencyScale)) nodes.forEach(node => { node.vulnerability = clamp(node.vulnerability * params.dependencyScale, 0, 1); });
+  return nodes;
+}
+
+function simulateFunctionalCascade(enriched, params, options) {
+  params = params || P;
+  const nodes = configuredFunctionalCascadeNodes(enriched, params);
   return FunctionalCascade.simulate({ nodes, startYear: YS, pressureYear: NOW, endYear: YE,
     threshold: params.cascadeThreshold ?? 0.50, ...(options || {}) });
+}
+
+function computeDomainFunctionalCrossing(enriched, cascadeResult, domain, params) {
+  params = params || P;
+  return FunctionalCascade.firstCrossingFromActivationYears({
+    nodes: configuredFunctionalCascadeNodes(enriched, params),
+    activationYears: cascadeResult.firstActivationYears,
+    activationCauses: cascadeResult.activationCauses,
+    startYear: YS,
+    endYear: YE,
+    threshold: params.cascadeThreshold ?? 0.50,
+    domain,
+  }).year;
 }
 
 function activeTransmissionShare(enriched, active) {
@@ -1983,8 +2000,7 @@ function recordMonteCarloSample(acc, enriched, globalThresholdEnriched, params) 
   acc.globalThresholdCascadeCrossing.push(computeAggregateYears(globalThresholdEnriched, params).dynamicCascade);
 
   Object.keys(acc.domainCrossing).forEach(domain => {
-    const subset = enriched.filter(t => t.domain === domain);
-    acc.domainCrossing[domain].push(computeCompensatoryCrossing(subset, params.threshold));
+    acc.domainCrossing[domain].push(computeDomainFunctionalCrossing(enriched, functional, domain, params));
   });
 }
 
@@ -2039,6 +2055,7 @@ function summarizeMonteCarloAccumulator(acc, nSim, seed, thresholdPolicy = THRES
     functionalStats: summarizeThreatHorizonSamples(acc.functionalHorizonSamples),
     functionalStatsMeaning: 'First functional-threshold activation, spontaneous or induced. Not extinction, permanent failure or completion of collapse.',
     domainStats,
+    domainStatsMeaning: 'Within-domain functional-loss first crossing after full-system directed propagation, using the same fixed criticality, overlap, essential-service and cascade-threshold rules as the headline model. Domain-specific denominators mean these are not additive parts of the system horizon.',
     structuralSigma,
     ensemble: {
       compensatory: compSummary,
@@ -2140,14 +2157,14 @@ const CALC_STEPS = [
   { id:'horizon', kind:'heuristic', label:'Process-specific threat horizon model', pending:'Continuous, event, and regime horizons are not yet recomputed.' },
   { id:'gsi', kind:'exact', label:'Global Stress Index', pending:'Aggregate systemic stress has not yet been recomputed.' },
   { id:'priorityrank', kind:'exact', label:'Lead-threat priority ranking', pending:'Top-priority threat ranking is waiting for deterministic scores.' },
-  { id:'domainlayers', kind:'exact', label:'Domain layer aggregation', pending:'Civilization, biosphere, and technology layer summaries are pending.' },
+  { id:'domainlayers', kind:'exact', label:'Domain layer preparation', pending:'Civilization, biosphere, and technology reporting baskets are pending.' },
   { id:'sampling', kind:'mc', label:'Beta / log-normal parameter sampling', pending:'Parameter sampling has not started yet.' },
   { id:'montecarlo', kind:'mc', label:'Monte Carlo crossing simulation', pending:'Monte Carlo crossing simulation has not started yet.' },
   { id:'compensatory', kind:'exact', label:'Compensatory aggregation', pending:'Weighted-share threshold aggregation is pending.' },
   { id:'maxrule', kind:'exact', label:'Non-compensatory max-rule aggregation', pending:'Earliest single-threat crossing aggregation is pending.' },
   { id:'graph', kind:'heuristic', label:'Graph-weighted heuristic index', pending:'Dependency-linked heuristic index is pending.' },
   { id:'cascade', kind:'heuristic', label:'Dynamic cascade propagation', pending:'Year-by-year dependency propagation is pending.' },
-  { id:'domainmc', kind:'mc', label:'Domain crossing distributions', pending:'Domain-specific Monte Carlo crossing summaries are pending.' },
+  { id:'domainmc', kind:'mc', label:'Domain functional-cascade distributions', pending:'Domain-specific functional first-crossing summaries are pending.' },
   { id:'structural', kind:'exact', label:'Structural ensemble spread', pending:'Cross-aggregator structural spread has not yet been computed.' },
   { id:'bootstrap', kind:'mc', label:'Bootstrap interval estimation', pending:'Bootstrap uncertainty summaries are pending.' },
   { id:'weibull', kind:'heuristic', label:'Weibull survival analysis', pending:'Accelerating hazard diagnostics are pending.' },
@@ -2750,24 +2767,24 @@ const DOMAIN_LAYER_CARDS = [
     cls:'dom-civ',
     icon:'<svg width="19" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     label:'Civilizational layer',
-    title:'Civilizational Collapse Index',
-    desc:'Groups human-system risks such as war, weak institutions, debt, migration pressure and social breakdown. The large year is the middle warning point for this layer; the lower and upper values show the uncertainty range.'
+    title:'Civilizational Functional Horizon',
+    desc:'First within-domain functional-loss horizon after full-system propagation across human-system risks. It is a model trigger for disrupted function, not a date of completed civilizational collapse.'
   },
   {
     key:'biosphere',
     cls:'dom-bio',
     icon:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
     label:'Biospheric layer',
-    title:'Biosphere Degradation Index',
-    desc:'Groups nature and life-support risks such as climate, oceans, biodiversity, water, soils and pollution. It shows when environmental pressure could become severe enough to destabilize food, health and basic living conditions.'
+    title:'Biosphere Functional Horizon',
+    desc:'First within-domain functional-loss horizon after full-system propagation across climate, oceans, biodiversity, water, soils and pollution. Remaining species or biomass do not rule out functional failure.'
   },
   {
     key:'technology',
     cls:'dom-tech',
     icon:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;flex-shrink:0"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx=".5" fill="currentColor" stroke="none"/><line x1="9" y1="6" x2="9" y2="3"/><line x1="12" y1="6" x2="12" y2="3"/><line x1="15" y1="6" x2="15" y2="3"/><line x1="9" y1="18" x2="9" y2="21"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="15" y1="18" x2="15" y2="21"/><line x1="6" y1="9" x2="3" y2="9"/><line x1="6" y1="12" x2="3" y2="12"/><line x1="6" y1="15" x2="3" y2="15"/><line x1="18" y1="9" x2="21" y2="9"/><line x1="18" y1="12" x2="21" y2="12"/><line x1="18" y1="15" x2="21" y2="15"/></svg>',
     label:'Technological layer',
-    title:'Technological Instability Index',
-    desc:'Groups technology risks such as advanced AI, cyberattacks, space infrastructure, autonomous weapons and critical minerals. It shows when fast-moving technical systems could create serious disruption faster than society can adapt.'
+    title:'Technological Functional Horizon',
+    desc:'First within-domain functional-loss horizon after full-system propagation across AI, cyber, autonomous-weapons, space and critical-minerals risks. It is not a forecast of total technological collapse.'
   },
 ];
 
@@ -2822,6 +2839,12 @@ function domainMonteCarloTimeline(mcRes, domainKey) {
     mid: stats.p50,
     upper: stats.p90,
     p2050: p2050Entry && Number.isFinite(p2050Entry.prob) ? p2050Entry.prob : null,
+    censorFraction: stats.censorFraction,
+    medianCensored: stats.medianCensored,
+    lowerCensored: stats.p10 > YE,
+    upperCensored: stats.p90 > YE,
+    nearMedianCensorBoundary: !stats.medianCensored && stats.censorFraction >= 0.40,
+    status: stats.medianCensored ? 'unidentified' : 'identified',
   };
 }
 
@@ -2887,18 +2910,11 @@ function summarizeDomainLayer(items, mcRes, domainKey) {
   return {
     ...timeline,
     weightedSummary: mode === 'weibull',
-    source: mode === 'weibull' ? (timeline.status === 'unidentified' ? `Weighted Weibull; ${timeline.censoredCount} censored, ${timeline.invalidCount} invalid` : 'Weighted Weibull') : 'MC',
+    source: mode === 'weibull'
+      ? (timeline.status === 'unidentified' ? `Weighted Weibull; ${timeline.censoredCount} censored, ${timeline.invalidCount} invalid` : 'Weighted Weibull')
+      : mcRes ? 'Dynamic cascade MC' : 'Deterministic preview',
     ...weightedThreatAverages(items),
   };
-}
-
-function domainDeltaText(agg, systemP50) {
-  if (!Number.isFinite(systemP50) || !Number.isFinite(agg.mid)) return '';
-
-  const deltaYr = Math.round(agg.mid - systemP50);
-  if (agg.weightedSummary) return `${deltaYr > 0 ? '+' : ''}${deltaYr} yr weighted summary vs system p50`;
-  if (deltaYr === 0) return 'same as system p50';
-  return deltaYr > 0 ? `+${deltaYr} yr vs system p50` : `−${Math.abs(deltaYr)} yr vs system p50`;
 }
 
 function domainNoDataHtml(dom) {
@@ -2906,41 +2922,46 @@ function domainNoDataHtml(dom) {
 }
 
 function domainStatsHtml(agg) {
-  const yearsLabel = year => Number.isFinite(year) ? fmtYearsLeft(year) : 'undefined';
-  const daysLabel = year => Number.isFinite(year) ? daysLeft(year) : '';
+  const yearsLabel = year => Number.isFinite(year) ? (year > YE ? 'Not identified' : fmtYearsLeft(year)) : 'undefined';
+  const daysLabel = year => Number.isFinite(year) && year <= YE ? daysLeft(year) : '';
   const weightedQuantileTip = 'Priority-weighted average of the individual threats’ Weibull quantiles. This is a descriptive summary, not a quantile of a domain crossing distribution or mixture. Identified quantiles beyond 2100 remain in the average.';
   return `<div class="agg-stats">
-    <div class="agg-stat" data-tip="<strong>P10 lower estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'The earlier edge of this domain’s risk window. About 10% of model runs fall earlier than this point; it is not a fixed prediction.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P10' : 'To lower  P10'}</div><div class="agg-stat-val">${yearsLabel(agg.lower)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.lower}">${daysLabel(agg.lower)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P50 middle estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'The median estimate for this domain. Half of the model runs are earlier and half are later, so this is the central model horizon.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P50' : 'To mid  P50'}</div><div class="agg-stat-val">${yearsLabel(agg.mid)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.mid}">${daysLabel(agg.mid)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P90 upper estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'The later, more conservative edge of this domain’s window. About 90% of model runs fall earlier than this point; it is not a promise that things stay safe until then.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P90' : 'To high  P90'}</div><div class="agg-stat-val">${yearsLabel(agg.upper)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.upper}">${daysLabel(agg.upper)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P≤2050 (${agg.source})</strong>${agg.weightedSummary ? 'Priority-weighted average of individual threat probabilities by 2050, not the probability of a joint domain crossing. Undefined when a contributing median is right-censored or invalid.' : 'Probability from the domain Monte Carlo crossing distribution by 2050.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P≤2050' : 'P≤2050'}</div><div class="agg-stat-val">${agg.status === 'unidentified' ? 'undefined' : agg.p2050 == null ? 'Run MC' : pct(agg.p2050)}<br><span style="font-size:8px;color:var(--text-3)">(${agg.source})</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P10 lower estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Earlier quantile of the within-domain functional-loss first-crossing distribution after full-system propagation.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P10' : 'To lower P10'}</div><div class="agg-stat-val">${yearsLabel(agg.lower)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.lower}">${daysLabel(agg.lower)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P50 middle estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Median within-domain functional-loss first crossing after full-system propagation. If at least half of runs do not cross by 2100, the actual P50 is not identified.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P50' : 'To mid P50'}</div><div class="agg-stat-val">${yearsLabel(agg.mid)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.mid}">${daysLabel(agg.mid)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P90 upper estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Later quantile of the same within-domain functional-loss distribution. A value beyond 2100 is right-censored, not evidence of safety.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P90' : 'To high P90'}</div><div class="agg-stat-val">${yearsLabel(agg.upper)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.upper}">${daysLabel(agg.upper)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P≤2050 (${agg.source})</strong>${agg.weightedSummary ? 'Priority-weighted average of individual threat probabilities by 2050, not the probability of a joint domain crossing. Undefined when a contributing median is right-censored or invalid.' : 'Share of Monte Carlo runs in which the domain functional-loss trigger is reached on or before 2050.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P≤2050' : 'P≤2050'}</div><div class="agg-stat-val">${agg.weightedSummary && agg.status === 'unidentified' ? 'undefined' : agg.p2050 == null ? 'Run MC' : pct(agg.p2050)}<br><span style="font-size:8px;color:var(--text-3)">(${agg.source})</span></div></div>
+    ${agg.weightedSummary ? '' : `<div class="agg-stat" data-tip="<strong>Right-censored by 2100</strong>Share of runs that do not reach this domain functional trigger inside the model horizon. These runs are not estimated as occurring in 2101."><div class="agg-stat-label">No cross by 2100</div><div class="agg-stat-val">${pct(agg.censorFraction || 0)}<br><span style="font-size:8px;color:var(--text-3)">right-censored</span></div></div>`}
     <div class="agg-stat" data-tip="<strong>Avg severity</strong>Average damage potential for threats in this domain. 1 means limited damage; 5 means global or systemic damage."><div class="agg-stat-label">Avg severity</div><div class="agg-stat-val">${agg.avgSev.toFixed(1)}/5</div></div>
     <div class="agg-stat" data-tip="<strong>Avg urgency</strong>How soon the threats in this domain are becoming relevant. Higher means the pressure is closer and more active now."><div class="agg-stat-label">Avg urgency</div><div class="agg-stat-val">${agg.avgUrg.toFixed(1)}/5</div></div>
     <div class="agg-stat" data-tip="<strong>Avg cascade</strong>How strongly threats in this domain can amplify each other or pull other systems with them. Higher means more domino-effect potential."><div class="agg-stat-label">Avg cascade</div><div class="agg-stat-val">${agg.avgCas.toFixed(1)}/5</div></div>
   </div>`;
 }
 
-function domainLayerCardHtml(dom, enriched, mcRes, systemP50) {
+function domainLayerCardHtml(dom, enriched, mcRes) {
   const items = enriched.filter(t => t.domain === dom.key);
   const agg = summarizeDomainLayer(items, mcRes, dom.key);
   if (!agg) return domainNoDataHtml(dom);
 
-  const deltaText = domainDeltaText(agg, systemP50);
+  const medianWarning = agg.medianCensored
+    ? '<div class="source-traceability-warning"><strong>P50 not identified.</strong> At least half of runs do not reach this domain trigger by 2100.</div>'
+    : agg.nearMedianCensorBoundary
+      ? '<div class="source-traceability-warning"><strong>P50 near the censoring boundary.</strong> Interpret the displayed median as structurally unstable.</div>'
+      : '';
   return `<div class="agg-card ${dom.cls}">
     <div class="agg-bracket-group">
       <div class="agg-bracket-rail"></div>
       <span class="agg-bracket-arrow"></span>
       <div class="agg-name" style="display:flex;align-items:center">${dom.icon || ''}${dom.title}</div>
       <div class="agg-desc">${dom.desc}</div>
-      <div class="agg-year-row" data-tip="${agg.weightedSummary ? '<strong>Weighted threat P50 summary</strong>Priority-weighted average of the individual Weibull medians, not a domain crossing median. The delta is a descriptive comparison with system Dynamic cascade P50; it is not a difference between equivalent statistics.' : '<strong>Domain P50 horizon</strong>The large year is this domain\'s median crossing horizon under the current scenario. The delta compares it to the system-wide Dynamic cascade P50 reference: negative means this domain crosses earlier than the system median; positive means later.'}">
+      <div class="agg-year-row" data-tip="${agg.weightedSummary ? '<strong>Weighted threat P50 summary</strong>Priority-weighted average of individual Weibull medians, not a domain crossing median.' : '<strong>Domain functional P50</strong>The large year is the median first crossing of this domain\'s functional-loss trigger after propagation through the full threat network. It uses the same criticality, overlap, service-basket and threshold rules as Dynamic cascade, but a domain-specific denominator; it is not a completed-collapse date.'}">
         <div>
           <div class="agg-year">${Number.isFinite(agg.mid) ? fmtY(agg.mid) : 'undefined'}</div>
-          <div class="agg-year-percentile">${agg.weightedSummary ? 'Weighted threat P50' : 'Domain P50 horizon'}</div>
-          ${deltaText ? `<div style="font-family:var(--mono);font-size:9px;color:var(--text-3);letter-spacing:.04em;margin-top:3px;text-transform:none">(${deltaText})</div>` : ''}
+          <div class="agg-year-percentile">${agg.weightedSummary ? 'Weighted threat P50' : agg.medianCensored ? 'Domain P50 not identified' : 'Domain functional P50'}</div>
         </div>
       </div>
     </div>
     ${renderTimelineBar(agg.lower, agg.mid, agg.upper, agg.lower, agg.upper, true)}
+    ${medianWarning}
     ${domainStatsHtml(agg)}
   </div>`;
 }
@@ -2950,12 +2971,8 @@ function renderAggregateRow(enriched, mcRes) {
   if (!el) return;
 
   cachePriorityRenderContext(enriched, mcRes);
-  const systemP50 = mcRes && mcRes.ensemble && mcRes.ensemble.dynamicCascade
-    ? mcRes.ensemble.dynamicCascade.p50
-    : null;
-
   el.innerHTML = DOMAIN_LAYER_CARDS
-    .map(dom => domainLayerCardHtml(dom, enriched, mcRes, systemP50))
+    .map(dom => domainLayerCardHtml(dom, enriched, mcRes))
     .join('');
 }
 
@@ -5343,6 +5360,8 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
         meaning: mcRes.functionalStatsMeaning,
         standalone: freezeDeepCopy(mcRes.threatStats),
         propagated: freezeDeepCopy(mcRes.functionalStats),
+        domains: freezeDeepCopy(mcRes.domainStats),
+        domainMeaning: mcRes.domainStatsMeaning,
         deterministic: explainCascadeCrossing(enriched, runSnapshot?.parameters || P),
       },
       averageExportWarning: AVERAGE_EXPORT_WARNING,
@@ -5571,10 +5590,12 @@ function numericalCodeFingerprint() {
     compensatoryShareByYear, normalizedHorizonSignal, exploratorySensitivityTarget,
     buildCdf, summarizeCrossings, pairedQuantileContrastStandardError, graphAggregationScoreForYear, computeCompensatoryCrossing,
     computeAggregateYears, dependencyExposure,
-    cascadeVulnerability, cascadePressureRatio, functionalCascadeNodes, simulateFunctionalCascade,
+    cascadeVulnerability, cascadePressureRatio, functionalCascadeNodes, configuredFunctionalCascadeNodes,
+    simulateFunctionalCascade, computeDomainFunctionalCrossing,
     functionalCoreSimulate: FunctionalCascade.simulate, functionalCorePrepare: FunctionalCascade.prepare,
     functionalCorePressure: FunctionalCascade.pressureRatio, functionalCoreExposure: FunctionalCascade.exposure,
     functionalCoreMetrics: FunctionalCascade.metrics,
+    functionalCoreDomainCrossing: FunctionalCascade.firstCrossingFromActivationYears,
     functionalCoreClamp: FunctionalCascade.clamp01,
     activeTransmissionShare, computeDynamicCascadeCrossing, explainCascadeCrossing,
     oatCompositeResponseFromYears, pairedOatBootstrapStandardErrors, createMonteCarloAccumulator, enrichMonteCarloThreats,
@@ -5634,6 +5655,8 @@ function createExecutionSnapshot(params) {
       cascadeRule: 'max(global fixed-weight loss, essential-service fixed-weight loss) >= cascadeThreshold',
       cascadeWeightMeaning: 'Fixed criticality judgments, not probability or sampled MCDA priority.',
       cascadeTimeMeaning: 'Absorbing first functional-threshold crossing; no recovery or physical permanence claim.',
+      regimeHorizonRule: 'Sampled latent-pressure first passage; regime abruptness does not add an uncalibrated geometric waiting-time draw.',
+      domainHorizonRule: 'Within-domain functional-loss first crossing reconstructed from full-system propagated activation histories using the headline criticality, overlap, service and threshold rules.',
     },
     threatInputs: THREATS.map(t => ({
       id: t.id,
@@ -5719,7 +5742,7 @@ async function runAll() {
     setCalcStepStatus('horizon', 'queued', 'Process-specific horizon heuristics will be remapped once adjusted priorities are available.');
     setCalcStepStatus('gsi', 'queued', 'Global systemic stress will update after deterministic threat priorities are rebuilt.');
     setCalcStepStatus('priorityrank', 'queued', 'Lead threat will be ranked from scenario-conditioned priority scores.');
-    setCalcStepStatus('domainlayers', 'queued', 'Domain layer summaries will be computed from deterministic threat windows.');
+    setCalcStepStatus('domainlayers', 'queued', 'Domain reporting baskets will be prepared before propagated Monte Carlo histories are available.');
     await yieldForCalcConsole();
     const enriched = buildEnriched(scKey, params);
     setCalcStepStatus('base', 'done', `${THREATS.length} weighted MCDA base scores computed under the active scenario.`);
@@ -5748,7 +5771,7 @@ async function runAll() {
     drawHeroSpark(null);
     if (deterministicLead) setDominantDriverKpi(deterministicLead.name, 'Current priority summary');
     setCalcStepStatus('priorityrank', 'done', deterministicLead ? `Lead threat ranked as ${deterministicLead.name} with priority ${deterministicLead.priority.toFixed(2)}.` : 'No lead threat could be ranked.');
-    setCalcStepStatus('domainlayers', 'done', 'Civilizational, biospheric, and technological layer cards computed from current deterministic horizons.');
+    setCalcStepStatus('domainlayers', 'done', 'Civilizational, biospheric, and technological reporting baskets prepared; final values await propagated Monte Carlo histories.');
     let lastMcUpdate = -1;
     setCalcStepStatus('sampling', 'running', 'Sampling bounded MCDA dimensions from Beta fits and positive parameters from log-normal fits.');
     setCalcStepStatus('montecarlo', 'running', `Simulating ${nSim.toLocaleString()} stochastic futures for threshold crossing.`);
@@ -5756,7 +5779,7 @@ async function runAll() {
     setCalcStepStatus('maxrule', 'running', 'Max-rule aggregation will track the earliest single-threat crossing inside the Monte Carlo pass.');
     setCalcStepStatus('graph', 'running', 'Graph-weighted dependency heuristic index will be evaluated inside the Monte Carlo pass; it is not a probability from a validated correlation matrix.');
     setCalcStepStatus('cascade', 'running', 'Dynamic cascade propagation will run a rule-based dependency cascade year by year.');
-    setCalcStepStatus('domainmc', 'queued', 'Domain-level crossing distributions will be summarized after the Monte Carlo pass.');
+    setCalcStepStatus('domainmc', 'queued', 'Within-domain functional-loss crossings will be reconstructed from full-system propagated activation histories.');
     setCalcStepStatus('structural', 'queued', 'Cross-aggregator structural spread will be computed after all ensemble rules resolve.');
     setCalcStepStatus('bootstrap', 'queued', 'Bootstrap uncertainty summaries will be computed after the crossing distributions are collected.');
     setCalcStepStatus('weibull', 'queued', 'Weibull-shaped hazard diagnostics will run after Monte Carlo threat statistics are available.');
@@ -5788,7 +5811,7 @@ async function runAll() {
     setCalcStepStatus('maxrule', 'done', `Non-compensatory max-rule resolved with P50 ${fmtY(mcRes.ensemble.maxRule.p50)}.`);
     setCalcStepStatus('graph', 'done', `Graph-weighted heuristic index resolved with P50 ${fmtY(mcRes.ensemble.graphWeighted.p50)}; diagnostic only.`);
     setCalcStepStatus('cascade', 'done', `Rule-based dynamic cascade resolved with P50 ${fmtY(mcRes.ensemble.dynamicCascade.p50)} and P90 ${fmtY(mcRes.ensemble.dynamicCascade.p90)}.`);
-    setCalcStepStatus('domainmc', 'done', `Domain crossing summaries resolved: civilization P50 ${fmtY(mcRes.domainStats.civilization.p50)}, biosphere P50 ${fmtY(mcRes.domainStats.biosphere.p50)}, technology P50 ${fmtY(mcRes.domainStats.technology.p50)}.`);
+    setCalcStepStatus('domainmc', 'done', `Propagated domain functional crossings resolved: civilization P50 ${fmtY(mcRes.domainStats.civilization.p50)}, biosphere P50 ${fmtY(mcRes.domainStats.biosphere.p50)}, technology P50 ${fmtY(mcRes.domainStats.technology.p50)}.`);
     setCalcStepStatus('structural', 'done', `Cross-aggregator P50 range (not σ) computed at ${mcRes.structuralSigma.toFixed(1)} years across compensatory, max-rule, graph-weighted heuristic, and dynamic cascade models.`);
     setCalcStepStatus('bootstrap', 'done', `Bootstrap horizon-coded precision summary completed; central 80% interval is P10 ${fmtY(mcRes.p10)} to P90 ${fmtY(mcRes.p90)}, with P50 ${fmtY(mcRes.p50)}. Censored: ${pct(mcRes.censorFraction)}.${mcRes.medianCensored ? ' Actual median and its MC SE are not identifiable within the horizon.' : ''}`, 'Bootstrap precision concerns the horizon-coded median, not input uncertainty or unidentified post-horizon dates.');
 

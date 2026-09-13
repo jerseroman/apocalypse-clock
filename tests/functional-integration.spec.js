@@ -8,7 +8,7 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const FUNCTIONAL_FILE = 'data_v1_9_0_functional.json';
 const LEGACY_FILE = 'data_v1_8_0_evidence_revision.json';
-const EXPECTED_MODEL = 'Apocalypse Clock v1.2.8';
+const EXPECTED_MODEL = 'Apocalypse Clock v1.2.9';
 const EXPECTED_DATASET = '1.9.0';
 const RANGE_FIELDS = ['scale', 'urgency', 'acceleration', 'interdependence',
   'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
@@ -153,6 +153,9 @@ test.describe('functional model browser integration', () => {
     expect(state.snapshot.codeIdentifier).toBe(EXPECTED_MODEL);
     expect(state.snapshot.dataIdentifier).toBe(EXPECTED_DATASET);
     expect(state.functional.meaning).toEqual(expect.any(String));
+    expect(state.functional.domainMeaning).toContain('full-system directed propagation');
+    expect(Object.keys(state.functional.domains).sort()).toEqual(['biosphere', 'civilization', 'technology']);
+    Object.values(state.functional.domains).forEach(expectQuantiles);
     expectThreatSummaries(state.functional.propagated, state.functional.standalone);
   });
 
@@ -230,6 +233,7 @@ test.describe('functional model browser integration', () => {
             directYear: computeDynamicCascadeCrossing(enriched, params),
             cascade: { p10: result.ensemble.dynamicCascade.p10,
               p50: result.ensemble.dynamicCascade.p50, p90: result.ensemble.dynamicCascade.p90 },
+            domains: result.domainStats,
             standalone: result.threatStats, propagated: result.functionalStats });
         }
       }
@@ -243,6 +247,8 @@ test.describe('functional model browser integration', () => {
       expect(row.directYear, `${row.scenario}/${row.profile}`).toBe(row.simulationYear);
       expect(Number.isFinite(row.simulationYear)).toBe(true);
       expectQuantiles(row.cascade);
+      expect(Object.keys(row.domains).sort()).toEqual(['biosphere', 'civilization', 'technology']);
+      Object.values(row.domains).forEach(expectQuantiles);
       expectThreatSummaries(row.propagated, row.standalone);
     }
   });
@@ -277,6 +283,9 @@ test.describe('functional model browser integration', () => {
       expect(functionalFields(input)).toEqual(functionalFields(data[`${input.id}.threshold`]));
     }
     expect(run.functional.meaning.length).toBeGreaterThan(0);
+    expect(run.functional.domainMeaning).toContain('full-system directed propagation');
+    expect(Object.keys(run.functional.domains).sort()).toEqual(['biosphere', 'civilization', 'technology']);
+    Object.values(run.functional.domains).forEach(expectQuantiles);
     expectThreatSummaries(run.functional.propagated, run.functional.standalone);
     expect(Number.isFinite(run.functional.deterministic.year)).toBe(true);
     expectQuantiles(run.modelCascade);

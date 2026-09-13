@@ -1,6 +1,6 @@
 # Apocalypse Clock Model Invariants
 
-These rules describe model 1.2.8 with dataset 1.9.0. They protect the declared model and its interpretation, not a claim of scientific validity. Changing them requires an explicit MODEL change and review.
+These rules describe model 1.2.9 with dataset 1.9.0. They protect the declared model and its interpretation, not a claim of scientific validity. Changing them requires an explicit MODEL change and review.
 
 ## Headline and input identity
 
@@ -46,7 +46,9 @@ For each inactive eligible target, the generic induction rule is q_i(t)+kappa_i*
 
 ## Retained limitations and censoring
 
-The standalone hazard/horizon families and background depFactor remain model conventions. Excluding depFactor from q_i limits direct reuse but does not empirically separate background coupling from new propagation. Event/regime calendars, growth-to-hazard relationships and omitted hazard-specific initiation pathways must remain disclosed.
+The standalone hazard/horizon families and background depFactor remain model conventions. Continuous and regime nodes use the same growth-responsive first-passage equation; regime nodes receive no additional geometric waiting-time draw. Event nodes retain their separate cumulative-hazard convention. Excluding depFactor from q_i limits direct reuse but does not empirically separate background coupling from new propagation. Growth-to-calendar relationships and omitted hazard-specific initiation pathways must remain disclosed.
+
+Domain functional horizons must be reconstructed from full-system propagated activation years, then scored with a domain-restricted node basket using the same fixed criticality, overlap, service and threshold rules. Domain denominators are separate, non-additive reporting denominators. Do not compare a domain priority-mass clock with the system functional horizon as if they were the same estimand.
 
 No crossing by 2100 is encoded as 2101 and displayed as >2100. Censored samples must not silently be dropped from unconditional quantiles or by-year denominators, or treated as known future dates. Linear interpolation and P10/P50/P90 meanings must not be altered without review.
 
