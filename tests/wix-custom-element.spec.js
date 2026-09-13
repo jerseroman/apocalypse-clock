@@ -26,3 +26,11 @@ test('Wix Velo custom element renders the audited dual-clock application without
   await expect(host.locator('#cascadeHorizonGap')).toHaveText('7');
   expect(errors).toEqual([]);
 });
+
+test('Wix Velo document facade does not wrap the live document as its Proxy target', async ({ request }) => {
+  const response = await request.get('/wix/apocalypse-clock-element.js');
+  expect(response.ok()).toBeTruthy();
+  const source = await response.text();
+  expect(source).toContain('new Proxy(Object.create(null), {');
+  expect(source).not.toContain('new Proxy(nativeDocument, {');
+});

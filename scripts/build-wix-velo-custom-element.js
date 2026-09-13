@@ -94,8 +94,12 @@ const runtime = `
   function createScopedDocument(shadowRoot, host, body) {
     const nativeDocument = window.document;
     const domContentLoadedListeners = new WeakSet();
-    return new Proxy(nativeDocument, {
-      get(target, property) {
+    // Wix wraps the live document in a security proxy whose createElement
+    // property is read-only and non-configurable. Wrapping that proxy directly
+    // would violate the JavaScript Proxy invariants when we return bound DOM
+    // methods. Use an empty facade target and delegate reads to Wix's document.
+    return new Proxy(Object.create(null), {
+      get(_target, property) {
         if (property === 'getElementById') return id => shadowRoot.getElementById(id);
         if (property === 'querySelector') return selector => {
           const local = shadowRoot.querySelector(selector);
@@ -117,8 +121,8 @@ const runtime = `
         if (property === 'documentElement') return host;
         if (property === 'head') return nativeDocument.head;
         if (property === 'readyState') return 'complete';
-        const value = Reflect.get(target, property, target);
-        return typeof value === 'function' ? value.bind(target) : value;
+        const value = Reflect.get(nativeDocument, property, nativeDocument);
+        return typeof value === 'function' ? value.bind(nativeDocument) : value;
       },
     });
   }
