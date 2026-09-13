@@ -737,13 +737,14 @@
 
   <div class="content-col">
     <div class="panel cdf-card">
-      <div class="card-title">Cumulative threshold probability P(threshold crossing ≤ T)</div>
+      <div class="card-title">Dynamic Cascade first-crossing distribution</div>
       <p class="cdf-sub">
-        CDF from Monte Carlo runs with scenario risk-growth proxies and a bootstrap envelope around the median estimate. These are model-generated
-        scenario intervals, not empirical probabilities of collapse or extinction.
+        This curve shows the share of model runs in which the Dynamic Cascade functional-disruption threshold has been reached by each year. It uses
+        the same simulated first-crossing distribution as the P50 and P90 clocks above. The shaded band shows resampling uncertainty in this simulated
+        curve, not uncertainty about the real world; these are scenario results, not measured probabilities of collapse or extinction.
       </p>
       <div id="cdfTip"></div>
-      <div id="cdfCanvas" role="img" style="height:280px" aria-label="Cumulative threshold probability chart"></div>
+      <div id="cdfCanvas" role="img" style="height:280px" aria-label="Dynamic Cascade cumulative first-crossing distribution chart"></div>
       <div class="cdf-legend" id="cdfLegend"></div>
     </div>
 

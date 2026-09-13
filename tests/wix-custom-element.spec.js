@@ -28,9 +28,11 @@ test('Wix Velo custom element renders the audited dual-clock application without
   await expect(host.locator('#cascadeMedianYear')).toHaveText('2036');
   await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2042');
   await expect(host.locator('#cascadeHorizonGap')).toHaveText('6');
-  await expect(host.getByText('Civilizational Functional Horizon', { exact: true })).toBeVisible();
-  await expect(host.getByText('Biosphere Functional Horizon', { exact: true })).toBeVisible();
-  await expect(host.getByText('Technological Functional Horizon', { exact: true })).toBeVisible();
+  await expect(host.getByText('Civilizational Functional-Disruption Horizon', { exact: true })).toBeVisible();
+  await expect(host.getByText('Biosphere Functional-Disruption Horizon', { exact: true })).toBeVisible();
+  await expect(host.getByText('Technological Functional-Disruption Horizon', { exact: true })).toBeVisible();
+  await expect(host.getByText('Dynamic Cascade first-crossing distribution', { exact: true })).toBeVisible();
+  await expect(host.locator('#cdfLegend')).toContainText('Baseline Dynamic Cascade P50: 2036');
   expect(await host.locator('#aggregateRow .agg-card .agg-year').allTextContents()).toEqual(['2045', '2036', '2040']);
   await expect(host.getByText('2068', { exact: true })).toHaveCount(0);
   await expect(host.getByText('2097', { exact: true })).toHaveCount(0);
@@ -49,6 +51,9 @@ test('Wix Velo custom element renders the audited dual-clock application without
       bodyOverflowX: getComputedStyle(body).overflowX,
       pageWidth: page.getBoundingClientRect().width,
       hostBackground: getComputedStyle(element).backgroundColor,
+      hostBoxShadow: getComputedStyle(element).boxShadow,
+      hostClipPath: getComputedStyle(element).clipPath,
+      hostOverflow: getComputedStyle(element).overflow,
       p50ClockWidth: p50Clock.getBoundingClientRect().width,
       p50FontSize: Number.parseFloat(getComputedStyle(element.shadowRoot.querySelector('#cascadeMedianYear').parentElement).fontSize),
       pairRight: pairBox.right,
@@ -59,6 +64,10 @@ test('Wix Velo custom element renders the audited dual-clock application without
   expect(horizontalLayout.hostClientWidth).toBe(1165);
   expect(horizontalLayout.bodyOverflowX).toBe('hidden');
   expect(horizontalLayout.hostBackground).toBe('rgb(20, 24, 30)');
+  expect(horizontalLayout.hostBoxShadow).toContain('rgb(20, 24, 30)');
+  expect(horizontalLayout.hostBoxShadow).toContain('1264px');
+  expect(horizontalLayout.hostClipPath).toContain('-1264px');
+  expect(horizontalLayout.hostOverflow).toBe('visible');
   expect(horizontalLayout.pageWidth).toBeLessThanOrEqual(horizontalLayout.hostClientWidth);
   expect(horizontalLayout.p50ClockWidth).toBeGreaterThanOrEqual(195);
   expect(horizontalLayout.p50FontSize).toBeGreaterThanOrEqual(48);

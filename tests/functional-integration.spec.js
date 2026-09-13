@@ -159,6 +159,64 @@ test.describe('functional model browser integration', () => {
     expectThreatSummaries(state.functional.propagated, state.functional.standalone);
   });
 
+  test('main CDF follows the Dynamic Cascade clocks and Weibull reports censoring bounds without undefined values', async ({ page }) => {
+    await expect(page.getByText('Dynamic Cascade first-crossing distribution', { exact: true })).toBeVisible();
+    const cdf = await page.evaluate(() => {
+      const result = _cdfCurves.baseline;
+      const dynamic = result.ensemble.dynamicCascade;
+      drawCDF();
+      const option = ensureEChart('cdfCanvas').getOption();
+      const mainSeries = option.series.find(series => String(series.name).includes('Dynamic Cascade'));
+      return {
+        legend: document.getElementById('cdfLegend').textContent.replace(/\s+/g, ' ').trim(),
+        expectedQuantiles: [dynamic.p10, dynamic.p50, dynamic.p90],
+        displayedMarkers: mainSeries.markLine.data
+          .filter(marker => marker.name !== 'NOW')
+          .map(marker => marker.xAxis),
+        displayedP2050: mainSeries.data.find(point => point[0] === 2050)[1] / 100,
+        expectedP2050: dynamic.cdf.find(point => point.year === 2050).prob,
+        compensatoryP2050: result.cdf.find(point => point.year === 2050).prob,
+      };
+    });
+    expect(cdf.legend).toContain('Baseline Dynamic Cascade P50: 2036');
+    expect(cdf.displayedMarkers).toEqual(cdf.expectedQuantiles);
+    expect(cdf.displayedP2050).toBeCloseTo(cdf.expectedP2050, 4);
+    expect(cdf.displayedP2050).not.toBeCloseTo(cdf.compensatoryP2050, 2);
+
+    await page.locator('[data-priority-mode-btn="weibull"]').click();
+    const weibull = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('#aggregateRow .agg-card')];
+      const summaries = DOMAIN_LAYER_CARDS.map(domain => summarizeDomainLayer(
+        priorityViewState.enriched.filter(threat => threat.domain === domain.key),
+        priorityViewState.mcRes,
+        domain.key,
+      ));
+      return {
+        titles: cards.map(card => card.querySelector('.agg-name').textContent.trim()),
+        years: cards.map(card => card.querySelector('.agg-year').textContent.trim()),
+        text: cards.map(card => card.textContent.replace(/\s+/g, ' ').trim()).join(' '),
+        summaries,
+      };
+    });
+    expect(weibull.titles).toEqual([
+      'Civilizational Functional-Disruption Horizon',
+      'Biosphere Functional-Disruption Horizon',
+      'Technological Functional-Disruption Horizon',
+    ]);
+    expect(weibull.years.every(year => /^>\d{4}$/.test(year))).toBe(true);
+    expect(weibull.text).toContain('right-censored after 2100');
+    expect(weibull.text).toContain('range');
+    expect(weibull.text).not.toMatch(/\bundefined\b|NaN/);
+    for (const summary of weibull.summaries) {
+      expect(summary.status).toBe('partially_identified');
+      expect(summary.mid).toBeNull();
+      expect(summary.midLowerBound).toEqual(expect.any(Number));
+      expect(summary.p2050Lower).toBeGreaterThanOrEqual(0);
+      expect(summary.p2050Upper).toBeLessThanOrEqual(1);
+      expect(summary.p2050Lower).toBeLessThanOrEqual(summary.p2050Upper);
+    }
+  });
+
   test('the file importer preserves all 184 ranges and threshold functional metadata', async ({ page }) => {
     const data = await uploadDataset(page, FUNCTIONAL_FILE);
     const state = await page.evaluate(() => ({

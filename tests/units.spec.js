@@ -259,15 +259,20 @@ test.describe('pure-function model contracts', () => {
         absentStats: weibullParamsForThreat(items[1], null).status,
         probability: weibullProbability(items[1], 2050, { p50: NaN }),
         pKnown: weibullProbability(items[0], 2035, stats[items[0].id]),
+        pKnown2050: weibullProbability(items[0], 2050, stats[items[0].id]),
         html, invalidHtml,
         timelineHtml: renderTimelineBar(null, null, null, null, null),
       };
     });
     expect(r.timeline.status).toBe('right_censored');
     expect([r.timeline.lower, r.timeline.mid, r.timeline.upper, r.timeline.p2050]).toEqual([null, null, null, null]);
+    expect([r.timeline.p2050Lower, r.timeline.p2050Upper]).toEqual([0, 0.5]);
     expect(r.timeline.medianLowerBound).toBe(2100);
-    expect(r.domain.status).toBe('unidentified');
+    expect(r.domain.status).toBe('partially_identified');
     expect([r.domain.lower, r.domain.mid, r.domain.upper]).toEqual([null, null, null]);
+    expect(r.domain.midLowerBound).toBeCloseTo(2065, 10);
+    expect(r.domain.p2050Lower).toBeCloseTo(r.pKnown2050 / 2, 12);
+    expect(r.domain.p2050Upper).toBeCloseTo((r.pKnown2050 + 0.5) / 2, 12);
     expect(r.zeroDomain.status).toBe('identified');
     expect(r.zeroDomain.mid).toBeCloseTo(2030, 10);
     expect(r.ref.censoredCount).toBe(1);
@@ -280,8 +285,9 @@ test.describe('pure-function model contracts', () => {
     expect(r.invalid.invalidCount).toBe(1);
     expect([r.invalid.expectedLower, r.invalid.expectedUpper, r.invalid.lowerPmf]).toEqual([null, null, null]);
     expect(r.invalidJointSafe).toBe(true);
-    expect(r.html).toContain('undefined');
-    expect(r.html).not.toMatch(/NaN|≥2100|<2025/);
+    expect(r.html).toContain('Not identified');
+    expect(r.html).toContain('range');
+    expect(r.html).not.toMatch(/\bundefined\b|NaN|≥2100|<2025/);
     expect(r.invalidHtml).toContain('n/a');
     expect(r.invalidHtml).not.toContain('NaN');
     expect(r.timelineHtml).toContain('Horizon not identifiable');

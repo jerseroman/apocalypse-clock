@@ -2767,7 +2767,7 @@ const DOMAIN_LAYER_CARDS = [
     cls:'dom-civ',
     icon:'<svg width="19" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     label:'Civilizational layer',
-    title:'Civilizational Functional Horizon',
+    title:'Civilizational Functional-Disruption Horizon',
     desc:'First within-domain functional-loss horizon after full-system propagation across human-system risks. It is a model trigger for disrupted function, not a date of completed civilizational collapse.'
   },
   {
@@ -2775,7 +2775,7 @@ const DOMAIN_LAYER_CARDS = [
     cls:'dom-bio',
     icon:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
     label:'Biospheric layer',
-    title:'Biosphere Functional Horizon',
+    title:'Biosphere Functional-Disruption Horizon',
     desc:'First within-domain functional-loss horizon after full-system propagation across climate, oceans, biodiversity, water, soils and pollution. Remaining species or biomass do not rule out functional failure.'
   },
   {
@@ -2783,7 +2783,7 @@ const DOMAIN_LAYER_CARDS = [
     cls:'dom-tech',
     icon:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;flex-shrink:0"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx=".5" fill="currentColor" stroke="none"/><line x1="9" y1="6" x2="9" y2="3"/><line x1="12" y1="6" x2="12" y2="3"/><line x1="15" y1="6" x2="15" y2="3"/><line x1="9" y1="18" x2="9" y2="21"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="15" y1="18" x2="15" y2="21"/><line x1="6" y1="9" x2="3" y2="9"/><line x1="6" y1="12" x2="3" y2="12"/><line x1="6" y1="15" x2="3" y2="15"/><line x1="18" y1="9" x2="21" y2="9"/><line x1="18" y1="12" x2="21" y2="12"/><line x1="18" y1="15" x2="21" y2="15"/></svg>',
     label:'Technological layer',
-    title:'Technological Functional Horizon',
+    title:'Technological Functional-Disruption Horizon',
     desc:'First within-domain functional-loss horizon after full-system propagation across AI, cyber, autonomous-weapons, space and critical-minerals risks. It is not a forecast of total technological collapse.'
   },
 ];
@@ -2854,24 +2854,35 @@ function threatTimelineForMode(t, mcRes, mode, options = {}) {
   if (mode === 'weibull') {
     const canShowProbability = !options.requireMcForWeibullProbability || mcRes;
     const params = weibullParamsForThreat(t, stats);
+    const probabilityBounds = canShowProbability
+      ? weibullProbabilityBounds(t, 2050, stats)
+      : { lower: null, upper: null };
+    const probabilityIdentified = Number.isFinite(probabilityBounds.lower)
+      && Number.isFinite(probabilityBounds.upper)
+      && Math.abs(probabilityBounds.upper - probabilityBounds.lower) < 1e-12;
     return {
       lower: weibullQuantile(t, 0.10, stats),
       mid: weibullQuantile(t, 0.50, stats),
       upper: weibullQuantile(t, 0.90, stats),
-      p2050: canShowProbability ? weibullProbability(t, 2050, stats) : null,
+      p2050: probabilityIdentified ? probabilityBounds.lower : null,
+      p2050Lower: probabilityBounds.lower,
+      p2050Upper: probabilityBounds.upper,
       censored: params.censored,
       status: params.status,
       medianLowerBound: params.censored ? YE : null,
     };
   }
 
+  const p2050 = stats && Number.isFinite(stats.p2050)
+    ? stats.p2050
+    : options.fallbackToWeibullProbability && mcRes ? weibullProbability(t, 2050, stats) : null;
   return {
     lower: stats ? stats.p10 : t.horizon,
     mid: stats ? stats.p50 : t.horizon,
     upper: stats ? stats.p90 : t.horizon,
-    p2050: stats && Number.isFinite(stats.p2050)
-      ? stats.p2050
-      : options.fallbackToWeibullProbability && mcRes ? weibullProbability(t, 2050, stats) : null,
+    p2050,
+    p2050Lower: p2050,
+    p2050Upper: p2050,
   };
 }
 
@@ -2880,18 +2891,45 @@ function weightedDomainTimeline(items, mcRes, mode) {
   if (mode === 'weibull') items = items.filter(t => Number.isFinite(t.priority) && t.priority > 0);
   const timelineFor = t => threatTimelineForMode(t, mcRes, mode);
   const timelines = items.map(timelineFor);
+  const timelineById = new Map(items.map((t, index) => [t.id, timelines[index]]));
   const censoredCount = timelines.filter(timeline => timeline.censored).length;
   const invalidCount = timelines.filter(timeline => timeline.status === 'invalid').length;
+  const p2050Lower = invalidCount ? null : weightedFiniteAverage(items, t => timelineById.get(t.id).p2050Lower, { fallback: null });
+  const p2050Upper = invalidCount ? null : weightedFiniteAverage(items, t => timelineById.get(t.id).p2050Upper, { fallback: null });
   if (mode === 'weibull' && (!items.length || censoredCount || invalidCount)) {
-    // A member's censored median does not put the weighted domain quantiles beyond YE.
-    return { lower: null, mid: null, upper: null, p2050: null, censored: false, censoredCount, invalidCount, status: 'unidentified' };
+    // Censoring does not identify an exact weighted quantile. Keep every positive-weight
+    // member and expose only defensible lower/probability bounds instead of inventing a date.
+    const midLowerBound = invalidCount ? null : weightedFiniteAverage(items, t => {
+      const timeline = timelineById.get(t.id);
+      return timeline.censored ? YE : timeline.mid;
+    }, { fallback: null });
+    const upperLowerBound = invalidCount ? null : weightedFiniteAverage(items, t => {
+      const timeline = timelineById.get(t.id);
+      return timeline.censored ? YE : timeline.upper;
+    }, { fallback: null });
+    return {
+      lower: null,
+      mid: null,
+      upper: null,
+      midLowerBound,
+      upperLowerBound,
+      p2050: null,
+      p2050Lower,
+      p2050Upper,
+      censored: false,
+      censoredCount,
+      invalidCount,
+      status: invalidCount ? 'invalid' : 'partially_identified',
+    };
   }
   const quantileLimit = mode === 'weibull' ? Infinity : YE;
   return {
     lower: weightedFiniteAverage(items, t => timelineFor(t).lower, { maxValue: quantileLimit, fallback: YE + 1 }),
     mid: weightedFiniteAverage(items, t => timelineFor(t).mid, { maxValue: quantileLimit, fallback: YE + 1 }),
     upper: weightedFiniteAverage(items, t => timelineFor(t).upper, { maxValue: quantileLimit, fallback: YE + 1 }),
-    p2050: weightedFiniteAverage(items, t => timelineFor(t).p2050, { fallback: null }),
+    p2050: weightedFiniteAverage(items, t => timelineById.get(t.id).p2050, { fallback: null }),
+    p2050Lower,
+    p2050Upper,
     censored: false,
     censoredCount: 0,
     invalidCount: 0,
@@ -2911,7 +2949,11 @@ function summarizeDomainLayer(items, mcRes, domainKey) {
     ...timeline,
     weightedSummary: mode === 'weibull',
     source: mode === 'weibull'
-      ? (timeline.status === 'unidentified' ? `Weighted Weibull; ${timeline.censoredCount} censored, ${timeline.invalidCount} invalid` : 'Weighted Weibull')
+      ? (timeline.status === 'partially_identified'
+          ? `Weighted Weibull bounds; ${timeline.censoredCount} right-censored`
+          : timeline.status === 'invalid'
+            ? `Weighted Weibull unavailable; ${timeline.invalidCount} invalid`
+            : 'Weighted Weibull')
       : mcRes ? 'Dynamic cascade MC' : 'Deterministic preview',
     ...weightedThreatAverages(items),
   };
@@ -2922,14 +2964,19 @@ function domainNoDataHtml(dom) {
 }
 
 function domainStatsHtml(agg) {
-  const yearsLabel = year => Number.isFinite(year) ? (year > YE ? 'Not identified' : fmtYearsLeft(year)) : 'undefined';
+  const yearsLabel = (year, lowerBound = null) => Number.isFinite(year)
+    ? (year > YE ? 'Not identified' : fmtYearsLeft(year))
+    : Number.isFinite(lowerBound)
+      ? `>${Math.max(0, Math.floor(lowerBound - NOW))} yr`
+      : 'Not identified';
   const daysLabel = year => Number.isFinite(year) && year <= YE ? daysLeft(year) : '';
-  const weightedQuantileTip = 'Priority-weighted average of the individual threats’ Weibull quantiles. This is a descriptive summary, not a quantile of a domain crossing distribution or mixture. Identified quantiles beyond 2100 remain in the average.';
+  const weightedQuantileTip = 'Priority-weighted summary of individual threat Weibull diagnostics, not a domain-cascade probability. If one input is right-censored, the card keeps it and reports only a defensible bound.';
+  const probabilityLabel = probabilityRangeLabel(agg.p2050, agg.p2050Lower, agg.p2050Upper, 'Not available');
   return `<div class="agg-stats">
     <div class="agg-stat" data-tip="<strong>P10 lower estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Earlier quantile of the within-domain functional-loss first-crossing distribution after full-system propagation.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P10' : 'To lower P10'}</div><div class="agg-stat-val">${yearsLabel(agg.lower)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.lower}">${daysLabel(agg.lower)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P50 middle estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Median within-domain functional-loss first crossing after full-system propagation. If at least half of runs do not cross by 2100, the actual P50 is not identified.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P50' : 'To mid P50'}</div><div class="agg-stat-val">${yearsLabel(agg.mid)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.mid}">${daysLabel(agg.mid)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P90 upper estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Later quantile of the same within-domain functional-loss distribution. A value beyond 2100 is right-censored, not evidence of safety.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P90' : 'To high P90'}</div><div class="agg-stat-val">${yearsLabel(agg.upper)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.upper}">${daysLabel(agg.upper)}</span></div></div>
-    <div class="agg-stat" data-tip="<strong>P≤2050 (${agg.source})</strong>${agg.weightedSummary ? 'Priority-weighted average of individual threat probabilities by 2050, not the probability of a joint domain crossing. Undefined when a contributing median is right-censored or invalid.' : 'Share of Monte Carlo runs in which the domain functional-loss trigger is reached on or before 2050.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P≤2050' : 'P≤2050'}</div><div class="agg-stat-val">${agg.weightedSummary && agg.status === 'unidentified' ? 'undefined' : agg.p2050 == null ? 'Run MC' : pct(agg.p2050)}<br><span style="font-size:8px;color:var(--text-3)">(${agg.source})</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P50 middle estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Median within-domain functional-loss first crossing after full-system propagation. If at least half of runs do not cross by 2100, the actual P50 is not identified.'}"><div class="agg-stat-label">${agg.weightedSummary && Number.isFinite(agg.midLowerBound) ? 'Weighted P50 bound' : agg.weightedSummary ? 'Weighted P50' : 'To mid P50'}</div><div class="agg-stat-val">${yearsLabel(agg.mid, agg.midLowerBound)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.mid}">${daysLabel(agg.mid)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P90 upper estimate</strong>${agg.weightedSummary ? weightedQuantileTip : 'Later quantile of the same within-domain functional-loss distribution. A value beyond 2100 is right-censored, not evidence of safety.'}"><div class="agg-stat-label">${agg.weightedSummary && Number.isFinite(agg.upperLowerBound) ? 'Weighted P90 bound' : agg.weightedSummary ? 'Weighted P90' : 'To high P90'}</div><div class="agg-stat-val">${yearsLabel(agg.upper, agg.upperLowerBound)}<br><span style="font-size:8px;color:var(--text-3)" data-year="${agg.upper}">${daysLabel(agg.upper)}</span></div></div>
+    <div class="agg-stat" data-tip="<strong>P≤2050 (${agg.source})</strong>${agg.weightedSummary ? 'Priority-weighted range for individual threat probabilities by 2050, not the probability of a joint domain crossing. Right-censored threats remain in the range.' : 'Share of Monte Carlo runs in which the domain functional-loss trigger is reached on or before 2050.'}"><div class="agg-stat-label">${agg.weightedSummary ? 'Weighted P≤2050' : 'P≤2050'}</div><div class="agg-stat-val">${probabilityLabel}<br><span style="font-size:8px;color:var(--text-3)">(${agg.source})</span></div></div>
     ${agg.weightedSummary ? '' : `<div class="agg-stat" data-tip="<strong>Right-censored by 2100</strong>Share of runs that do not reach this domain functional trigger inside the model horizon. These runs are not estimated as occurring in 2101."><div class="agg-stat-label">No cross by 2100</div><div class="agg-stat-val">${pct(agg.censorFraction || 0)}<br><span style="font-size:8px;color:var(--text-3)">right-censored</span></div></div>`}
     <div class="agg-stat" data-tip="<strong>Avg severity</strong>Average damage potential for threats in this domain. 1 means limited damage; 5 means global or systemic damage."><div class="agg-stat-label">Avg severity</div><div class="agg-stat-val">${agg.avgSev.toFixed(1)}/5</div></div>
     <div class="agg-stat" data-tip="<strong>Avg urgency</strong>How soon the threats in this domain are becoming relevant. Higher means the pressure is closer and more active now."><div class="agg-stat-label">Avg urgency</div><div class="agg-stat-val">${agg.avgUrg.toFixed(1)}/5</div></div>
@@ -2941,8 +2988,15 @@ function domainLayerCardHtml(dom, enriched, mcRes) {
   const items = enriched.filter(t => t.domain === dom.key);
   const agg = summarizeDomainLayer(items, mcRes, dom.key);
   if (!agg) return domainNoDataHtml(dom);
+  const cardDescription = agg.weightedSummary
+    ? 'Weibull comparison view: a priority-weighted summary of individual threat timing diagnostics. It is not the domain functional-cascade horizon shown in MC mode.'
+    : dom.desc;
 
-  const medianWarning = agg.medianCensored
+  const medianWarning = agg.weightedSummary && agg.status === 'partially_identified'
+    ? `<div class="source-traceability-warning"><strong>Weibull year only partly identified.</strong> ${agg.censoredCount} positive-weight input${agg.censoredCount === 1 ? ' is' : 's are'} right-censored after 2100. The card keeps ${agg.censoredCount === 1 ? 'it' : 'them'}, shows a lower bound for the weighted P50, and reports a P≤2050 range.</div>`
+    : agg.weightedSummary && agg.status === 'invalid'
+      ? '<div class="source-traceability-warning"><strong>Weibull result unavailable.</strong> At least one input is invalid; no numerical value is substituted.</div>'
+      : agg.medianCensored
     ? '<div class="source-traceability-warning"><strong>P50 not identified.</strong> At least half of runs do not reach this domain trigger by 2100.</div>'
     : agg.nearMedianCensorBoundary
       ? '<div class="source-traceability-warning"><strong>P50 near the censoring boundary.</strong> Interpret the displayed median as structurally unstable.</div>'
@@ -2952,11 +3006,11 @@ function domainLayerCardHtml(dom, enriched, mcRes) {
       <div class="agg-bracket-rail"></div>
       <span class="agg-bracket-arrow"></span>
       <div class="agg-name" style="display:flex;align-items:center">${dom.icon || ''}${dom.title}</div>
-      <div class="agg-desc">${dom.desc}</div>
+      <div class="agg-desc">${cardDescription}</div>
       <div class="agg-year-row" data-tip="${agg.weightedSummary ? '<strong>Weighted threat P50 summary</strong>Priority-weighted average of individual Weibull medians, not a domain crossing median.' : '<strong>Domain functional P50</strong>The large year is the median first crossing of this domain\'s functional-loss trigger after propagation through the full threat network. It uses the same criticality, overlap, service-basket and threshold rules as Dynamic cascade, but a domain-specific denominator; it is not a completed-collapse date.'}">
         <div>
-          <div class="agg-year">${Number.isFinite(agg.mid) ? fmtY(agg.mid) : 'undefined'}</div>
-          <div class="agg-year-percentile">${agg.weightedSummary ? 'Weighted threat P50' : agg.medianCensored ? 'Domain P50 not identified' : 'Domain functional P50'}</div>
+          <div class="agg-year">${Number.isFinite(agg.mid) ? fmtY(agg.mid) : Number.isFinite(agg.midLowerBound) ? `>${Math.floor(agg.midLowerBound)}` : 'Not identified'}</div>
+          <div class="agg-year-percentile">${agg.weightedSummary && Number.isFinite(agg.midLowerBound) ? 'Weighted threat P50 lower bound' : agg.weightedSummary ? 'Weighted threat P50 not identified' : agg.medianCensored ? 'Domain P50 not identified' : 'Domain functional P50'}</div>
         </div>
       </div>
     </div>
@@ -3910,8 +3964,8 @@ function climateJsonExposureHtml(t) {
 }
 
 function formatYear(y) {
-  if (!Number.isFinite(y)) return 'undefined';
-  if (y > YE) return '≥2100';
+  if (!Number.isFinite(y)) return 'Not identified';
+  if (y > YE) return '>2100';
   return String(Math.round(y));
 }
 
@@ -3925,7 +3979,7 @@ function climateMethodNotesHtml(t, low, mid, high, p2050) {
       ? `<li>The displayed lower / central / upper horizon is computed from the Weibull diagnostic layer calibrated to the current model horizon after MCDA scoring and dependency amplification.</li>`
       : `<li>The displayed lower / central / upper horizon is computed from the current model run after MCDA scoring, dependency amplification, and Monte Carlo sampling.</li>`,
     `<li>The current model interval for this threat is <strong>${escapeHtml(formatYear(low))}–${escapeHtml(formatYear(high))}</strong>, with central horizon <strong>${escapeHtml(formatYear(mid))}</strong>.</li>`,
-    `<li>P/2050 is read from the current <strong>${escapeHtml(sourceLabel)}</strong> view: <strong>${p2050 == null ? (useWeibull && !Number.isFinite(mid) ? 'undefined (median not identifiable)' : 'Run Monte Carlo') : escapeHtml(pct(p2050))}</strong>. It is Model implied, not an empirical measured probability of collapse.</li>`
+    `<li>P/2050 is read from the current <strong>${escapeHtml(sourceLabel)}</strong> view: <strong>${p2050 == null ? (useWeibull && !Number.isFinite(mid) ? 'Not identified from a right-censored median' : 'Run Monte Carlo') : escapeHtml(pct(p2050))}</strong>. It is model-implied, not an empirical measured probability of collapse.</li>`
   ];
   return `<ul class="detail-list">${lines.join('')}</ul>`;
 }
@@ -4064,7 +4118,15 @@ function threatSourcePanelHtml(t) {
   return links.map(x => `<div style="margin-bottom:6px"><strong>${escapeHtml(x.fields.join(', '))}:</strong> <a href="${escapeHtml(x.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(x.source)}</a>${x.strength ? `  ${escapeHtml(String(x.strength))}` : ''}</div>`).join('');
 }
 
-function threatMethodNotesHtml(t, low, mid, high, p2050) {
+function probabilityRangeLabel(point, lower, upper, fallback = 'Not identified') {
+  if (Number.isFinite(point)) return pct(point);
+  if (!Number.isFinite(lower) || !Number.isFinite(upper)) return fallback;
+  const lowerLabel = pct(lower);
+  const upperLabel = pct(upper);
+  return lowerLabel === upperLabel ? lowerLabel : `${lowerLabel}–${upperLabel} range`;
+}
+
+function threatMethodNotesHtml(t, low, mid, high, p2050, p2050Lower = null, p2050Upper = null) {
   const processType = t.process_type ? String(t.process_type) : 'unspecified';
   const useWeibull = priorityViewMode() === 'weibull';
   const sourceLabel = useWeibull ? 'Weibull' : 'Monte Carlo';
@@ -4074,7 +4136,7 @@ function threatMethodNotesHtml(t, low, mid, high, p2050) {
       ? `<li>The displayed lower / central / upper horizon is computed from the Weibull diagnostic layer calibrated to the current threat horizon after MCDA scoring, dependency amplification, and threshold calibration.</li>`
       : `<li>The displayed lower / central / upper horizon is computed from the current model run after MCDA scoring, dependency amplification, threshold calibration, and Monte Carlo sampling.</li>`,
     `<li>The current model interval for this threat is <strong>${escapeHtml(formatYear(low))}–${escapeHtml(formatYear(high))}</strong>, with central horizon <strong>${escapeHtml(formatYear(mid))}</strong>.</li>`,
-    `<li>By-2050 risk is shown from the current <strong>${escapeHtml(sourceLabel)}</strong> view under the present scenario assumptions: <strong>${p2050 == null ? (useWeibull && !Number.isFinite(mid) ? 'undefined (median not identifiable)' : 'Run Monte Carlo') : escapeHtml(pct(p2050))}</strong>. It is not a measured empirical probability.</li>`
+    `<li>By-2050 risk is shown from the current <strong>${escapeHtml(sourceLabel)}</strong> view under the present scenario assumptions: <strong>${escapeHtml(useWeibull ? probabilityRangeLabel(p2050, p2050Lower, p2050Upper) : p2050 == null ? 'Run Monte Carlo' : pct(p2050))}</strong>. A range means the median is right-censored after 2100; it is not a measured empirical probability.</li>`
   ];
   return `<ul class="detail-list">${lines.join('')}</ul>`;
 }
@@ -4119,6 +4181,8 @@ function priorityThreatViewModel(t, rank, enriched, mcRes) {
     mid: timeline.mid,
     high: timeline.upper,
     p2050: timeline.p2050,
+    p2050Lower: timeline.p2050Lower,
+    p2050Upper: timeline.p2050Upper,
     censored: timeline.censored === true,
     weibullStatus: timeline.status,
     useWeibull: mode === 'weibull',
@@ -4142,18 +4206,21 @@ function priorityThreatPillsHtml(vm) {
 }
 
 function priorityThreatScoreHtml(vm) {
-  const { t, priorityThreshold, p2050, useWeibull, censored, weibullStatus } = vm;
+  const { t, priorityThreshold, p2050, p2050Lower, p2050Upper, useWeibull, weibullStatus } = vm;
+  const probabilityText = useWeibull
+    ? probabilityRangeLabel(p2050, p2050Lower, p2050Upper, weibullStatus === 'invalid' ? 'Not available' : 'Not identified')
+    : p2050 == null ? 'Run MC' : pct(p2050);
   return `<div class="t-score">
     <div class="t-score-val">${t.priority.toFixed(2)}<span class="t-score-denom">/ ${priorityThreshold.toFixed(2)}</span></div>
     <div class="t-score-lbl">Priority / threshold</div>
     <div style="font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:2px;letter-spacing:.02em">${pct(clamp(t.priority / Math.max(0.001, priorityThreshold), 0, 1.5))} of critical level</div>
-    <div style="font-size:9px;color:var(--text3);margin-top:3px">P≤2050: ${censored ? 'undefined (median right-censored)' : weibullStatus === 'invalid' ? 'undefined (invalid median)' : p2050 == null ? 'Run MC' : pct(p2050)} <span style="font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--text-3);opacity:.7">(${useWeibull ? 'Weibull' : 'MC'})</span></div>
+    <div style="font-size:9px;color:var(--text3);margin-top:3px">P≤2050: ${probabilityText} <span style="font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--text-3);opacity:.7">(${useWeibull ? 'Weibull' : 'MC'})</span></div>
   </div>`;
 }
 
 function priorityThreatMetricsHtml(vm) {
   const { t, low, mid, high, growthPct, priorityThreshold } = vm;
-  const yearsLabel = year => Number.isFinite(year) ? fmtYearsLeft(year) : 'undefined';
+  const yearsLabel = year => Number.isFinite(year) ? fmtYearsLeft(year) : 'Not identified';
   const daysLabel = year => Number.isFinite(year) ? daysLeft(year) : '';
   return `<div class="meta-grid">
     ${climateMetric('To lower', yearsLabel(low), daysLabel(low))}
@@ -4171,11 +4238,11 @@ function priorityThreatMetricsHtml(vm) {
 }
 
 function priorityThreatDetailHtml(vm, enriched) {
-  const { t, low, mid, high, p2050, evidence } = vm;
+  const { t, low, mid, high, p2050, p2050Lower, p2050Upper, evidence } = vm;
   return `<div class="t-detail">
     <div class="detail-box"><div class="detail-box-title">Risk structure captured here</div><div class="detail-box-body">${threatRiskStructureHtml(t, enriched)}</div></div>
     <div class="detail-box"><div class="detail-box-title">Dependency pathways in the model</div><div class="detail-box-body">${threatDependencyPathwaysHtml(t, enriched)}</div></div>
-    <div class="detail-box"><div class="detail-box-title">Methodological notes</div><div class="detail-box-body">${threatMethodNotesHtml(t, low, mid, high, p2050)}</div></div>
+    <div class="detail-box"><div class="detail-box-title">Methodological notes</div><div class="detail-box-body">${threatMethodNotesHtml(t, low, mid, high, p2050, p2050Lower, p2050Upper)}</div></div>
     <div class="detail-box"><div class="detail-box-title">Source panel</div><div class="detail-box-body">${threatSourcePanelHtml(t)}<br><strong>Evidence grade:</strong> ${escapeHtml(evidence)}.</div></div>
     <div class="detail-box"><div class="detail-box-title">Exposure landscape</div><div class="detail-box-body">${escapeHtml(threatExposureLandscapeHtml(t))}</div></div>
     <div class="detail-box"><div class="detail-box-title">Parameter notes</div><div class="detail-box-body">${threatParameterNotesHtml(t)}</div></div>
@@ -4443,6 +4510,9 @@ function drawClock(gsi) {
 function drawHeroSpark(mcRes) {
 }
 
+function displayedCascadeCdfSummary(result) {
+  return result && result.ensemble ? result.ensemble.dynamicCascade || null : null;
+}
 
 function drawCDF() {
   const chart = ensureEChart('cdfCanvas');
@@ -4451,14 +4521,16 @@ function drawCDF() {
   const tip = document.getElementById('cdfTip');
   if (tip) tip.style.display = 'none';
   const activeScenario = currentScenario();
-  const entries = Object.entries(_cdfCurves).filter(([, res]) => res && res.cdf && res.cdf.length);
+  const entries = Object.entries(_cdfCurves)
+    .map(([scenarioKey, result]) => [scenarioKey, displayedCascadeCdfSummary(result)])
+    .filter(([, summary]) => summary && summary.cdf && summary.cdf.length);
   if (!entries.length) {
     chart.setOption(emptyChartOption('Run simulation to populate the cumulative probability surface', palette), true);
     return;
   }
 
   const series = [];
-  const activeRes = _cdfCurves[activeScenario] || null;
+  const activeRes = displayedCascadeCdfSummary(_cdfCurves[activeScenario]);
   if (activeRes && activeRes.bLo && activeRes.bHi) {
     series.push({
       name: 'Active lower',
@@ -4498,7 +4570,7 @@ function drawCDF() {
       ].filter(entry => Number.isFinite(entry.xAxis) && entry.xAxis <= YE) : [];
 
       series.push({
-        name: SC[scKey].label,
+        name: `${SC[scKey].label} — Dynamic Cascade`,
         type: 'line',
         step: 'end',
         data: res.cdf.map(point => [point.year, +(point.prob * 100).toFixed(4)]),
@@ -5312,7 +5384,7 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
     const _csn = document.getElementById('cascadeStabilityNote');
     if (_csn) _csn.style.display = '';
     const _chn = document.getElementById('cascadeHeadlineNote');
-    if (_chn) { _chn.textContent = `Paired Dynamic functional-cascade horizons under the selected ${SC[scKey].label || scKey} scenario. P50 is the median first-crossing time; P90 is the later 90th percentile of the same distribution. A single initial failure can propagate through directed dependencies and affect essential services; it need not wait for every domain to fail. Neither clock predicts completed global collapse, and P90 is not a physical tipping threshold or worst-case bound. “>2100” means the quantile is not identified inside the model horizon, not safety until then. Growth, criticality weights, propagation strength and service memberships remain explicit scenario assumptions, not empirically calibrated probabilities.`; _chn.style.display = ''; }
+    if (_chn) { _chn.textContent = `The two clocks show two points from the same set of simulated cascade timelines for the ${SC[scKey].label || scKey} scenario. P50 is the middle result; P90 is the later result reached in about nine out of ten model runs. Because risks are connected, one serious failure can spread and disrupt essential services without every domain failing first. These dates are warning horizons, not forecasts of complete global collapse. “>2100” only means the model cannot locate that point within its time window; it does not mean the system is safe until then. The result still depends on stated assumptions about growth, system importance, connections and essential services.`; _chn.style.display = ''; }
     const whyEl = document.getElementById('whyChangedNote');
     if (whyEl) whyEl.textContent = buildWhyChangedSummary(scKey, P.weightProfile || 'expert', enriched);
     const rbEl = document.getElementById('robustnessNote');
@@ -5432,9 +5504,9 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
   }
   const leg = document.getElementById('cdfLegend');
   if (leg) leg.innerHTML = Object.keys(_cdfCurves).map(sc => {
-    const r = _cdfCurves[sc];
+    const r = displayedCascadeCdfSummary(_cdfCurves[sc]);
     return `<div class="leg-item"><div class="leg-sw" style="background:${SC[sc].color}"></div>
-      ${SC[sc].label} P50: ${r ? fmtY(r.p50) : ' '}</div>`;
+      ${SC[sc].label} Dynamic Cascade P50: ${r ? fmtY(r.p50) : ' '}</div>`;
   }).join('');
 
   document.getElementById('narrativeText').innerHTML = buildNarrative(scKey, enriched, mcRes);

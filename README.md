@@ -128,7 +128,8 @@ Validation checklist:
 - Page loads without JavaScript errors.
 - Core dashboard cards render.
 - Monte Carlo simulation completes.
-- MC / Weibull horizon toggle updates top threat cards and domain cards.
+- MC / Weibull horizon toggle updates top threat cards and domain cards; right-censored Weibull inputs are retained and shown through identification bounds rather than `undefined` dates.
+- The main cumulative chart uses the same Dynamic Cascade first-crossing distribution as the paired P50/P90 clocks.
 - JSON and CSV exports are available.
 
 ## GitHub Pages

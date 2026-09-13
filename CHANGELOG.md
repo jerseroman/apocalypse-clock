@@ -4,6 +4,14 @@
 
 This MODEL correction makes the domain cards and regime timing internally consistent with the declared functional-pressure model. Dataset 1.9.0, its 184 numerical ranges, thresholds, topology, fixed criticality tiers, service memberships, edge weights and lags are unchanged.
 
+### Same-version CDF, Weibull and Wix presentation hotfix
+
+- Corrects the main cumulative chart to display the existing Dynamic Cascade first-crossing distribution used by the paired P50/P90 clocks. It previously rendered the top-level compensatory distribution (Baseline P50 2054) even though the surrounding headline referred to Dynamic Cascade (P50 2036, P90 2042).
+- Replaces JavaScript-style `undefined` output in the Weibull domain view with explicit partial-identification reporting. Positive-weight right-censored threats remain in the calculation: the UI shows a defensible lower bound for the weighted P50 and a weighted P≤2050 probability range instead of inventing a date or silently dropping late threats.
+- Renames the three domain cards to Civilizational, Biosphere and Technological `Functional-Disruption Horizon`, and makes the paired-clock explanation easier to read without changing its scientific caveats.
+- Extends the Wix custom element's `#14181e` background across the full viewport width for the height of the application, removing the darker Wix-section gutters without adding an iframe or changing other page sections.
+- This is a correction within application 1.2.9 and data 1.9.0. No model equation, dataset value, threshold, sampling rule, headline number or version identifier changes.
+
 - Replaces the domain cards' former 40-percent standalone sampled-priority-mass crossing with a domain functional first crossing reconstructed from the full-system propagated activation history. Only the reporting node basket and denominator are restricted by domain; fixed criticality, overlap, essential-service and 0.50 trigger rules match the headline engine.
 - Removes the misleading comparison of domain P50 values with the system P50 because the former rule measured a different estimand.
 - Makes regime-process timing use sampled priority, growth and threshold in the same first-passage equation as continuous latent pressure. The previous growth-blind logistic/geometric waiting clock had no empirical calendar calibration and is removed.

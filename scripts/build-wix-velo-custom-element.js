@@ -24,7 +24,7 @@ function scopeStylesForShadowRoot(css) {
     // Viewport units escape the Wix element's layout box. Scope horizontal
     // sizing to the custom-element host so the P50/P90 pair cannot be clipped.
     .replace(/100vw/g, '100%')
-    .concat('\n:host{display:block;width:100%;max-width:100%;background:#14181e;color-scheme:dark}.ac-body{width:100%;min-height:100%;isolation:isolate}\n');
+    .concat('\n:host{display:block;width:100%;max-width:100%;overflow:visible;background:#14181e;box-shadow:0 0 0 100vmax #14181e;clip-path:inset(0 -100vmax);color-scheme:dark}.ac-body{width:100%;min-height:100%;overflow-x:hidden;isolation:isolate}\n');
 }
 
 const html = read('index.html');
