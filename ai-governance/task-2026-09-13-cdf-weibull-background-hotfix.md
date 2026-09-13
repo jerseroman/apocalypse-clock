@@ -1,6 +1,6 @@
 # Task
 
-Correct the main cumulative chart binding, make censored Weibull diagnostics readable instead of displaying JavaScript-style `undefined`, align the domain titles and explanatory copy with their intended meaning, and remove the visible Wix-background colour mismatch without changing model or dataset versions.
+Correct the main cumulative chart binding, make censored Weibull diagnostics readable instead of displaying JavaScript-style `undefined`, align the domain titles and explanatory copy with their intended meaning, and remove the visible page-background colour mismatch without changing model or dataset versions.
 
 ## Change class
 
@@ -12,7 +12,6 @@ The owner explicitly requested these corrections and publication without creatin
 
 - `src/app.js`: `drawCDF`, CDF legend rendering, domain-card rendering helpers, domain display names, and paired-horizon explanatory copy.
 - `index.html`, `404.html`: main CDF heading, explanation and accessibility label; bundled dataset blocks remain byte-identical.
-- `scripts/build-wix-velo-custom-element.js`, `wix/apocalypse-clock-element.js`: generated Wix delivery CSS and rebuilt artifact.
 - `tests/*`: focused binding, censoring-label, title, background and regression assertions.
 - `README.md`, `CHANGELOG.md`, `ai-governance/review-log.md`: same-version hotfix documentation and validation record.
 
@@ -25,7 +24,7 @@ The owner explicitly requested these corrections and publication without creatin
 
 ## Affected outputs
 
-- DOM nodes: `#cdfCanvas`, `#cdfLegend`, CDF heading/copy, `#aggregateRow`, `#cascadeHeadlineNote`, and Wix/custom-element background.
+- DOM nodes: `#cdfCanvas`, `#cdfLegend`, CDF heading/copy, `#aggregateRow`, `#cascadeHeadlineNote`, and application background.
 - Export fields: none.
 - Headline-related numbers: no.
 - Determinism under default seed: preserved.
@@ -40,7 +39,7 @@ The owner explicitly requested these corrections and publication without creatin
 
 - Run all items 1-8 in `validation-checklist.md`, including the full Playwright suite and the pinned headline-determinism check.
 - Add focused tests proving the main CDF series/markers/legend use Dynamic Cascade P10/P50/P90, and that Weibull mode contains no `undefined` or `NaN` while retaining right-censoring disclosure.
-- Verify desktop and mobile custom-element geometry, full-width `#14181e` background, and the public Wix page after deployment.
+- Verify desktop and mobile geometry plus the full-width `#14181e` application background after deployment.
 - No new numerical golden is recorded because model outputs must remain bit-identical.
 
 ## Rollback plan

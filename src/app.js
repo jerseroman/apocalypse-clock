@@ -7254,7 +7254,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'claude.opus4.7.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_3098987023234632b012f237a4522101.json',
+    url: './presets/claude.opus4.7.data.json',
     chatUrl: 'https://claude.ai/share/33f155da-4c3b-44b9-b6fc-99a7f9dcfa52',
   },
   gpt: {
@@ -7264,7 +7264,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'gpt5.5.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_ed75db20af174949ac02dd6b1c67efbf.json',
+    url: './presets/gpt5.5.data.json',
     chatUrl: 'https://chatgpt.com/share/69f666b6-db54-83eb-aff9-dcc35b0b626e',
   },
   gemini: {
@@ -7274,7 +7274,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'Gemini3.1.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_f0b88cfe12684eea98e58a2bc9e3a1a3.json',
+    url: './presets/Gemini3.1.data.json',
     chatUrl: 'https://gemini.google.com/share/ba734236ef06',
   },
   deepseek: {
@@ -7284,7 +7284,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'DeepSeek-V4Preview.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_d51b457416cf4de69f09ebd823838d37.json',
+    url: './presets/DeepSeek-V4Preview.data.json',
     chatUrl: 'https://chat.deepseek.com/share/z0hekl5ix3yszqlb0q',
   },
   allAiAverage: {
@@ -7294,7 +7294,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'All-AI-Average.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_69aed70dda774341871d4b2e59caae65.json',
+    url: './presets/All-AI-Average.data.json',
     chatUrl: 'https://www.apocalypseclock.com/scoringmethodology',
   },
   primarycalibrated: {
@@ -7314,7 +7314,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'MetaAI.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_9340155ae5684cfab132ff9a1614f69f.json',
+    url: './presets/MetaAI.data.json',
     chatUrl: 'https://www.meta.ai/share/BJ58mD1g4ib',
   },
   grok: {
@@ -7324,7 +7324,7 @@ const AI_PRESETS = {
     depAlpha: 1.0,
     threshold: 0.50,
     fileName: 'Grok4.20.data.json',
-    url: 'https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_cfeab5d3751b4c99ab67cc7c01d87d34.json',
+    url: './presets/Grok4.20.data.json',
     chatUrl: 'https://grok.com/share/c2hhcmQtMi1jb3B5_be361e2b-dbf1-46b2-ac0c-f2ce6c056b62',
   },
 };

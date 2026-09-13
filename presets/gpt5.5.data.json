@@ -1,0 +1,2209 @@
+{
+  "_meta": {
+    "schema_version": "1.5",
+    "generated": "2026-05-02",
+    "description": "Apocalypse Clock parameter dataset with explicit growth-calibration metadata. Each '<threat>.growth_rate' entry distinguishes raw indicator growth from effective systemic risk-growth.",
+    "parameter_count_excluding_meta": 184,
+    "threat_count": 23,
+    "metrics_per_threat": 8,
+    "threats": [
+      "ai",
+      "amr",
+      "authoritarian",
+      "autonomousw",
+      "biodiversity",
+      "bioengineered",
+      "climate",
+      "cyber",
+      "debt",
+      "displacement",
+      "economic",
+      "epistemic",
+      "fragmentation_gov",
+      "geopolitics",
+      "minerals",
+      "nuclear",
+      "oceans",
+      "pandemics",
+      "pollution",
+      "soils",
+      "space",
+      "supply",
+      "water"
+    ],
+    "metrics": [
+      "scale",
+      "urgency",
+      "acceleration",
+      "interdependence",
+      "irreversibility",
+      "gov_failure",
+      "growth_rate",
+      "threshold"
+    ],
+    "entry_fields": [
+      "mu",
+      "lo",
+      "hi",
+      "source",
+      "url",
+      "accessed",
+      "strength",
+      "note",
+      "growth_kind",
+      "risk_conversion",
+      "raw_indicator_growth",
+      "effective_growth_calibrated",
+      "calibration_note"
+    ],
+    "dimensions": {
+      "scale": {
+        "range": [
+          0,
+          5
+        ],
+        "meaning": "estimated potential systemic magnitude of harm if the threat intensifies."
+      },
+      "urgency": {
+        "range": [
+          0,
+          5
+        ],
+        "meaning": "near-term priority; how much the threat already requires action in the present decade."
+      },
+      "acceleration": {
+        "range": [
+          0,
+          5
+        ],
+        "meaning": "observed or plausibly inferred rate of worsening in drivers, exposure, capability, or impacts."
+      },
+      "interdependence": {
+        "range": [
+          0,
+          5
+        ],
+        "meaning": "degree to which the threat couples to, amplifies, or is amplified by other systemic threats."
+      },
+      "irreversibility": {
+        "range": [
+          0,
+          5
+        ],
+        "meaning": "persistence of damage and difficulty of recovery once the threat crosses damaging states."
+      },
+      "gov_failure": {
+        "range": [
+          0,
+          5
+        ],
+        "meaning": "risk that governance, institutions, or collective action fail to prevent or contain the threat."
+      },
+      "growth_rate": {
+        "range": "dimension-specific, not 0–5",
+        "unit": "annualized effective systemic risk-growth proxy",
+        "meaning": "annualized fractional growth proxy where 0.02 means about 2% per year. This is a calibrated effective systemic risk-growth value, not raw indicator growth."
+      },
+      "threshold": {
+        "range": [
+          0,
+          10
+        ],
+        "unit": "normalized destabilization threshold",
+        "meaning": "abstract model threshold for systemic destabilization. It is not a 0–5 severity score. It is calibrated against dashboard anchors such as climate, nuclear conflict, global governance failure, and systemic cascade vulnerability."
+      }
+    },
+    "strength_values": {
+      "strong": "Direct support from a high-quality source or closely matched quantitative evidence.",
+      "moderate": "Reasonable support from credible sources, but with non-trivial uncertainty or indirect mapping.",
+      "weak": "Limited, proxy, small-sample, commercial, incomplete, or otherwise lower-confidence evidence.",
+      "expert_judgment": "Expert judgment without a direct URL anchor. Use sparingly.",
+      "anchored_judgment": "Expert judgment calibrated to one or more named/linked source anchors; used when the numeric mapping is inferential but the conceptual anchor is explicit."
+    },
+    "calibration_method": "For growth_rate entries, empirical indicator or proxy growth is mapped to effective systemic risk-growth using effective_growth = min(log1p(raw_indicator_growth) × conversion_multiplier, cap). This is a compatibility-layer calibration and not a claim that raw indicator growth equals annual collapse probability.",
+    "growth_rate_calibration_classes": {
+      "ai": {
+        "growth_kind": "capability_growth",
+        "conversion_multiplier": 0.025,
+        "cap": 0.04
+      },
+      "amr": {
+        "growth_kind": "selection_pressure_growth",
+        "conversion_multiplier": 0.85,
+        "cap": 0.035
+      },
+      "authoritarian": {
+        "growth_kind": "population_share_proxy",
+        "conversion_multiplier": 0.8,
+        "cap": 0.04
+      },
+      "autonomousw": {
+        "growth_kind": "market_capability_growth",
+        "conversion_multiplier": 0.25,
+        "cap": 0.04
+      },
+      "biodiversity": {
+        "growth_kind": "assessment_and_extinction_pressure_proxy",
+        "conversion_multiplier": 0.7,
+        "cap": 0.035
+      },
+      "bioengineered": {
+        "growth_kind": "publication_capability_proxy",
+        "conversion_multiplier": 0.28,
+        "cap": 0.04
+      },
+      "climate": {
+        "growth_kind": "direct_risk_pressure_proxy",
+        "conversion_multiplier": 1.0,
+        "cap": 0.035
+      },
+      "cyber": {
+        "growth_kind": "incident_reporting_growth",
+        "conversion_multiplier": 0.055,
+        "cap": 0.045
+      },
+      "debt": {
+        "growth_kind": "macro_balance_proxy",
+        "conversion_multiplier": 0.6,
+        "cap": 0.03
+      },
+      "displacement": {
+        "growth_kind": "exposed_population_growth",
+        "conversion_multiplier": 0.75,
+        "cap": 0.04
+      },
+      "economic": {
+        "growth_kind": "expert_systemic_fragility_proxy",
+        "conversion_multiplier": 1.0,
+        "cap": 0.03
+      },
+      "epistemic": {
+        "growth_kind": "institutional_spread_proxy",
+        "conversion_multiplier": 0.2,
+        "cap": 0.04
+      },
+      "fragmentation_gov": {
+        "growth_kind": "small_count_institutional_proxy",
+        "conversion_multiplier": 0.1,
+        "cap": 0.04
+      },
+      "geopolitics": {
+        "growth_kind": "spending_conflict_pressure",
+        "conversion_multiplier": 0.55,
+        "cap": 0.045
+      },
+      "minerals": {
+        "growth_kind": "market_demand_growth",
+        "conversion_multiplier": 0.22,
+        "cap": 0.04
+      },
+      "nuclear": {
+        "growth_kind": "stockpile_modernization_risk_proxy",
+        "conversion_multiplier": 0.9,
+        "cap": 0.035
+      },
+      "oceans": {
+        "growth_kind": "composite_degradation_pressure",
+        "conversion_multiplier": 1.0,
+        "cap": 0.03
+      },
+      "pandemics": {
+        "growth_kind": "event_frequency_growth",
+        "conversion_multiplier": 0.9,
+        "cap": 0.05
+      },
+      "pollution": {
+        "growth_kind": "production_pressure_growth",
+        "conversion_multiplier": 0.7,
+        "cap": 0.04
+      },
+      "soils": {
+        "growth_kind": "land_degradation_pressure",
+        "conversion_multiplier": 1.0,
+        "cap": 0.025
+      },
+      "space": {
+        "growth_kind": "inventory_growth_proxy",
+        "conversion_multiplier": 0.18,
+        "cap": 0.04
+      },
+      "supply": {
+        "growth_kind": "trade_restriction_growth",
+        "conversion_multiplier": 0.25,
+        "cap": 0.04
+      },
+      "water": {
+        "growth_kind": "scarcity_exposure_growth",
+        "conversion_multiplier": 0.9,
+        "cap": 0.035
+      }
+    },
+    "validation_rules": [
+      "Exactly 184 non-meta entries are required: 23 threats × 8 metrics.",
+      "Every non-meta key must follow '<threat_id>.<metric>'.",
+      "Threat IDs must exactly match the _meta.threats array.",
+      "Metric names must exactly match the _meta.metrics array.",
+      "For every entry, lo <= mu <= hi.",
+      "For scale, urgency, acceleration, interdependence, irreversibility and gov_failure, all numeric values must be in [0,5].",
+      "For threshold, all numeric values must be in [0,10].",
+      "For growth_rate, mu, lo and hi must be calibrated annualized fractional effective systemic risk-growth values, not raw indicator growth.",
+      "Every growth_rate entry must set effective_growth_calibrated to true and include growth_kind, risk_conversion, raw_indicator_growth and calibration_note.",
+      "No null, NaN, stringified numeric values, trailing commas, comments or unresolved placeholders are allowed."
+    ]
+  },
+  "ai.scale": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Artificial intelligence capability and governance risk. AI Index reports rapid diffusion of frontier AI, benchmark progress, falling inference costs and growing policy activity; Epoch documents very rapid growth in frontier training compute. Scores treat capability acceleration as strong evidence but convert it cautiously into systemic risk pressure because capability growth is not identical to harm probability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "ai.urgency": {
+    "mu": 4.1,
+    "lo": 3.2,
+    "hi": 4.9,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Artificial intelligence capability and governance risk. AI Index reports rapid diffusion of frontier AI, benchmark progress, falling inference costs and growing policy activity; Epoch documents very rapid growth in frontier training compute. Scores treat capability acceleration as strong evidence but convert it cautiously into systemic risk pressure because capability growth is not identical to harm probability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "ai.acceleration": {
+    "mu": 4.8,
+    "lo": 4.0,
+    "hi": 5.0,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Artificial intelligence capability and governance risk. AI Index reports rapid diffusion of frontier AI, benchmark progress, falling inference costs and growing policy activity; Epoch documents very rapid growth in frontier training compute. Scores treat capability acceleration as strong evidence but convert it cautiously into systemic risk pressure because capability growth is not identical to harm probability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "ai.interdependence": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Artificial intelligence capability and governance risk. AI Index reports rapid diffusion of frontier AI, benchmark progress, falling inference costs and growing policy activity; Epoch documents very rapid growth in frontier training compute. Scores treat capability acceleration as strong evidence but convert it cautiously into systemic risk pressure because capability growth is not identical to harm probability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "ai.irreversibility": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.8,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Artificial intelligence capability and governance risk. AI Index reports rapid diffusion of frontier AI, benchmark progress, falling inference costs and growing policy activity; Epoch documents very rapid growth in frontier training compute. Scores treat capability acceleration as strong evidence but convert it cautiously into systemic risk pressure because capability growth is not identical to harm probability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "ai.gov_failure": {
+    "mu": 4.1,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Artificial intelligence capability and governance risk. AI Index reports rapid diffusion of frontier AI, benchmark progress, falling inference costs and growing policy activity; Epoch documents very rapid growth in frontier training compute. Scores treat capability acceleration as strong evidence but convert it cautiously into systemic risk pressure because capability growth is not identical to harm probability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "ai.growth_rate": {
+    "mu": 0.0376,
+    "lo": 0.0239,
+    "hi": 0.04,
+    "source": "Epoch AI, Trends in Artificial Intelligence and frontier training-compute analyses",
+    "url": "https://epoch.ai/trends",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for capability_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.025, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "capability_growth",
+    "risk_conversion": 0.025,
+    "raw_indicator_growth": 3.5,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "ai.threshold": {
+    "mu": 8.7,
+    "lo": 8.2,
+    "hi": 9.2,
+    "source": "Stanford HAI, Artificial Intelligence Index Report 2025",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against frontier capability acceleration, dual-use deployment, uncertain alignment capacity and incomplete international governance. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "amr.scale": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 4.9,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Antimicrobial resistance. The Lancet GBD AMR study estimates a large present mortality burden and forecasts increasing AMR burden to 2050; WHO BPPL identifies priority resistant pathogens, including resistant Gram-negative bacteria and drug-resistant tuberculosis. Scores reflect high health-system coupling and significant uncertainty in future surveillance and stewardship. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "amr.urgency": {
+    "mu": 4.0,
+    "lo": 3.4,
+    "hi": 4.8,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Antimicrobial resistance. The Lancet GBD AMR study estimates a large present mortality burden and forecasts increasing AMR burden to 2050; WHO BPPL identifies priority resistant pathogens, including resistant Gram-negative bacteria and drug-resistant tuberculosis. Scores reflect high health-system coupling and significant uncertainty in future surveillance and stewardship. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "amr.acceleration": {
+    "mu": 3.4,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Antimicrobial resistance. The Lancet GBD AMR study estimates a large present mortality burden and forecasts increasing AMR burden to 2050; WHO BPPL identifies priority resistant pathogens, including resistant Gram-negative bacteria and drug-resistant tuberculosis. Scores reflect high health-system coupling and significant uncertainty in future surveillance and stewardship. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "amr.interdependence": {
+    "mu": 4.0,
+    "lo": 3.2,
+    "hi": 4.8,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Antimicrobial resistance. The Lancet GBD AMR study estimates a large present mortality burden and forecasts increasing AMR burden to 2050; WHO BPPL identifies priority resistant pathogens, including resistant Gram-negative bacteria and drug-resistant tuberculosis. Scores reflect high health-system coupling and significant uncertainty in future surveillance and stewardship. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "amr.irreversibility": {
+    "mu": 3.8,
+    "lo": 3.0,
+    "hi": 4.6,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Antimicrobial resistance. The Lancet GBD AMR study estimates a large present mortality burden and forecasts increasing AMR burden to 2050; WHO BPPL identifies priority resistant pathogens, including resistant Gram-negative bacteria and drug-resistant tuberculosis. Scores reflect high health-system coupling and significant uncertainty in future surveillance and stewardship. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "amr.gov_failure": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Antimicrobial resistance. The Lancet GBD AMR study estimates a large present mortality burden and forecasts increasing AMR burden to 2050; WHO BPPL identifies priority resistant pathogens, including resistant Gram-negative bacteria and drug-resistant tuberculosis. Scores reflect high health-system coupling and significant uncertainty in future surveillance and stewardship. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "amr.growth_rate": {
+    "mu": 0.0185,
+    "lo": 0.0093,
+    "hi": 0.0309,
+    "source": "GBD 2021 AMR estimates and forecasts; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.who.int/publications/i/item/9789240093461",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for selection_pressure_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.85, 0.035), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "selection_pressure_growth",
+    "risk_conversion": 0.85,
+    "raw_indicator_growth": 0.022,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "amr.threshold": {
+    "mu": 8.5,
+    "lo": 8.0,
+    "hi": 9.0,
+    "source": "GBD 2021 Antimicrobial Resistance Collaborators, The Lancet, 2024; WHO Bacterial Priority Pathogens List 2024",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01867-1/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against high mortality burden, pipeline and stewardship gaps, One Health transmission and health-system dependence. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "authoritarian.scale": {
+    "mu": 3.9,
+    "lo": 3.0,
+    "hi": 4.7,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Authoritarianism and democratic backsliding. V-Dem documents a long wave of autocratization and provides a broad country-year evidence base for democratic erosion, censorship, polarization and institutional weakening. Scores emphasize governance coupling and reversibility uncertainty: democratic recovery is possible, but institutional degradation can persist and amplify other risks. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "authoritarian.urgency": {
+    "mu": 4.1,
+    "lo": 3.3,
+    "hi": 4.8,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Authoritarianism and democratic backsliding. V-Dem documents a long wave of autocratization and provides a broad country-year evidence base for democratic erosion, censorship, polarization and institutional weakening. Scores emphasize governance coupling and reversibility uncertainty: democratic recovery is possible, but institutional degradation can persist and amplify other risks. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "authoritarian.acceleration": {
+    "mu": 3.6,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Authoritarianism and democratic backsliding. V-Dem documents a long wave of autocratization and provides a broad country-year evidence base for democratic erosion, censorship, polarization and institutional weakening. Scores emphasize governance coupling and reversibility uncertainty: democratic recovery is possible, but institutional degradation can persist and amplify other risks. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "authoritarian.interdependence": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Authoritarianism and democratic backsliding. V-Dem documents a long wave of autocratization and provides a broad country-year evidence base for democratic erosion, censorship, polarization and institutional weakening. Scores emphasize governance coupling and reversibility uncertainty: democratic recovery is possible, but institutional degradation can persist and amplify other risks. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "authoritarian.irreversibility": {
+    "mu": 3.6,
+    "lo": 2.7,
+    "hi": 4.6,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Authoritarianism and democratic backsliding. V-Dem documents a long wave of autocratization and provides a broad country-year evidence base for democratic erosion, censorship, polarization and institutional weakening. Scores emphasize governance coupling and reversibility uncertainty: democratic recovery is possible, but institutional degradation can persist and amplify other risks. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "authoritarian.gov_failure": {
+    "mu": 4.6,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Authoritarianism and democratic backsliding. V-Dem documents a long wave of autocratization and provides a broad country-year evidence base for democratic erosion, censorship, polarization and institutional weakening. Scores emphasize governance coupling and reversibility uncertainty: democratic recovery is possible, but institutional degradation can persist and amplify other risks. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "authoritarian.growth_rate": {
+    "mu": 0.0314,
+    "lo": 0.0158,
+    "hi": 0.04,
+    "source": "V-Dem Institute, Democracy Report 2025",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for population_share_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.8, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "population_share_proxy",
+    "risk_conversion": 0.8,
+    "raw_indicator_growth": 0.04,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "authoritarian.threshold": {
+    "mu": 8.3,
+    "lo": 7.8,
+    "hi": 8.9,
+    "source": "V-Dem Institute, Democracy Report 2025: 25 Years of Autocratization",
+    "url": "https://www.v-dem.net/documents/60/V-dem-dr__2025_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against population exposed to autocratization, erosion of checks and balances, information control and reduced collective-action capacity. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "autonomousw.scale": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.8,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Autonomous weapons and AI-enabled military targeting. ICRC and UNODA materials show unresolved legal and humanitarian concerns over autonomy in weapon systems, while SIPRI analyses AI-enabled targeting and autonomous systems as active military-governance issues. Scores are high for acceleration and governance failure, but scale remains below nuclear because consequences depend strongly on deployment context. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "autonomousw.urgency": {
+    "mu": 3.5,
+    "lo": 2.6,
+    "hi": 4.5,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Autonomous weapons and AI-enabled military targeting. ICRC and UNODA materials show unresolved legal and humanitarian concerns over autonomy in weapon systems, while SIPRI analyses AI-enabled targeting and autonomous systems as active military-governance issues. Scores are high for acceleration and governance failure, but scale remains below nuclear because consequences depend strongly on deployment context. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "autonomousw.acceleration": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Autonomous weapons and AI-enabled military targeting. ICRC and UNODA materials show unresolved legal and humanitarian concerns over autonomy in weapon systems, while SIPRI analyses AI-enabled targeting and autonomous systems as active military-governance issues. Scores are high for acceleration and governance failure, but scale remains below nuclear because consequences depend strongly on deployment context. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "autonomousw.interdependence": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 5.0,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Autonomous weapons and AI-enabled military targeting. ICRC and UNODA materials show unresolved legal and humanitarian concerns over autonomy in weapon systems, while SIPRI analyses AI-enabled targeting and autonomous systems as active military-governance issues. Scores are high for acceleration and governance failure, but scale remains below nuclear because consequences depend strongly on deployment context. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "autonomousw.irreversibility": {
+    "mu": 3.2,
+    "lo": 2.3,
+    "hi": 4.4,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Autonomous weapons and AI-enabled military targeting. ICRC and UNODA materials show unresolved legal and humanitarian concerns over autonomy in weapon systems, while SIPRI analyses AI-enabled targeting and autonomous systems as active military-governance issues. Scores are high for acceleration and governance failure, but scale remains below nuclear because consequences depend strongly on deployment context. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "autonomousw.gov_failure": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Autonomous weapons and AI-enabled military targeting. ICRC and UNODA materials show unresolved legal and humanitarian concerns over autonomy in weapon systems, while SIPRI analyses AI-enabled targeting and autonomous systems as active military-governance issues. Scores are high for acceleration and governance failure, but scale remains below nuclear because consequences depend strongly on deployment context. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "autonomousw.growth_rate": {
+    "mu": 0.0238,
+    "lo": 0.0122,
+    "hi": 0.0393,
+    "source": "SIPRI, Autonomous Weapon Systems and AI-enabled Decision-support Systems in Military Targeting, 2025",
+    "url": "https://www.sipri.org/publications/2025/other-publications/autonomous-weapon-systems-and-ai-enabled-decision-support-systems-military-targeting-comparison-and",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for market_capability_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.25, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "market_capability_growth",
+    "risk_conversion": 0.25,
+    "raw_indicator_growth": 0.1,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "autonomousw.threshold": {
+    "mu": 8.0,
+    "lo": 7.6,
+    "hi": 8.7,
+    "source": "ICRC, Autonomous weapons: law and policy position; UNODA CCW Group of Governmental Experts on LAWS",
+    "url": "https://www.icrc.org/en/law-and-policy/autonomous-weapons",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against reduced human control over force, proliferation incentives, targeting-speed compression and weak binding international regulation. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "biodiversity.scale": {
+    "mu": 4.6,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Biodiversity loss and ecosystem-service degradation. IPBES concludes that nature is declining globally at unprecedented rates, with large threats to species, ecosystem functions and nature’s contributions to people. The planetary-boundaries literature treats biosphere integrity as a core Earth-system boundary, supporting high interdependence and irreversibility. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "biodiversity.urgency": {
+    "mu": 4.3,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Biodiversity loss and ecosystem-service degradation. IPBES concludes that nature is declining globally at unprecedented rates, with large threats to species, ecosystem functions and nature’s contributions to people. The planetary-boundaries literature treats biosphere integrity as a core Earth-system boundary, supporting high interdependence and irreversibility. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "biodiversity.acceleration": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Biodiversity loss and ecosystem-service degradation. IPBES concludes that nature is declining globally at unprecedented rates, with large threats to species, ecosystem functions and nature’s contributions to people. The planetary-boundaries literature treats biosphere integrity as a core Earth-system boundary, supporting high interdependence and irreversibility. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "biodiversity.interdependence": {
+    "mu": 4.7,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Biodiversity loss and ecosystem-service degradation. IPBES concludes that nature is declining globally at unprecedented rates, with large threats to species, ecosystem functions and nature’s contributions to people. The planetary-boundaries literature treats biosphere integrity as a core Earth-system boundary, supporting high interdependence and irreversibility. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "biodiversity.irreversibility": {
+    "mu": 4.8,
+    "lo": 4.0,
+    "hi": 5.0,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Biodiversity loss and ecosystem-service degradation. IPBES concludes that nature is declining globally at unprecedented rates, with large threats to species, ecosystem functions and nature’s contributions to people. The planetary-boundaries literature treats biosphere integrity as a core Earth-system boundary, supporting high interdependence and irreversibility. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "biodiversity.gov_failure": {
+    "mu": 4.3,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Biodiversity loss and ecosystem-service degradation. IPBES concludes that nature is declining globally at unprecedented rates, with large threats to species, ecosystem functions and nature’s contributions to people. The planetary-boundaries literature treats biosphere integrity as a core Earth-system boundary, supporting high interdependence and irreversibility. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "biodiversity.growth_rate": {
+    "mu": 0.0241,
+    "lo": 0.0145,
+    "hi": 0.0342,
+    "source": "IPBES Global Assessment 2019 and Richardson et al., Science Advances, 2023 planetary boundaries update",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for assessment_and_extinction_pressure_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.7, 0.035), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "assessment_and_extinction_pressure_proxy",
+    "risk_conversion": 0.7,
+    "raw_indicator_growth": 0.035,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "biodiversity.threshold": {
+    "mu": 8.7,
+    "lo": 8.2,
+    "hi": 9.2,
+    "source": "IPBES, Global Assessment Report on Biodiversity and Ecosystem Services, 2019",
+    "url": "https://www.ipbes.net/system/files/2021-06/2020%20IPBES%20GLOBAL%20REPORT%28FIRST%20PART%29_V3_SINGLE.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against biosphere-integrity transgression, irreversible extinctions, ecosystem-service dependence and food-water-climate coupling. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "bioengineered.scale": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Bioengineered pandemic and synthetic-biology misuse risk. The National Academies identify synthetic-biology misuse pathways, and the 2024 nucleic-acid screening framework shows that governance is still being updated for distributed biological design and synthesis. Scores emphasize rapidly expanding capability and governance gaps, with wide uncertainty over actor intent and technical barriers. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "bioengineered.urgency": {
+    "mu": 3.5,
+    "lo": 2.6,
+    "hi": 4.5,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Bioengineered pandemic and synthetic-biology misuse risk. The National Academies identify synthetic-biology misuse pathways, and the 2024 nucleic-acid screening framework shows that governance is still being updated for distributed biological design and synthesis. Scores emphasize rapidly expanding capability and governance gaps, with wide uncertainty over actor intent and technical barriers. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "bioengineered.acceleration": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Bioengineered pandemic and synthetic-biology misuse risk. The National Academies identify synthetic-biology misuse pathways, and the 2024 nucleic-acid screening framework shows that governance is still being updated for distributed biological design and synthesis. Scores emphasize rapidly expanding capability and governance gaps, with wide uncertainty over actor intent and technical barriers. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "bioengineered.interdependence": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 5.0,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Bioengineered pandemic and synthetic-biology misuse risk. The National Academies identify synthetic-biology misuse pathways, and the 2024 nucleic-acid screening framework shows that governance is still being updated for distributed biological design and synthesis. Scores emphasize rapidly expanding capability and governance gaps, with wide uncertainty over actor intent and technical barriers. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "bioengineered.irreversibility": {
+    "mu": 3.9,
+    "lo": 2.8,
+    "hi": 5.0,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Bioengineered pandemic and synthetic-biology misuse risk. The National Academies identify synthetic-biology misuse pathways, and the 2024 nucleic-acid screening framework shows that governance is still being updated for distributed biological design and synthesis. Scores emphasize rapidly expanding capability and governance gaps, with wide uncertainty over actor intent and technical barriers. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "bioengineered.gov_failure": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Bioengineered pandemic and synthetic-biology misuse risk. The National Academies identify synthetic-biology misuse pathways, and the 2024 nucleic-acid screening framework shows that governance is still being updated for distributed biological design and synthesis. Scores emphasize rapidly expanding capability and governance gaps, with wide uncertainty over actor intent and technical barriers. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "bioengineered.growth_rate": {
+    "mu": 0.0292,
+    "lo": 0.0163,
+    "hi": 0.04,
+    "source": "OSTP Framework for Nucleic Acid Synthesis Screening, 2024; Applied Biosafety biosecurity risk assessment for AI in synthetic biology, 2024",
+    "url": "https://aspr.hhs.gov/S3/Pages/OSTP-Framework-for-Nucleic-Acid-Synthesis-Screening.aspx",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for publication_capability_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.28, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "publication_capability_proxy",
+    "risk_conversion": 0.28,
+    "raw_indicator_growth": 0.11,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "bioengineered.threshold": {
+    "mu": 8.6,
+    "lo": 8.1,
+    "hi": 9.3,
+    "source": "National Academies, Biodefense in the Age of Synthetic Biology, 2018; OSTP Framework for Nucleic Acid Synthesis Screening, 2024",
+    "url": "https://nap.nationalacademies.org/catalog/24890/biodefense-in-the-age-of-synthetic-biology",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against pathogen-engineering capability, synthesis access, screening incompleteness and pandemic-scale consequence potential. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "climate.scale": {
+    "mu": 4.7,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Climate breakdown. IPCC AR6 assesses widespread climate impacts and escalating risks with additional warming; WMO reports record or near-record climate indicators and long-lived ocean and cryosphere changes. Scores are near the top because climate couples to food, water, health, displacement, ecosystems and economic stability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "climate.urgency": {
+    "mu": 4.6,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Climate breakdown. IPCC AR6 assesses widespread climate impacts and escalating risks with additional warming; WMO reports record or near-record climate indicators and long-lived ocean and cryosphere changes. Scores are near the top because climate couples to food, water, health, displacement, ecosystems and economic stability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "climate.acceleration": {
+    "mu": 4.3,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Climate breakdown. IPCC AR6 assesses widespread climate impacts and escalating risks with additional warming; WMO reports record or near-record climate indicators and long-lived ocean and cryosphere changes. Scores are near the top because climate couples to food, water, health, displacement, ecosystems and economic stability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "climate.interdependence": {
+    "mu": 4.8,
+    "lo": 3.9,
+    "hi": 5.0,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Climate breakdown. IPCC AR6 assesses widespread climate impacts and escalating risks with additional warming; WMO reports record or near-record climate indicators and long-lived ocean and cryosphere changes. Scores are near the top because climate couples to food, water, health, displacement, ecosystems and economic stability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "climate.irreversibility": {
+    "mu": 4.7,
+    "lo": 3.9,
+    "hi": 5.0,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Climate breakdown. IPCC AR6 assesses widespread climate impacts and escalating risks with additional warming; WMO reports record or near-record climate indicators and long-lived ocean and cryosphere changes. Scores are near the top because climate couples to food, water, health, displacement, ecosystems and economic stability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "climate.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Climate breakdown. IPCC AR6 assesses widespread climate impacts and escalating risks with additional warming; WMO reports record or near-record climate indicators and long-lived ocean and cryosphere changes. Scores are near the top because climate couples to food, water, health, displacement, ecosystems and economic stability. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "climate.growth_rate": {
+    "mu": 0.0178,
+    "lo": 0.01,
+    "hi": 0.0276,
+    "source": "IEA World Energy Outlook 2025; Global Carbon Project Global Carbon Budget 2025",
+    "url": "https://www.iea.org/reports/world-energy-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for direct_risk_pressure_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 1, 0.035), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "direct_risk_pressure_proxy",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.018,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "climate.threshold": {
+    "mu": 8.9,
+    "lo": 8.4,
+    "hi": 9.4,
+    "source": "IPCC, Climate Change 2023: Synthesis Report; WMO State of the Global Climate 2025",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against warming trajectories, tipping-risk literature, planetary-boundary framing and present policy insufficiency. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "cyber.scale": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.8,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Systemic cyber risk. The Verizon DBIR and Microsoft Digital Defense Report document large incident and breach volumes, ransomware, supply-chain exposure and AI-enabled threat evolution. Scores emphasize high interdependence with finance, energy, health, logistics and government services, while irreversibility is lower because many cyber harms are recoverable. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "cyber.urgency": {
+    "mu": 4.1,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Systemic cyber risk. The Verizon DBIR and Microsoft Digital Defense Report document large incident and breach volumes, ransomware, supply-chain exposure and AI-enabled threat evolution. Scores emphasize high interdependence with finance, energy, health, logistics and government services, while irreversibility is lower because many cyber harms are recoverable. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "cyber.acceleration": {
+    "mu": 4.5,
+    "lo": 3.6,
+    "hi": 5.0,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Systemic cyber risk. The Verizon DBIR and Microsoft Digital Defense Report document large incident and breach volumes, ransomware, supply-chain exposure and AI-enabled threat evolution. Scores emphasize high interdependence with finance, energy, health, logistics and government services, while irreversibility is lower because many cyber harms are recoverable. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "cyber.interdependence": {
+    "mu": 4.6,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Systemic cyber risk. The Verizon DBIR and Microsoft Digital Defense Report document large incident and breach volumes, ransomware, supply-chain exposure and AI-enabled threat evolution. Scores emphasize high interdependence with finance, energy, health, logistics and government services, while irreversibility is lower because many cyber harms are recoverable. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "cyber.irreversibility": {
+    "mu": 2.5,
+    "lo": 1.8,
+    "hi": 3.6,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Systemic cyber risk. The Verizon DBIR and Microsoft Digital Defense Report document large incident and breach volumes, ransomware, supply-chain exposure and AI-enabled threat evolution. Scores emphasize high interdependence with finance, energy, health, logistics and government services, while irreversibility is lower because many cyber harms are recoverable. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "cyber.gov_failure": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 5.0,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Systemic cyber risk. The Verizon DBIR and Microsoft Digital Defense Report document large incident and breach volumes, ransomware, supply-chain exposure and AI-enabled threat evolution. Scores emphasize high interdependence with finance, energy, health, logistics and government services, while irreversibility is lower because many cyber harms are recoverable. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "cyber.growth_rate": {
+    "mu": 0.0381,
+    "lo": 0.0223,
+    "hi": 0.045,
+    "source": "Verizon 2025 Data Breach Investigations Report",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for incident_reporting_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.055, 0.045), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "incident_reporting_growth",
+    "risk_conversion": 0.055,
+    "raw_indicator_growth": 1.0,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "cyber.threshold": {
+    "mu": 8.1,
+    "lo": 7.6,
+    "hi": 8.8,
+    "source": "Verizon 2025 Data Breach Investigations Report; Microsoft Digital Defense Report 2025",
+    "url": "https://www.verizon.com/business/resources/T16f/reports/2025-dbir-data-breach-investigations-report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against critical-infrastructure dependency, correlated software supply-chain vulnerabilities, ransomware disruption and AI-enabled attack scaling. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "debt.scale": {
+    "mu": 3.6,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Sovereign and macro-financial debt stress. The IMF projects high and rising public debt, with widespread risks and debt-service pressures, while the World Bank documents stress in developing-country external debt. Scores are systemic because debt stress transmits through fiscal capacity, development, banking channels and political stability, but collapses are often regional or cyclical rather than globally terminal. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "debt.urgency": {
+    "mu": 3.6,
+    "lo": 2.8,
+    "hi": 4.5,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Sovereign and macro-financial debt stress. The IMF projects high and rising public debt, with widespread risks and debt-service pressures, while the World Bank documents stress in developing-country external debt. Scores are systemic because debt stress transmits through fiscal capacity, development, banking channels and political stability, but collapses are often regional or cyclical rather than globally terminal. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "debt.acceleration": {
+    "mu": 3.3,
+    "lo": 2.4,
+    "hi": 4.3,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Sovereign and macro-financial debt stress. The IMF projects high and rising public debt, with widespread risks and debt-service pressures, while the World Bank documents stress in developing-country external debt. Scores are systemic because debt stress transmits through fiscal capacity, development, banking channels and political stability, but collapses are often regional or cyclical rather than globally terminal. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "debt.interdependence": {
+    "mu": 4.3,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Sovereign and macro-financial debt stress. The IMF projects high and rising public debt, with widespread risks and debt-service pressures, while the World Bank documents stress in developing-country external debt. Scores are systemic because debt stress transmits through fiscal capacity, development, banking channels and political stability, but collapses are often regional or cyclical rather than globally terminal. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "debt.irreversibility": {
+    "mu": 2.8,
+    "lo": 1.8,
+    "hi": 3.9,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Sovereign and macro-financial debt stress. The IMF projects high and rising public debt, with widespread risks and debt-service pressures, while the World Bank documents stress in developing-country external debt. Scores are systemic because debt stress transmits through fiscal capacity, development, banking channels and political stability, but collapses are often regional or cyclical rather than globally terminal. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "debt.gov_failure": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.8,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Sovereign and macro-financial debt stress. The IMF projects high and rising public debt, with widespread risks and debt-service pressures, while the World Bank documents stress in developing-country external debt. Scores are systemic because debt stress transmits through fiscal capacity, development, banking channels and political stability, but collapses are often regional or cyclical rather than globally terminal. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "debt.growth_rate": {
+    "mu": 0.0131,
+    "lo": 0.0066,
+    "hi": 0.0218,
+    "source": "IMF Fiscal Monitor October 2025 and Global Debt Monitor 2025",
+    "url": "https://www.imf.org/external/datamapper/GDD/2025%20Global%20Debt%20Monitor.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for macro_balance_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.6, 0.03), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "macro_balance_proxy",
+    "risk_conversion": 0.6,
+    "raw_indicator_growth": 0.022,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "debt.threshold": {
+    "mu": 8.0,
+    "lo": 7.5,
+    "hi": 8.6,
+    "source": "IMF Fiscal Monitor October 2025; World Bank International Debt Report 2025",
+    "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2025/october/english/text.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against global public debt trajectory, refinancing pressure, debt-distress concentration and fiscal-buffer erosion. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "displacement.scale": {
+    "mu": 4.0,
+    "lo": 3.2,
+    "hi": 4.9,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Mass displacement. UNHCR reports very high global forced displacement, and IDMC documents record internal displacement from conflict and disasters. Scores reflect immediate humanitarian urgency and strong coupling to conflict, climate stress, food insecurity, health systems and governance capacity. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "displacement.urgency": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Mass displacement. UNHCR reports very high global forced displacement, and IDMC documents record internal displacement from conflict and disasters. Scores reflect immediate humanitarian urgency and strong coupling to conflict, climate stress, food insecurity, health systems and governance capacity. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "displacement.acceleration": {
+    "mu": 3.9,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Mass displacement. UNHCR reports very high global forced displacement, and IDMC documents record internal displacement from conflict and disasters. Scores reflect immediate humanitarian urgency and strong coupling to conflict, climate stress, food insecurity, health systems and governance capacity. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "displacement.interdependence": {
+    "mu": 4.5,
+    "lo": 3.6,
+    "hi": 5.0,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Mass displacement. UNHCR reports very high global forced displacement, and IDMC documents record internal displacement from conflict and disasters. Scores reflect immediate humanitarian urgency and strong coupling to conflict, climate stress, food insecurity, health systems and governance capacity. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "displacement.irreversibility": {
+    "mu": 3.3,
+    "lo": 2.5,
+    "hi": 4.4,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Mass displacement. UNHCR reports very high global forced displacement, and IDMC documents record internal displacement from conflict and disasters. Scores reflect immediate humanitarian urgency and strong coupling to conflict, climate stress, food insecurity, health systems and governance capacity. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "displacement.gov_failure": {
+    "mu": 4.1,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Mass displacement. UNHCR reports very high global forced displacement, and IDMC documents record internal displacement from conflict and disasters. Scores reflect immediate humanitarian urgency and strong coupling to conflict, climate stress, food insecurity, health systems and governance capacity. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "displacement.growth_rate": {
+    "mu": 0.0366,
+    "lo": 0.0185,
+    "hi": 0.04,
+    "source": "UNHCR Global Trends 2025; IDMC GRID 2025",
+    "url": "https://www.internal-displacement.org/global-report/grid2025/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for exposed_population_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.75, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "exposed_population_growth",
+    "risk_conversion": 0.75,
+    "raw_indicator_growth": 0.05,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "displacement.threshold": {
+    "mu": 8.2,
+    "lo": 7.7,
+    "hi": 8.8,
+    "source": "UNHCR Global Trends 2025; IDMC Global Report on Internal Displacement 2025",
+    "url": "https://www.unhcr.org/global-trends",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against forced-displacement stock, disaster-conflict interaction, host-state capacity and humanitarian-system overload. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "economic.scale": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Global economic systemic fragility. IMF and BIS assessments describe elevated financial stability risks, high leverage, valuation vulnerabilities and debt-sustainability concerns. Scores are high for interdependence because financial and economic shocks transmit rapidly through trade, credit, employment and sovereign capacity, but reversibility is moderate because policy response can stabilize many crises. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "economic.urgency": {
+    "mu": 3.8,
+    "lo": 2.9,
+    "hi": 4.6,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Global economic systemic fragility. IMF and BIS assessments describe elevated financial stability risks, high leverage, valuation vulnerabilities and debt-sustainability concerns. Scores are high for interdependence because financial and economic shocks transmit rapidly through trade, credit, employment and sovereign capacity, but reversibility is moderate because policy response can stabilize many crises. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "economic.acceleration": {
+    "mu": 3.2,
+    "lo": 2.3,
+    "hi": 4.2,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Global economic systemic fragility. IMF and BIS assessments describe elevated financial stability risks, high leverage, valuation vulnerabilities and debt-sustainability concerns. Scores are high for interdependence because financial and economic shocks transmit rapidly through trade, credit, employment and sovereign capacity, but reversibility is moderate because policy response can stabilize many crises. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "economic.interdependence": {
+    "mu": 4.8,
+    "lo": 3.9,
+    "hi": 5.0,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Global economic systemic fragility. IMF and BIS assessments describe elevated financial stability risks, high leverage, valuation vulnerabilities and debt-sustainability concerns. Scores are high for interdependence because financial and economic shocks transmit rapidly through trade, credit, employment and sovereign capacity, but reversibility is moderate because policy response can stabilize many crises. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "economic.irreversibility": {
+    "mu": 3.0,
+    "lo": 2.0,
+    "hi": 4.0,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Global economic systemic fragility. IMF and BIS assessments describe elevated financial stability risks, high leverage, valuation vulnerabilities and debt-sustainability concerns. Scores are high for interdependence because financial and economic shocks transmit rapidly through trade, credit, employment and sovereign capacity, but reversibility is moderate because policy response can stabilize many crises. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "economic.gov_failure": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.7,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Global economic systemic fragility. IMF and BIS assessments describe elevated financial stability risks, high leverage, valuation vulnerabilities and debt-sustainability concerns. Scores are high for interdependence because financial and economic shocks transmit rapidly through trade, credit, employment and sovereign capacity, but reversibility is moderate because policy response can stabilize many crises. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "economic.growth_rate": {
+    "mu": 0.0149,
+    "lo": 0.0075,
+    "hi": 0.0252,
+    "source": "IMF Global Financial Stability Report April 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for expert_systemic_fragility_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 1, 0.03), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "expert_systemic_fragility_proxy",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.015,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "economic.threshold": {
+    "mu": 8.4,
+    "lo": 7.9,
+    "hi": 9.0,
+    "source": "IMF Global Financial Stability Report April 2025; BIS Annual Economic Report 2025",
+    "url": "https://www.imf.org/en/publications/gfsr/issues/2025/04/22/global-financial-stability-report-april-2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against financial-stability vulnerabilities, leverage, valuation risk, recession spillovers and sovereign-policy capacity. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "epistemic.scale": {
+    "mu": 3.9,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Epistemic breakdown, misinformation and trust erosion. Reuters Institute documents low trust, changing news consumption and misinformation concerns across many markets; V-Dem’s Digital Society Project measures misinformation campaigns, online censorship and polarization. Scores treat epistemic degradation as a multiplier of other risks because it impairs collective sense-making and legitimate governance. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "epistemic.urgency": {
+    "mu": 4.0,
+    "lo": 3.2,
+    "hi": 4.8,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Epistemic breakdown, misinformation and trust erosion. Reuters Institute documents low trust, changing news consumption and misinformation concerns across many markets; V-Dem’s Digital Society Project measures misinformation campaigns, online censorship and polarization. Scores treat epistemic degradation as a multiplier of other risks because it impairs collective sense-making and legitimate governance. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "epistemic.acceleration": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Epistemic breakdown, misinformation and trust erosion. Reuters Institute documents low trust, changing news consumption and misinformation concerns across many markets; V-Dem’s Digital Society Project measures misinformation campaigns, online censorship and polarization. Scores treat epistemic degradation as a multiplier of other risks because it impairs collective sense-making and legitimate governance. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "epistemic.interdependence": {
+    "mu": 4.6,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Epistemic breakdown, misinformation and trust erosion. Reuters Institute documents low trust, changing news consumption and misinformation concerns across many markets; V-Dem’s Digital Society Project measures misinformation campaigns, online censorship and polarization. Scores treat epistemic degradation as a multiplier of other risks because it impairs collective sense-making and legitimate governance. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "epistemic.irreversibility": {
+    "mu": 3.2,
+    "lo": 2.3,
+    "hi": 4.3,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Epistemic breakdown, misinformation and trust erosion. Reuters Institute documents low trust, changing news consumption and misinformation concerns across many markets; V-Dem’s Digital Society Project measures misinformation campaigns, online censorship and polarization. Scores treat epistemic degradation as a multiplier of other risks because it impairs collective sense-making and legitimate governance. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "epistemic.gov_failure": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Epistemic breakdown, misinformation and trust erosion. Reuters Institute documents low trust, changing news consumption and misinformation concerns across many markets; V-Dem’s Digital Society Project measures misinformation campaigns, online censorship and polarization. Scores treat epistemic degradation as a multiplier of other risks because it impairs collective sense-making and legitimate governance. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "epistemic.growth_rate": {
+    "mu": 0.0297,
+    "lo": 0.0154,
+    "hi": 0.04,
+    "source": "Reuters Institute Digital News Report 2025 and V-Dem Digital Society Project",
+    "url": "https://www.v-dem.net/our-work/collaborations/digital-society-project/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for institutional_spread_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.2, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "institutional_spread_proxy",
+    "risk_conversion": 0.2,
+    "raw_indicator_growth": 0.16,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "epistemic.threshold": {
+    "mu": 8.3,
+    "lo": 7.8,
+    "hi": 8.9,
+    "source": "Reuters Institute Digital News Report 2025; V-Dem Digital Society Project",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against trust erosion, information manipulation, institutional polarization and degraded capacity for evidence-based collective action. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "fragmentation_gov.scale": {
+    "mu": 3.8,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Global governance fragmentation. UN veto data show visible blockage in the Security Council on major crises, while the WTO Appellate Body remains unable to perform normal binding appellate review. Scores emphasize systemic interdependence because fragmented governance weakens climate, trade, health, conflict and technology coordination at the same time. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "fragmentation_gov.urgency": {
+    "mu": 4.1,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Global governance fragmentation. UN veto data show visible blockage in the Security Council on major crises, while the WTO Appellate Body remains unable to perform normal binding appellate review. Scores emphasize systemic interdependence because fragmented governance weakens climate, trade, health, conflict and technology coordination at the same time. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "fragmentation_gov.acceleration": {
+    "mu": 4.0,
+    "lo": 3.1,
+    "hi": 4.8,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Global governance fragmentation. UN veto data show visible blockage in the Security Council on major crises, while the WTO Appellate Body remains unable to perform normal binding appellate review. Scores emphasize systemic interdependence because fragmented governance weakens climate, trade, health, conflict and technology coordination at the same time. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "fragmentation_gov.interdependence": {
+    "mu": 4.8,
+    "lo": 3.9,
+    "hi": 5.0,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Global governance fragmentation. UN veto data show visible blockage in the Security Council on major crises, while the WTO Appellate Body remains unable to perform normal binding appellate review. Scores emphasize systemic interdependence because fragmented governance weakens climate, trade, health, conflict and technology coordination at the same time. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "fragmentation_gov.irreversibility": {
+    "mu": 3.1,
+    "lo": 2.2,
+    "hi": 4.2,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Global governance fragmentation. UN veto data show visible blockage in the Security Council on major crises, while the WTO Appellate Body remains unable to perform normal binding appellate review. Scores emphasize systemic interdependence because fragmented governance weakens climate, trade, health, conflict and technology coordination at the same time. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "fragmentation_gov.gov_failure": {
+    "mu": 4.6,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Global governance fragmentation. UN veto data show visible blockage in the Security Council on major crises, while the WTO Appellate Body remains unable to perform normal binding appellate review. Scores emphasize systemic interdependence because fragmented governance weakens climate, trade, health, conflict and technology coordination at the same time. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "fragmentation_gov.growth_rate": {
+    "mu": 0.0336,
+    "lo": 0.0182,
+    "hi": 0.04,
+    "source": "UN Security Council veto data and WTO trade-monitoring/appellate-body status",
+    "url": "https://www.wto.org/english/tratop_e/dispu_e/appellate_body_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for small_count_institutional_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.1, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "small_count_institutional_proxy",
+    "risk_conversion": 0.1,
+    "raw_indicator_growth": 0.4,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "fragmentation_gov.threshold": {
+    "mu": 8.6,
+    "lo": 8.1,
+    "hi": 9.2,
+    "source": "UN Security Council veto dataset; WTO Appellate Body dispute-settlement status",
+    "url": "https://main.un.org/securitycouncil/en/content/vetoes-since-1946",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against Security Council blockage, WTO dispute-settlement dysfunction, multilateral enforcement gaps and cross-domain coordination failure. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "geopolitics.scale": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Geopolitical conflict and militarization. SIPRI reports continued growth in world military expenditure, rising regional tensions and high concentration of spending among major powers. Scores reflect the way militarization interacts with nuclear risk, cyber conflict, trade fragmentation, displacement and institutional breakdown. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "geopolitics.urgency": {
+    "mu": 4.3,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Geopolitical conflict and militarization. SIPRI reports continued growth in world military expenditure, rising regional tensions and high concentration of spending among major powers. Scores reflect the way militarization interacts with nuclear risk, cyber conflict, trade fragmentation, displacement and institutional breakdown. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "geopolitics.acceleration": {
+    "mu": 4.0,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Geopolitical conflict and militarization. SIPRI reports continued growth in world military expenditure, rising regional tensions and high concentration of spending among major powers. Scores reflect the way militarization interacts with nuclear risk, cyber conflict, trade fragmentation, displacement and institutional breakdown. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "geopolitics.interdependence": {
+    "mu": 4.7,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Geopolitical conflict and militarization. SIPRI reports continued growth in world military expenditure, rising regional tensions and high concentration of spending among major powers. Scores reflect the way militarization interacts with nuclear risk, cyber conflict, trade fragmentation, displacement and institutional breakdown. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "geopolitics.irreversibility": {
+    "mu": 3.7,
+    "lo": 2.8,
+    "hi": 4.8,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Geopolitical conflict and militarization. SIPRI reports continued growth in world military expenditure, rising regional tensions and high concentration of spending among major powers. Scores reflect the way militarization interacts with nuclear risk, cyber conflict, trade fragmentation, displacement and institutional breakdown. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "geopolitics.gov_failure": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Geopolitical conflict and militarization. SIPRI reports continued growth in world military expenditure, rising regional tensions and high concentration of spending among major powers. Scores reflect the way militarization interacts with nuclear risk, cyber conflict, trade fragmentation, displacement and institutional breakdown. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "geopolitics.growth_rate": {
+    "mu": 0.0423,
+    "lo": 0.0216,
+    "hi": 0.045,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for spending_conflict_pressure, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.55, 0.045), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "spending_conflict_pressure",
+    "risk_conversion": 0.55,
+    "raw_indicator_growth": 0.08,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "geopolitics.threshold": {
+    "mu": 8.6,
+    "lo": 8.1,
+    "hi": 9.3,
+    "source": "SIPRI, Trends in World Military Expenditure 2025",
+    "url": "https://www.sipri.org/publications/2026/sipri-fact-sheets/trends-world-military-expenditure-2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against sustained military-expenditure growth, active interstate tensions, arms-race dynamics and conflict spillover pathways. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "minerals.scale": {
+    "mu": 3.6,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Critical minerals and resource bottlenecks. IEA documents rapidly rising clean-energy mineral demand and supply-concentration risks, while USGS tracks production and reserve constraints across many nonfuel minerals. Scores are high for acceleration and interdependence because mineral bottlenecks affect energy transition, defense, electronics and industrial supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "minerals.urgency": {
+    "mu": 3.8,
+    "lo": 2.9,
+    "hi": 4.6,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Critical minerals and resource bottlenecks. IEA documents rapidly rising clean-energy mineral demand and supply-concentration risks, while USGS tracks production and reserve constraints across many nonfuel minerals. Scores are high for acceleration and interdependence because mineral bottlenecks affect energy transition, defense, electronics and industrial supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "minerals.acceleration": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Critical minerals and resource bottlenecks. IEA documents rapidly rising clean-energy mineral demand and supply-concentration risks, while USGS tracks production and reserve constraints across many nonfuel minerals. Scores are high for acceleration and interdependence because mineral bottlenecks affect energy transition, defense, electronics and industrial supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "minerals.interdependence": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Critical minerals and resource bottlenecks. IEA documents rapidly rising clean-energy mineral demand and supply-concentration risks, while USGS tracks production and reserve constraints across many nonfuel minerals. Scores are high for acceleration and interdependence because mineral bottlenecks affect energy transition, defense, electronics and industrial supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "minerals.irreversibility": {
+    "mu": 2.9,
+    "lo": 2.0,
+    "hi": 4.0,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Critical minerals and resource bottlenecks. IEA documents rapidly rising clean-energy mineral demand and supply-concentration risks, while USGS tracks production and reserve constraints across many nonfuel minerals. Scores are high for acceleration and interdependence because mineral bottlenecks affect energy transition, defense, electronics and industrial supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "minerals.gov_failure": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.7,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Critical minerals and resource bottlenecks. IEA documents rapidly rising clean-energy mineral demand and supply-concentration risks, while USGS tracks production and reserve constraints across many nonfuel minerals. Scores are high for acceleration and interdependence because mineral bottlenecks affect energy transition, defense, electronics and industrial supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "minerals.growth_rate": {
+    "mu": 0.0307,
+    "lo": 0.0159,
+    "hi": 0.04,
+    "source": "IEA, Global Critical Minerals Outlook 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for market_demand_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.22, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "market_demand_growth",
+    "risk_conversion": 0.22,
+    "raw_indicator_growth": 0.15,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "minerals.threshold": {
+    "mu": 8.0,
+    "lo": 7.5,
+    "hi": 8.6,
+    "source": "IEA, Global Critical Minerals Outlook 2025; USGS Mineral Commodity Summaries 2025",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against concentrated extraction and processing, transition-mineral demand growth, export controls and substitution limits. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "nuclear.scale": {
+    "mu": 4.9,
+    "lo": 4.0,
+    "hi": 5.0,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Nuclear conflict and nuclear winter risk. SIPRI documents nuclear modernization and weakened arms-control conditions, while nuclear-winter literature shows potentially global climatic and food-system consequences from large nuclear war. Scores are near maximum for scale and irreversibility but do not assume extinction certainty. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "nuclear.urgency": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Nuclear conflict and nuclear winter risk. SIPRI documents nuclear modernization and weakened arms-control conditions, while nuclear-winter literature shows potentially global climatic and food-system consequences from large nuclear war. Scores are near maximum for scale and irreversibility but do not assume extinction certainty. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "nuclear.acceleration": {
+    "mu": 3.8,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Nuclear conflict and nuclear winter risk. SIPRI documents nuclear modernization and weakened arms-control conditions, while nuclear-winter literature shows potentially global climatic and food-system consequences from large nuclear war. Scores are near maximum for scale and irreversibility but do not assume extinction certainty. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "nuclear.interdependence": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Nuclear conflict and nuclear winter risk. SIPRI documents nuclear modernization and weakened arms-control conditions, while nuclear-winter literature shows potentially global climatic and food-system consequences from large nuclear war. Scores are near maximum for scale and irreversibility but do not assume extinction certainty. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "nuclear.irreversibility": {
+    "mu": 4.8,
+    "lo": 4.0,
+    "hi": 5.0,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Nuclear conflict and nuclear winter risk. SIPRI documents nuclear modernization and weakened arms-control conditions, while nuclear-winter literature shows potentially global climatic and food-system consequences from large nuclear war. Scores are near maximum for scale and irreversibility but do not assume extinction certainty. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "nuclear.gov_failure": {
+    "mu": 4.5,
+    "lo": 3.6,
+    "hi": 5.0,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Nuclear conflict and nuclear winter risk. SIPRI documents nuclear modernization and weakened arms-control conditions, while nuclear-winter literature shows potentially global climatic and food-system consequences from large nuclear war. Scores are near maximum for scale and irreversibility but do not assume extinction certainty. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "nuclear.growth_rate": {
+    "mu": 0.0161,
+    "lo": 0.0098,
+    "hi": 0.0257,
+    "source": "SIPRI Yearbook 2025 and Federation of American Scientists Status of World Nuclear Forces",
+    "url": "https://fas.org/initiative/status-world-nuclear-forces/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for stockpile_modernization_risk_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.9, 0.035), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "stockpile_modernization_risk_proxy",
+    "risk_conversion": 0.9,
+    "raw_indicator_growth": 0.018,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "nuclear.threshold": {
+    "mu": 9.2,
+    "lo": 8.7,
+    "hi": 9.7,
+    "source": "SIPRI Yearbook 2025: World nuclear forces; Robock et al., Nuclear winter revisited, 2007",
+    "url": "https://www.sipri.org/yearbook/2025/06",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against large-war catastrophic consequence, modernization, arms-control erosion, command-and-control risk and deterrence fragility. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "oceans.scale": {
+    "mu": 4.5,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Ocean degradation. IPCC SROCC and UNESCO describe ocean warming, acidification, deoxygenation, sea-level rise and ecosystem stress, while FAO assesses fisheries and overfishing. Scores treat oceans as a composite degradation threat, not merely a pH series, with high irreversibility because deep-ocean and habitat changes persist for long periods. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "oceans.urgency": {
+    "mu": 4.3,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Ocean degradation. IPCC SROCC and UNESCO describe ocean warming, acidification, deoxygenation, sea-level rise and ecosystem stress, while FAO assesses fisheries and overfishing. Scores treat oceans as a composite degradation threat, not merely a pH series, with high irreversibility because deep-ocean and habitat changes persist for long periods. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "oceans.acceleration": {
+    "mu": 4.3,
+    "lo": 3.4,
+    "hi": 4.9,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Ocean degradation. IPCC SROCC and UNESCO describe ocean warming, acidification, deoxygenation, sea-level rise and ecosystem stress, while FAO assesses fisheries and overfishing. Scores treat oceans as a composite degradation threat, not merely a pH series, with high irreversibility because deep-ocean and habitat changes persist for long periods. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "oceans.interdependence": {
+    "mu": 4.5,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Ocean degradation. IPCC SROCC and UNESCO describe ocean warming, acidification, deoxygenation, sea-level rise and ecosystem stress, while FAO assesses fisheries and overfishing. Scores treat oceans as a composite degradation threat, not merely a pH series, with high irreversibility because deep-ocean and habitat changes persist for long periods. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "oceans.irreversibility": {
+    "mu": 4.7,
+    "lo": 4.0,
+    "hi": 5.0,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Ocean degradation. IPCC SROCC and UNESCO describe ocean warming, acidification, deoxygenation, sea-level rise and ecosystem stress, while FAO assesses fisheries and overfishing. Scores treat oceans as a composite degradation threat, not merely a pH series, with high irreversibility because deep-ocean and habitat changes persist for long periods. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "oceans.gov_failure": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 4.9,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Ocean degradation. IPCC SROCC and UNESCO describe ocean warming, acidification, deoxygenation, sea-level rise and ecosystem stress, while FAO assesses fisheries and overfishing. Scores treat oceans as a composite degradation threat, not merely a pH series, with high irreversibility because deep-ocean and habitat changes persist for long periods. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "oceans.growth_rate": {
+    "mu": 0.0119,
+    "lo": 0.006,
+    "hi": 0.0247,
+    "source": "FAO State of World Fisheries and Aquaculture 2024; IOC/UNESCO State of the Ocean Report 2024",
+    "url": "https://www.fao.org/publications/fao-flagship-publications/the-state-of-world-fisheries-and-aquaculture",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for composite_degradation_pressure, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 1, 0.03), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "composite_degradation_pressure",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.012,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "oceans.threshold": {
+    "mu": 8.4,
+    "lo": 7.9,
+    "hi": 9.0,
+    "source": "IPCC SROCC; UNESCO IOC State of the Ocean Report 2024; FAO fisheries assessments",
+    "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against combined warming, acidification, deoxygenation, overfishing, reef decline, fisheries dependence and coastal-system exposure. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "pandemics.scale": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Natural pandemic and zoonotic spillover risk. WHO treats epidemic-prone diseases as persistent high-threat hazards; the Lancet COVID-19 Commission documents preparedness failures, and zoonotic-spillover studies link climate, land use and wildlife-human contact to future emergence. Scores are high because pandemics couple health, economy, governance and supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pandemics.urgency": {
+    "mu": 3.8,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Natural pandemic and zoonotic spillover risk. WHO treats epidemic-prone diseases as persistent high-threat hazards; the Lancet COVID-19 Commission documents preparedness failures, and zoonotic-spillover studies link climate, land use and wildlife-human contact to future emergence. Scores are high because pandemics couple health, economy, governance and supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pandemics.acceleration": {
+    "mu": 3.9,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Natural pandemic and zoonotic spillover risk. WHO treats epidemic-prone diseases as persistent high-threat hazards; the Lancet COVID-19 Commission documents preparedness failures, and zoonotic-spillover studies link climate, land use and wildlife-human contact to future emergence. Scores are high because pandemics couple health, economy, governance and supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pandemics.interdependence": {
+    "mu": 4.6,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Natural pandemic and zoonotic spillover risk. WHO treats epidemic-prone diseases as persistent high-threat hazards; the Lancet COVID-19 Commission documents preparedness failures, and zoonotic-spillover studies link climate, land use and wildlife-human contact to future emergence. Scores are high because pandemics couple health, economy, governance and supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pandemics.irreversibility": {
+    "mu": 3.4,
+    "lo": 2.5,
+    "hi": 4.6,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Natural pandemic and zoonotic spillover risk. WHO treats epidemic-prone diseases as persistent high-threat hazards; the Lancet COVID-19 Commission documents preparedness failures, and zoonotic-spillover studies link climate, land use and wildlife-human contact to future emergence. Scores are high because pandemics couple health, economy, governance and supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pandemics.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Natural pandemic and zoonotic spillover risk. WHO treats epidemic-prone diseases as persistent high-threat hazards; the Lancet COVID-19 Commission documents preparedness failures, and zoonotic-spillover studies link climate, land use and wildlife-human contact to future emergence. Scores are high because pandemics couple health, economy, governance and supply chains. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pandemics.growth_rate": {
+    "mu": 0.0439,
+    "lo": 0.0283,
+    "hi": 0.05,
+    "source": "Meadows et al., BMJ Global Health 2023; Carlson et al., Nature 2022",
+    "url": "https://gh.bmj.com/content/8/11/e012026",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for event_frequency_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.9, 0.05), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "event_frequency_growth",
+    "risk_conversion": 0.9,
+    "raw_indicator_growth": 0.05,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "pandemics.threshold": {
+    "mu": 8.5,
+    "lo": 8.0,
+    "hi": 9.2,
+    "source": "WHO pandemic preparedness materials; Lancet Commission on lessons for the future from COVID-19; Carlson et al., Nature 2022",
+    "url": "https://www.who.int/activities/preparing-and-preventing-epidemics-and-pandemics",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against zoonotic spillover drivers, global connectivity, health-system capacity, vaccine equity and institutional readiness. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "pollution.scale": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Chemical, air and plastic pollution. The Lancet pollution update estimates very large mortality burdens, UNEP describes global chemical management gaps, and OECD documents plastics production, waste and leakage trajectories. Scores combine health burden, persistent pollutants and planetary-boundary concerns while recognizing that some emissions can be reduced rapidly with regulation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pollution.urgency": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Chemical, air and plastic pollution. The Lancet pollution update estimates very large mortality burdens, UNEP describes global chemical management gaps, and OECD documents plastics production, waste and leakage trajectories. Scores combine health burden, persistent pollutants and planetary-boundary concerns while recognizing that some emissions can be reduced rapidly with regulation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pollution.acceleration": {
+    "mu": 3.7,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Chemical, air and plastic pollution. The Lancet pollution update estimates very large mortality burdens, UNEP describes global chemical management gaps, and OECD documents plastics production, waste and leakage trajectories. Scores combine health burden, persistent pollutants and planetary-boundary concerns while recognizing that some emissions can be reduced rapidly with regulation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pollution.interdependence": {
+    "mu": 4.4,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Chemical, air and plastic pollution. The Lancet pollution update estimates very large mortality burdens, UNEP describes global chemical management gaps, and OECD documents plastics production, waste and leakage trajectories. Scores combine health burden, persistent pollutants and planetary-boundary concerns while recognizing that some emissions can be reduced rapidly with regulation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pollution.irreversibility": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 4.9,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Chemical, air and plastic pollution. The Lancet pollution update estimates very large mortality burdens, UNEP describes global chemical management gaps, and OECD documents plastics production, waste and leakage trajectories. Scores combine health burden, persistent pollutants and planetary-boundary concerns while recognizing that some emissions can be reduced rapidly with regulation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pollution.gov_failure": {
+    "mu": 4.1,
+    "lo": 3.2,
+    "hi": 4.9,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Chemical, air and plastic pollution. The Lancet pollution update estimates very large mortality burdens, UNEP describes global chemical management gaps, and OECD documents plastics production, waste and leakage trajectories. Scores combine health burden, persistent pollutants and planetary-boundary concerns while recognizing that some emissions can be reduced rapidly with regulation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "pollution.growth_rate": {
+    "mu": 0.0275,
+    "lo": 0.0139,
+    "hi": 0.04,
+    "source": "UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.unep.org/resources/report/global-chemicals-outlook-ii-legacies-innovative-solutions",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for production_pressure_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.7, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "production_pressure_growth",
+    "risk_conversion": 0.7,
+    "raw_indicator_growth": 0.04,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "pollution.threshold": {
+    "mu": 8.2,
+    "lo": 7.7,
+    "hi": 8.8,
+    "source": "Lancet Commission on pollution and health update, 2022; UNEP Global Chemicals Outlook II; OECD Global Plastics Outlook",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against mortality burden, persistent chemicals, novel-entity boundary concerns, plastic leakage and incomplete global chemical governance. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "soils.scale": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 4.8,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Soil degradation and land-system productivity loss. UNCCD and IPBES document widespread land degradation affecting human well-being, biodiversity, food production and climate mitigation; FAO identifies major threats to soil functions. Scores are high because soils sit at the food-water-climate nexus, though restoration can reverse some local damage. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "soils.urgency": {
+    "mu": 4.0,
+    "lo": 3.2,
+    "hi": 4.7,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Soil degradation and land-system productivity loss. UNCCD and IPBES document widespread land degradation affecting human well-being, biodiversity, food production and climate mitigation; FAO identifies major threats to soil functions. Scores are high because soils sit at the food-water-climate nexus, though restoration can reverse some local damage. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "soils.acceleration": {
+    "mu": 3.8,
+    "lo": 2.9,
+    "hi": 4.6,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Soil degradation and land-system productivity loss. UNCCD and IPBES document widespread land degradation affecting human well-being, biodiversity, food production and climate mitigation; FAO identifies major threats to soil functions. Scores are high because soils sit at the food-water-climate nexus, though restoration can reverse some local damage. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "soils.interdependence": {
+    "mu": 4.5,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Soil degradation and land-system productivity loss. UNCCD and IPBES document widespread land degradation affecting human well-being, biodiversity, food production and climate mitigation; FAO identifies major threats to soil functions. Scores are high because soils sit at the food-water-climate nexus, though restoration can reverse some local damage. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "soils.irreversibility": {
+    "mu": 4.1,
+    "lo": 3.4,
+    "hi": 4.8,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Soil degradation and land-system productivity loss. UNCCD and IPBES document widespread land degradation affecting human well-being, biodiversity, food production and climate mitigation; FAO identifies major threats to soil functions. Scores are high because soils sit at the food-water-climate nexus, though restoration can reverse some local damage. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "soils.gov_failure": {
+    "mu": 3.9,
+    "lo": 3.1,
+    "hi": 4.7,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Soil degradation and land-system productivity loss. UNCCD and IPBES document widespread land degradation affecting human well-being, biodiversity, food production and climate mitigation; FAO identifies major threats to soil functions. Scores are high because soils sit at the food-water-climate nexus, though restoration can reverse some local damage. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "soils.growth_rate": {
+    "mu": 0.009,
+    "lo": 0.007,
+    "hi": 0.0119,
+    "source": "UNCCD Global Land Outlook 2 and FAO Status of the World's Soil Resources",
+    "url": "https://openknowledge.fao.org/handle/20.500.14283/i5199e",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for land_degradation_pressure, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 1, 0.025), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "land_degradation_pressure",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.009,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "soils.threshold": {
+    "mu": 8.3,
+    "lo": 7.8,
+    "hi": 8.9,
+    "source": "UNCCD Global Land Outlook 2; IPBES Land Degradation and Restoration Assessment; FAO SOLAW 2021",
+    "url": "https://www.unccd.int/resources/global-land-outlook/global-land-outlook-2nd-edition",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against degraded-land extent, food-production dependence, soil-carbon loss, dryland vulnerability and restoration-governance gaps. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "space.scale": {
+    "mu": 3.0,
+    "lo": 2.1,
+    "hi": 4.2,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Orbital congestion and space-debris cascade risk. ESA reports fast growth in tracked objects, active payloads and debris concerns, while UNOOSA maintains the launch-object registry. Scores emphasize acceleration and governance failure, but overall scale is lower than climate or nuclear because orbital collapse would primarily damage space-enabled infrastructure rather than the biosphere directly. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "space.urgency": {
+    "mu": 3.4,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Orbital congestion and space-debris cascade risk. ESA reports fast growth in tracked objects, active payloads and debris concerns, while UNOOSA maintains the launch-object registry. Scores emphasize acceleration and governance failure, but overall scale is lower than climate or nuclear because orbital collapse would primarily damage space-enabled infrastructure rather than the biosphere directly. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "space.acceleration": {
+    "mu": 4.5,
+    "lo": 3.6,
+    "hi": 5.0,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Orbital congestion and space-debris cascade risk. ESA reports fast growth in tracked objects, active payloads and debris concerns, while UNOOSA maintains the launch-object registry. Scores emphasize acceleration and governance failure, but overall scale is lower than climate or nuclear because orbital collapse would primarily damage space-enabled infrastructure rather than the biosphere directly. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "space.interdependence": {
+    "mu": 3.8,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Orbital congestion and space-debris cascade risk. ESA reports fast growth in tracked objects, active payloads and debris concerns, while UNOOSA maintains the launch-object registry. Scores emphasize acceleration and governance failure, but overall scale is lower than climate or nuclear because orbital collapse would primarily damage space-enabled infrastructure rather than the biosphere directly. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "space.irreversibility": {
+    "mu": 3.2,
+    "lo": 2.3,
+    "hi": 4.4,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Orbital congestion and space-debris cascade risk. ESA reports fast growth in tracked objects, active payloads and debris concerns, while UNOOSA maintains the launch-object registry. Scores emphasize acceleration and governance failure, but overall scale is lower than climate or nuclear because orbital collapse would primarily damage space-enabled infrastructure rather than the biosphere directly. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "space.gov_failure": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Orbital congestion and space-debris cascade risk. ESA reports fast growth in tracked objects, active payloads and debris concerns, while UNOOSA maintains the launch-object registry. Scores emphasize acceleration and governance failure, but overall scale is lower than climate or nuclear because orbital collapse would primarily damage space-enabled infrastructure rather than the biosphere directly. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "space.growth_rate": {
+    "mu": 0.0328,
+    "lo": 0.0172,
+    "hi": 0.04,
+    "source": "ESA Space Environment Report 2025",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for inventory_growth_proxy, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.18, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "inventory_growth_proxy",
+    "risk_conversion": 0.18,
+    "raw_indicator_growth": 0.2,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "space.threshold": {
+    "mu": 7.9,
+    "lo": 7.3,
+    "hi": 8.6,
+    "source": "ESA Space Environment Report 2025; UNOOSA Online Index of Objects Launched into Outer Space",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_Space_Environment_Report_2025",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against tracked-object growth, collision probability, Kessler-type cascade risk, satellite-service dependence and weak global traffic rules. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "supply.scale": {
+    "mu": 3.7,
+    "lo": 2.8,
+    "hi": 4.7,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal systemic magnitude score for Global supply-chain fragility. WTO documents elevated trade-policy uncertainty and trade measures, while UNCTAD describes fragile maritime logistics, route disruptions and volatile freight conditions. Scores are high for interdependence because supply chains connect food, energy, health goods, electronics and defense inputs, but irreversibility is moderate because logistics can often reroute. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "supply.urgency": {
+    "mu": 4.0,
+    "lo": 3.1,
+    "hi": 4.8,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal near-term action priority score for Global supply-chain fragility. WTO documents elevated trade-policy uncertainty and trade measures, while UNCTAD describes fragile maritime logistics, route disruptions and volatile freight conditions. Scores are high for interdependence because supply chains connect food, energy, health goods, electronics and defense inputs, but irreversibility is moderate because logistics can often reroute. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "supply.acceleration": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.7,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Global supply-chain fragility. WTO documents elevated trade-policy uncertainty and trade measures, while UNCTAD describes fragile maritime logistics, route disruptions and volatile freight conditions. Scores are high for interdependence because supply chains connect food, energy, health goods, electronics and defense inputs, but irreversibility is moderate because logistics can often reroute. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "supply.interdependence": {
+    "mu": 4.7,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal coupling to other systemic risks score for Global supply-chain fragility. WTO documents elevated trade-policy uncertainty and trade measures, while UNCTAD describes fragile maritime logistics, route disruptions and volatile freight conditions. Scores are high for interdependence because supply chains connect food, energy, health goods, electronics and defense inputs, but irreversibility is moderate because logistics can often reroute. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "supply.irreversibility": {
+    "mu": 2.8,
+    "lo": 1.8,
+    "hi": 3.8,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Global supply-chain fragility. WTO documents elevated trade-policy uncertainty and trade measures, while UNCTAD describes fragile maritime logistics, route disruptions and volatile freight conditions. Scores are high for interdependence because supply chains connect food, energy, health goods, electronics and defense inputs, but irreversibility is moderate because logistics can often reroute. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "supply.gov_failure": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.8,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Global supply-chain fragility. WTO documents elevated trade-policy uncertainty and trade measures, while UNCTAD describes fragile maritime logistics, route disruptions and volatile freight conditions. Scores are high for interdependence because supply chains connect food, energy, health goods, electronics and defense inputs, but irreversibility is moderate because logistics can often reroute. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "supply.growth_rate": {
+    "mu": 0.0283,
+    "lo": 0.0146,
+    "hi": 0.04,
+    "source": "WTO Report on G20 Trade Measures 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/news_e/news_docs/32nd_WTO_Report_on_G20_Trade_Measures.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for trade_restriction_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.25, 0.04), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "trade_restriction_growth",
+    "risk_conversion": 0.25,
+    "raw_indicator_growth": 0.12,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "supply.threshold": {
+    "mu": 8.1,
+    "lo": 7.6,
+    "hi": 8.7,
+    "source": "WTO Global Trade Outlook and Statistics 2025; UNCTAD Review of Maritime Transport 2025",
+    "url": "https://www.wto.org/english/res_e/publications_e/trade_outlook25_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against trade restrictions, shipping disruption, route chokepoints, just-in-time exposure and limited redundancy in critical sectors. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  },
+  "water.scale": {
+    "mu": 4.5,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal systemic magnitude score for Freshwater stress and hydrological instability. UN WWDR 2024 frames water as central to prosperity and peace and documents severe scarcity and service gaps, while WMO reports abnormal river flows, droughts, floods and storage anomalies. Scores reflect strong coupling to food, health, conflict, energy and climate adaptation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "water.urgency": {
+    "mu": 4.5,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal near-term action priority score for Freshwater stress and hydrological instability. UN WWDR 2024 frames water as central to prosperity and peace and documents severe scarcity and service gaps, while WMO reports abnormal river flows, droughts, floods and storage anomalies. Scores reflect strong coupling to food, health, conflict, energy and climate adaptation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "water.acceleration": {
+    "mu": 4.0,
+    "lo": 3.1,
+    "hi": 4.8,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal worsening trend or capability/exposure growth score for Freshwater stress and hydrological instability. UN WWDR 2024 frames water as central to prosperity and peace and documents severe scarcity and service gaps, while WMO reports abnormal river flows, droughts, floods and storage anomalies. Scores reflect strong coupling to food, health, conflict, energy and climate adaptation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "water.interdependence": {
+    "mu": 4.6,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal coupling to other systemic risks score for Freshwater stress and hydrological instability. UN WWDR 2024 frames water as central to prosperity and peace and documents severe scarcity and service gaps, while WMO reports abnormal river flows, droughts, floods and storage anomalies. Scores reflect strong coupling to food, health, conflict, energy and climate adaptation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "water.irreversibility": {
+    "mu": 4.2,
+    "lo": 3.4,
+    "hi": 4.9,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Ordinal persistence of damage and difficulty of recovery score for Freshwater stress and hydrological instability. UN WWDR 2024 frames water as central to prosperity and peace and documents severe scarcity and service gaps, while WMO reports abnormal river flows, droughts, floods and storage anomalies. Scores reflect strong coupling to food, health, conflict, energy and climate adaptation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "water.gov_failure": {
+    "mu": 4.2,
+    "lo": 3.3,
+    "hi": 4.9,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Ordinal risk of inadequate collective response score for Freshwater stress and hydrological instability. UN WWDR 2024 frames water as central to prosperity and peace and documents severe scarcity and service gaps, while WMO reports abnormal river flows, droughts, floods and storage anomalies. Scores reflect strong coupling to food, health, conflict, energy and climate adaptation. The low–high range represents mapping uncertainty between the cited evidence base and the dashboard’s 0–5 systemic-risk dimension."
+  },
+  "water.growth_rate": {
+    "mu": 0.0245,
+    "lo": 0.0134,
+    "hi": 0.031,
+    "source": "Kummu et al., Scientific Reports, 2016; UN WWDR 2024",
+    "url": "https://www.nature.com/articles/srep38495",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "The raw indicator is treated as a proxy annual growth signal for scarcity_exposure_growth, not as a direct probability of collapse. The calibrated range is computed as min(log1p(raw_indicator_growth) × 0.9, 0.035), with uncertainty taken from the low and high proxy-growth bounds. This stores effective systemic risk-pressure growth for the dashboard.",
+    "growth_kind": "scarcity_exposure_growth",
+    "risk_conversion": 0.9,
+    "raw_indicator_growth": 0.0276,
+    "effective_growth_calibrated": true,
+    "calibration_note": "mu, lo and hi already store calibrated annualized effective systemic risk-growth. Do not apply a second conversion to these values in the dashboard."
+  },
+  "water.threshold": {
+    "mu": 8.6,
+    "lo": 8.1,
+    "hi": 9.1,
+    "source": "UN World Water Development Report 2024; WMO State of Global Water Resources 2024",
+    "url": "https://www.unesco.org/en/articles/united-nations-world-water-development-report-2024-water-prosperity-and-peace",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No source measures an Apocalypse Clock normalized destabilization threshold directly. This value is an anchored model threshold calibrated against population exposed to scarcity, groundwater depletion, hydrological extremes, transboundary stress and SDG 6 governance deficits. It is a 0–10 abstract destabilization threshold, not a severity score or empirical tipping point."
+  }
+}

@@ -794,21 +794,50 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   *,*::before,*::after{animation:none!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
 @media (max-width: 520px){
-  .cascade-horizon-pair{grid-template-columns:1fr;gap:8px}
-  .cascade-horizon-clock{width:min(210px,75vw);padding:20px}
-  .cascade-horizon-interval{min-height:54px;width:min(210px,75vw);margin:0 auto;border:1px solid var(--border);border-radius:var(--r4)}
-  .cascade-horizon-interval::before{content:'↕';font-size:18px;margin-bottom:1px}
-  .cascade-horizon-clock .cascade-headline-year{font-size:clamp(40px,15vw,64px)}
-  .cascade-horizon-clock .cascade-prob-line{gap:4px;margin-top:9px}
-  .cascade-horizon-clock .cascade-prob-label{font-size:7px;letter-spacing:.08em}
-  .cascade-headline-year{font-size:clamp(40px,15vw,64px);letter-spacing:.01em;}
-  .cascade-prob-line{gap:6px}
-  .cascade-prob-label{font-size:7px}
-  #cascadeHeadlineProb.cascade-headline-prob,#cascadeMedianProb.cascade-headline-prob{font-size:12px;}
-  #heroAbsoluteClock .cascade-horizon-pair{grid-template-columns:1fr;gap:10px}
-  #heroAbsoluteClock .cascade-horizon-clock{width:min(230px,100%);max-width:230px;padding:20px}
-  #heroAbsoluteClock .cascade-horizon-interval{width:min(230px,100%)}
-  #heroAbsoluteClock .cascade-horizon-clock .cascade-headline-year{font-size:clamp(48px,15vw,64px)}
+  #heroAbsoluteClock{padding:14px!important}
+  #heroAbsoluteClock .hero-projected-layout{min-height:0;margin-bottom:12px}
+  .cascade-horizon-pair,
+  #heroAbsoluteClock .cascade-horizon-pair{
+    grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);
+    gap:5px;
+    align-items:center;
+    margin:12px auto 9px;
+  }
+  .cascade-horizon-clock,
+  #heroAbsoluteClock .cascade-horizon-clock{
+    width:100%;
+    max-width:142px;
+    padding:8px;
+  }
+  .cascade-horizon-clock::before{inset:5px}
+  .cascade-horizon-role{font-size:5.5px;letter-spacing:.055em;line-height:1.2}
+  .cascade-horizon-quantile{font-size:9px;letter-spacing:.1em;margin:1px 0 3px}
+  .cascade-horizon-clock .cascade-headline-year,
+  #heroAbsoluteClock .cascade-horizon-clock .cascade-headline-year{
+    font-size:clamp(27px,8.8vw,35px);
+    letter-spacing:.01em;
+  }
+  .cascade-horizon-clock .cascade-prob-line{gap:2px;margin-top:5px}
+  .cascade-horizon-clock .cascade-prob-label{display:none}
+  #cascadeHeadlineProb.cascade-headline-prob,
+  #cascadeMedianProb.cascade-headline-prob{font-size:10px}
+  .cascade-horizon-interval,
+  #heroAbsoluteClock .cascade-horizon-interval{
+    width:34px;
+    min-height:82px;
+    margin:0;
+    padding:5px 1px;
+    border:0;
+    border-top:1px solid var(--border2);
+    border-bottom:1px solid var(--border2);
+    border-radius:0;
+  }
+  .cascade-horizon-interval::before{content:'↔';font-size:13px;margin-bottom:2px}
+  .cascade-horizon-interval-label{display:none}
+  .cascade-horizon-interval strong{font-size:16px}
+  .cascade-horizon-interval-unit{font-size:5.5px;letter-spacing:.04em}
+  .cascade-stability-note{font-size:8px;line-height:1.5;margin:6px auto}
+  .cascade-headline-note{font-size:7px;line-height:1.5;margin:8px 0 10px;padding:6px 7px}
 }
 .climate-feature-card{
   position:relative;

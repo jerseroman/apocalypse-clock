@@ -4,12 +4,13 @@
 
 This MODEL correction makes the domain cards and regime timing internally consistent with the declared functional-pressure model. Dataset 1.9.0, its 184 numerical ranges, thresholds, topology, fixed criticality tiers, service memberships, edge weights and lags are unchanged.
 
-### Same-version CDF, Weibull and Wix presentation hotfix
+### Same-version CDF, Weibull and presentation hotfix
 
 - Corrects the main cumulative chart to display the existing Dynamic Cascade first-crossing distribution used by the paired P50/P90 clocks. It previously rendered the top-level compensatory distribution (Baseline P50 2054) even though the surrounding headline referred to Dynamic Cascade (P50 2036, P90 2042).
 - Replaces JavaScript-style `undefined` output in the Weibull domain view with explicit partial-identification reporting. Positive-weight right-censored threats remain in the calculation: the UI shows a defensible lower bound for the weighted P50 and a weighted P≤2050 probability range instead of inventing a date or silently dropping late threats.
 - Renames the three domain cards to Civilizational, Biosphere and Technological `Functional-Disruption Horizon`, and makes the paired-clock explanation easier to read without changing its scientific caveats.
-- Extends the Wix custom element's `#14181e` background across the full viewport width for the height of the application, removing the darker Wix-section gutters without adding an iframe or changing other page sections.
+- Extends the application's `#14181e` background across the full viewport width for the height of the dashboard, removing darker page gutters without changing the model or other page sections.
+- Removes the obsolete page-builder delivery layer, its generator, harness and dedicated tests. The logo, Perplexity icon and all seven AI comparison presets are now served directly from the repository.
 - This is a correction within application 1.2.9 and data 1.9.0. No model equation, dataset value, threshold, sampling rule, headline number or version identifier changes.
 
 - Replaces the domain cards' former 40-percent standalone sampled-priority-mass crossing with a domain functional first crossing reconstructed from the full-system propagated activation history. Only the reporting node basket and denominator are restricted by domain; fixed criticality, overlap, essential-service and 0.50 trigger rules match the headline engine.
@@ -38,7 +39,6 @@ Version 1.2.8 advances the public release sequence from 1.2.7. It incorporates t
 - Retains event-specific initiation for nuclear, engineered biological, pandemic and autonomous-weapons events. All remain aggregate-eligible and can transmit after activation.
 - Separates standalone and propagated first-functional-failure summaries in UI narrative and JSON/CSV exports. Corrects stale explanations and active dataset labels. Adds functional catalog/import/causal regression checks.
 - Replaces the single headline P90 display with paired Dynamic-cascade P50 and P90 clocks plus their calendar-year interval. The pair exposes the median and later distribution quantile without changing the simulation, dataset, thresholds, random seed, or stored baseline result (P50 2036, P90 2043, interval 7 years).
-- Adds a reproducible Wix Velo Custom Element delivery target (`wix/apocalypse-clock-element.js`) and a local harness. The generated Web Component renders the application in an encapsulated shadow root and contains no HTML iframe; the legacy Wix HTML embed can therefore be replaced without maintaining a second copy of the model inside Wix.
 - Expands public methodology, model-scope and limitation documentation. It explicitly distinguishes a functional-disruption threshold from completed global collapse and separates reproducible engineering results from empirical predictive validation.
 - Synchronizes the 1.2.8 identifier across runtime code, HTML delivery surfaces, npm metadata, tests, documentation, citation metadata and Zenodo metadata. The active dataset remains 1.9.0.
 - Original 1.7.1 and 1.8.0 JSON files remain byte-identical to the backup. The full previous application is preserved in `backups/pre-functional-cascade-2026-09-09`.

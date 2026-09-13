@@ -13,8 +13,8 @@ Exact owner instruction authorizing this class: "popravi tako da bo pravilno! po
 - `src/app.js`: `sampleRegimeHorizon`, `deterministicRegimeHorizon`, `computeThreatHorizon`, `configuredFunctionalCascadeNodes`, `simulateFunctionalCascade`, `computeDomainFunctionalCrossing`, `recordMonteCarloSample`, `summarizeMonteCarloAccumulator`, domain-card rendering, execution snapshot and numerical fingerprint.
 - `src/cascade-model.js`: add pure `firstCrossingFromActivationYears` reporting-basket reconstruction.
 - `index.html`, `404.html`: domain-method explanation and release identity only; bundled numerical data remain unchanged.
-- `tests/functional-cascade.spec.js`, `tests/units.spec.js`, `tests/functional-integration.spec.js`, `tests/headline-determinism.spec.js`, `tests/wix-custom-element.spec.js`: monotonicity, domain reconstruction, censoring, export and golden contracts.
-- `package.json`, `package-lock.json`, `CITATION.cff`, `.zenodo.json`, `README.md`, `CHANGELOG.md`, `docs/*`, `ai-governance/*`, `scripts/build-wix-velo-custom-element.js`, `scripts/build-wix-embed.js`, `wix/*`: model 1.2.9 identity, rationale, limitations and delivery artifacts.
+- `tests/functional-cascade.spec.js`, `tests/units.spec.js`, `tests/functional-integration.spec.js`, `tests/headline-determinism.spec.js`: monotonicity, domain reconstruction, censoring, export and golden contracts.
+- `package.json`, `package-lock.json`, `CITATION.cff`, `.zenodo.json`, `README.md`, `CHANGELOG.md`, `docs/*`, `ai-governance/*`: model 1.2.9 identity, rationale, limitations and delivery artifacts.
 
 ## Files explicitly NOT touched
 

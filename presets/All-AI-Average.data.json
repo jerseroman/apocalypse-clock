@@ -1,0 +1,972 @@
+{
+  "_meta": {
+    "generated": "calculated-average",
+    "calculated_at": "2026-05-03T10:09:32.867Z",
+    "description": "Average Apocalypse Clock numeric parameter dataset calculated from all listed AI JSON files. Each non-meta entry contains only averaged mu, lo, and hi numeric values.",
+    "parameter_count_excluding_meta": 184,
+    "threat_count": 23,
+    "metrics_per_threat": 8,
+    "threats": [
+      "climate",
+      "biodiversity",
+      "nuclear",
+      "water",
+      "soils",
+      "oceans",
+      "pollution",
+      "pandemics",
+      "amr",
+      "bioengineered",
+      "ai",
+      "cyber",
+      "autonomousw",
+      "minerals",
+      "space",
+      "geopolitics",
+      "supply",
+      "fragmentation_gov",
+      "economic",
+      "debt",
+      "displacement",
+      "authoritarian",
+      "epistemic"
+    ],
+    "metrics": [
+      "scale",
+      "urgency",
+      "acceleration",
+      "interdependence",
+      "irreversibility",
+      "gov_failure",
+      "growth_rate",
+      "threshold"
+    ],
+    "entry_fields": [
+      "mu",
+      "lo",
+      "hi"
+    ],
+    "model_count": 6,
+    "average_method": "For each '<threat>.<metric>' key, mu, lo, and hi are averaged independently across the six input JSON datasets. Parameter entries intentionally contain only numeric mu, lo, and hi fields."
+  },
+  "climate.scale": {
+    "mu": 4.733333,
+    "lo": 3.883333,
+    "hi": 5
+  },
+  "climate.urgency": {
+    "mu": 4.6,
+    "lo": 3.75,
+    "hi": 5
+  },
+  "climate.acceleration": {
+    "mu": 4.183333,
+    "lo": 3.333333,
+    "hi": 4.85
+  },
+  "climate.interdependence": {
+    "mu": 4.683333,
+    "lo": 3.833333,
+    "hi": 5
+  },
+  "climate.irreversibility": {
+    "mu": 4.6,
+    "lo": 3.766667,
+    "hi": 4.983333
+  },
+  "climate.gov_failure": {
+    "mu": 3.85,
+    "lo": 3.116667,
+    "hi": 4.666667
+  },
+  "climate.growth_rate": {
+    "mu": 0.0178,
+    "lo": 0.010417,
+    "hi": 0.02685
+  },
+  "climate.threshold": {
+    "mu": 8.833333,
+    "lo": 8.366667,
+    "hi": 9.3
+  },
+  "biodiversity.scale": {
+    "mu": 4.55,
+    "lo": 3.666667,
+    "hi": 4.95
+  },
+  "biodiversity.urgency": {
+    "mu": 4.283333,
+    "lo": 3.4,
+    "hi": 4.916667
+  },
+  "biodiversity.acceleration": {
+    "mu": 4.1,
+    "lo": 3.216667,
+    "hi": 4.783333
+  },
+  "biodiversity.interdependence": {
+    "mu": 4.516667,
+    "lo": 3.633333,
+    "hi": 4.966667
+  },
+  "biodiversity.irreversibility": {
+    "mu": 4.7,
+    "lo": 3.833333,
+    "hi": 5
+  },
+  "biodiversity.gov_failure": {
+    "mu": 4.166667,
+    "lo": 3.283333,
+    "hi": 4.866667
+  },
+  "biodiversity.growth_rate": {
+    "mu": 0.022583,
+    "lo": 0.013833,
+    "hi": 0.0319
+  },
+  "biodiversity.threshold": {
+    "mu": 8.483333,
+    "lo": 8.016667,
+    "hi": 8.95
+  },
+  "nuclear.scale": {
+    "mu": 4.85,
+    "lo": 3.966667,
+    "hi": 5
+  },
+  "nuclear.urgency": {
+    "mu": 4.416667,
+    "lo": 3.516667,
+    "hi": 4.95
+  },
+  "nuclear.acceleration": {
+    "mu": 3.583333,
+    "lo": 2.816667,
+    "hi": 4.416667
+  },
+  "nuclear.interdependence": {
+    "mu": 4.116667,
+    "lo": 3.233333,
+    "hi": 4.933333
+  },
+  "nuclear.irreversibility": {
+    "mu": 4.75,
+    "lo": 3.883333,
+    "hi": 5
+  },
+  "nuclear.gov_failure": {
+    "mu": 4.366667,
+    "lo": 3.483333,
+    "hi": 4.9
+  },
+  "nuclear.growth_rate": {
+    "mu": 0.015633,
+    "lo": 0.009733,
+    "hi": 0.024367
+  },
+  "nuclear.threshold": {
+    "mu": 9.183333,
+    "lo": 8.716667,
+    "hi": 9.633333
+  },
+  "water.scale": {
+    "mu": 4.283333,
+    "lo": 3.733333,
+    "hi": 4.766667
+  },
+  "water.urgency": {
+    "mu": 4.333333,
+    "lo": 3.716667,
+    "hi": 4.866667
+  },
+  "water.acceleration": {
+    "mu": 3.783333,
+    "lo": 2.9,
+    "hi": 4.466667
+  },
+  "water.interdependence": {
+    "mu": 4.4,
+    "lo": 3.783333,
+    "hi": 4.916667
+  },
+  "water.irreversibility": {
+    "mu": 4,
+    "lo": 3.383333,
+    "hi": 4.616667
+  },
+  "water.gov_failure": {
+    "mu": 4.016667,
+    "lo": 3.283333,
+    "hi": 4.633333
+  },
+  "water.growth_rate": {
+    "mu": 0.0228,
+    "lo": 0.012667,
+    "hi": 0.0301
+  },
+  "water.threshold": {
+    "mu": 8.483333,
+    "lo": 8.016667,
+    "hi": 8.9
+  },
+  "soils.scale": {
+    "mu": 4.05,
+    "lo": 3.433333,
+    "hi": 4.6
+  },
+  "soils.urgency": {
+    "mu": 3.866667,
+    "lo": 3.25,
+    "hi": 4.483333
+  },
+  "soils.acceleration": {
+    "mu": 3.55,
+    "lo": 2.766667,
+    "hi": 4.283333
+  },
+  "soils.interdependence": {
+    "mu": 4.316667,
+    "lo": 3.7,
+    "hi": 4.85
+  },
+  "soils.irreversibility": {
+    "mu": 4.133333,
+    "lo": 3.533333,
+    "hi": 4.75
+  },
+  "soils.gov_failure": {
+    "mu": 3.8,
+    "lo": 3.083333,
+    "hi": 4.533333
+  },
+  "soils.growth_rate": {
+    "mu": 0.00975,
+    "lo": 0.00695,
+    "hi": 0.01395
+  },
+  "soils.threshold": {
+    "mu": 8.233333,
+    "lo": 7.766667,
+    "hi": 8.716667
+  },
+  "oceans.scale": {
+    "mu": 4.416667,
+    "lo": 3.8,
+    "hi": 4.883333
+  },
+  "oceans.urgency": {
+    "mu": 4.233333,
+    "lo": 3.6,
+    "hi": 4.85
+  },
+  "oceans.acceleration": {
+    "mu": 4.05,
+    "lo": 3.316667,
+    "hi": 4.65
+  },
+  "oceans.interdependence": {
+    "mu": 4.433333,
+    "lo": 3.816667,
+    "hi": 4.95
+  },
+  "oceans.irreversibility": {
+    "mu": 4.6,
+    "lo": 4,
+    "hi": 4.966667
+  },
+  "oceans.gov_failure": {
+    "mu": 4.133333,
+    "lo": 3.45,
+    "hi": 4.75
+  },
+  "oceans.growth_rate": {
+    "mu": 0.012467,
+    "lo": 0.006783,
+    "hi": 0.023933
+  },
+  "oceans.threshold": {
+    "mu": 8.416667,
+    "lo": 7.95,
+    "hi": 8.95
+  },
+  "pollution.scale": {
+    "mu": 4.15,
+    "lo": 3.516667,
+    "hi": 4.7
+  },
+  "pollution.urgency": {
+    "mu": 3.883333,
+    "lo": 3.216667,
+    "hi": 4.516667
+  },
+  "pollution.acceleration": {
+    "mu": 3.516667,
+    "lo": 2.783333,
+    "hi": 4.216667
+  },
+  "pollution.interdependence": {
+    "mu": 4,
+    "lo": 3.316667,
+    "hi": 4.6
+  },
+  "pollution.irreversibility": {
+    "mu": 4.133333,
+    "lo": 3.45,
+    "hi": 4.733333
+  },
+  "pollution.gov_failure": {
+    "mu": 3.816667,
+    "lo": 3.083333,
+    "hi": 4.45
+  },
+  "pollution.growth_rate": {
+    "mu": 0.025783,
+    "lo": 0.0136,
+    "hi": 0.03705
+  },
+  "pollution.threshold": {
+    "mu": 7.966667,
+    "lo": 7.5,
+    "hi": 8.45
+  },
+  "pandemics.scale": {
+    "mu": 4.533333,
+    "lo": 3.95,
+    "hi": 4.966667
+  },
+  "pandemics.urgency": {
+    "mu": 4.183333,
+    "lo": 3.566667,
+    "hi": 4.8
+  },
+  "pandemics.acceleration": {
+    "mu": 3.85,
+    "lo": 3.166667,
+    "hi": 4.5
+  },
+  "pandemics.interdependence": {
+    "mu": 4.533333,
+    "lo": 3.916667,
+    "hi": 4.9
+  },
+  "pandemics.irreversibility": {
+    "mu": 3.116667,
+    "lo": 2.383333,
+    "hi": 3.9
+  },
+  "pandemics.gov_failure": {
+    "mu": 4.116667,
+    "lo": 3.433333,
+    "hi": 4.766667
+  },
+  "pandemics.growth_rate": {
+    "mu": 0.039483,
+    "lo": 0.02465,
+    "hi": 0.045517
+  },
+  "pandemics.threshold": {
+    "mu": 8.5,
+    "lo": 8.033333,
+    "hi": 9
+  },
+  "amr.scale": {
+    "mu": 4.25,
+    "lo": 3.633333,
+    "hi": 4.733333
+  },
+  "amr.urgency": {
+    "mu": 4.15,
+    "lo": 3.516667,
+    "hi": 4.766667
+  },
+  "amr.acceleration": {
+    "mu": 3.583333,
+    "lo": 2.933333,
+    "hi": 4.266667
+  },
+  "amr.interdependence": {
+    "mu": 3.966667,
+    "lo": 3.3,
+    "hi": 4.6
+  },
+  "amr.irreversibility": {
+    "mu": 3.8,
+    "lo": 3.133333,
+    "hi": 4.433333
+  },
+  "amr.gov_failure": {
+    "mu": 4,
+    "lo": 3.316667,
+    "hi": 4.633333
+  },
+  "amr.growth_rate": {
+    "mu": 0.0191,
+    "lo": 0.010167,
+    "hi": 0.030617
+  },
+  "amr.threshold": {
+    "mu": 8.183333,
+    "lo": 7.716667,
+    "hi": 8.65
+  },
+  "bioengineered.scale": {
+    "mu": 4.316667,
+    "lo": 3.516667,
+    "hi": 4.9
+  },
+  "bioengineered.urgency": {
+    "mu": 3.85,
+    "lo": 3.066667,
+    "hi": 4.616667
+  },
+  "bioengineered.acceleration": {
+    "mu": 4.166667,
+    "lo": 3.383333,
+    "hi": 4.816667
+  },
+  "bioengineered.interdependence": {
+    "mu": 4,
+    "lo": 3.2,
+    "hi": 4.75
+  },
+  "bioengineered.irreversibility": {
+    "mu": 4.066667,
+    "lo": 3.25,
+    "hi": 4.75
+  },
+  "bioengineered.gov_failure": {
+    "mu": 4.05,
+    "lo": 3.266667,
+    "hi": 4.783333
+  },
+  "bioengineered.growth_rate": {
+    "mu": 0.02955,
+    "lo": 0.0172,
+    "hi": 0.04015
+  },
+  "bioengineered.threshold": {
+    "mu": 8.616667,
+    "lo": 8.033333,
+    "hi": 9.216667
+  },
+  "ai.scale": {
+    "mu": 4.45,
+    "lo": 3.666667,
+    "hi": 4.983333
+  },
+  "ai.urgency": {
+    "mu": 4.2,
+    "lo": 3.416667,
+    "hi": 4.9
+  },
+  "ai.acceleration": {
+    "mu": 4.633333,
+    "lo": 3.933333,
+    "hi": 4.983333
+  },
+  "ai.interdependence": {
+    "mu": 4.3,
+    "lo": 3.533333,
+    "hi": 4.95
+  },
+  "ai.irreversibility": {
+    "mu": 4.166667,
+    "lo": 3.366667,
+    "hi": 4.75
+  },
+  "ai.gov_failure": {
+    "mu": 4.183333,
+    "lo": 3.4,
+    "hi": 4.866667
+  },
+  "ai.growth_rate": {
+    "mu": 0.034867,
+    "lo": 0.023817,
+    "hi": 0.039983
+  },
+  "ai.threshold": {
+    "mu": 8.866667,
+    "lo": 8.266667,
+    "hi": 9.45
+  },
+  "cyber.scale": {
+    "mu": 3.866667,
+    "lo": 3.066667,
+    "hi": 4.633333
+  },
+  "cyber.urgency": {
+    "mu": 4,
+    "lo": 3.233333,
+    "hi": 4.75
+  },
+  "cyber.acceleration": {
+    "mu": 4.016667,
+    "lo": 3.233333,
+    "hi": 4.7
+  },
+  "cyber.interdependence": {
+    "mu": 4.266667,
+    "lo": 3.483333,
+    "hi": 4.933333
+  },
+  "cyber.irreversibility": {
+    "mu": 3.083333,
+    "lo": 2.333333,
+    "hi": 3.9
+  },
+  "cyber.gov_failure": {
+    "mu": 3.866667,
+    "lo": 3.066667,
+    "hi": 4.616667
+  },
+  "cyber.growth_rate": {
+    "mu": 0.036733,
+    "lo": 0.022633,
+    "hi": 0.044
+  },
+  "cyber.threshold": {
+    "mu": 8.216667,
+    "lo": 7.65,
+    "hi": 8.816667
+  },
+  "autonomousw.scale": {
+    "mu": 3.866667,
+    "lo": 2.966667,
+    "hi": 4.75
+  },
+  "autonomousw.urgency": {
+    "mu": 3.733333,
+    "lo": 2.85,
+    "hi": 4.6
+  },
+  "autonomousw.acceleration": {
+    "mu": 4,
+    "lo": 3.116667,
+    "hi": 4.816667
+  },
+  "autonomousw.interdependence": {
+    "mu": 3.9,
+    "lo": 3,
+    "hi": 4.75
+  },
+  "autonomousw.irreversibility": {
+    "mu": 3.05,
+    "lo": 2.166667,
+    "hi": 3.983333
+  },
+  "autonomousw.gov_failure": {
+    "mu": 4.116667,
+    "lo": 3.233333,
+    "hi": 4.916667
+  },
+  "autonomousw.growth_rate": {
+    "mu": 0.024833,
+    "lo": 0.013617,
+    "hi": 0.039283
+  },
+  "autonomousw.threshold": {
+    "mu": 8.3,
+    "lo": 7.75,
+    "hi": 8.916667
+  },
+  "minerals.scale": {
+    "mu": 3.616667,
+    "lo": 2.733333,
+    "hi": 4.466667
+  },
+  "minerals.urgency": {
+    "mu": 3.733333,
+    "lo": 2.85,
+    "hi": 4.566667
+  },
+  "minerals.acceleration": {
+    "mu": 3.916667,
+    "lo": 3.016667,
+    "hi": 4.75
+  },
+  "minerals.interdependence": {
+    "mu": 3.933333,
+    "lo": 3.033333,
+    "hi": 4.733333
+  },
+  "minerals.irreversibility": {
+    "mu": 2.916667,
+    "lo": 2.033333,
+    "hi": 3.833333
+  },
+  "minerals.gov_failure": {
+    "mu": 3.466667,
+    "lo": 2.816667,
+    "hi": 4.35
+  },
+  "minerals.growth_rate": {
+    "mu": 0.029417,
+    "lo": 0.016083,
+    "hi": 0.03825
+  },
+  "minerals.threshold": {
+    "mu": 7.933333,
+    "lo": 7.366667,
+    "hi": 8.516667
+  },
+  "space.scale": {
+    "mu": 3.666667,
+    "lo": 3.033333,
+    "hi": 4.35
+  },
+  "space.urgency": {
+    "mu": 3.533333,
+    "lo": 2.666667,
+    "hi": 4.433333
+  },
+  "space.acceleration": {
+    "mu": 4.333333,
+    "lo": 3.7,
+    "hi": 4.833333
+  },
+  "space.interdependence": {
+    "mu": 4.2,
+    "lo": 3.316667,
+    "hi": 4.55
+  },
+  "space.irreversibility": {
+    "mu": 3.966667,
+    "lo": 3.333333,
+    "hi": 4.616667
+  },
+  "space.gov_failure": {
+    "mu": 4.166667,
+    "lo": 3.516667,
+    "hi": 4.75
+  },
+  "space.growth_rate": {
+    "mu": 0.031567,
+    "lo": 0.017233,
+    "hi": 0.038783
+  },
+  "space.threshold": {
+    "mu": 8.133333,
+    "lo": 7.55,
+    "hi": 8.733333
+  },
+  "geopolitics.scale": {
+    "mu": 4.333333,
+    "lo": 3.65,
+    "hi": 4.816667
+  },
+  "geopolitics.urgency": {
+    "mu": 4.45,
+    "lo": 3.733333,
+    "hi": 4.916667
+  },
+  "geopolitics.acceleration": {
+    "mu": 4.083333,
+    "lo": 3.3,
+    "hi": 4.666667
+  },
+  "geopolitics.interdependence": {
+    "mu": 4.45,
+    "lo": 3.716667,
+    "hi": 4.916667
+  },
+  "geopolitics.irreversibility": {
+    "mu": 3.55,
+    "lo": 2.766667,
+    "hi": 4.316667
+  },
+  "geopolitics.gov_failure": {
+    "mu": 4.116667,
+    "lo": 3.333333,
+    "hi": 4.75
+  },
+  "geopolitics.growth_rate": {
+    "mu": 0.03915,
+    "lo": 0.020833,
+    "hi": 0.042633
+  },
+  "geopolitics.threshold": {
+    "mu": 8.733333,
+    "lo": 8.166667,
+    "hi": 9.333333
+  },
+  "supply.scale": {
+    "mu": 3.616667,
+    "lo": 2.833333,
+    "hi": 4.283333
+  },
+  "supply.urgency": {
+    "mu": 3.766667,
+    "lo": 2.983333,
+    "hi": 4.4
+  },
+  "supply.acceleration": {
+    "mu": 3.166667,
+    "lo": 2.366667,
+    "hi": 3.916667
+  },
+  "supply.interdependence": {
+    "mu": 4.45,
+    "lo": 3.766667,
+    "hi": 4.9
+  },
+  "supply.irreversibility": {
+    "mu": 2.9,
+    "lo": 2.1,
+    "hi": 3.65
+  },
+  "supply.gov_failure": {
+    "mu": 3.566667,
+    "lo": 2.766667,
+    "hi": 4.316667
+  },
+  "supply.growth_rate": {
+    "mu": 0.02665,
+    "lo": 0.014017,
+    "hi": 0.037383
+  },
+  "supply.threshold": {
+    "mu": 8.25,
+    "lo": 7.683333,
+    "hi": 8.833333
+  },
+  "fragmentation_gov.scale": {
+    "mu": 3.85,
+    "lo": 3.083333,
+    "hi": 4.516667
+  },
+  "fragmentation_gov.urgency": {
+    "mu": 4.066667,
+    "lo": 3.35,
+    "hi": 4.716667
+  },
+  "fragmentation_gov.acceleration": {
+    "mu": 3.816667,
+    "lo": 3.033333,
+    "hi": 4.45
+  },
+  "fragmentation_gov.interdependence": {
+    "mu": 4.5,
+    "lo": 3.766667,
+    "hi": 4.9
+  },
+  "fragmentation_gov.irreversibility": {
+    "mu": 3.366667,
+    "lo": 2.633333,
+    "hi": 4.083333
+  },
+  "fragmentation_gov.gov_failure": {
+    "mu": 4.483333,
+    "lo": 3.816667,
+    "hi": 4.9
+  },
+  "fragmentation_gov.growth_rate": {
+    "mu": 0.031317,
+    "lo": 0.017417,
+    "hi": 0.037567
+  },
+  "fragmentation_gov.threshold": {
+    "mu": 8.666667,
+    "lo": 8.1,
+    "hi": 9.2
+  },
+  "economic.scale": {
+    "mu": 4.05,
+    "lo": 3.35,
+    "hi": 4.633333
+  },
+  "economic.urgency": {
+    "mu": 3.6,
+    "lo": 2.916667,
+    "hi": 4.233333
+  },
+  "economic.acceleration": {
+    "mu": 3.233333,
+    "lo": 2.55,
+    "hi": 3.9
+  },
+  "economic.interdependence": {
+    "mu": 4.5,
+    "lo": 3.866667,
+    "hi": 4.9
+  },
+  "economic.irreversibility": {
+    "mu": 3.033333,
+    "lo": 2.333333,
+    "hi": 3.733333
+  },
+  "economic.gov_failure": {
+    "mu": 3.816667,
+    "lo": 3.116667,
+    "hi": 4.483333
+  },
+  "economic.growth_rate": {
+    "mu": 0.014483,
+    "lo": 0.007767,
+    "hi": 0.02355
+  },
+  "economic.threshold": {
+    "mu": 8.35,
+    "lo": 7.833333,
+    "hi": 8.883333
+  },
+  "debt.scale": {
+    "mu": 3.916667,
+    "lo": 3.25,
+    "hi": 4.533333
+  },
+  "debt.urgency": {
+    "mu": 3.75,
+    "lo": 3.083333,
+    "hi": 4.4
+  },
+  "debt.acceleration": {
+    "mu": 3.5,
+    "lo": 2.816667,
+    "hi": 4.166667
+  },
+  "debt.interdependence": {
+    "mu": 4.316667,
+    "lo": 3.683333,
+    "hi": 4.783333
+  },
+  "debt.irreversibility": {
+    "mu": 3.183333,
+    "lo": 2.483333,
+    "hi": 3.9
+  },
+  "debt.gov_failure": {
+    "mu": 4,
+    "lo": 3.3,
+    "hi": 4.6
+  },
+  "debt.growth_rate": {
+    "mu": 0.013633,
+    "lo": 0.007433,
+    "hi": 0.021817
+  },
+  "debt.threshold": {
+    "mu": 8.316667,
+    "lo": 7.8,
+    "hi": 8.85
+  },
+  "displacement.scale": {
+    "mu": 3.916667,
+    "lo": 3.25,
+    "hi": 4.566667
+  },
+  "displacement.urgency": {
+    "mu": 4.15,
+    "lo": 3.483333,
+    "hi": 4.783333
+  },
+  "displacement.acceleration": {
+    "mu": 4.183333,
+    "lo": 3.533333,
+    "hi": 4.733333
+  },
+  "displacement.interdependence": {
+    "mu": 4.35,
+    "lo": 3.666667,
+    "hi": 4.883333
+  },
+  "displacement.irreversibility": {
+    "mu": 3.5,
+    "lo": 2.833333,
+    "hi": 4.216667
+  },
+  "displacement.gov_failure": {
+    "mu": 4.016667,
+    "lo": 3.333333,
+    "hi": 4.666667
+  },
+  "displacement.growth_rate": {
+    "mu": 0.033883,
+    "lo": 0.017717,
+    "hi": 0.03775
+  },
+  "displacement.threshold": {
+    "mu": 7.966667,
+    "lo": 7.45,
+    "hi": 8.5
+  },
+  "authoritarian.scale": {
+    "mu": 4.183333,
+    "lo": 3.6,
+    "hi": 4.666667
+  },
+  "authoritarian.urgency": {
+    "mu": 4.133333,
+    "lo": 3.466667,
+    "hi": 4.7
+  },
+  "authoritarian.acceleration": {
+    "mu": 3.716667,
+    "lo": 2.983333,
+    "hi": 4.366667
+  },
+  "authoritarian.interdependence": {
+    "mu": 4.133333,
+    "lo": 3.45,
+    "hi": 4.733333
+  },
+  "authoritarian.irreversibility": {
+    "mu": 3.816667,
+    "lo": 3.133333,
+    "hi": 4.466667
+  },
+  "authoritarian.gov_failure": {
+    "mu": 4.133333,
+    "lo": 3.416667,
+    "hi": 4.7
+  },
+  "authoritarian.growth_rate": {
+    "mu": 0.027083,
+    "lo": 0.013967,
+    "hi": 0.036383
+  },
+  "authoritarian.threshold": {
+    "mu": 8.533333,
+    "lo": 7.966667,
+    "hi": 9.116667
+  },
+  "epistemic.scale": {
+    "mu": 3.883333,
+    "lo": 3.2,
+    "hi": 4.533333
+  },
+  "epistemic.urgency": {
+    "mu": 4.15,
+    "lo": 3.483333,
+    "hi": 4.733333
+  },
+  "epistemic.acceleration": {
+    "mu": 4.25,
+    "lo": 3.583333,
+    "hi": 4.783333
+  },
+  "epistemic.interdependence": {
+    "mu": 4.283333,
+    "lo": 3.6,
+    "hi": 4.783333
+  },
+  "epistemic.irreversibility": {
+    "mu": 3.316667,
+    "lo": 2.633333,
+    "hi": 4
+  },
+  "epistemic.gov_failure": {
+    "mu": 4.033333,
+    "lo": 3.283333,
+    "hi": 4.616667
+  },
+  "epistemic.growth_rate": {
+    "mu": 0.028317,
+    "lo": 0.015367,
+    "hi": 0.038333
+  },
+  "epistemic.threshold": {
+    "mu": 8.266667,
+    "lo": 7.75,
+    "hi": 8.8
+  }
+}

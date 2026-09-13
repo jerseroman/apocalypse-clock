@@ -1,0 +1,2216 @@
+{
+  "_meta": {
+    "schema_version": "1.5",
+    "generated": "2026-05-02",
+    "description": "Apocalypse Clock parameter dataset with explicit growth-calibration metadata. Each '<threat>.growth_rate' entry distinguishes raw indicator growth from effective systemic risk-growth.",
+    "parameter_count_excluding_meta": 184,
+    "threat_count": 23,
+    "metrics_per_threat": 8,
+    "threats": [
+      "ai",
+      "amr",
+      "authoritarian",
+      "autonomousw",
+      "biodiversity",
+      "bioengineered",
+      "climate",
+      "cyber",
+      "debt",
+      "displacement",
+      "economic",
+      "epistemic",
+      "fragmentation_gov",
+      "geopolitics",
+      "minerals",
+      "nuclear",
+      "oceans",
+      "pandemics",
+      "pollution",
+      "soils",
+      "space",
+      "supply",
+      "water"
+    ],
+    "metrics": [
+      "scale",
+      "urgency",
+      "acceleration",
+      "interdependence",
+      "irreversibility",
+      "gov_failure",
+      "growth_rate",
+      "threshold"
+    ],
+    "entry_fields": [
+      "mu",
+      "lo",
+      "hi",
+      "source",
+      "url",
+      "accessed",
+      "strength",
+      "note",
+      "growth_kind",
+      "risk_conversion",
+      "raw_indicator_growth",
+      "effective_growth_calibrated",
+      "calibration_note"
+    ],
+    "dimensions": {
+      "scale": {
+        "range": [
+          0,
+          5
+        ],
+        "unit": "normalized ordinal score",
+        "meaning": "Estimated potential systemic magnitude of harm if the threat intensifies."
+      },
+      "urgency": {
+        "range": [
+          0,
+          5
+        ],
+        "unit": "normalized ordinal score",
+        "meaning": "Near-term priority: how much the threat already requires action in the present decade."
+      },
+      "acceleration": {
+        "range": [
+          0,
+          5
+        ],
+        "unit": "normalized ordinal score",
+        "meaning": "Observed or plausibly inferred rate of worsening in drivers, exposure, capability, or impacts."
+      },
+      "interdependence": {
+        "range": [
+          0,
+          5
+        ],
+        "unit": "normalized ordinal score",
+        "meaning": "Degree to which the threat couples to, amplifies, or is amplified by other systemic threats."
+      },
+      "irreversibility": {
+        "range": [
+          0,
+          5
+        ],
+        "unit": "normalized ordinal score",
+        "meaning": "Persistence of damage and difficulty of recovery once the threat crosses damaging states."
+      },
+      "gov_failure": {
+        "range": [
+          0,
+          5
+        ],
+        "unit": "normalized ordinal score",
+        "meaning": "Risk that governance, institutions, or collective action fail to prevent or contain the threat."
+      },
+      "growth_rate": {
+        "range": "dimension-specific, not 0-5",
+        "unit": "annualized effective systemic risk-growth proxy",
+        "meaning": "Annualized fractional growth where 0.02 means about 2% per year. mu/lo/hi store calibrated effective systemic risk-growth, not raw indicator growth. Raw evidence anchor is in raw_indicator_growth."
+      },
+      "threshold": {
+        "range": [
+          0,
+          10
+        ],
+        "unit": "normalized destabilization threshold",
+        "meaning": "Abstract model threshold for systemic destabilization; not a 0-5 severity score. Calibrated against dashboard anchors such as climate, nuclear conflict, and global governance failure."
+      }
+    },
+    "strength_values": {
+      "strong": "Direct support from a high-quality source or closely matched quantitative evidence.",
+      "moderate": "Reasonable support from credible sources, but with non-trivial uncertainty or indirect mapping.",
+      "weak": "Limited, proxy, very small-sample, commercial, or otherwise lower-confidence evidence.",
+      "expert_judgment": "Expert judgment without a direct URL anchor in the entry.",
+      "anchored_judgment": "Expert judgment calibrated to one or more named/linked source anchors; used when the numeric mapping is inferential but the conceptual anchor is explicit."
+    },
+    "calibration_method": "For growth_rate entries, empirical indicator/proxy growth is mapped to effective systemic risk-growth using min(log1p(raw_indicator_growth) * conversion_multiplier, cap). mu/lo/hi store calibrated effective values directly; do not apply the conversion again at runtime.",
+    "growth_rate_calibration_classes": {
+      "ai": {
+        "growth_kind": "capability_growth",
+        "conversion_multiplier": 0.025,
+        "cap": 0.04
+      },
+      "amr": {
+        "growth_kind": "selection_pressure_growth",
+        "conversion_multiplier": 0.85,
+        "cap": 0.035
+      },
+      "authoritarian": {
+        "growth_kind": "population_share_proxy",
+        "conversion_multiplier": 0.8,
+        "cap": 0.04
+      },
+      "autonomousw": {
+        "growth_kind": "market_capability_growth",
+        "conversion_multiplier": 0.25,
+        "cap": 0.04
+      },
+      "biodiversity": {
+        "growth_kind": "assessment_and_extinction_pressure_proxy",
+        "conversion_multiplier": 0.7,
+        "cap": 0.035
+      },
+      "bioengineered": {
+        "growth_kind": "publication_capability_proxy",
+        "conversion_multiplier": 0.28,
+        "cap": 0.04
+      },
+      "climate": {
+        "growth_kind": "direct_risk_pressure_proxy",
+        "conversion_multiplier": 1.0,
+        "cap": 0.035
+      },
+      "cyber": {
+        "growth_kind": "incident_reporting_growth",
+        "conversion_multiplier": 0.055,
+        "cap": 0.045
+      },
+      "debt": {
+        "growth_kind": "macro_balance_proxy",
+        "conversion_multiplier": 0.6,
+        "cap": 0.03
+      },
+      "displacement": {
+        "growth_kind": "exposed_population_growth",
+        "conversion_multiplier": 0.75,
+        "cap": 0.04
+      },
+      "economic": {
+        "growth_kind": "expert_systemic_fragility_proxy",
+        "conversion_multiplier": 1.0,
+        "cap": 0.03
+      },
+      "epistemic": {
+        "growth_kind": "institutional_spread_proxy",
+        "conversion_multiplier": 0.2,
+        "cap": 0.04
+      },
+      "fragmentation_gov": {
+        "growth_kind": "small_count_institutional_proxy",
+        "conversion_multiplier": 0.1,
+        "cap": 0.04
+      },
+      "geopolitics": {
+        "growth_kind": "spending_conflict_pressure",
+        "conversion_multiplier": 0.55,
+        "cap": 0.045
+      },
+      "minerals": {
+        "growth_kind": "market_demand_growth",
+        "conversion_multiplier": 0.22,
+        "cap": 0.04
+      },
+      "nuclear": {
+        "growth_kind": "stockpile_modernization_risk_proxy",
+        "conversion_multiplier": 0.9,
+        "cap": 0.035
+      },
+      "oceans": {
+        "growth_kind": "composite_degradation_pressure",
+        "conversion_multiplier": 1.0,
+        "cap": 0.03
+      },
+      "pandemics": {
+        "growth_kind": "event_frequency_growth",
+        "conversion_multiplier": 0.9,
+        "cap": 0.05
+      },
+      "pollution": {
+        "growth_kind": "production_pressure_growth",
+        "conversion_multiplier": 0.7,
+        "cap": 0.04
+      },
+      "soils": {
+        "growth_kind": "land_degradation_pressure",
+        "conversion_multiplier": 1.0,
+        "cap": 0.025
+      },
+      "space": {
+        "growth_kind": "inventory_growth_proxy",
+        "conversion_multiplier": 0.18,
+        "cap": 0.04
+      },
+      "supply": {
+        "growth_kind": "trade_restriction_growth",
+        "conversion_multiplier": 0.25,
+        "cap": 0.04
+      },
+      "water": {
+        "growth_kind": "scarcity_exposure_growth",
+        "conversion_multiplier": 0.9,
+        "cap": 0.035
+      }
+    },
+    "validation_rules": [
+      "Exactly one _meta object exists.",
+      "Exactly 184 non-meta entries exist.",
+      "All 23 threats are present, no extras.",
+      "All 8 metrics exist for every threat, no extras.",
+      "Every non-meta key follows '<threat_id>.<metric>'.",
+      "For every entry: lo <= mu <= hi.",
+      "For scale/urgency/acceleration/interdependence/irreversibility/gov_failure: values in [0,5].",
+      "For threshold: values in [0,10] with mu typically in [7.8, 9.2].",
+      "For growth_rate: mu/lo/hi store calibrated effective systemic risk-growth, not raw indicator growth.",
+      "Every growth_rate entry has growth_kind, risk_conversion, raw_indicator_growth, effective_growth_calibrated=true, calibration_note.",
+      "No null, NaN, stringified numbers, missing fields, or trailing commas."
+    ]
+  },
+  "ai.scale": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Bengio et al., 2024: International Scientific Report on the Safety of Advanced AI (Interim Report)",
+    "url": "https://www.gov.uk/government/publications/international-scientific-report-on-the-safety-of-advanced-ai",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The Interim International Scientific Report on the Safety of Advanced AI surveys credible expert positions including scenarios in which highly capable general-purpose AI causes large-scale labour-market disruption, mass-scale disinformation, biosecurity uplift and, in worst-case loss-of-control framings, civilizational impact; the central scale is set high but with a wide lower bound to reflect persistent disagreement among experts on whether such impacts are achievable on near-term timescales."
+  },
+  "ai.urgency": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 4.9,
+    "source": "AI Safety Institute (UK), 2024: Frontier AI Capability Evaluations Update",
+    "url": "https://www.aisi.gov.uk/work/advanced-ai-evaluations-may-update",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "AISI's frontier-model evaluations document non-trivial uplift on cyber, autonomy and biology benchmarks already, while the Hiroshima G7 Process and the EU AI Act timetable indicate that governance must act in this decade; urgency is therefore high but capped below climate because severe systemic harms remain contingent on capability progression."
+  },
+  "ai.acceleration": {
+    "mu": 4.6,
+    "lo": 4.0,
+    "hi": 5.0,
+    "source": "Sevilla et al. / Epoch AI, 2024: Training compute of frontier AI models grows by 4–5x per year",
+    "url": "https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Epoch's frontier-model database shows training compute scaling roughly 4.1x per year (90% CI 3.7–4.6x) over 2010–2024, an order-of-magnitude faster than Moore's law, with parallel benchmark and capability gains on AISI evaluations; this supports a near-maximal acceleration score with narrow uncertainty."
+  },
+  "ai.interdependence": {
+    "mu": 4.3,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "Bengio et al., 2024: International Scientific Report on the Safety of Advanced AI (Interim Report)",
+    "url": "https://www.gov.uk/government/publications/international-scientific-report-on-the-safety-of-advanced-ai",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The Interim Scientific Report and AI Risk literature describe AI as a general-purpose technology that couples to cyber, bio, autonomous-weapons, epistemic and economic threats by lowering attacker costs, amplifying disinformation, and accelerating capability diffusion across domains; coupling strength is judged high but uncertain because effects depend on deployment patterns."
+  },
+  "ai.irreversibility": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.8,
+    "source": "Bengio et al., 2024: International Scientific Report on the Safety of Advanced AI (Interim Report)",
+    "url": "https://www.gov.uk/government/publications/international-scientific-report-on-the-safety-of-advanced-ai",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most plausible AI harms (labour disruption, disinformation, cyber damage) are at least partly recoverable, but loss-of-control or persistent misaligned-agent scenarios discussed in the report could be effectively irreversible because the systems themselves resist shutdown; the central value reflects this mixture, with broad uncertainty over the realized share of irreversible outcomes."
+  },
+  "ai.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "OECD, 2024: AI Policy Observatory and Tracking of National AI Strategies",
+    "url": "https://oecd.ai/en/dashboards/overview",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The OECD AI Observatory and parallel work by the EU AI Act, the Hiroshima Process and AISI/USAISI show that international AI governance is fragmented, voluntary in most jurisdictions, and lags capability growth by years; gov_failure is therefore high but not maximal, as binding rules exist in the EU and several states are building evaluation capacity."
+  },
+  "ai.growth_rate": {
+    "mu": 0.0353,
+    "lo": 0.0257,
+    "hi": 0.04,
+    "source": "Sevilla et al. / Epoch AI, 2024: Training compute of frontier AI models grows by 4–5x per year",
+    "url": "https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Epoch's database puts frontier-model training-compute growth at roughly 3.1x per year central with a 1.8–4.6x plausible band; this is a capability-growth proxy, not a direct collapse-hazard rate, hence the strong attenuation. v1.5 calibration: raw indicator central growth ~3.1/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.025, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "capability_growth",
+    "risk_conversion": 0.025,
+    "raw_indicator_growth": 3.1,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.025, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "ai.threshold": {
+    "mu": 9.0,
+    "lo": 8.3,
+    "hi": 9.6,
+    "source": "Bengio et al., 2024: International Scientific Report on the Safety of Advanced AI (Interim Report); UK AISI",
+    "url": "https://www.aisi.gov.uk/work/advanced-ai-evaluations-may-update",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical AI catastrophe threshold exists; the destabilization range is anchored to the Interim Scientific Report's framing of frontier loss-of-control as comparable to nuclear and pandemic catastrophes but with greater uncertainty, and to the dashboard convention placing AI just below nuclear conflict."
+  },
+  "amr.scale": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.6,
+    "source": "Murray CJL et al., 2022: Global burden of bacterial antimicrobial resistance in 2019 (Lancet)",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)02724-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "The Murray et al. global burden study attributes ~1.27 million direct deaths and ~4.95 million associated deaths in 2019 to bacterial AMR, comparable in scale to HIV or malaria, and projects this could grow substantially without action; scale is high but bounded below climate/nuclear because the burden, while massive, is chronic rather than civilizational."
+  },
+  "amr.urgency": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.8,
+    "source": "WHO, 2024: Antimicrobial resistance fact sheet",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "WHO classifies AMR as one of the top global public health threats, identifies an antibiotic pipeline insufficient to keep pace with resistance, and highlights that without urgent multisectoral action AMR-attributable mortality could rise sharply by 2050; urgency is high though somewhat below climate because some resistance trends are slow-moving."
+  },
+  "amr.acceleration": {
+    "mu": 3.6,
+    "lo": 2.8,
+    "hi": 4.4,
+    "source": "WHO GLASS, 2024: Global antimicrobial resistance and use surveillance system report",
+    "url": "https://www.who.int/initiatives/glass",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "GLASS data show steady growth in resistance prevalence for several priority pathogens (E. coli, K. pneumoniae, Acinetobacter) and continued global rise in antibiotic consumption; the trend is clearly upward but less explosive than the most accelerating threats, justifying a moderate-to-high acceleration score."
+  },
+  "amr.interdependence": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "WHO/FAO/WOAH/UNEP, 2022: One Health Joint Plan of Action 2022–2026",
+    "url": "https://www.who.int/publications/i/item/9789240059139",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The Quadripartite One Health Joint Plan documents how AMR couples to food systems, livestock, environment, water and pandemic preparedness; couplings are real but the threat does not propagate as quickly through other systems as climate or finance, so interdependence is moderate-to-high rather than maximal."
+  },
+  "amr.irreversibility": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "Murray CJL et al., 2022: Global burden of bacterial antimicrobial resistance in 2019 (Lancet)",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)02724-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Once resistance genes spread broadly through human, animal and environmental microbiomes, they tend to persist on multi-decadal timescales even when antibiotic pressure is reduced; however, some reversibility is possible at population level through stewardship and new drug classes, so irreversibility is high but not extreme."
+  },
+  "amr.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "WHO, 2024: AMR governance and the Global Action Plan implementation",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Despite the 2015 Global Action Plan and 2024 UN High-Level Meeting commitments, antibiotic stewardship enforcement, surveillance coverage and new-class incentives remain weak globally, and the antibiotic R&D pipeline is dominated by small biotechs; gov_failure is therefore high."
+  },
+  "amr.growth_rate": {
+    "mu": 0.021,
+    "lo": 0.0101,
+    "hi": 0.035,
+    "source": "WHO GLASS, 2024: Global antimicrobial resistance and use surveillance system report",
+    "url": "https://www.who.int/initiatives/glass",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "GLASS resistance trends and projected mortality scenarios suggest underlying systemic AMR pressure rises by roughly 2–4% per year on a composite of resistance prevalence, antibiotic use and pipeline shortfall; this is a selection-pressure proxy rather than direct collapse-hazard. v1.5 calibration: raw indicator central growth ~0.025/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.85, 0.035); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "selection_pressure_growth",
+    "risk_conversion": 0.85,
+    "raw_indicator_growth": 0.025,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.85, 0.035). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "amr.threshold": {
+    "mu": 8.2,
+    "lo": 7.7,
+    "hi": 8.7,
+    "source": "Murray CJL et al., 2022: Global burden of bacterial antimicrobial resistance in 2019 (Lancet)",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)02724-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "There is no single clinical threshold for civilizational AMR destabilization; the range is anchored to scenario projections in which last-line resistance against multiple priority pathogens becomes routine, undermining surgery, transplant and chemotherapy medicine, and is set below climate/nuclear but above pure economic shock thresholds."
+  },
+  "authoritarian.scale": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024 – Democracy Winning and Losing at the Ballot",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "V-Dem 2024 reports that 71% of the world's population (5.7 billion people) lived in autocracies in 2023, up from 48% a decade earlier, and that the level of democracy enjoyed by the average global citizen is now at 1985 levels; this magnitude of democratic recession justifies a high but not civilizational scale score."
+  },
+  "authoritarian.urgency": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "International IDEA, 2024: The Global State of Democracy 2024",
+    "url": "https://www.idea.int/gsod/2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "International IDEA finds democratic backsliding now in its eighth consecutive year, with declines outpacing improvements across most regions; given the 2024 super-election cycle and rapid shifts in several large democracies, urgency is high though not maximal."
+  },
+  "authoritarian.acceleration": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "V-Dem identifies 42 countries with ongoing autocratization affecting 2.8 billion people in 2023, with the autocratization wave having broadened from third-wave reversals to include large countries; the pace is faster than the 2010s, justifying a moderate-to-high acceleration score."
+  },
+  "authoritarian.interdependence": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Democratic backsliding interacts strongly with epistemic threats (disinformation), geopolitical fragmentation, governance fragmentation and conflict risk, as multiple V-Dem and IDEA analyses show; coupling is high but not as direct as climate-biodiversity or finance-debt linkages."
+  },
+  "authoritarian.irreversibility": {
+    "mu": 2.9,
+    "lo": 1.9,
+    "hi": 3.9,
+    "source": "Lührmann & Lindberg, 2019: A third wave of autocratization is here (Democratization)",
+    "url": "https://www.tandfonline.com/doi/full/10.1080/13510347.2019.1582029",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Empirical work on autocratization waves shows that backsliding is reversible in many cases, but consolidated autocracies in large powers can persist for decades; the central value reflects this mixture of recoverable and durable cases."
+  },
+  "authoritarian.gov_failure": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "International IDEA, 2024: The Global State of Democracy 2024",
+    "url": "https://www.idea.int/gsod/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Current multilateral mechanisms (UN, OAS, AU, EU) show limited capacity to halt democratic decline in member states, as documented by IDEA and V-Dem; gov_failure is high though some regional mechanisms remain partly effective."
+  },
+  "authoritarian.growth_rate": {
+    "mu": 0.0198,
+    "lo": 0.008,
+    "hi": 0.0352,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The share of world population in autocratizing or autocratic states has risen from ~48% to ~71% over a decade, implying an underlying autocratization pressure on the order of a few percent per year on the population-share proxy, with substantial uncertainty given thresholding effects. v1.5 calibration: raw indicator central growth ~0.025/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.8, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "population_share_proxy",
+    "risk_conversion": 0.8,
+    "raw_indicator_growth": 0.025,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.8, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "authoritarian.threshold": {
+    "mu": 8.0,
+    "lo": 7.5,
+    "hi": 8.5,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024; International IDEA, 2024: Global State of Democracy",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "There is no established empirical destabilization threshold for global democratic recession; the range is anchored to V-Dem's classification of consolidated autocratization in major states as a civilizational governance shock, set below climate/nuclear but above pure technical or supply threats."
+  },
+  "autonomousw.scale": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.4,
+    "source": "SIPRI, 2023: Responsible artificial intelligence research and innovation for international peace and security",
+    "url": "https://www.sipri.org/sites/default/files/2023-11/2311_responsible_ai.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "SIPRI documents that LAWS could affect strategic stability, lower thresholds for use of force, and complicate attribution; while not as catastrophic as nuclear weapons, large-scale autonomous warfare could cause major civilian harm and accelerate other conflict pathways, justifying a moderate-to-high scale."
+  },
+  "autonomousw.urgency": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "Stop Killer Robots / ICRC, 2024: ICRC position on autonomous weapon systems",
+    "url": "https://www.icrc.org/en/document/icrc-position-autonomous-weapon-systems",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The ICRC has called for legally binding rules on autonomous weapons and the UN Secretary-General has set a 2026 negotiating deadline; observed deployment in Ukraine and elsewhere shows the technology is already battle-tested, justifying high urgency."
+  },
+  "autonomousw.acceleration": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.7,
+    "source": "SIPRI, 2024: Yearbook 2024 – Military spending and emerging technologies",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Defense AI and autonomous-systems markets are growing at roughly 10–15% per year and battlefield use of loitering munitions and drone swarms in Ukraine and the Middle East is rapidly advancing; SIPRI documents this as a clear accelerating capability area."
+  },
+  "autonomousw.interdependence": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "SIPRI, 2023: Responsible artificial intelligence research and innovation",
+    "url": "https://www.sipri.org/sites/default/files/2023-11/2311_responsible_ai.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Autonomous weapons couple strongly to AI capability, geopolitical competition, cyber operations and arms control regimes; interdependence is high but slightly below the most networked threats."
+  },
+  "autonomousw.irreversibility": {
+    "mu": 2.7,
+    "lo": 1.7,
+    "hi": 3.7,
+    "source": "ICRC, 2024: ICRC position on autonomous weapon systems",
+    "url": "https://www.icrc.org/en/document/icrc-position-autonomous-weapon-systems",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most direct autonomous-weapon harms are reversible at the conflict level once a war ends, but technology proliferation and norm erosion are difficult to roll back; the central value reflects this distinction with wide uncertainty."
+  },
+  "autonomousw.gov_failure": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "United Nations, 2023: UNGA Resolution A/RES/78/241 on lethal autonomous weapon systems",
+    "url": "https://documents.un.org/doc/undoc/gen/n23/410/96/pdf/n2341096.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Despite UN General Assembly resolutions and a decade of CCW GGE discussions, no binding international instrument on LAWS has been adopted, and major military powers remain reluctant; this represents severe governance failure on a fast-moving technology."
+  },
+  "autonomousw.growth_rate": {
+    "mu": 0.0238,
+    "lo": 0.0122,
+    "hi": 0.04,
+    "source": "SIPRI, 2024: Yearbook 2024 – Military spending and emerging technologies",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Defense AI / autonomous-systems market analyses converge on a 10% per year central growth rate with a 5–18% plausible band reflecting different definitions of the segment; raw market growth is mapped to systemic risk-pressure with a strong attenuation. v1.5 calibration: raw indicator central growth ~0.1/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.25, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "market_capability_growth",
+    "risk_conversion": 0.25,
+    "raw_indicator_growth": 0.1,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.25, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "autonomousw.threshold": {
+    "mu": 8.0,
+    "lo": 7.5,
+    "hi": 8.6,
+    "source": "SIPRI, 2023: Responsible artificial intelligence research and innovation",
+    "url": "https://www.sipri.org/sites/default/files/2023-11/2311_responsible_ai.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical destabilization threshold exists for LAWS; the range is anchored to SIPRI's framing of strategic-stability degradation and is set below nuclear conflict but above conventional cyber, reflecting the combination of human-out-of-the-loop decision-making and proliferation risk."
+  },
+  "biodiversity.scale": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "IPBES, 2019: Global Assessment Report on Biodiversity and Ecosystem Services",
+    "url": "https://www.ipbes.net/global-assessment",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "The IPBES Global Assessment finds that around one million species are threatened with extinction and that ecosystem services underpinning food, water and health are being severely degraded, with cascading risks to civilization; the central scale is high with a wide upper bound."
+  },
+  "biodiversity.urgency": {
+    "mu": 4.3,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "IPBES, 2024: Transformative Change Assessment – Summary for Policymakers",
+    "url": "https://www.ipbes.net/transformative-change-assessment",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "The IPBES Transformative Change Assessment concludes that only rapid system-wide change this decade can meet the 2050 Vision; biodiversity loss is unfolding now, justifying a high urgency score."
+  },
+  "biodiversity.acceleration": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "IPBES, 2019: Global Assessment Report on Biodiversity and Ecosystem Services",
+    "url": "https://www.ipbes.net/global-assessment",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Extinction rates are tens to hundreds of times higher than background and rising, IUCN Red List time series show large increases in threatened species since 2000, and IPBES identifies acceleration in direct and indirect drivers; acceleration is high though some uncertainty remains over taxonomic coverage."
+  },
+  "biodiversity.interdependence": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Richardson et al., 2023: Earth beyond six of nine planetary boundaries (Science Advances)",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Richardson et al. identify biosphere integrity as a core planetary boundary that interacts nonlinearly with climate, land-system change and biogeochemical flows; IPBES highlights deep linkages with food, water, health and climate, justifying a near-maximal interdependence score."
+  },
+  "biodiversity.irreversibility": {
+    "mu": 4.6,
+    "lo": 3.6,
+    "hi": 5.0,
+    "source": "IPBES, 2019: Global Assessment Report on Biodiversity and Ecosystem Services",
+    "url": "https://www.ipbes.net/global-assessment",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Species extinction and many ecosystem regime shifts are irreversible on human timescales, and genetic diversity loss undermines future resilience; IPBES and planetary boundaries literature both emphasise this, while limited local recovery is possible under strong restoration."
+  },
+  "biodiversity.gov_failure": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "IPBES, 2024: Transformative Change Assessment – Summary for Policymakers",
+    "url": "https://www.ipbes.net/transformative-change-assessment",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Past Aichi Targets were largely missed and the Transformative Change Assessment finds that existing governance has failed to address underlying drivers; some progress under the Kunming–Montreal framework prevents a maximal score."
+  },
+  "biodiversity.growth_rate": {
+    "mu": 0.0234,
+    "lo": 0.0139,
+    "hi": 0.0342,
+    "source": "IUCN Red List, 2024: Summary statistics – Number of threatened species",
+    "url": "https://www.iucnredlist.org/resources/summary-statistics",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "IUCN Red List time series show threatened-species counts roughly tripling between 2000 and 2024, corresponding to a multi-percent annual increase; the central proxy is ~3.4% per year combining extinction-pressure indicators and assessment growth, with substantial uncertainty due to expanding assessment effort. v1.5 calibration: raw indicator central growth ~0.034/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.7, 0.035); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "assessment_and_extinction_pressure_proxy",
+    "risk_conversion": 0.7,
+    "raw_indicator_growth": 0.034,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.7, 0.035). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "biodiversity.threshold": {
+    "mu": 8.4,
+    "lo": 7.9,
+    "hi": 8.9,
+    "source": "Richardson et al., 2023: Earth beyond six of nine planetary boundaries (Science Advances)",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No single quantitative destabilization threshold exists for biodiversity; the range is anchored to the planetary boundaries assessment which finds biosphere integrity heavily transgressed and treats it as co-core with climate, justifying a threshold slightly below climate."
+  },
+  "bioengineered.scale": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Esvelt KM, 2022: Delay, Detect, Defend: Preparing for a Future in which Thousands Can Release New Pandemics (Geneva Papers)",
+    "url": "https://geneva.fas.org/wp-content/uploads/2022/11/Delay-Detect-Defend.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Esvelt and parallel biosecurity literature argue that an engineered, transmissible pathogen optimized for harm could exceed natural pandemic worst cases and represent a global catastrophic risk; scale is set high with a wide lower bound because realised harms remain hypothetical."
+  },
+  "bioengineered.urgency": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "WHO, 2024: Pandemic preparedness and the negotiation of the Pandemic Agreement",
+    "url": "https://www.who.int/news/item/03-06-2024-pandemic-agreement",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "WHO Member States continue negotiating a Pandemic Agreement and updated IHR amendments while DNA-synthesis screening guidance and benchtop synthesis advances make near-term action important; urgency is high though slightly below climate/AMR because the threat is contingent rather than continuous."
+  },
+  "bioengineered.acceleration": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "Nuclear Threat Initiative, 2024: Global Health Security Index 2024",
+    "url": "https://ghsindex.org/wp-content/uploads/2024/11/2024-GHS-Index-Full-Report.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "GHS Index data and biosecurity literature document continuing growth in publications on gain-of-function and synthetic biology, falling DNA synthesis costs (Carlson curve), and benchtop synthesis devices; capability acceleration is real and material."
+  },
+  "bioengineered.interdependence": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "Esvelt KM, 2022: Delay, Detect, Defend",
+    "url": "https://geneva.fas.org/wp-content/uploads/2022/11/Delay-Detect-Defend.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Bioengineered threats couple to AI (capability uplift), pandemic preparedness, governance and supply chains; interdependence is high but somewhat below the most networked threats."
+  },
+  "bioengineered.irreversibility": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "Esvelt KM, 2022: Delay, Detect, Defend",
+    "url": "https://geneva.fas.org/wp-content/uploads/2022/11/Delay-Detect-Defend.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most pandemic harms are reversible at the population level given vaccines and recovery, but a sufficiently lethal or persistent pathogen, or normalized misuse capability, could cause durable demographic and institutional damage."
+  },
+  "bioengineered.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "Nuclear Threat Initiative, 2024: Global Health Security Index 2024",
+    "url": "https://ghsindex.org/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The GHS Index 2024 finds that no country is fully prepared for a high-consequence biological event and that international biosecurity governance, including BWC verification, remains weak; gov_failure is therefore high."
+  },
+  "bioengineered.growth_rate": {
+    "mu": 0.0292,
+    "lo": 0.0163,
+    "hi": 0.04,
+    "source": "Carlson R, 2010-ongoing: Cost of synthetic biology (Carlson Curve, Synthesis)",
+    "url": "https://www.synthesis.cc/synthesis/category/cost",
+    "accessed": "2026-05-02",
+    "strength": "weak",
+    "note": "Synthetic biology cost trends and biotech publication growth combine to suggest underlying capability-pressure growth on the order of 6–18% per year; this is a publication/capability proxy and is heavily attenuated. v1.5 calibration: raw indicator central growth ~0.11/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.28, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "publication_capability_proxy",
+    "risk_conversion": 0.28,
+    "raw_indicator_growth": 0.11,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.28, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "bioengineered.threshold": {
+    "mu": 8.6,
+    "lo": 8.0,
+    "hi": 9.1,
+    "source": "Esvelt KM, 2022: Delay, Detect, Defend",
+    "url": "https://geneva.fas.org/wp-content/uploads/2022/11/Delay-Detect-Defend.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical destabilization threshold exists; the range is anchored to biosecurity literature framing engineered pandemics as a global catastrophic risk class on par with nuclear but with greater uncertainty over realisation."
+  },
+  "climate.scale": {
+    "mu": 4.7,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "IPCC, 2023: AR6 Synthesis Report",
+    "url": "https://www.ipcc.ch/report/ar6/syr/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IPCC AR6 SYR documents that climate change is already causing widespread, severe and increasing impacts on ecosystems and people, with high confidence that warming above 1.5°C will produce additional and partially irreversible loss; scale is near-civilizational with a wide lower bound."
+  },
+  "climate.urgency": {
+    "mu": 4.7,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "IPCC, 2023: AR6 Synthesis Report (Summary for Policymakers)",
+    "url": "https://www.ipcc.ch/report/ar6/syr/resources/spm-headline-statements/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "AR6 SYR concludes that this decade is decisive for limiting warming to 1.5°C, with deep emission cuts needed by 2030; WMO 2024 confirms 2024 as the warmest year on record, justifying a maximal urgency score."
+  },
+  "climate.acceleration": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "WMO, 2025: State of the Global Climate 2024",
+    "url": "https://wmo.int/publication-series/state-of-global-climate-2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "WMO 2024 reports the warmest year on record at ~1.55°C above pre-industrial, ocean heat content at record levels and accelerated ice loss; the warming rate has accelerated in the last decade, supporting a high acceleration score."
+  },
+  "climate.interdependence": {
+    "mu": 4.7,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "Richardson et al., 2023: Earth beyond six of nine planetary boundaries (Science Advances)",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Richardson et al. and the Global Tipping Points Report identify climate as deeply coupled to biosphere integrity, biogeochemical flows, oceans, water and food systems; climate is among the most networked of all systemic threats."
+  },
+  "climate.irreversibility": {
+    "mu": 4.5,
+    "lo": 3.5,
+    "hi": 5.0,
+    "source": "Armstrong McKay et al., 2022: Exceeding 1.5°C global warming could trigger multiple climate tipping points (Science)",
+    "url": "https://www.science.org/doi/10.1126/science.abn7950",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Armstrong McKay et al. identify multiple potential tipping elements (Greenland and West Antarctic ice sheets, Amazon, AMOC) that may be crossed between 1.5–2.5°C, with multi-century to multi-millennial commitment of impacts; irreversibility is very high though some emissions pathways remain reversible."
+  },
+  "climate.gov_failure": {
+    "mu": 3.8,
+    "lo": 3.0,
+    "hi": 4.7,
+    "source": "IEA, 2024: World Energy Outlook 2024",
+    "url": "https://www.iea.org/reports/world-energy-outlook-2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IEA WEO 2024 STEPS scenario projects ~2.4°C warming by 2100 under current policies, well above Paris targets, indicating serious but partial governance failure; existing frameworks (Paris, NDCs, EU CBAM) prevent a maximal score."
+  },
+  "climate.growth_rate": {
+    "mu": 0.0178,
+    "lo": 0.01,
+    "hi": 0.0276,
+    "source": "IEA, 2024: World Energy Outlook 2024; Global Carbon Budget, 2024",
+    "url": "https://globalcarbonbudget.org/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "Mapping the IEA STEPS-vs-NZE scenario spread and Global Carbon Budget trends to an annualised systemic risk-pressure increase yields a central ~1.8% per year with a 1.0–2.8% plausible range; this is a direct risk-pressure proxy, not an emissions CAGR. v1.5 calibration: raw indicator central growth ~0.018/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 1.0, 0.035); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "direct_risk_pressure_proxy",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.018,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 1.0, 0.035). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "climate.threshold": {
+    "mu": 8.8,
+    "lo": 8.3,
+    "hi": 9.3,
+    "source": "Richardson et al., 2023: Earth beyond six of nine planetary boundaries (Science Advances)",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No primary quantitative source exists for a single climate destabilization threshold; the range is anchored to the planetary boundaries framework with climate as a core, already-transgressed boundary, set higher than most environmental threats but slightly below nuclear conflict."
+  },
+  "cyber.scale": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "ENISA, 2024: ENISA Threat Landscape 2024",
+    "url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "ENISA TL 2024 documents large-scale ransomware, hacktivism and supply-chain attacks affecting critical sectors but not yet civilizational-scale destruction; CrowdStrike-class single-vendor disruptions show systemic exposure, justifying a moderate-to-high scale."
+  },
+  "cyber.urgency": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "ENISA, 2024: ENISA Threat Landscape 2024",
+    "url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "ENISA reports geopolitical-driven escalation in cyber threats during 2023–2024, with state-affiliated actors targeting critical infrastructure; near-term policy and resilience action is required, supporting high urgency."
+  },
+  "cyber.acceleration": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "Verizon, 2024: Data Breach Investigations Report (DBIR) 2024",
+    "url": "https://www.verizon.com/business/resources/reports/dbir/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "DBIR 2024 documents a 180% rise in vulnerability-exploitation breaches and continued growth in ransomware and stolen-credential attacks; reporting growth is partly an artefact of better detection but underlying threat acceleration is real."
+  },
+  "cyber.interdependence": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "ENISA, 2024: ENISA Threat Landscape 2024",
+    "url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Cyber threats couple deeply to finance, supply chains, energy, health, critical infrastructure and AI; ENISA explicitly identifies cross-sector cascade risk as a defining feature of the 2024 landscape."
+  },
+  "cyber.irreversibility": {
+    "mu": 2.4,
+    "lo": 1.4,
+    "hi": 3.4,
+    "source": "Verizon, 2024: Data Breach Investigations Report (DBIR) 2024",
+    "url": "https://www.verizon.com/business/resources/reports/dbir/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most cyber harms are recoverable through patching, restoration and rebuilding, though stolen data and IP cannot be 'unstolen' and some destructive attacks on OT/ICS systems can have lasting effects; irreversibility is therefore moderate."
+  },
+  "cyber.gov_failure": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "Verizon, 2024: Data Breach Investigations Report (DBIR) 2024",
+    "url": "https://www.verizon.com/business/resources/reports/dbir/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Despite frameworks like NIS2, CISA directives and the EU Cyber Resilience Act, attacker capability continues to outpace defender response and many CNI operators remain under-protected; gov_failure is high though regulatory progress is ongoing."
+  },
+  "cyber.growth_rate": {
+    "mu": 0.0381,
+    "lo": 0.0259,
+    "hi": 0.045,
+    "source": "Verizon, 2024: Data Breach Investigations Report (DBIR) 2024",
+    "url": "https://www.verizon.com/business/resources/reports/dbir/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Reported breaches and ransomware incidents have roughly doubled per year in some categories; raw reporting growth is heavily attenuated because growth reflects both attacker activity and improved detection/disclosure regimes. v1.5 calibration: raw indicator central growth ~1/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.055, 0.045); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "incident_reporting_growth",
+    "risk_conversion": 0.055,
+    "raw_indicator_growth": 1.0,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.055, 0.045). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "cyber.threshold": {
+    "mu": 7.9,
+    "lo": 7.4,
+    "hi": 8.4,
+    "source": "ENISA, 2024: ENISA Threat Landscape 2024",
+    "url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No quantitative civilizational cyber threshold exists; the range is anchored to ENISA's framing of cascading CNI compromise as a high-impact systemic event but lower than nuclear/climate, given general recoverability of digital systems."
+  },
+  "debt.scale": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "IMF, 2024: Fiscal Monitor October 2024",
+    "url": "https://www.imf.org/en/Publications/FM/Issues/2024/10/23/fiscal-monitor-october-2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IMF Fiscal Monitor 2024 reports global public debt approaching 100% of GDP and projects further rises; widespread sovereign distress would impose severe but not civilizational impacts, justifying a moderate-to-high scale."
+  },
+  "debt.urgency": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "World Bank, 2024: International Debt Report 2024",
+    "url": "https://www.worldbank.org/en/programs/debt-statistics/idr/products",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "World Bank IDR 2024 documents record debt-service costs for low-income countries, with many in or near distress; near-term policy action on restructuring and concessional finance is needed, supporting high urgency."
+  },
+  "debt.acceleration": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "BIS, 2024: BIS Quarterly Review – Global debt monitor",
+    "url": "https://www.bis.org/publ/qtrpdf/r_qt2403.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "BIS data show continuing rise in global debt-to-GDP since the pandemic, with high-rate environment increasing debt-service burdens; acceleration is real but slower than environmental or technological threats."
+  },
+  "debt.interdependence": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "GFSR 2024 documents tight linkages between sovereign debt, banking, NBFI and emerging-market stress; debt-shock contagion is one of the best-documented systemic transmission channels."
+  },
+  "debt.irreversibility": {
+    "mu": 2.7,
+    "lo": 1.7,
+    "hi": 3.7,
+    "source": "IMF, 2024: Fiscal Monitor October 2024",
+    "url": "https://www.imf.org/en/Publications/FM/Issues/2024/10/23/fiscal-monitor-october-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Sovereign debt crises typically resolve over years to decades through restructuring, growth and inflation; impacts on poverty and human capital can be longer-lasting, justifying moderate irreversibility."
+  },
+  "debt.gov_failure": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "World Bank, 2024: International Debt Report 2024",
+    "url": "https://www.worldbank.org/en/programs/debt-statistics/idr/products",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Common Framework restructuring has been slow and uneven, and IMF/World Bank surveillance has limited ability to compel pre-emptive action; gov_failure is moderate-to-high."
+  },
+  "debt.growth_rate": {
+    "mu": 0.0119,
+    "lo": 0.006,
+    "hi": 0.0206,
+    "source": "IMF, 2024: Fiscal Monitor October 2024",
+    "url": "https://www.imf.org/en/Publications/FM/Issues/2024/10/23/fiscal-monitor-october-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Annual increases in global debt-to-GDP and rising debt-service ratios suggest underlying systemic-fragility growth on the order of 1–3.5% per year on a macro-balance proxy. v1.5 calibration: raw indicator central growth ~0.02/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.6, 0.03); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "macro_balance_proxy",
+    "risk_conversion": 0.6,
+    "raw_indicator_growth": 0.02,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.6, 0.03). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "debt.threshold": {
+    "mu": 7.9,
+    "lo": 7.4,
+    "hi": 8.4,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No fixed empirical threshold exists for global debt destabilization; the range is anchored to GFSR scenarios in which simultaneous large-economy distress could trigger global recession, set below climate/nuclear because impacts are severe but generally reversible."
+  },
+  "displacement.scale": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "UNHCR, 2024: Global Trends Report 2023",
+    "url": "https://www.unhcr.org/global-trends-report-2023",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "UNHCR Global Trends 2023 reports 117.3 million people forcibly displaced at end-2023, rising further in 2024; while not civilizational in itself, this magnitude imposes severe humanitarian, host-country and stability burdens, justifying a moderate-to-high scale."
+  },
+  "displacement.urgency": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "IDMC, 2024: Global Report on Internal Displacement 2024",
+    "url": "https://www.internal-displacement.org/global-report/grid2024/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IDMC GRID 2024 reports 75.9 million people living in internal displacement at end-2023, with conflict and disaster drivers continuing to grow; near-term operational and political response is needed."
+  },
+  "displacement.acceleration": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "UNHCR, 2024: Global Trends Report 2023",
+    "url": "https://www.unhcr.org/global-trends-report-2023",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Forced displacement has approximately doubled in a decade (~60M in 2014 to 117M+ in 2023), and IPCC-aligned modelling projects further climate-driven exposure; acceleration is high."
+  },
+  "displacement.interdependence": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "World Bank, 2021: Groundswell – Acting on Internal Climate Migration",
+    "url": "https://www.worldbank.org/en/news/feature/2021/09/13/millions-on-the-move-in-their-own-countries-the-human-face-of-climate-change",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "World Bank Groundswell projects up to 216 million internal climate migrants by 2050; displacement is tightly coupled with climate, conflict, water, food and authoritarian threats."
+  },
+  "displacement.irreversibility": {
+    "mu": 2.9,
+    "lo": 1.9,
+    "hi": 3.9,
+    "source": "UNHCR, 2024: Global Trends Report 2023",
+    "url": "https://www.unhcr.org/global-trends-report-2023",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most displacement is in principle reversible through return, integration or resettlement, but protracted situations average over a decade and many will become permanent under climate trajectories; irreversibility is moderate."
+  },
+  "displacement.gov_failure": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "UNHCR, 2024: Global Trends Report 2023",
+    "url": "https://www.unhcr.org/global-trends-report-2023",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Refugee burden remains highly unequal (low- and middle-income countries host most refugees) and resettlement quotas in wealthy states cover only a fraction of need; gov_failure is high but partial frameworks like the Global Compact on Refugees exist."
+  },
+  "displacement.growth_rate": {
+    "mu": 0.0366,
+    "lo": 0.0185,
+    "hi": 0.04,
+    "source": "UNHCR, 2024: Global Trends Report 2023; IDMC, 2024: GRID 2024",
+    "url": "https://www.unhcr.org/global-trends-report-2023",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Forced displacement has grown ~5% per year on average for over a decade with a 2.5–8.5% range across years; this is mapped to a systemic risk-pressure proxy via moderate attenuation. v1.5 calibration: raw indicator central growth ~0.05/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.75, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "exposed_population_growth",
+    "risk_conversion": 0.75,
+    "raw_indicator_growth": 0.05,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.75, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "displacement.threshold": {
+    "mu": 7.9,
+    "lo": 7.4,
+    "hi": 8.4,
+    "source": "UNHCR, 2024: Global Trends Report 2023",
+    "url": "https://www.unhcr.org/global-trends-report-2023",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational threshold exists for displacement; the range is anchored to scenarios in which climate-driven displacement combines with conflict to overwhelm host-country and humanitarian system capacity."
+  },
+  "economic.scale": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "GFSR October 2024 documents elevated financial-stability risks across NBFI, sovereign-bank nexus, commercial real estate and crypto; severe systemic crises can cause GDP losses of 10–15% but are recoverable on multi-year timescales, justifying a high but bounded scale."
+  },
+  "economic.urgency": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Stress in commercial real estate, leveraged finance and emerging-market sovereigns is identified as a near-term concern by GFSR 2024; urgency is high but slightly below climate/AMR because crystallization timing is uncertain."
+  },
+  "economic.acceleration": {
+    "mu": 3.2,
+    "lo": 2.2,
+    "hi": 4.0,
+    "source": "BIS, 2024: BIS Quarterly Review",
+    "url": "https://www.bis.org/publ/qtrpdf/r_qt2403.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "BIS reports show NBFI and private credit growing faster than oversight, with leverage building in less-regulated sectors; acceleration is moderate-to-high."
+  },
+  "economic.interdependence": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Systemic financial crises are among the most coupled threats: contagion through banking, sovereign, trade and supply chains is well documented in GFSR and BIS analyses."
+  },
+  "economic.irreversibility": {
+    "mu": 2.6,
+    "lo": 1.6,
+    "hi": 3.6,
+    "source": "Reinhart CM & Rogoff KS, 2009: This Time Is Different (Princeton University Press) – academic synthesis",
+    "url": "https://press.princeton.edu/books/paperback/9780691152646/this-time-is-different",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Empirical literature on financial crises shows that GDP and employment typically recover within a decade, though impacts on inequality, public-debt and trust can persist longer; irreversibility is moderate."
+  },
+  "economic.gov_failure": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "OECD, 2024: OECD Economic Outlook",
+    "url": "https://www.oecd.org/economic-outlook/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Post-2008 reforms (Basel III, FSB, EU banking union) have strengthened core banking, but NBFI, crypto and shadow leverage remain under-regulated; gov_failure is moderate-to-high."
+  },
+  "economic.growth_rate": {
+    "mu": 0.0149,
+    "lo": 0.008,
+    "hi": 0.0247,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Composite indicators of systemic fragility (NBFI growth, leverage in private credit, sovereign-bank exposure) suggest underlying pressure rises 0.8–2.5% per year as a systemic-risk proxy. v1.5 calibration: raw indicator central growth ~0.015/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 1.0, 0.03); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "expert_systemic_fragility_proxy",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.015,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 1.0, 0.03). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "economic.threshold": {
+    "mu": 7.9,
+    "lo": 7.4,
+    "hi": 8.4,
+    "source": "IMF, 2024: Global Financial Stability Report October 2024",
+    "url": "https://www.imf.org/en/Publications/GFSR",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No fixed civilizational financial-crisis threshold exists; the range is anchored to GFSR adverse scenarios producing global recession with multi-year recovery, set below climate/nuclear because financial systems generally recover."
+  },
+  "epistemic.scale": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "Reuters Institute, 2024: Digital News Report 2024",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Reuters Digital News Report 2024 finds trust in news at 40% globally and shows large declines in news engagement; combined with V-Dem evidence on disinformation campaigns, scale of impact on shared reality and democratic decision-making is high but not civilizational on its own."
+  },
+  "epistemic.urgency": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "V-Dem documents that government and party-led disinformation has worsened over the past decade in dozens of countries; with generative AI lowering production costs, urgency is high."
+  },
+  "epistemic.acceleration": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "Oxford Internet Institute, 2021: Industrialized Disinformation – 2020 Global Inventory of Organized Social Media Manipulation",
+    "url": "https://demtech.oii.ox.ac.uk/research/posts/industrialized-disinformation/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "OII has documented organized social-media manipulation in over 80 countries by 2020 and rising rapidly, with generative-AI tools enabling cheap, large-scale synthetic content; acceleration is high."
+  },
+  "epistemic.interdependence": {
+    "mu": 4.3,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Epistemic threats couple to AI, authoritarianism, governance fragmentation, public health (vaccine hesitancy) and conflict; coupling is high but somewhat below climate-biosphere."
+  },
+  "epistemic.irreversibility": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "Lewandowsky S et al., 2017: Beyond Misinformation: Understanding and Coping with the Post-Truth Era (J Appl Res Memory & Cogn)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S2211368117300700",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Empirical psychology literature on misinformation correction shows that beliefs persist even after correction (continued influence effect), and erosion of trust is slow to repair; irreversibility is moderate-to-high."
+  },
+  "epistemic.gov_failure": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "Reuters Institute, 2024: Digital News Report 2024",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Platform self-regulation has been inconsistent and the EU DSA is recent and untested at scale; many democracies lack functional information-integrity governance, supporting high gov_failure."
+  },
+  "epistemic.growth_rate": {
+    "mu": 0.0297,
+    "lo": 0.0154,
+    "hi": 0.04,
+    "source": "Oxford Internet Institute, 2021: Industrialized Disinformation – 2020 Global Inventory",
+    "url": "https://demtech.oii.ox.ac.uk/research/posts/industrialized-disinformation/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "OII's count of countries with documented organized manipulation roughly tripled in a few years, generative AI is amplifying volume; raw spread is mapped to a systemic risk-pressure proxy with strong attenuation given measurement uncertainty. v1.5 calibration: raw indicator central growth ~0.16/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.2, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "institutional_spread_proxy",
+    "risk_conversion": 0.2,
+    "raw_indicator_growth": 0.16,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.2, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "epistemic.threshold": {
+    "mu": 8.0,
+    "lo": 7.5,
+    "hi": 8.5,
+    "source": "V-Dem Institute, 2024: Democracy Report 2024",
+    "url": "https://v-dem.net/documents/43/v-dem_dr2024_lowres.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational epistemic-collapse threshold exists; the range is anchored to V-Dem and Reuters analyses indicating widespread loss of shared factual baseline as a multiplier on political and pandemic governance failures."
+  },
+  "fragmentation_gov.scale": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "WTO WTR 2024 documents rising trade fragmentation along geopolitical lines, with potential 5% GDP losses in deeply fragmented scenarios; scale is high but bounded because some institutions remain functional."
+  },
+  "fragmentation_gov.urgency": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "IMF, 2023: Geo-economic fragmentation and the future of multilateralism",
+    "url": "https://www.imf.org/en/Publications/Staff-Discussion-Notes/Issues/2023/01/11/Geo-Economic-Fragmentation-and-the-Future-of-Multilateralism-527266",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "IMF Staff Discussion Note 2023 stresses near-term cost of fragmentation in trade, finance and climate cooperation; urgency is high because fragmentation undermines responses to all other systemic threats."
+  },
+  "fragmentation_gov.acceleration": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "UN Security Council vetoes 2014–2024, UN press releases / SCR Voting Record",
+    "url": "https://research.un.org/en/docs/sc/quick",
+    "accessed": "2026-05-02",
+    "strength": "weak",
+    "note": "UN Security Council vetoes have risen markedly since 2022 (Russia and US blocking key resolutions on Ukraine, Gaza), and WTO dispute system remains paralysed; acceleration is moderate-to-high but based on small-count institutional indicators."
+  },
+  "fragmentation_gov.interdependence": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IMF, 2023: Geo-economic fragmentation and the future of multilateralism",
+    "url": "https://www.imf.org/en/Publications/Staff-Discussion-Notes/Issues/2023/01/11/Geo-Economic-Fragmentation-and-the-Future-of-Multilateralism-527266",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Governance fragmentation is a meta-threat that degrades collective action on climate, pandemics, AI, debt and conflict; coupling is therefore very high."
+  },
+  "fragmentation_gov.irreversibility": {
+    "mu": 2.9,
+    "lo": 1.9,
+    "hi": 3.9,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Institutional repair is possible (e.g., post-Cold-War rebuilding) but takes decades; current fragmentation is partly reversible but with significant lock-in effects."
+  },
+  "fragmentation_gov.gov_failure": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IMF, 2023: Geo-economic fragmentation and the future of multilateralism",
+    "url": "https://www.imf.org/en/Publications/Staff-Discussion-Notes/Issues/2023/01/11/Geo-Economic-Fragmentation-and-the-Future-of-Multilateralism-527266",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "By construction this threat measures governance failure itself, with UN Security Council deadlocks, WTO appellate body paralysis and stalled climate finance illustrating severe collective-action breakdown."
+  },
+  "fragmentation_gov.growth_rate": {
+    "mu": 0.0336,
+    "lo": 0.0182,
+    "hi": 0.04,
+    "source": "UN Security Council vetoes 2014–2024, UN press releases / SCR Voting Record",
+    "url": "https://research.un.org/en/docs/sc/quick",
+    "accessed": "2026-05-02",
+    "strength": "weak",
+    "note": "Veto-count and trade-restriction proxies suggest underlying fragmentation pressure rising 20–70% on small-base counts; this is heavily attenuated because the underlying counts are tiny and noisy. v1.5 calibration: raw indicator central growth ~0.4/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.1, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "small_count_institutional_proxy",
+    "risk_conversion": 0.1,
+    "raw_indicator_growth": 0.4,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.1, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "fragmentation_gov.threshold": {
+    "mu": 8.1,
+    "lo": 7.6,
+    "hi": 8.6,
+    "source": "IMF, 2023: Geo-economic fragmentation and the future of multilateralism",
+    "url": "https://www.imf.org/en/Publications/Staff-Discussion-Notes/Issues/2023/01/11/Geo-Economic-Fragmentation-and-the-Future-of-Multilateralism-527266",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical destabilization threshold; range anchored to IMF/WTO scenarios where deep fragmentation eliminates effective global response capacity for other threats, set above pure economic but below climate/nuclear."
+  },
+  "geopolitics.scale": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024 – Armaments, Disarmament and International Security",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "SIPRI 2024 documents 56 active armed conflicts in 2023, the highest since World War II, with 9 wars (1000+ battle deaths); the magnitude of human and economic impact is high though large-power direct war is the larger latent risk."
+  },
+  "geopolitics.urgency": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "SIPRI, 2024: Yearbook 2024",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Active major conflicts (Ukraine, Middle East, Sudan), Taiwan tension and renewed great-power confrontation place geopolitical risk at the top of near-term agendas; urgency is very high."
+  },
+  "geopolitics.acceleration": {
+    "mu": 4.3,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "SIPRI, 2024: Trends in World Military Expenditure 2023",
+    "url": "https://www.sipri.org/publications/2024/sipri-fact-sheets/trends-world-military-expenditure-2023",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "SIPRI reports world military spending reached $2,443 billion in 2023, up 6.8% real (the steepest rise since 2009), with growth in all five regions for the first time since 2009; acceleration is very high."
+  },
+  "geopolitics.interdependence": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Geopolitical conflict couples to nuclear risk, supply chains, energy, displacement, food security and governance fragmentation; SIPRI documents these linkages as central to current systemic risk."
+  },
+  "geopolitics.irreversibility": {
+    "mu": 2.9,
+    "lo": 1.9,
+    "hi": 3.9,
+    "source": "Uppsala Conflict Data Program (UCDP), 2024: Annual update",
+    "url": "https://ucdp.uu.se/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most conflict harms are reversible at country level over a decade or more, but failed-state outcomes and great-power restructuring of orders are durable; irreversibility is moderate."
+  },
+  "geopolitics.gov_failure": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "UN Security Council paralysis on Ukraine and Gaza, breakdown of multiple arms control regimes and inability to halt active conflicts indicate high but not maximal gov_failure."
+  },
+  "geopolitics.growth_rate": {
+    "mu": 0.0423,
+    "lo": 0.0216,
+    "hi": 0.045,
+    "source": "SIPRI, 2024: Trends in World Military Expenditure 2023",
+    "url": "https://www.sipri.org/publications/2024/sipri-fact-sheets/trends-world-military-expenditure-2023",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Real global military spending rose 6.8% in 2023 with conflict counts rising; combining spending growth and active-conflict trends yields a central proxy of ~8% per year with a 4–15% band, mapped to systemic risk-pressure with moderate attenuation. v1.5 calibration: raw indicator central growth ~0.08/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.55, 0.045); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "spending_conflict_pressure",
+    "risk_conversion": 0.55,
+    "raw_indicator_growth": 0.08,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.55, 0.045). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "geopolitics.threshold": {
+    "mu": 8.3,
+    "lo": 7.8,
+    "hi": 8.8,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational geopolitical threshold; range anchored to scenarios of great-power direct war or simultaneous multi-theatre conflict, set above debt/economic but below nuclear conflict (which has its own dedicated threat)."
+  },
+  "minerals.scale": {
+    "mu": 3.2,
+    "lo": 2.2,
+    "hi": 4.0,
+    "source": "IEA, 2024: Global Critical Minerals Outlook 2024",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IEA Critical Minerals Outlook 2024 finds that critical-mineral supply concentration risks slowing the energy transition and creating geopolitical leverage; scale is significant but not civilizational on its own."
+  },
+  "minerals.urgency": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "IEA, 2024: Global Critical Minerals Outlook 2024",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "IEA highlights tightening supply for lithium, copper, cobalt and rare earths in 2030–2040 net-zero scenarios; near-term policy and investment action is required, supporting high urgency."
+  },
+  "minerals.acceleration": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "USGS, 2024: Mineral Commodity Summaries 2024",
+    "url": "https://pubs.usgs.gov/periodicals/mcs2024/mcs2024.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "USGS data show lithium and rare-earth demand rising 10–15% per year and supply concentration in a handful of countries; acceleration is high."
+  },
+  "minerals.interdependence": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "IEA, 2024: Global Critical Minerals Outlook 2024",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Critical minerals couple to climate (energy transition), geopolitics, supply chains and economic systems; interdependence is high but somewhat below the most networked threats."
+  },
+  "minerals.irreversibility": {
+    "mu": 2.4,
+    "lo": 1.4,
+    "hi": 3.4,
+    "source": "USGS, 2024: Mineral Commodity Summaries 2024",
+    "url": "https://pubs.usgs.gov/periodicals/mcs2024/mcs2024.pdf",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Mineral shortages are recoverable through new exploration, recycling and substitution over years to decades; environmental impacts of extraction are more durable but covered under pollution/biodiversity."
+  },
+  "minerals.gov_failure": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "OECD, 2024: Geographical concentration of critical mineral supply chains",
+    "url": "https://www.oecd.org/en/publications/raw-materials-critical-for-the-green-transition_2c49e4d3-en.html",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Limited international coordination on critical minerals (G7 partnerships, Minerals Security Partnership) is recent and partial; gov_failure is moderate."
+  },
+  "minerals.growth_rate": {
+    "mu": 0.0307,
+    "lo": 0.0169,
+    "hi": 0.04,
+    "source": "IEA, 2024: Global Critical Minerals Outlook 2024",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "IEA scenarios show critical-mineral demand rising 10–25% per year for several minerals; raw market-demand growth is mapped to a systemic risk-pressure proxy with strong attenuation. v1.5 calibration: raw indicator central growth ~0.15/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.22, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "market_demand_growth",
+    "risk_conversion": 0.22,
+    "raw_indicator_growth": 0.15,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.22, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "minerals.threshold": {
+    "mu": 7.8,
+    "lo": 7.3,
+    "hi": 8.3,
+    "source": "IEA, 2024: Global Critical Minerals Outlook 2024",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational threshold; range anchored to scenarios in which mineral supply shocks halt energy-transition deployment and trigger broader geopolitical/economic stress."
+  },
+  "nuclear.scale": {
+    "mu": 4.8,
+    "lo": 3.8,
+    "hi": 5.0,
+    "source": "Robock A, Oman L, Stenchikov GL, 2007: Nuclear winter revisited (J Geophys Res)",
+    "url": "https://climate.envsci.rutgers.edu/pdf/RobockNW2006JD008235.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Robock et al. and follow-up studies show that even regional nuclear war could cause multi-year global cooling and agricultural collapse, while large-scale war could kill billions; scale is near-maximal."
+  },
+  "nuclear.urgency": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "Bulletin of the Atomic Scientists, 2025: Doomsday Clock at 89 seconds to midnight",
+    "url": "https://thebulletin.org/doomsday-clock/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "The Doomsday Clock was set to 89 seconds to midnight in 2025 and moved closer in 2026, with explicit reference to nuclear danger and erosion of arms control; urgency is very high though actual use remains a low-frequency event."
+  },
+  "nuclear.acceleration": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024 – World Nuclear Forces",
+    "url": "https://www.sipri.org/yearbook/2024/07",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "SIPRI 2024 reports an estimated 12,121 warheads at start of 2024, with 9,585 in military stockpiles and 3,904 deployed; modernization and the gradual rise in deployable inventory after decades of decline support a moderate-to-high acceleration score."
+  },
+  "nuclear.interdependence": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 5.0,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024",
+    "url": "https://www.sipri.org/yearbook/2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "SIPRI documents how nuclear risks intertwine with great-power competition, regional conflicts, cyber operations and emerging tech; coupling is strong but slightly below the most networked threats."
+  },
+  "nuclear.irreversibility": {
+    "mu": 4.7,
+    "lo": 3.7,
+    "hi": 5.0,
+    "source": "Robock A, Oman L, Stenchikov GL, 2007: Nuclear winter revisited (J Geophys Res)",
+    "url": "https://climate.envsci.rutgers.edu/pdf/RobockNW2006JD008235.pdf",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Nuclear war effects—nuclear winter, infrastructure destruction, radioactive contamination, lost human capital—are persistent over decades to centuries; irreversibility is very high."
+  },
+  "nuclear.gov_failure": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024 – Nuclear arms control",
+    "url": "https://www.sipri.org/yearbook/2024/07",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "SIPRI documents collapse or weakening of New START, INF, Open Skies and CTBT compliance, with all nuclear-armed states modernizing; gov_failure is high."
+  },
+  "nuclear.growth_rate": {
+    "mu": 0.0161,
+    "lo": 0.0098,
+    "hi": 0.0257,
+    "source": "SIPRI, 2024: SIPRI Yearbook 2024 – World Nuclear Forces; FAS, 2024: Status of World Nuclear Forces",
+    "url": "https://fas.org/initiative/status-world-nuclear-forces/",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "Total inventories are roughly stable but military stockpiles and deployments are inching up after decades of decline, and modernization is ongoing across all nine nuclear-armed states; mapped to a 1–3% per year risk-pressure increase. v1.5 calibration: raw indicator central growth ~0.018/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.9, 0.035); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "stockpile_modernization_risk_proxy",
+    "risk_conversion": 0.9,
+    "raw_indicator_growth": 0.018,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.9, 0.035). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "nuclear.threshold": {
+    "mu": 9.2,
+    "lo": 8.7,
+    "hi": 9.6,
+    "source": "Robock A, Oman L, Stenchikov GL, 2007: Nuclear winter revisited (J Geophys Res)",
+    "url": "https://climate.envsci.rutgers.edu/pdf/RobockNW2006JD008235.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "Range anchored to nuclear-winter literature treating large nuclear exchange as an existential-class threat; the dashboard convention places nuclear at the top of the threshold ladder."
+  },
+  "oceans.scale": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "FAO, 2024: The State of World Fisheries and Aquaculture 2024 (SOFIA)",
+    "url": "https://openknowledge.fao.org/handle/20.500.14283/cd0683en",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "FAO SOFIA 2024 reports 37.7% of marine fish stocks fished at biologically unsustainable levels; combined with IPCC findings on ocean warming, acidification and deoxygenation, oceans degradation imposes severe but not yet civilizational scale impacts."
+  },
+  "oceans.urgency": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "IPCC, 2019: Special Report on the Ocean and Cryosphere in a Changing Climate (SROCC)",
+    "url": "https://www.ipcc.ch/srocc/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IPCC SROCC and subsequent assessments find ocean systems already under multiple stresses, with marine heatwaves, coral bleaching and species range shifts accelerating; urgency is high."
+  },
+  "oceans.acceleration": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "WMO, 2025: State of the Global Climate 2024",
+    "url": "https://wmo.int/publication-series/state-of-global-climate-2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "WMO 2024 reports record ocean heat content for the eighth consecutive year and unprecedented sea surface temperatures; acceleration of ocean stress is high."
+  },
+  "oceans.interdependence": {
+    "mu": 4.3,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "Richardson et al., 2023: Earth beyond six of nine planetary boundaries (Science Advances)",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Oceans couple deeply with climate (heat, carbon), biodiversity, biogeochemistry, food and weather systems; coupling is among the strongest of all systemic threats."
+  },
+  "oceans.irreversibility": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "IPCC, 2019: Special Report on the Ocean and Cryosphere in a Changing Climate (SROCC)",
+    "url": "https://www.ipcc.ch/srocc/",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IPCC SROCC concludes ocean warming, acidification, deoxygenation and sea-level rise are effectively irreversible over centuries to millennia; irreversibility is very high."
+  },
+  "oceans.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "FAO, 2024: The State of World Fisheries and Aquaculture 2024 (SOFIA)",
+    "url": "https://openknowledge.fao.org/handle/20.500.14283/cd0683en",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Despite the BBNJ Treaty and various RFMOs, overfishing and IUU fishing remain widespread, marine plastic pollution governance is weak, and emissions cuts insufficient to limit ocean change; gov_failure is high."
+  },
+  "oceans.growth_rate": {
+    "mu": 0.0119,
+    "lo": 0.006,
+    "hi": 0.0247,
+    "source": "FAO SOFIA 2024; IPCC SROCC; WMO State of the Global Climate 2024",
+    "url": "https://openknowledge.fao.org/handle/20.500.14283/cd0683en",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "Composite ocean-degradation pressure (warming, acidification, fish-stock status, deoxygenation) yields an estimated 0.6–2.5% per year systemic risk-pressure rise; this replaces a pH-only proxy. v1.5 calibration: raw indicator central growth ~0.012/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 1.0, 0.03); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "composite_degradation_pressure",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.012,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 1.0, 0.03). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "oceans.threshold": {
+    "mu": 8.4,
+    "lo": 7.9,
+    "hi": 8.9,
+    "source": "Richardson et al., 2023: Earth beyond six of nine planetary boundaries (Science Advances)",
+    "url": "https://www.science.org/doi/10.1126/sciadv.adh2458",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No single global ocean-collapse threshold exists; range is anchored to functional ecosystem and fisheries-collapse pathways and the planetary boundaries framing of ocean acidification."
+  },
+  "pandemics.scale": {
+    "mu": 4.3,
+    "lo": 3.3,
+    "hi": 5.0,
+    "source": "Marani M et al., 2021: Intensity and frequency of extreme novel epidemics (PNAS)",
+    "url": "https://www.pnas.org/doi/10.1073/pnas.2105482118",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Marani et al. estimate ~2% annual probability of a COVID-19-class pandemic and project rising frequency; combined with COVID-19's ~7M reported deaths, scale is high though typically below climate/nuclear."
+  },
+  "pandemics.urgency": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "WHO, 2024: Pandemic preparedness and the negotiation of the Pandemic Agreement",
+    "url": "https://www.who.int/news/item/03-06-2024-pandemic-agreement",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Continued spillover events (H5N1 in mammals, mpox), incomplete recovery of preparedness investments post-COVID and ongoing Pandemic Agreement negotiations support a high urgency score."
+  },
+  "pandemics.acceleration": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "Marani M et al., 2021: Intensity and frequency of extreme novel epidemics (PNAS)",
+    "url": "https://www.pnas.org/doi/10.1073/pnas.2105482118",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Marani et al. project rising spillover frequency due to land-use change, climate change and travel; acceleration is moderate-to-high."
+  },
+  "pandemics.interdependence": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "WHO/FAO/WOAH/UNEP, 2022: One Health Joint Plan of Action 2022–2026",
+    "url": "https://www.who.int/publications/i/item/9789240059139",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Pandemics couple to biodiversity loss, climate, food systems, AMR, displacement and economic stability; the One Health framing makes interdependence very high."
+  },
+  "pandemics.irreversibility": {
+    "mu": 2.7,
+    "lo": 1.7,
+    "hi": 3.7,
+    "source": "WHO, 2024: COVID-19 epidemiological updates",
+    "url": "https://www.who.int/publications/m/item/covid-19-epidemiological-update---august-2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most pandemic harms are recoverable within years given vaccines and recovery, but excess mortality, long-term morbidity and institutional damage are partly persistent; irreversibility is moderate."
+  },
+  "pandemics.gov_failure": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "Nuclear Threat Initiative, 2024: Global Health Security Index 2024",
+    "url": "https://ghsindex.org/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "GHS Index 2024 finds no country fully prepared for a high-consequence biological event, and Pandemic Agreement negotiations have repeatedly missed deadlines; gov_failure is high."
+  },
+  "pandemics.growth_rate": {
+    "mu": 0.0439,
+    "lo": 0.0222,
+    "hi": 0.05,
+    "source": "Marani M et al., 2021: Intensity and frequency of extreme novel epidemics (PNAS)",
+    "url": "https://www.pnas.org/doi/10.1073/pnas.2105482118",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Marani et al. estimate rising spillover frequency on the order of a few percent per year; mapped to a systemic risk-pressure proxy with moderate attenuation. v1.5 calibration: raw indicator central growth ~0.05/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.9, 0.05); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "event_frequency_growth",
+    "risk_conversion": 0.9,
+    "raw_indicator_growth": 0.05,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.9, 0.05). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "pandemics.threshold": {
+    "mu": 8.4,
+    "lo": 7.9,
+    "hi": 8.9,
+    "source": "Marani M et al., 2021: Intensity and frequency of extreme novel epidemics (PNAS)",
+    "url": "https://www.pnas.org/doi/10.1073/pnas.2105482118",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational pandemic threshold; range anchored to scenarios of high-CFR airborne pathogens with sustained transmission, set just below climate."
+  },
+  "pollution.scale": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "Fuller R et al., 2022: Pollution and health: a progress update (Lancet Planetary Health)",
+    "url": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(22)00090-0/fulltext",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "The Lancet Commission progress update attributes ~9 million premature deaths per year to pollution (16% of global mortality), with rising contributions from chemical and modern pollution; scale is high but bounded below climate/nuclear."
+  },
+  "pollution.urgency": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "UNEP, 2024: Global Chemicals Outlook II",
+    "url": "https://www.unep.org/resources/report/global-chemicals-outlook-ii-legacies-innovative-solutions",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "UNEP Global Chemicals Outlook II warns that chemical production is projected to roughly double by 2030 with limited governance; urgency is high."
+  },
+  "pollution.acceleration": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "UNEP, 2024: Global Chemicals Outlook II",
+    "url": "https://www.unep.org/resources/report/global-chemicals-outlook-ii-legacies-innovative-solutions",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Chemical production has risen ~3–4% per year and PFAS, microplastics and pharmaceutical contamination continue to spread; acceleration is moderate-to-high."
+  },
+  "pollution.interdependence": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "Persson L et al., 2022: Outside the Safe Operating Space of the Planetary Boundary for Novel Entities (Environ Sci Technol)",
+    "url": "https://pubs.acs.org/doi/10.1021/acs.est.1c04158",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Persson et al. argue novel entities (chemicals, plastics) have transgressed the planetary boundary; pollution couples with biodiversity, oceans, soils, water and human health, justifying high interdependence."
+  },
+  "pollution.irreversibility": {
+    "mu": 4.1,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "Cousins IT et al., 2022: Outside the Safe Operating Space for PFAS (Environ Sci Technol)",
+    "url": "https://pubs.acs.org/doi/10.1021/acs.est.2c02765",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Persistent classes (PFAS, heavy metals, dioxins) are effectively irreversible at environmental scale; less persistent pollutants are recoverable, so the central value is high but bounded below biodiversity/climate."
+  },
+  "pollution.gov_failure": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "UNEP, 2024: Global Chemicals Outlook II",
+    "url": "https://www.unep.org/resources/report/global-chemicals-outlook-ii-legacies-innovative-solutions",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "UNEP documents that the SAICM 2020 goal was missed and that international chemical governance lacks enforceable global instruments for most chemical classes; gov_failure is moderate-to-high."
+  },
+  "pollution.growth_rate": {
+    "mu": 0.0275,
+    "lo": 0.0139,
+    "hi": 0.04,
+    "source": "UNEP, 2024: Global Chemicals Outlook II",
+    "url": "https://www.unep.org/resources/report/global-chemicals-outlook-ii-legacies-innovative-solutions",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Chemical production growth (~3–4%/yr) and rising contamination indicators suggest pollution-pressure rises 2–7.5%/yr; mapped to systemic risk-pressure with moderate attenuation. v1.5 calibration: raw indicator central growth ~0.04/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.7, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "production_pressure_growth",
+    "risk_conversion": 0.7,
+    "raw_indicator_growth": 0.04,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.7, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "pollution.threshold": {
+    "mu": 8.0,
+    "lo": 7.5,
+    "hi": 8.5,
+    "source": "Persson L et al., 2022: Outside the Safe Operating Space of the Planetary Boundary for Novel Entities (Environ Sci Technol)",
+    "url": "https://pubs.acs.org/doi/10.1021/acs.est.1c04158",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "Anchored to planetary-boundaries assessments of novel entities as transgressed; set above pure economic but below climate/biodiversity."
+  },
+  "soils.scale": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "UNCCD, 2022: Global Land Outlook 2 (GLO2)",
+    "url": "https://www.unccd.int/resources/global-land-outlook/glo2",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "UNCCD GLO2 reports up to 40% of global land already degraded, affecting half of humanity; impacts on food security and resilience are severe but not civilizational on their own."
+  },
+  "soils.urgency": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "FAO, 2022: Global Status of Salt-affected Soils; FAO Soils Portal",
+    "url": "https://www.fao.org/soils-portal/en/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "FAO and UNCCD highlight that meeting Land Degradation Neutrality by 2030 requires immediate action; urgency is high."
+  },
+  "soils.acceleration": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "UNCCD, 2022: Global Land Outlook 2 (GLO2)",
+    "url": "https://www.unccd.int/resources/global-land-outlook/glo2",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Approximately 100 million ha additional land becomes degraded each year; acceleration is moderate-to-high but slower than fast-moving threats."
+  },
+  "soils.interdependence": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "IPBES, 2018: Assessment Report on Land Degradation and Restoration",
+    "url": "https://www.ipbes.net/assessment-reports/ldr",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "IPBES finds land degradation tightly coupled to biodiversity, climate, water and food; coupling is among the strongest in environmental threats."
+  },
+  "soils.irreversibility": {
+    "mu": 3.9,
+    "lo": 2.9,
+    "hi": 4.7,
+    "source": "FAO, 2015: Status of the World's Soil Resources – Main Report",
+    "url": "https://www.fao.org/global-soil-partnership/resources/highlights/detail/en/c/1411921/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "FAO documents soil formation taking centuries to millennia, making severe degradation effectively irreversible on human timescales, though some land can be restored over decades."
+  },
+  "soils.gov_failure": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "UNCCD, 2022: Global Land Outlook 2 (GLO2)",
+    "url": "https://www.unccd.int/resources/global-land-outlook/glo2",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most countries are off-track for Land Degradation Neutrality, agricultural subsidies often incentivize degradation; gov_failure is moderate-to-high."
+  },
+  "soils.growth_rate": {
+    "mu": 0.01,
+    "lo": 0.005,
+    "hi": 0.0198,
+    "source": "UNCCD, 2022: Global Land Outlook 2 (GLO2)",
+    "url": "https://www.unccd.int/resources/global-land-outlook/glo2",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "Net annual rise in degraded share of total land suggests ~0.5–2% per year systemic-pressure increase, calibrated relative to total land; this replaces an earlier proxy expressed relative to already-degraded land. v1.5 calibration: raw indicator central growth ~0.01/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 1.0, 0.025); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "land_degradation_pressure",
+    "risk_conversion": 1.0,
+    "raw_indicator_growth": 0.01,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 1.0, 0.025). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "soils.threshold": {
+    "mu": 8.1,
+    "lo": 7.6,
+    "hi": 8.6,
+    "source": "UNCCD, 2022: Global Land Outlook 2 (GLO2)",
+    "url": "https://www.unccd.int/resources/global-land-outlook/glo2",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational soils threshold; range anchored to scenarios of degraded breadbaskets producing simultaneous yield collapse and migration."
+  },
+  "space.scale": {
+    "mu": 2.8,
+    "lo": 1.8,
+    "hi": 3.8,
+    "source": "ESA, 2024: ESA's Annual Space Environment Report 2024",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_s_Space_Environment_Report_2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "ESA finds orbital congestion threatens services like GNSS, communications and weather; while critical infrastructure could be lost, scale is moderate compared with civilizational threats."
+  },
+  "space.urgency": {
+    "mu": 3.0,
+    "lo": 2.0,
+    "hi": 4.0,
+    "source": "ESA, 2024: ESA's Annual Space Environment Report 2024",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_s_Space_Environment_Report_2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "ESA highlights that current adherence to debris mitigation is insufficient and urgent action is required to avoid a Kessler-style cascade; urgency is moderate-to-high."
+  },
+  "space.acceleration": {
+    "mu": 4.4,
+    "lo": 3.4,
+    "hi": 5.0,
+    "source": "ESA, 2024: ESA's Annual Space Environment Report 2024",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_s_Space_Environment_Report_2024",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Annual launch counts and active satellites are rising at unprecedented rates (Starlink-class megaconstellations), with debris generation events continuing; acceleration is very high."
+  },
+  "space.interdependence": {
+    "mu": 3.4,
+    "lo": 2.4,
+    "hi": 4.2,
+    "source": "NASA, 2024: NASA Orbital Debris Quarterly News",
+    "url": "https://orbitaldebris.jsc.nasa.gov/quarterly-news/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Space couples with critical infrastructure (GNSS, comms, weather, defence), cyber, climate monitoring; interdependence is moderate-to-high."
+  },
+  "space.irreversibility": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "Kessler DJ & Cour-Palais BG, 1978: Collision frequency of artificial satellites (J Geophys Res); ESA 2024",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_s_Space_Environment_Report_2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Once a Kessler cascade is triggered, debris can persist for decades to centuries in some orbits, and full active-removal capability is nascent; irreversibility is moderate-to-high."
+  },
+  "space.gov_failure": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "ESA, 2024: ESA's Annual Space Environment Report 2024",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_s_Space_Environment_Report_2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "ESA notes only ~half of operators meet 25-year post-mission disposal guidelines, and binding global rules are absent; gov_failure is moderate-to-high."
+  },
+  "space.growth_rate": {
+    "mu": 0.0328,
+    "lo": 0.0172,
+    "hi": 0.04,
+    "source": "ESA, 2024: ESA's Annual Space Environment Report 2024",
+    "url": "https://www.esa.int/Space_Safety/Space_Debris/ESA_s_Space_Environment_Report_2024",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Active satellite count is growing ~20% per year and debris counts ~5% per year; the inventory-growth proxy is heavily attenuated to avoid letting one explosive indicator dominate. v1.5 calibration: raw indicator central growth ~0.2/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.18, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "inventory_growth_proxy",
+    "risk_conversion": 0.18,
+    "raw_indicator_growth": 0.2,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.18, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "space.threshold": {
+    "mu": 7.8,
+    "lo": 7.3,
+    "hi": 8.3,
+    "source": "Kessler DJ & Cour-Palais BG, 1978: Collision frequency of artificial satellites (J Geophys Res)",
+    "url": "https://ntrs.nasa.gov/api/citations/19790015917/downloads/19790015917.pdf",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical destabilization threshold; anchored to Kessler-syndrome scenarios involving catastrophic loss of LEO services."
+  },
+  "supply.scale": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "WTO WTR 2024 estimates that severe supply-chain fragmentation could cost up to 5% of global GDP; scale is high but bounded below climate/nuclear."
+  },
+  "supply.urgency": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "Global Trade Alert, 2024: Independent monitoring of policies that affect world commerce",
+    "url": "https://www.globaltradealert.org/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Global Trade Alert documents continuing accumulation of trade-restrictive measures since 2017, with industrial-policy interventions accelerating; near-term action is needed."
+  },
+  "supply.acceleration": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Trade restrictions, export controls and reshoring have grown rapidly since 2018, especially around semiconductors, critical minerals and dual-use goods; acceleration is high."
+  },
+  "supply.interdependence": {
+    "mu": 4.2,
+    "lo": 3.2,
+    "hi": 5.0,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "Supply chains couple to geopolitics, minerals, energy, food, debt and pandemics; interdependence is among the highest of all systemic threats."
+  },
+  "supply.irreversibility": {
+    "mu": 2.3,
+    "lo": 1.3,
+    "hi": 3.3,
+    "source": "OECD, 2024: Trade and supply chain resilience analysis",
+    "url": "https://www.oecd.org/en/topics/global-value-chains-and-trade.html",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Most supply-chain disruptions are reversible within months to years through rerouting, substitution and inventory; some structural fragmentation may persist longer."
+  },
+  "supply.gov_failure": {
+    "mu": 3.6,
+    "lo": 2.6,
+    "hi": 4.4,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "WTO appellate body remains paralysed since 2019, plurilateral and bilateral arrangements proliferate, and dispute-settlement reform has stalled; gov_failure is moderate-to-high."
+  },
+  "supply.growth_rate": {
+    "mu": 0.0283,
+    "lo": 0.0122,
+    "hi": 0.04,
+    "source": "Global Trade Alert, 2024: Independent monitoring of policies that affect world commerce",
+    "url": "https://www.globaltradealert.org/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Global Trade Alert counts of harmful interventions have grown 10–20% per year; this is a trade-restriction-growth proxy mapped with strong attenuation. v1.5 calibration: raw indicator central growth ~0.12/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.25, 0.04); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "trade_restriction_growth",
+    "risk_conversion": 0.25,
+    "raw_indicator_growth": 0.12,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.25, 0.04). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "supply.threshold": {
+    "mu": 7.9,
+    "lo": 7.4,
+    "hi": 8.4,
+    "source": "WTO, 2024: World Trade Report 2024",
+    "url": "https://www.wto.org/english/res_e/publications_e/wtr24_e.htm",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational threshold; range anchored to deep-fragmentation scenarios producing GDP losses of multiple percent and chronic shortages."
+  },
+  "water.scale": {
+    "mu": 3.8,
+    "lo": 2.8,
+    "hi": 4.6,
+    "source": "WRI, 2023: Aqueduct 4.0 – 25 countries face extremely high water stress",
+    "url": "https://www.wri.org/insights/highest-water-stressed-countries",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "WRI Aqueduct 4.0 finds 25 countries (and ~4 billion people for one month per year) face extremely high water stress; scale is high but bounded below climate/biodiversity."
+  },
+  "water.urgency": {
+    "mu": 4.0,
+    "lo": 3.0,
+    "hi": 4.8,
+    "source": "WRI, 2023: Aqueduct 4.0 – 25 countries face extremely high water stress",
+    "url": "https://www.wri.org/insights/highest-water-stressed-countries",
+    "accessed": "2026-05-02",
+    "strength": "strong",
+    "note": "WRI projects water demand-supply gaps to widen significantly by 2050 and groundwater depletion is accelerating in many breadbaskets; urgency is very high."
+  },
+  "water.acceleration": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "Rodell M et al., 2018: Emerging trends in global freshwater availability (Nature)",
+    "url": "https://www.nature.com/articles/s41586-018-0123-1",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Rodell et al. document significant losses in major aquifers (NW India, Central Valley, Middle East) using GRACE; acceleration is moderate-to-high."
+  },
+  "water.interdependence": {
+    "mu": 4.1,
+    "lo": 3.1,
+    "hi": 4.9,
+    "source": "FAO, 2024: AQUASTAT – Global water statistics",
+    "url": "https://www.fao.org/aquastat/en/",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Water couples to climate, food, energy, conflict, displacement and biodiversity; interdependence is high."
+  },
+  "water.irreversibility": {
+    "mu": 3.5,
+    "lo": 2.5,
+    "hi": 4.3,
+    "source": "Rodell M et al., 2018: Emerging trends in global freshwater availability (Nature)",
+    "url": "https://www.nature.com/articles/s41586-018-0123-1",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Aquifer depletion can be effectively irreversible on human timescales for fossil aquifers; surface-water stresses are more recoverable; irreversibility is moderate-to-high."
+  },
+  "water.gov_failure": {
+    "mu": 3.7,
+    "lo": 2.7,
+    "hi": 4.5,
+    "source": "UN Water, 2024: World Water Development Report 2024",
+    "url": "https://www.unesco.org/reports/wwdr/2024/en",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "WWDR 2024 finds water governance fragmented, transboundary frameworks under stress (e.g., Nile, Indus, Tigris-Euphrates), and SDG 6 progress off-track; gov_failure is high."
+  },
+  "water.growth_rate": {
+    "mu": 0.0222,
+    "lo": 0.0107,
+    "hi": 0.035,
+    "source": "WRI, 2023: Aqueduct 4.0; Rodell et al., 2018",
+    "url": "https://www.wri.org/insights/highest-water-stressed-countries",
+    "accessed": "2026-05-02",
+    "strength": "moderate",
+    "note": "Combining growth in water-stressed populations and groundwater depletion suggests scarcity-pressure rising 1–4.5% per year, mapped via moderate attenuation. v1.5 calibration: raw indicator central growth ~0.025/yr is mapped to effective systemic risk-growth using min(log1p(raw) * 0.9, 0.035); mu/lo/hi already store the calibrated effective values.",
+    "growth_kind": "scarcity_exposure_growth",
+    "risk_conversion": 0.9,
+    "raw_indicator_growth": 0.025,
+    "effective_growth_calibrated": true,
+    "calibration_note": "v1.5-safe calibrated entry. mu/lo/hi are calibrated effective systemic risk-growth, not raw indicator growth; do not apply log1p conversion again. Reference formula: effective = min(log1p(raw) * 0.9, 0.035). raw_indicator_growth field stores the original empirical anchor for transparency."
+  },
+  "water.threshold": {
+    "mu": 8.2,
+    "lo": 7.7,
+    "hi": 8.7,
+    "source": "WRI, 2023: Aqueduct 4.0",
+    "url": "https://www.wri.org/insights/highest-water-stressed-countries",
+    "accessed": "2026-05-02",
+    "strength": "anchored_judgment",
+    "note": "No empirical civilizational water threshold; range anchored to scenarios of simultaneous breadbasket water failure and major-aquifer depletion."
+  }
+}

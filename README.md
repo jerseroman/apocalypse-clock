@@ -80,12 +80,12 @@ These links are provided for transparency and auditability. They allow reviewers
 
 | AI model | JSON preset | Shared chat / conversation |
 |---|---|---|
-| Meta AI | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_9340155ae5684cfab132ff9a1614f69f.json) | [Shared conversation](https://www.meta.ai/share/BJ58mD1g4ib) |
-| DeepSeek | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_d51b457416cf4de69f09ebd823838d37.json) | [Shared conversation](https://chat.deepseek.com/share/z0hekl5ix3yszqlb0q) |
-| Gemini | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_f0b88cfe12684eea98e58a2bc9e3a1a3.json) | [Shared conversation](https://gemini.google.com/share/ba734236ef06) |
-| GPT | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_ed75db20af174949ac02dd6b1c67efbf.json) | [Shared conversation](https://chatgpt.com/share/69f666b6-db54-83eb-aff9-dcc35b0b626e) |
-| Claude | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_3098987023234632b012f237a4522101.json) | [Shared conversation](https://claude.ai/share/33f155da-4c3b-44b9-b6fc-99a7f9dcfa52) |
-| Grok | [JSON preset](https://313d4b58-3475-474c-bc09-1d2aa1181c13.usrfiles.com/ugd/313d4b_cfeab5d3751b4c99ab67cc7c01d87d34.json) | [Shared conversation](https://grok.com/share/c2hhcmQtMi1jb3B5_be361e2b-dbf1-46b2-ac0c-f2ce6c056b62) |
+| Meta AI | [JSON preset](presets/MetaAI.data.json) | [Shared conversation](https://www.meta.ai/share/BJ58mD1g4ib) |
+| DeepSeek | [JSON preset](presets/DeepSeek-V4Preview.data.json) | [Shared conversation](https://chat.deepseek.com/share/z0hekl5ix3yszqlb0q) |
+| Gemini | [JSON preset](presets/Gemini3.1.data.json) | [Shared conversation](https://gemini.google.com/share/ba734236ef06) |
+| GPT | [JSON preset](presets/gpt5.5.data.json) | [Shared conversation](https://chatgpt.com/share/69f666b6-db54-83eb-aff9-dcc35b0b626e) |
+| Claude | [JSON preset](presets/claude.opus4.7.data.json) | [Shared conversation](https://claude.ai/share/33f155da-4c3b-44b9-b6fc-99a7f9dcfa52) |
+| Grok | [JSON preset](presets/Grok4.20.data.json) | [Shared conversation](https://grok.com/share/c2hhcmQtMi1jb3B5_be361e2b-dbf1-46b2-ac0c-f2ce6c056b62) |
 
 ## Model Scope
 
