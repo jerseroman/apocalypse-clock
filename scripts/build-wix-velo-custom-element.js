@@ -21,6 +21,9 @@ function scopeStylesForShadowRoot(css) {
     .replace(/:root/g, ':host')
     .replace(/(^|[\s,{>])html(?=\s*(?:,|\{))/g, '$1:host')
     .replace(/(^|[\s,{>])body(?=\s*(?:::|,|\{))/g, '$1.ac-body')
+    // Viewport units escape the Wix element's layout box. Scope horizontal
+    // sizing to the custom-element host so the P50/P90 pair cannot be clipped.
+    .replace(/100vw/g, '100%')
     .concat('\n:host{display:block;width:100%;max-width:100%;color-scheme:dark}.ac-body{width:100%;min-height:100%;isolation:isolate}\n');
 }
 

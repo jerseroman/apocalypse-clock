@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test('Wix Velo custom element renders the audited dual-clock application without an iframe', async ({ page }) => {
   test.setTimeout(90000);
+  await page.setViewportSize({ width: 1264, height: 720 });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => {
@@ -24,6 +25,29 @@ test('Wix Velo custom element renders the audited dual-clock application without
   await expect(host.locator('#cascadeMedianYear')).toHaveText('2036');
   await expect(host.locator('#cascadeHeadlineYear')).toHaveText('2043');
   await expect(host.locator('#cascadeHorizonGap')).toHaveText('7');
+
+  const horizontalLayout = await host.evaluate(element => {
+    const body = element.shadowRoot.querySelector('.ac-body');
+    const page = element.shadowRoot.querySelector('.page');
+    const pair = element.shadowRoot.querySelector('#cascadeHorizonPair');
+    const p90 = element.shadowRoot.querySelector('#cascadeHeadlineYear');
+    const hostBox = element.getBoundingClientRect();
+    const pairBox = pair.getBoundingClientRect();
+    const p90Box = p90.getBoundingClientRect();
+    return {
+      hostClientWidth: element.clientWidth,
+      bodyOverflowX: getComputedStyle(body).overflowX,
+      pageWidth: page.getBoundingClientRect().width,
+      pairRight: pairBox.right,
+      p90Right: p90Box.right,
+      hostRight: hostBox.right,
+    };
+  });
+  expect(horizontalLayout.hostClientWidth).toBe(1165);
+  expect(horizontalLayout.bodyOverflowX).toBe('hidden');
+  expect(horizontalLayout.pageWidth).toBeLessThanOrEqual(horizontalLayout.hostClientWidth);
+  expect(horizontalLayout.pairRight).toBeLessThanOrEqual(horizontalLayout.hostRight);
+  expect(horizontalLayout.p90Right).toBeLessThanOrEqual(horizontalLayout.hostRight);
   expect(errors).toEqual([]);
 });
 
