@@ -105,7 +105,8 @@ test('model loading indicator shows real monotonic progress on desktop and mobil
   });
 
   await expect(page.locator('#cascadeLoadingPercent')).toHaveText('52%');
-  await expect(page.locator('#cascadeLoadingLabel')).toHaveText('Running uncertainty simulation');
+  await expect(page.locator('.cascade-loading-wait')).toHaveText('PLEASE WAIT');
+  await expect(page.locator('.cascade-loading-description')).toHaveText('LOADING AND CALCULATING DATA FROM JSON');
   await expect(page.locator('#cascadeLoadingProgress')).toHaveAttribute('aria-valuenow', '52');
 
   for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
@@ -121,11 +122,14 @@ test('model loading indicator shows real monotonic progress on desktop and mobil
         parentLeft: parentRect.left,
         parentRight: parentRect.right,
         ratio: fill.width / track.width,
+        percentFontSize: parseFloat(getComputedStyle(element.querySelector('.cascade-loading-percent')).fontSize),
       };
     });
     expect(geometry.left).toBeGreaterThanOrEqual(geometry.parentLeft - 1);
     expect(geometry.right).toBeLessThanOrEqual(geometry.parentRight + 1);
     expect(geometry.ratio).toBeGreaterThan(0.50);
     expect(geometry.ratio).toBeLessThan(0.54);
+    expect(geometry.percentFontSize).toBeGreaterThanOrEqual(29.9);
+    expect(geometry.percentFontSize).toBeLessThanOrEqual(38.1);
   }
 });

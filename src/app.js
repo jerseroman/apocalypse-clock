@@ -5533,19 +5533,6 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
 let _running = false;
 let _resultVersion = 0;
 
-const LOADING_STAGES = [
-  { until: 0.18, label: 'Preparing model' },
-  { until: 0.38, label: 'Scoring threats' },
-  { until: 0.70, label: 'Running uncertainty simulation' },
-  { until: 0.90, label: 'Propagating cascades' },
-  { until: 1.00, label: 'Preparing results' },
-];
-
-function loadingStageLabel(progress) {
-  const stage = LOADING_STAGES.find(item => progress <= item.until);
-  return stage ? stage.label : LOADING_STAGES[LOADING_STAGES.length - 1].label;
-}
-
 function updateLoadingProgress(progress) {
   const percent = Math.round(progress * 100);
   for (const [fillId, percentId] of [
@@ -5557,8 +5544,6 @@ function updateLoadingProgress(progress) {
     if (fill) fill.style.width = `${percent}%`;
     if (value) value.textContent = `${percent}%`;
   }
-  const label = document.getElementById('cascadeLoadingLabel');
-  if (label) label.textContent = loadingStageLabel(progress);
   const progressbar = document.getElementById('cascadeLoadingProgress');
   if (progressbar) progressbar.setAttribute('aria-valuenow', String(percent));
 }

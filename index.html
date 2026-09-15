@@ -160,13 +160,12 @@
         <div class="hero-section-kicker">Projected horizon</div>
         <div class="cascade-headline-label">Dynamic cascade · paired P50/P90 horizon clocks · projected pathway</div>
         <div id="cascadeLoadingMsg" class="cascade-loading" style="display:none" role="status" aria-live="polite">
-          <div class="cascade-loading-head">
-            <span class="cascade-loading-label" id="cascadeLoadingLabel">Preparing model</span>
-            <span class="cascade-loading-percent" id="cascadeLoadingPercent">0%</span>
-          </div>
+          <p class="cascade-loading-wait">PLEASE WAIT</p>
+          <p class="cascade-loading-percent" id="cascadeLoadingPercent">0%</p>
           <div class="cascade-loading-track" id="cascadeLoadingProgress" role="progressbar" aria-label="Model calculation progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div class="cascade-loading-fill" id="cascadeLoadingFill"></div>
           </div>
+          <p class="cascade-loading-description">LOADING AND CALCULATING DATA FROM JSON</p>
         </div>
         <div class="cascade-horizon-pair" id="cascadeHorizonPair" role="group" aria-label="Dynamic cascade P50 and P90 projected horizons" style="display:none">
           <div class="cascade-horizon-clock cascade-horizon-p50" id="cascadeMedianYearWrap" style="display:none">
