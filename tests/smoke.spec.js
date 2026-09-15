@@ -91,3 +91,41 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
   expect(errors).toEqual([]);
   expect(warnings.filter(text => text.includes('custom wheel sensitivity'))).toEqual([]);
 });
+
+test('model loading indicator shows real monotonic progress on desktop and mobile widths', async ({ page }) => {
+  test.setTimeout(90000);
+  await page.goto('/index.html');
+  await expect(page.locator('#cascadeHeadlineYear')).toContainText(/\d{4}|>2100/, { timeout: 60000 });
+
+  await page.evaluate(() => {
+    document.getElementById('cascadeLoadingMsg').style.display = 'block';
+    window._particleLoader.start();
+    window._particleLoader.setProgress(0.52);
+    window._particleLoader.setProgress(0.30);
+  });
+
+  await expect(page.locator('#cascadeLoadingPercent')).toHaveText('52%');
+  await expect(page.locator('#cascadeLoadingLabel')).toHaveText('Running uncertainty simulation');
+  await expect(page.locator('#cascadeLoadingProgress')).toHaveAttribute('aria-valuenow', '52');
+
+  for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    const geometry = await page.locator('#cascadeLoadingMsg').evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const parentRect = element.parentElement.getBoundingClientRect();
+      const track = element.querySelector('.cascade-loading-track').getBoundingClientRect();
+      const fill = element.querySelector('.cascade-loading-fill').getBoundingClientRect();
+      return {
+        left: rect.left,
+        right: rect.right,
+        parentLeft: parentRect.left,
+        parentRight: parentRect.right,
+        ratio: fill.width / track.width,
+      };
+    });
+    expect(geometry.left).toBeGreaterThanOrEqual(geometry.parentLeft - 1);
+    expect(geometry.right).toBeLessThanOrEqual(geometry.parentRight + 1);
+    expect(geometry.ratio).toBeGreaterThan(0.50);
+    expect(geometry.ratio).toBeLessThan(0.54);
+  }
+});

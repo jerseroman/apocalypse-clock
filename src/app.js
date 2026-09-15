@@ -5533,34 +5533,49 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
 let _running = false;
 let _resultVersion = 0;
 
-const LOADING_MSGS = [
-  'Conditioning scenario…','Normalizing weights…','Scoring threat drivers…',
-  'Applying dependency model…','Mapping threat horizons…','Computing stress index…',
-  'Ranking lead threats…','Preparing parameter draws…','Sampling uncertainty…',
-  'Running Monte Carlo…','Resolving compensatory path…','Testing max-rule path…',
-  'Evaluating graph heuristic…','Propagating cascade links…','Aggregating domain risk…',
-  'Estimating bootstrap bounds…','Checking structural spread…','Ranking network hubs…',
-  'Measuring risk entropy…','Calibrating clock display…','Preparing model output…'
+const LOADING_STAGES = [
+  { until: 0.18, label: 'Preparing model' },
+  { until: 0.38, label: 'Scoring threats' },
+  { until: 0.70, label: 'Running uncertainty simulation' },
+  { until: 0.90, label: 'Propagating cascades' },
+  { until: 1.00, label: 'Preparing results' },
 ];
+
+function loadingStageLabel(progress) {
+  const stage = LOADING_STAGES.find(item => progress <= item.until);
+  return stage ? stage.label : LOADING_STAGES[LOADING_STAGES.length - 1].label;
+}
+
+function updateLoadingProgress(progress) {
+  const percent = Math.round(progress * 100);
+  for (const [fillId, percentId] of [
+    ['loaderLineFill', 'loaderPercent'],
+    ['cascadeLoadingFill', 'cascadeLoadingPercent'],
+  ]) {
+    const fill = document.getElementById(fillId);
+    const value = document.getElementById(percentId);
+    if (fill) fill.style.width = `${percent}%`;
+    if (value) value.textContent = `${percent}%`;
+  }
+  const label = document.getElementById('cascadeLoadingLabel');
+  if (label) label.textContent = loadingStageLabel(progress);
+  const progressbar = document.getElementById('cascadeLoadingProgress');
+  if (progressbar) progressbar.setAttribute('aria-valuenow', String(percent));
+}
+
 (function() {
   let _cur = 0;
   window._particleLoader = {
     start() {
       _cur = 0;
       const wrap = document.getElementById('mcParticleWrap');
-      const fill = document.getElementById('loaderLineFill');
-      const pct  = document.getElementById('loaderPercent');
-      if (fill) fill.style.width = '0%';
-      if (pct)  pct.textContent = '0%';
+      updateLoadingProgress(0);
       if (wrap) wrap.style.display = 'grid';
     },
     setProgress(p) {
       const v = Math.max(_cur, Math.max(0, Math.min(1, p)));
       _cur = v;
-      const fill = document.getElementById('loaderLineFill');
-      const pct  = document.getElementById('loaderPercent');
-      if (fill) fill.style.width = (v * 100) + '%';
-      if (pct)  pct.textContent = Math.round(v * 100) + '%';
+      updateLoadingProgress(v);
     },
     stop() {
       _cur = 0;
@@ -5570,15 +5585,7 @@ const LOADING_MSGS = [
   };
 })();
 
-function buildLoadingMsgHTML(fontSize, step) {
-  const s = step || 0.7;
-  const dur = (LOADING_MSGS.length * s).toFixed(2);
-  return LOADING_MSGS.map((msg, i) =>
-    `<span class="lmsg" style="animation-duration:${dur}s;animation-delay:${-(i * s).toFixed(2)}s;font-size:${fontSize}">${msg}</span>`
-  ).join('');
-}
-
-function startLoadingMessages() {
+function startLoadingIndicator() {
   const pair = document.getElementById('cascadeHorizonPair');
   const medianWrap = document.getElementById('cascadeMedianYearWrap');
   const yearWrap = document.getElementById('cascadeHeadlineYearWrap');
@@ -5591,12 +5598,12 @@ function startLoadingMessages() {
   if (note)     note.style.display = 'none';
   if (stabilityNote) stabilityNote.style.display = 'none';
   if (clm) {
-    if (!clm.dataset.built) { clm.dataset.built = '1'; clm.innerHTML = buildLoadingMsgHTML('11px', 0.35); }
+    updateLoadingProgress(0);
     clm.style.display = 'block';
   }
 }
 
-function stopLoadingMessages() {
+function stopLoadingIndicator() {
   const clm = document.getElementById('cascadeLoadingMsg');
   if (clm) clm.style.display = 'none';
 }
@@ -5790,7 +5797,8 @@ async function runAll() {
   if (_running) return;
   const runVersion = ++_resultVersion;
   _running = true;
-  startLoadingMessages();
+  startLoadingIndicator();
+  if (window._particleLoader) window._particleLoader.start();
   try {
     const scKey = currentScenario();
     const nSim = parseInt(P.nSim, 10) || 3000;
@@ -5807,7 +5815,6 @@ async function runAll() {
     const prog = document.getElementById('mcProgress');
     const badge = document.getElementById('simBadge');
     prog.style.width = '0%';
-    if (window._particleLoader) window._particleLoader.start();
     setCalcStepStatus('base', 'running', `Recomputing weighted six-dimension base scores for ${THREATS.length} threats.`);
     setCalcStepStatus('dependency', 'queued', 'Heuristic dependency amplification will be applied immediately after base scoring.');
     setCalcStepStatus('domainweights', 'queued', 'Domain sliders will be normalized into relative multipliers around the equal-weight baseline.');
@@ -5938,7 +5945,7 @@ async function runAll() {
     const runningStep = CORE_CALC_STEPS.find(step => state.steps[step.id].status === 'running');
     if (runningStep) setCalcStepStatus(runningStep.id, 'error', 'This stage was interrupted by a run failure.', 'Current run failed before all calculation stages could finish.');
   } finally {
-    stopLoadingMessages();
+    stopLoadingIndicator();
     _running = false;
   }
 }
