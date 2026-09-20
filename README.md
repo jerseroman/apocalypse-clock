@@ -8,8 +8,7 @@ The original dataset files remain unchanged. The model-1.2.9 baseline is reprodu
 
 The dataset's `_meta.model_compatibility` value remains 1.2.8 because that is the earliest application version implementing its functional fields. Model 1.2.9 changes the calculation engine and presentation, not the dataset payload or dataset version.
 
-Live GitHub Pages version: https://jerseroman.github.io/apocalypse-clock/  
-Official website: https://www.apocalypseclock.com/
+Live application: https://jerseroman.github.io/apocalypse-clock/
 
 Apocalypse Clock is a static, browser-based systemic-risk dashboard for exploring interacting global threats across civilizational, biospheric, and technological domains. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs in a client-side application. The dashboard is driven by a structured JSON dataset that serves as the primary data input source for the model.
 
@@ -161,7 +160,7 @@ These metadata files support citation and archival discovery. They do not imply 
 If you use, cite, review, or discuss this project, please cite it as:
 
 Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.2.9.
-https://www.apocalypseclock.com/
+https://github.com/jerseroman/apocalypse-clock
 
 ## Changelog
 
@@ -179,10 +178,10 @@ For attribution and third-party notice information, see [`NOTICE.md`](./NOTICE.m
 
 This repository is released under the Apocalypse Clock Source-Available Non-Commercial Fork License.
 
-Forking is permitted for non-commercial purposes, provided that every fork or derivative version clearly credits the original project and includes the official website:
+Forking is permitted for non-commercial purposes, provided that every fork or derivative version clearly credits the original project and includes the official project repository:
 
 Based on the Apocalypse Clock project by Roman Jerše.  
-Official website: https://www.apocalypseclock.com/
+Official repository: https://github.com/jerseroman/apocalypse-clock
 
 Commercial use is not permitted without prior written permission from Roman Jerše.
 

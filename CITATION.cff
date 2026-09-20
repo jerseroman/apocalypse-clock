@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Jerše"
     given-names: "Roman"
-url: "https://www.apocalypseclock.com/"
+url: "https://jerseroman.github.io/apocalypse-clock/"
 repository-code: "https://github.com/jerseroman/apocalypse-clock"
 version: "1.2.9"
 date-released: "2026-09-13"

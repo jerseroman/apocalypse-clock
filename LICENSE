@@ -3,8 +3,8 @@ Version 1.0
 
 Copyright © 2026 Roman Jerše. All rights reserved.
 
-Official project website:
-https://www.apocalypseclock.com/
+Official project repository:
+https://github.com/jerseroman/apocalypse-clock
 
 1. Purpose
 
@@ -41,13 +41,13 @@ educational, archival, or experimental purposes.
 
 Every fork, copy, modification, adaptation, derivative repository, or public
 redistribution must clearly credit the original project and include the official
-website.
+project repository.
 
 The following notice must be retained in the README file, license notice, and
 any public-facing documentation of the fork or derivative work:
 
     Based on the Apocalypse Clock project by Roman Jerše.
-    Official website: https://www.apocalypseclock.com/
+    Official repository: https://github.com/jerseroman/apocalypse-clock
 
 If the fork or derivative version is publicly accessible as a website,
 application, dashboard, repository, demonstration, publication, or public
@@ -87,7 +87,7 @@ being endorsed, approved, supervised, or maintained by Roman Jerše unless
 separate written permission has been granted.
 
 Forks and derivative versions must not remove, obscure, or misrepresent the
-required attribution to the original project and official website.
+required attribution to the original project and official repository.
 
 7. Name, branding, and visual identity
 
@@ -133,6 +133,6 @@ branding, or broader licensing permissions require prior written permission from
 Roman Jerše.
 
 Contact or project reference:
-https://www.apocalypseclock.com/
+https://github.com/jerseroman/apocalypse-clock
 
 End of license.

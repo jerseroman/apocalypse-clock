@@ -1,5 +1,5 @@
 /*!
- * Apocalypse Clock — https://www.apocalypseclock.com/
+ * Apocalypse Clock — https://jerseroman.github.io/apocalypse-clock/
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 (function(){

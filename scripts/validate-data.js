@@ -96,7 +96,7 @@ for (const htmlFile of ['index.html', '404.html']) {
   const html = readText(htmlFile);
   assert(/<title>Apocalypse Clock \| Global Systemic Risk Monitor<\/title>/.test(html), `${htmlFile}: missing title`);
   assert(/<meta name="description"/.test(html), `${htmlFile}: missing meta description`);
-  assert(/<link rel="canonical" href="https:\/\/www\.apocalypseclock\.com\/">/.test(html), `${htmlFile}: missing canonical URL`);
+  assert(/<link rel="canonical" href="https:\/\/jerseroman\.github\.io\/apocalypse-clock\/">/.test(html), `${htmlFile}: missing canonical URL`);
   assert(/<meta property="og:title"/.test(html), `${htmlFile}: missing OpenGraph metadata`);
   assert(/<meta name="twitter:card"/.test(html), `${htmlFile}: missing Twitter metadata`);
   assert(!/decoding="async"\/\s+loading=/.test(html), `${htmlFile}: malformed img decoding/loading attributes`);

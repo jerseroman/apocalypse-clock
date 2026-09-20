@@ -60,7 +60,7 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
   expect(Math.abs(actionsAfter.height - actionsBefore.height)).toBeLessThan(2);
 
   const encodedShareText = 'Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system.';
-  const encodedShareUrl = 'https%3A%2F%2Fwww.apocalypseclock.com%2F';
+  const encodedShareUrl = 'https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F';
   const shareLinks = {
     '#sh-twitter': ['twitter.com/intent/tweet', 'text='],
     '#sh-facebook': ['facebook.com/sharer/sharer.php', 'quote='],

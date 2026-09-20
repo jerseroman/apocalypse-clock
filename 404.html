@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Apocalypse Clock — https://www.apocalypseclock.com/
+  Apocalypse Clock — https://jerseroman.github.io/apocalypse-clock/
   (c) 2026 Apocalypse Clock project authors. See LICENSE.
 -->
 <html lang="en">
@@ -9,12 +9,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Apocalypse Clock | Global Systemic Risk Monitor</title>
 <meta name="description" content="Apocalypse Clock is a transparent, scenario-based systemic-risk dashboard for exploring 23 interacting global threats across civilizational, biospheric, and technological domains.">
-<link rel="canonical" href="https://www.apocalypseclock.com/">
+<link rel="canonical" href="https://jerseroman.github.io/apocalypse-clock/">
 <meta name="theme-color" content="#111722">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Apocalypse Clock | Global Systemic Risk Monitor">
 <meta property="og:description" content="Explore interacting global systemic risks through scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, and Dynamic cascade diagnostics.">
-<meta property="og:url" content="https://www.apocalypseclock.com/">
+<meta property="og:url" content="https://jerseroman.github.io/apocalypse-clock/">
 <meta property="og:image" content="https://jerseroman.github.io/apocalypse-clock/assets/apocalypse-clock-logo.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apocalypse Clock | Global Systemic Risk Monitor">
@@ -111,18 +111,18 @@
 
       <button type="button" id="missionToggle" class="mission-action" data-action="toggle-mission-more" aria-expanded="false">Read more</button>
       <div id="missionActions" class="mission-actions">
-        <a class="mission-action" href="https://www.apocalypseclock.com/methodology" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">&#x2197;</span> Read Methodology</a>
-        <a class="mission-action" href="https://www.apocalypseclock.com/scoringmethodology" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">&#x2197;</span> Read Scoring Methodology</a>
+        <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/docs/METHODOLOGY.md" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">&#x2197;</span> Read Methodology</a>
+        <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/docs/MODEL_SCOPE.md" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">&#x2197;</span> Review Model Scope</a>
         <a class="mission-action" href="mailto:info@apocalypseclock.com"><span class="mission-action-icon">&#x26A0;</span> Report Problem</a>
-        <a class="mission-action" href="https://www.apocalypseclock.com/legal" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">⚖</span> Legal &amp; Privacy</a>
+        <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">⚖</span> License</a>
         <div id="shareMenuWrap" class="mission-action-menu">
           <a class="mission-action" aria-label="Open sharing menu" role="button" data-action="toggle-share-menu" href="#"><span class="mission-action-icon">&#x2B06;</span> Share</a>
           <div id="shareDropdown" class="mission-share-dropdown">
             <a id="sh-twitter" aria-label="Share on X" href="#" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">X / Twitter</a>
-            <a id="sh-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.apocalypseclock.com" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Facebook</a>
+            <a id="sh-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Facebook</a>
             <a id="sh-telegram" aria-label="Share on Telegram" href="#" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Telegram</a>
             <a id="sh-reddit" aria-label="Share on Reddit" href="#" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Reddit</a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.apocalypseclock.com" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">LinkedIn</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">LinkedIn</a>
             <button type="button" data-action="copy-share-link">⧉ Copy link</button>
           </div>
         </div>
@@ -131,7 +131,7 @@
         <a class="mission-action" aria-label="Print Apocalypse Clock page" role="button" data-action="print-page" href="#"><span class="mission-action-icon">⎙</span> Print / PDF</a>
         <a class="mission-action" href="https://www.facebook.com/profile.php?id=61571359601171" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">f</span> Follow on Facebook</a>
         <a class="mission-action" href="https://www.arewealoneintheuniverse.com/" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">✦</span> Are we alone in the universe?</a>
-        <a class="mission-action" aria-label="Open Perplexity interpretation prompt" href="https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fwww.apocalypseclock.com%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2Fdata_v1_9_0_functional.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon" aria-hidden="true"><img src="./assets/perplexity-icon.png" alt="" width="13" height="13" style="display:block;width:13px;height:13px"></span> Ask Perplexity</a>
+        <a class="mission-action" aria-label="Open Perplexity interpretation prompt" href="https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2Fdata_v1_9_0_functional.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon" aria-hidden="true"><img src="./assets/perplexity-icon.png" alt="" width="13" height="13" style="display:block;width:13px;height:13px"></span> Ask Perplexity</a>
       </div>
     </div>
     <div class="calc-console" id="calcConsole">

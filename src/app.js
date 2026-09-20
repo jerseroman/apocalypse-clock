@@ -1,5 +1,5 @@
 /*!
- * Apocalypse Clock — https://www.apocalypseclock.com/
+ * Apocalypse Clock — https://jerseroman.github.io/apocalypse-clock/
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
@@ -3730,40 +3730,16 @@ function buildNarrative(scKey, enriched, mcRes) {
 }
 
 
-const THREAT_PAGE_URLS = Object.freeze({
-  climate: 'https://www.apocalypseclock.com/climatebreakdown',
-  biodiversity: 'https://www.apocalypseclock.com/biodiversityloss',
-  soils: 'https://www.apocalypseclock.com/soilfoodsystem',
-  water: 'https://www.apocalypseclock.com/freshwaterstress',
-  oceans: 'https://www.apocalypseclock.com/oceandegradation',
-  pollution: 'https://www.apocalypseclock.com/toxicpollutionpfas',
-  pandemics: 'https://www.apocalypseclock.com/pandemicbiosecurity',
-  amr: 'https://www.apocalypseclock.com/antimicrobialresistance',
-  bioengineered: 'https://www.apocalypseclock.com/engineeredbiologicalevent',
-  nuclear: 'https://www.apocalypseclock.com/nuclearconflict',
-  supply: 'https://www.apocalypseclock.com/energysupplychains',
-  geopolitics: 'https://www.apocalypseclock.com/geopoliticalescalation',
-  fragmentation_gov: 'https://www.apocalypseclock.com/globalgovernancefragmentation',
-  economic: 'https://www.apocalypseclock.com/economicfracture',
-  debt: 'https://www.apocalypseclock.com/debtfinancialcontagion',
-  displacement: 'https://www.apocalypseclock.com/massdisplacement',
-  authoritarian: 'https://www.apocalypseclock.com/authoritariandrift',
-  epistemic: 'https://www.apocalypseclock.com/epistemicbreakdown',
-  ai: 'https://www.apocalypseclock.com/advancedaidestabilizer',
-  cyber: 'https://www.apocalypseclock.com/systemiccyberattacks',
-  autonomousw: 'https://www.apocalypseclock.com/autonomousweaponsescalation',
-  minerals: 'https://www.apocalypseclock.com/criticalmineralsbottleneck',
-  space: 'https://www.apocalypseclock.com/spaceinfrastructuredisruption'
-});
+const SOURCE_DATA_URL = './data_v1_9_0_functional.json';
 
 function threatPageUrl(t) {
-  return THREAT_PAGE_URLS[t?.id] || 'https://www.apocalypseclock.com/';
+  return SOURCE_DATA_URL;
 }
 
 function threatReadMoreLink(t) {
   const url = threatPageUrl(t);
   const label = escapeHtml(t?.name || 'this threat');
-  return `<a class="threat-read-more" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Read more about ${label}">READ MORE</a>`;
+  return `<a class="threat-read-more" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="View source data for ${label}">VIEW SOURCE DATA</a>`;
 }
 
 function threatTableMetaHtml(t) {
@@ -3992,19 +3968,6 @@ function climateDependencyPathwaysHtml(t, enriched) {
   if (!depNames.length) return 'No outgoing dependencies are declared for this threat in the current calculator specification.';
   const arrows = depNames.map(name => `<li><strong>Climate Breakdown</strong> → ${escapeHtml(name)}</li>`).join('');
   return `<ul class="detail-list">${arrows}<li>These are declared outgoing model dependencies; this card does not add extra dependency links beyond the current calculator specification.</li></ul>`;
-}
-
-
-function updateClimateReadMoreLinks() {
-  document.querySelectorAll('.threat-title-row').forEach(row => {
-    const title = row.querySelector('.threat-title-text');
-    const link = row.querySelector('.threat-read-more');
-    if (title && link && /climate breakdown/i.test(title.textContent || '')) {
-      link.setAttribute('href', 'https://www.apocalypseclock.com/climatebreakdown');
-      link.setAttribute('target', '_blank');
-      link.setAttribute('rel', 'noopener noreferrer');
-    }
-  });
 }
 
 
@@ -4275,7 +4238,7 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
       <div class="t-interactions"><strong>Declared interactions:</strong> ${escapeHtml(vm.depNames.join('  ') || 'none recorded')}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap">
         <button class="a-chip" type="button" data-threat-action="watch">Watch</button>
-        <a class="a-chip" href="${escapeHtml(threatPageUrl(t))}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">READ MORE</a>
+        <a class="a-chip" href="${escapeHtml(threatPageUrl(t))}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">VIEW SOURCE DATA</a>
         <button class="a-chip" type="button" data-threat-action="toggle-collapse">${actionLabel}</button>
       </div>
     </div>
@@ -4293,7 +4256,6 @@ function renderClimateBreakdownDetail(enriched, mcRes) {
     return;
   }
   shell.innerHTML = sorted.map((t, idx) => priorityThreatCardHtml(t, idx + 1, enriched, mcRes)).join('');
-  updateClimateReadMoreLinks();
   initClimateDetailControls();
 }
 
@@ -5281,7 +5243,7 @@ function exportClockCSV() {
 
 function buildShareLinks() {
   const d = window._lastInterpretData;
-  const base = 'https://www.apocalypseclock.com';
+  const base = 'https://jerseroman.github.io/apocalypse-clock/';
   let text = 'Apocalypse Clock simulation';
   if (d && d.cascadeP90) {
     text = `Apocalypse Clock: Dynamic cascade P90 critical horizon ${d.cascadeP90}   run your own simulation at ${base}`;
@@ -7287,7 +7249,7 @@ const AI_PRESETS = {
     threshold: 0.50,
     fileName: 'All-AI-Average.data.json',
     url: './presets/All-AI-Average.data.json',
-    chatUrl: 'https://www.apocalypseclock.com/scoringmethodology',
+    chatUrl: 'https://github.com/jerseroman/apocalypse-clock/blob/main/docs/METHODOLOGY.md',
   },
   primarycalibrated: {
     label: 'Primary Functional JSON',
@@ -7297,7 +7259,7 @@ const AI_PRESETS = {
     threshold: 0.50,
     fileName: PRIMARY_DATASET_NAME,
     isPrimary: true,
-    chatUrl: 'https://www.apocalypseclock.com/scoringmethodology',
+    chatUrl: 'https://github.com/jerseroman/apocalypse-clock/blob/main/docs/METHODOLOGY.md',
   },
   meta: {
     label: 'Meta AI',

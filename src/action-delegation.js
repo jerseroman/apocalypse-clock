@@ -1,11 +1,11 @@
 /*!
- * Apocalypse Clock — https://www.apocalypseclock.com/
+ * Apocalypse Clock — https://jerseroman.github.io/apocalypse-clock/
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 (function installActionDelegation(){
   if (window.__AC_ACTIONS_INIT__) return;
   window.__AC_ACTIONS_INIT__ = true;
-  const SHARE_URL = 'https://www.apocalypseclock.com/';
+  const SHARE_URL = 'https://jerseroman.github.io/apocalypse-clock/';
   const SHARE_TEXT = 'Explore the Apocalypse Clock: an independent systemic-risk monitor showing which civilizational threats are currently placing the greatest pressure on the global system.';
   function updateShareLinks(){
     const text = encodeURIComponent(SHARE_TEXT);
