@@ -6,10 +6,10 @@
       "name": "Jerše, Roman"
     }
   ],
-  "version": "1.2.9",
-  "publication_date": "2026-09-13",
+  "version": "1.3",
+  "publication_date": "2026-09-23",
   "access_right": "open",
-  "description": "Apocalypse Clock is an experimental, browser-based systemic-risk dashboard for exploring interacting global threats through scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs. The project is not peer reviewed. Model outputs are scenario outputs, not predictions.",
+  "description": "Apocalypse Clock is an experimental, browser-based systemic-risk dashboard covering 59 modeled risk elements: 23 interacting headline threats and 36 nested Climate Breakdown and Ocean Degradation subsystem components. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs. The project is not peer reviewed. Model outputs are scenario outputs, not predictions.",
   "keywords": [
     "systemic risk",
     "scenario analysis",
@@ -33,5 +33,5 @@
       "resource_type": "software"
     }
   ],
-  "notes": "Version 1.2.9 makes regime first-passage timing responsive to the existing sampled latent-pressure growth and replaces domain priority-mass dates with propagated, fixed-criticality functional horizons. Dataset v1.9.0 numerical values are unchanged. The model does not claim empirical calibration or predictive validation. Released under the custom source-available non-commercial fork license; the project is not peer reviewed and outputs remain conditional scenarios, not predictions."
+  "notes": "Version 1.3 uses dataset v1.9.1 dated 2026-09-23, with 23 headline threats and 36 nested climate and ocean subsystem components. The model does not claim empirical calibration or predictive validation. The project is not peer reviewed and outputs remain conditional scenarios, not predictions."
 }

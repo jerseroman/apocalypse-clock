@@ -20,7 +20,8 @@ npm run validate:data
 
 Enforces:
 - `_meta.schema_version === "1.7.1"` (or the current schema version on a DATASET change)
-- 23 threats, 184 parameters
+- 23 headline threats and 184 headline parameters
+- up to 36 nested Climate Breakdown and Ocean Degradation subsystem components
 - `lo <= mu <= hi` for every parameter
 - required HTML metadata present
 - byte-equal JSON across `data_v1_7_1metadata_revision.json`, `<script id="bundledSources">` in `index.html`, and the same in `404.html`

@@ -1,16 +1,16 @@
-# Apocalypse Clock v1.2.9 — domain functional-horizon correction
+# Apocalypse Clock v1.3.1-dev
 
-Version **1.2.9** uses the unchanged dataset **1.9.0**, [data_v1_9_0_functional.json](./data_v1_9_0_functional.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). Domain cards now use the same propagated functional-loss estimand as the headline, restricted only at the reporting basket; regime processes now respond to sampled latent-pressure growth instead of a separate growth-blind geometric clock.
+Version **1.3** started as a controlled copy of application 1.2.9. The current development revision uses dataset **1.9.1**, [data/data_v1_9_1_2026-09-23.json](./data/data_v1_9_1_2026-09-23.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). The active causal topology is defined once in [src/causal-graph.js](./src/causal-graph.js) and shared by the calculations and network view; source-map uploads cannot replace it.
 
 A single initial failure can propagate into initially right-censored targets. Fixed criticality weights, essential-service baskets, one-year dependency lags and explicit overlap grouping replace the former three-domain/transmission veto. Functional failure does not require disappearance of all organisms. The headline is a **functional-disruption threshold after propagation**, not a calibrated prediction of completed global collapse. Parameter scores, growth priors and coupling coefficients remain transparent model judgments.
 
-The original dataset files remain unchanged. The model-1.2.9 baseline is reproducible with the fixed seed: Dynamic Cascade P10/P50/P90 is 2033/2036/2042; domain functional P50 values are civilization 2045, biosphere 2036 and technology 2040. These are conditional model quantiles, not validated dates of completed collapse. The immediate pre-change files and baseline-commit record are preserved outside the repository in `C:/Users/error/Desktop/Apocalypse Clock backups/pre-domain-functional-fix-20260913`.
+The original dataset files remain unchanged. The initial model-1.3 baseline reproduced the 1.2.9 fixed-seed result: Dynamic Cascade P10/P50/P90 was 2033/2036/2042. With the unreviewed direct geopolitics-to-climate link removed, the local 1.3.1-dev result is 2034/2037/2043 under the same baseline, expert profile, seed and 3000 simulations; domain P50 values are civilization 2046, biosphere 2037 and technology 2040. These are conditional model quantiles, not validated dates of completed collapse. The immediate pre-change files and baseline-commit record are preserved outside the repository in `C:/Users/error/Desktop/Apocalypse Clock backups/pre-domain-functional-fix-20260913`.
 
-The dataset's `_meta.model_compatibility` value remains 1.2.8 because that is the earliest application version implementing its functional fields. Model 1.2.9 changes the calculation engine and presentation, not the dataset payload or dataset version.
+The dataset's `_meta.model_compatibility` value remains 1.2.8 because that is the earliest application version implementing its functional fields. Its legacy dependency fields remain present for compatibility and provenance, but no longer configure the active graph; see the methodology for this distinction.
 
-Live application: https://jerseroman.github.io/apocalypse-clock/
+Published application: https://jerseroman.github.io/apocalypse-clock/
 
-Apocalypse Clock is a static, browser-based systemic-risk dashboard for exploring interacting global threats across civilizational, biospheric, and technological domains. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs in a client-side application. The dashboard is driven by a structured JSON dataset that serves as the primary data input source for the model.
+Apocalypse Clock is a static, browser-based systemic-risk dashboard covering 59 modeled risk elements: 23 interacting headline threats across civilizational, biospheric, and technological domains, plus 36 nested Climate Breakdown and Ocean Degradation subsystem components. It combines scenario controls, Monte Carlo uncertainty sampling, dependency-aware aggregation, Weibull horizon diagnostics, network analysis, and exportable model outputs in a client-side application. The dashboard is driven by a structured JSON dataset that serves as the primary data input source for the model.
 
 > **Statement**  
 > Apocalypse Clock was created to show the broader public not only individual threats, but the wider structure of potential civilizational dangers: their origins, interconnections, and the    possibility that isolated risks may develop into systemic crises.  
@@ -22,9 +22,10 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 
 - `index.html` - application entry point, page shell, and embedded dataset copy.
 - `404.html` - GitHub Pages fallback route with the same embedded dataset copy.
-- `data_v1_9_0_functional.json` - active local functional-pressure dataset.
+- `data/data_v1_9_1_2026-09-23.json` - canonical dataset 1.9.1, dated 23 September 2026.
 - `data_v1_7_1metadata_revision.json`, `data_v1_8_0_evidence_revision.json` - preserved historical inputs.
 - `src/cascade-model.js` - pure directed functional-cascade engine.
+- `src/causal-graph.js` - canonical, fixed directed topology used by calculations and network view.
 - `src/app.js` - model logic, simulation workflow, rendering, exports, and initialization.
 - `src/action-delegation.js` - early UI action delegation.
 - `src/aria-status.js` - accessibility status helper.
@@ -37,7 +38,8 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 - `.github/pull_request_template.md` - governance-aware pull request checklist.
 - `.github/workflows/validate.yml` - GitHub Actions validation workflow.
 - `vendor/echarts.bundle.js` - local ECharts runtime.
-- `vendor/cytoscape.bundle.js` - local Cytoscape runtime.
+- `src/network-viz.js` - self-contained SVG dependency view with directed links and reduced-motion support.
+- `vendor/cytoscape.bundle.js` - retained protected legacy asset; not loaded by the current dependency view.
 - `Statement.md` - project statement.
 - `CITATION.cff` - citation metadata for academic, public, and review references.
 - `.zenodo.json` - Zenodo archival and release metadata.
@@ -58,9 +60,9 @@ The model uses a structured JSON parameter dataset as its primary input source.
 
 Current dataset:
 
-- [`data_v1_9_0_functional.json`](./data_v1_9_0_functional.json)
+- [`data/data_v1_9_1_2026-09-23.json`](./data/data_v1_9_1_2026-09-23.json)
 
-This file contains dataset v1.9.0: 23 threat categories and 8 metrics per threat, 184 parameter entries, 23 functional profiles and a registry of 61 primary/institutional source URLs. The review is targeted, not systematic.
+This file contains dataset v1.9.1: 23 headline threat categories and 8 metrics per headline threat, 184 parameter entries, 23 functional profiles and an expanded source registry. It also contains 36 nested Climate Breakdown and Ocean Degradation components through `_meta.subsystem_models`; they do not alter the 184-entry headline-threat contract or become 36 independently weighted top-level threats. The review is targeted, not systematic.
 
 Unlike historical v1.7.1, this is an explicitly authorized numerical and methodological revision. It is not empirical recalibration: growth priors describe conditional latent functional pressure, not observed-indicator CAGR.
 
@@ -159,7 +161,7 @@ These metadata files support citation and archival discovery. They do not imply 
 
 If you use, cite, review, or discuss this project, please cite it as:
 
-Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.2.9.
+Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.3.
 https://github.com/jerseroman/apocalypse-clock
 
 ## Changelog

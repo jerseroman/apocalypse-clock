@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.3.1-dev — dataset 1.9.1, 2026-09-23
+
+- Promotes `data/data_v1_9_1_2026-09-23.json` to the canonical primary dataset.
+- Keeps the 23-headline-threat and 184-parameter runtime contract while adding 18 Climate Breakdown and 18 Ocean Degradation components under `_meta.subsystem_models`.
+- Stores the canonical JSON in `data/` and synchronizes byte-identical delivery copies into `index.html` and `404.html` through `npm run sync:data`.
+- Updates source links, runtime labels, exports, validation and browser integration tests to identify dataset 1.9.1.
+- This is a data-source promotion, not scientific validation. Component horizons remain unidentified where the cited literature does not provide a compatible first-passage distribution.
+
+## v1.3.1-dev — canonical causal graph correction, 2026-09-23
+
+- Describes the application scope as 59 modeled risk elements: 23 headline threats plus 36 nested Climate Breakdown and Ocean Degradation subsystem components. The 36 components are not described as independent top-level threats and do not alter the 184-parameter headline-threat contract.
+- Defines the active directed topology once in `src/causal-graph.js`; the visual network, dependency-aware scoring and cascade calculation now share it. Uploaded JSON dependency metadata cannot change this topology.
+- Removes the unreviewed direct `geopolitics -> climate` link. The three remaining incoming climate links keep weight 0.25 each, totaling 0.75; no automatic renormalization was applied. The active graph has 70 links, including 13 with previously documented mechanisms, 57 provisional scenario links and 12 contextual links into event-gated threats.
+- Adds a restrained directional flow highlight to selected eligible links. The underlying solid/dashed line and arrow remain visible; hidden and event-gated links do not animate. Reduced-motion preferences disable the effect. Motion is presentation only, not model timing.
+- Keeps dataset 1.9.0 and its embedded copies byte-unchanged. Its old dependency fields remain as inactive historical metadata, not a second executable graph. The 184 numerical input ranges, threshold values, growth priors, sampling rules and seed are unchanged.
+- Fixed-seed baseline comparison (`baseline`, `expert`, seed `AC-1.2.6-2026`, 3000 simulations): Dynamic Cascade P10/P50/P90 changes from **2033/2036/2042** to **2034/2037/2043**; civilization/biosphere/technology domain P50 changes from **2045/2036/2040** to **2046/2037/2040**. These are model outputs, not validated dates.
+- Included in the v1.3.1-dev publication together with dataset 1.9.1.
+
+## v1.3 — development baseline, 2026-09-23
+
+- Creates a separate GitHub development copy from the current 1.2.9 application.
+- Changes only application version and revision metadata at this baseline step.
+- Keeps dataset 1.9.0, model equations, parameters, thresholds, sampling rules, fixed seed and expected numerical outputs unchanged.
+- This baseline was superseded by the v1.3.1-dev corrections and dataset 1.9.1 promotion documented above.
+
 ## v1.2.9 — 2026-09-13
 
 This MODEL correction makes the domain cards and regime timing internally consistent with the declared functional-pressure model. Dataset 1.9.0, its 184 numerical ranges, thresholds, topology, fixed criticality tiers, service memberships, edge weights and lags are unchanged.
@@ -67,7 +92,7 @@ Earlier development versions existed internally, but they were not maintained as
 - Updated the active dataset reference to `data_v1_7_1metadata_revision.json`.
 - Uses dataset v1.7.1 metadata-cleanup export.
 - Refreshed selected source and URL references.
-- Preserved the 23-threat, 8-metric, 184-parameter model structure.
+- Preserved the 23-headline-threat, 8-metric, 184-parameter model structure.
 - Preserved numerical `mu`, `lo`, and `hi` values; this release is not a scientific recalibration.
 - Improved the distinction between current systemic stress and projected Dynamic Cascade horizon.
 - Clarified that the Dynamic Cascade P90 horizon is a model-derived upper-risk horizon, not a deterministic forecast.
@@ -84,4 +109,4 @@ Earlier development versions existed internally, but they were not maintained as
 - Fixed broken or outdated source links where replacements were available.
 - No scientific recalibration.
 - No modification of model parameter values.
-- 23 threat categories × 8 metrics = 184 model parameters, excluding metadata.
+- 23 headline threat categories × 8 metrics = 184 model parameters, excluding metadata.

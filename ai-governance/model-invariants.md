@@ -1,11 +1,11 @@
 # Apocalypse Clock Model Invariants
 
-These rules describe model 1.2.9 with dataset 1.9.0. They protect the declared model and its interpretation, not a claim of scientific validity. Changing them requires an explicit MODEL change and review.
+These rules describe model 1.3.1-dev with dataset 1.9.1. The initial 1.3 development baseline was a functional copy of model 1.2.9; the current revision moves the active dependency topology into code and removes one unreviewed direct link. They protect the declared model and its interpretation, not a claim of scientific validity. Changing them requires an explicit MODEL change and review.
 
 ## Headline and input identity
 
 - The headline is Dynamic Cascade P90, not the median, a deterministic collapse date or an empirical probability of extinction.
-- Preserve 23 threats and eight flat metric entries per threat, plus disclosed functional metadata. The 184-entry count does not exclude additional model assumptions in metadata.
+- Preserve 23 headline threats and eight flat metric entries per headline threat, plus disclosed functional metadata. The 184-entry count does not include the 36 nested Climate Breakdown and Ocean Degradation subsystem components or other model assumptions stored in metadata.
 - Preserve the four named aggregation systems and distinguish their estimands.
 - Preserve scenario-conditioned enrichment, Monte Carlo architecture, seed identity, PRNG behavior, quantile interpolation and sentinel semantics unless explicitly reviewed.
 - Standalone and propagated first-activation horizons are different outputs and must remain separately identifiable.
@@ -25,8 +25,8 @@ For each inactive eligible target, the generic induction rule is q_i(t)+kappa_i*
 
 - q_i uses pre-network baseScore times the normalized domain multiplier, divided by the operational threshold and grown by (1+g_i) from 2026. It must not depend on the administrative end year or a censored standalone date.
 - kappa_i is clamp((interdependence_i-1)/4,0,1) times (0.5+0.5*clamp((gov_failure_i-1)/4,0,1)). This is susceptibility, not probability.
-- A dependency on target i points to upstream j. Fixed nonnegative a_ij values sum to at most one per target; current equal shares are judgments, not calibrated causal strengths.
-- Exposure begins only when the upstream activation year plus its nonnegative integer edge lag has arrived. The standard dataset lag is one year; zero- and five-year alternatives are explicit sensitivity settings.
+- A dependency on target i points to upstream j. Fixed nonnegative a_ij values sum to at most one per target. The code-defined graph is the single active source for model and display; older JSON dependency fields cannot override it. Most targets retain equal shares, while climate retains three 0.25 shares after an unreviewed direct geopolitics link was removed. No remaining coefficient was automatically renormalized. All coefficients are judgments, not calibrated causal strengths.
+- Exposure begins only when the upstream activation year plus its nonnegative integer edge lag has arrived. The standard code-defined graph lag is one year; zero- and five-year alternatives are explicit sensitivity settings.
 - Add spontaneous activations first, then evaluate induced activations synchronously to the least fixed point. Node ordering must not change the result; there is no three-wave cap.
 - No inactive cycle can self-start without a spontaneous activation or other positive active upstream influence.
 - Initially right-censored nodes remain inducible when eligible. An administrative >2100 horizon is not a propagation veto.

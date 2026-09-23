@@ -10,9 +10,9 @@ const { test, expect } = require('@playwright/test');
  *   - Seed: AC-1.2.6-2026 (DEFAULT_MC_SEED)
  *   - Monte Carlo iterations: 3000
  *
- * Golden values refreshed after the explicitly authorized functional-cascade
- * model 1.2.9 / dataset 1.9.0 revision on 2026-09-13,
- * Chromium-via-Playwright. If you intentionally change model code, update
+ * Golden values recorded for model 1.3.1-dev with dataset 1.9.1 on
+ * 2026-09-23, Chromium-via-Playwright.
+ * If you intentionally change model code, update
  * EXPECTED in a single edit and record the change in
  * ai-governance/review-log.md per change-policy.md §MODEL.
  *
@@ -25,21 +25,21 @@ const GOLDEN_SEED = 'AC-1.2.6-2026';
 const GOLDEN_NSIM = '3000';
 
 const EXPECTED = Object.freeze({
-  pinnedAt: '2026-09-13',
-  modelVersion: 'Apocalypse Clock v1.2.9',
-  datasetVersion: '1.9.0',
+  pinnedAt: '2026-09-23',
+  modelVersion: 'Apocalypse Clock v1.3.1-dev',
+  datasetVersion: '1.9.1',
   scenario: 'baseline',
   weightProfile: 'expert',
   seed: GOLDEN_SEED,
   nSim: 3000,
   cascadeP10: 2033,
   cascadeP50: 2036,
-  cascadeP90: 2042,
-  headlineYearText: '2042',
+  cascadeP90: 2043,
+  headlineYearText: '2043',
   domains: {
-    civilization: { p10: 2037, p50: 2045, p90: 2060 },
-    biosphere: { p10: 2033, p50: 2036, p90: 2042 },
-    technology: { p10: 2030, p50: 2040, p90: 2051 },
+    civilization: { p10: 2038, p50: 2049, p90: 2070 },
+    biosphere: { p10: 2033, p50: 2036, p90: 2043 },
+    technology: { p10: 2030, p50: 2042, p90: 2061 },
   },
 });
 
@@ -131,7 +131,8 @@ test.describe('headline determinism under default baseline configuration', () =>
     });
     expect(await page.locator('#cascadeMedianYear').textContent()).toBe(String(EXPECTED.cascadeP50));
     expect(await page.locator('#cascadeHorizonGap').textContent()).toBe(String(EXPECTED.cascadeP90 - EXPECTED.cascadeP50));
-    expect(await page.locator('body').innerText()).not.toContain('2101');
+    expect(await page.locator('#cascadeHeadlineYear').textContent()).not.toContain('2101');
+    expect(await page.locator('#cascadeMedianYear').textContent()).not.toContain('2101');
     expect(await page.evaluate(() => Number.isFinite(probabilityByDisplayedYear(
       _cdfCurves.baseline.ensemble.dynamicCascade,
       _cdfCurves.baseline.ensemble.dynamicCascade.p90,
