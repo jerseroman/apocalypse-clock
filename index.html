@@ -8,12 +8,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Apocalypse Clock | Global Systemic Risk Monitor</title>
-<meta name="description" content="Apocalypse Clock is a transparent, scenario-based systemic-risk dashboard covering 59 modeled risk elements: 23 interacting headline threats and 36 climate/ocean subsystem components.">
+<meta name="description" content="Apocalypse Clock tracks 59 risk elements: 23 interacting headline threats drive the model; 36 climate/ocean subsystem components provide separately labeled evidence and context.">
 <link rel="canonical" href="https://jerseroman.github.io/apocalypse-clock/">
 <meta name="theme-color" content="#111722">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Apocalypse Clock | Global Systemic Risk Monitor">
-<meta property="og:description" content="Explore 59 modeled risk elements: 23 interacting headline threats and 36 nested climate/ocean subsystem components.">
+<meta property="og:description" content="Explore 59 risk elements: 23 modeled headline threats and 36 nested climate/ocean components currently used for evidence and context.">
 <meta property="og:url" content="https://jerseroman.github.io/apocalypse-clock/">
 <meta property="og:image" content="https://jerseroman.github.io/apocalypse-clock/assets/apocalypse-clock-logo.png">
 <meta name="twitter:card" content="summary">
@@ -44,12 +44,12 @@
 <header class="site-header">
   <div class="header-left">
     <div class="header-overline">Global Systemic Risk Monitor</div>
-    <div class="header-last-update">Revision: 23 September 2026 · Model 1.3.1-dev · Data 1.9.1</div>
+    <div class="header-last-update">Revision: 23 September 2026 · Model 1.3.1-dev · Data 1.3</div>
     <div class="brand-row">
       <img class="header-logo" src="./assets/apocalypse-clock-logo.png" alt="Apocalypse Clock logo" width="70" height="70" decoding="async" loading="lazy">
       <h1 class="header-title">Apocalypse Clock</h1>
     </div>
-    <p class="header-sub">Apocalypse Clock is a transparent, scenario-based systemic-risk model covering 59 modeled risk elements: 23 interacting headline threats across civilizational, biospheric, and technological domains, plus 36 nested Climate Breakdown and Ocean Degradation subsystem components. It estimates probabilistic critical horizons through Dynamic cascade modeling, dependency amplification, and Monte Carlo uncertainty sampling. Each displayed year is a model-derived threshold horizon under explicit assumptions, not a deterministic prediction.</p>
+    <p class="header-sub">Apocalypse Clock tracks 59 risk elements: 23 interacting headline threats across civilizational, biospheric, and technological domains, plus 36 nested Climate Breakdown and Ocean Degradation subsystem components. The clocks currently use the 23 headline-threat inputs and a simulated dependency cascade. Subsystem dates provide evidence and context; they do not yet drive the clocks. Model P50 and P90 are scenario-based results under explicit assumptions, not empirically calibrated collapse forecasts. Literature dates are labeled separately.</p>
   </div>
   <div class="header-right" style="display:none">
     <div class="live-badge"><div class="live-dot"></div>Interactive scenario model</div>
@@ -131,7 +131,7 @@
         <a class="mission-action" aria-label="Print Apocalypse Clock page" role="button" data-action="print-page" href="#"><span class="mission-action-icon">⎙</span> Print / PDF</a>
         <a class="mission-action" href="https://www.facebook.com/profile.php?id=61571359601171" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">f</span> Follow on Facebook</a>
         <a class="mission-action" href="https://www.arewealoneintheuniverse.com/" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">✦</span> Are we alone in the universe?</a>
-        <a class="mission-action" aria-label="Open Perplexity interpretation prompt" href="https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2Fdata/data_v1_9_1_2026-09-23.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon" aria-hidden="true"><img src="./assets/perplexity-icon.png" alt="" width="13" height="13" style="display:block;width:13px;height:13px"></span> Ask Perplexity</a>
+        <a class="mission-action" aria-label="Open Perplexity interpretation prompt" href="https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2Fdata/data_v1_3_timing_2026-09-23.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon" aria-hidden="true"><img src="./assets/perplexity-icon.png" alt="" width="13" height="13" style="display:block;width:13px;height:13px"></span> Ask Perplexity</a>
       </div>
     </div>
     <div class="calc-console" id="calcConsole">
@@ -188,6 +188,10 @@
         </div>
         <div class="cascade-stability-note" id="cascadeStabilityNote" style="display:none">P50 and P90 are two quantiles of the same simulated first-crossing distribution; they are not two independent predictions.</div>
         <div class="cascade-headline-note" id="cascadeHeadlineNote" style="display:none"></div>
+        <details class="calculation-transparency" id="calculationTransparency">
+          <summary>How is this calculated?</summary>
+          <div id="calculationTransparencyBody" aria-live="polite">Waiting for a completed calculation.</div>
+        </details>
       </div>
     </div>
     <div class="countdown-card" style="padding:0;width:100%">
@@ -224,7 +228,7 @@
     <div class="source-panel" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
       <div class="source-head">
         <div>
-          <div class="source-copy">The clock now runs against the embedded <code>data/data_v1_9_1_2026-09-23.json</code> data map as its default and primary parameter source. AI presets and All-AI Average are secondary comparison/audit inputs unless deliberately selected. You can upload either a full source map with <code>{mu, lo, hi}</code> ranges or an evidence overlay with <code>{obs, weight}</code> observations to update the current parameter ranges client-side.</div>
+          <div class="source-copy">The clock now runs against the embedded <code>data/data_v1_3_timing_2026-09-23.json</code> data map as its default and primary parameter source. AI presets and All-AI Average are secondary comparison/audit inputs unless deliberately selected. You can upload either a full source map with <code>{mu, lo, hi}</code> ranges or an evidence overlay with <code>{obs, weight}</code> observations to update the current parameter ranges client-side.</div>
         </div>
         <div class="source-badge" id="sourceBadge">Bundled source map active</div>
       </div>
@@ -235,8 +239,8 @@
         <input id="sourceFileInput" type="file" accept=".json,application/json" hidden>
       </div>
       <div class="ai-preset-row">
-        <span class="ai-preset-label">AI Preset</span>
-        <div class="ai-preset-btns" id="aiPresetBtns">
+        <span class="ai-preset-label" hidden>AI Preset</span>
+        <div class="ai-preset-btns" id="aiPresetBtns" hidden>
           <button class="ai-preset-btn" data-ai="claude" type="button">
             <img src="https://unpkg.com/@lobehub/icons-static-svg@1.86.0/icons/claude-color.svg" width="16" height="16" alt="" aria-hidden="true" loading="lazy" decoding="async">
             Claude
@@ -288,12 +292,12 @@
       </div>
 
       <div class="source-summary">
-        <div class="source-stat"><div class="source-stat-lbl">Active file</div><div class="source-stat-val" id="sourceFileName">data/data_v1_9_1_2026-09-23.json</div></div>
+        <div class="source-stat"><div class="source-stat-lbl">Active file</div><div class="source-stat-val" id="sourceFileName">data/data_v1_3_timing_2026-09-23.json</div></div>
         <div class="source-stat"><div class="source-stat-lbl">Parameter entries</div><div class="source-stat-val" id="sourceEntryCount"> </div></div>
         <div class="source-stat"><div class="source-stat-lbl">Threat coverage</div><div class="source-stat-val" id="sourceThreatCoverage"> </div></div>
         <div class="source-stat"><div class="source-stat-lbl">Mode</div><div class="source-stat-val" id="sourceMode">Bundled</div></div>
       </div>
-      <div class="source-message" id="sourceMessage">Bundled data/data_v1_9_1_2026-09-23.json parameter map is embedded directly in this widget and remains the default primary source unless a custom source map, evidence overlay, or AI preset is deliberately selected.</div>
+      <div class="source-message" id="sourceMessage">Bundled data/data_v1_3_timing_2026-09-23.json parameter map is embedded directly in this widget and remains the default primary source unless a custom source map, evidence overlay, or AI preset is deliberately selected.</div>
       <details class="source-viewer" id="sourceViewer">
         <summary>Inspect active parameter map</summary>
         <pre class="source-json" id="sourceJsonView">Loading source map…</pre>
@@ -827,12 +831,12 @@
 <script id="bundledSources" type="application/json">
 {
   "_meta": {
-    "schema_version": "1.9.1",
-    "dataset_version": "1.9.1",
-    "artifact_kind": "Apocalypse Clock dataset 1.9.1 for Model 1.3 with 184 headline-threat parameters and 36 climate and ocean subsystem components",
+    "schema_version": "1.3",
+    "dataset_version": "1.3-climate-ocean-subsystems-timing-evidence-2026-09-23",
+    "artifact_kind": "Complete 184-parameter Apocalypse Clock Model 1.3 working source map with additive Climate/Ocean subsystem timing_evidence; all existing threat.parameter numerical inputs preserved.",
     "generated": "2026-09-23",
     "evidence_cutoff": "2026-09-23",
-    "model_compatibility": "Apocalypse Clock Model 1.3 subsystem schema; dataset release 1.9.1 dated 2026-09-23; preserves the 184 headline threat.parameter records and adds 36 nested climate and ocean subsystem components.",
+    "model_compatibility": "Apocalypse Clock Model 1.3 subsystem schema; preserves all 184 v1.2.9 numerical threat.parameter records unchanged for backward comparison.",
     "base_dataset_sha256": "bbb2b77bf488d4b509fc8ef2073a9ab053fadeb708e33ffd6f18c3f10e1652e9",
     "base_dataset_git_blob_sha1": "17506353e1277d6bfb491ccf0b65cea367092763",
     "assessment_status": "Evidence-informed AI-assisted analyst judgment, not expert-panel elicitation, empirical calibration or predictive validation",
@@ -9327,7 +9331,59 @@
             "source_ids": [
               "CL_R02",
               "CL_R03"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_co2_net_zero_15c_2050_2055",
+                "kind": "mitigation_milestone",
+                "event_definition": "Global net-zero CO2 is reached in 1.5 C pathways with no or limited overshoot.",
+                "metric": "global_net_CO2_emissions",
+                "unit": "GtCO2/yr",
+                "reference_baseline": "2019/pathway-specific",
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 WGIII 1.5 C pathways with no or limited overshoot",
+                "time": {
+                  "year": null,
+                  "start_year": 2050,
+                  "end_year": 2055,
+                  "interval_kind": "scenario_range",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2050-2055"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGIII, Chapter 3: Mitigation Pathways Compatible with Long-Term Goals",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-3/",
+                  "version_note": null,
+                  "location": "Chapter 3; net-zero CO2 pathway timing as quoted in the traceability report.",
+                  "traceability_excerpt": "“Net zero CO2 emissions are reached between 2050-2055”",
+                  "derivation": "The 2050-2055 interval is retained as a mitigation/pathway milestone, not as a climate-collapse date."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Mitigation success timing is not a physical tipping or functional-failure time.",
+                  "The report notes a broader source range of 2035-2070; it is not converted into P10/P90."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_co2_net_zero_15c_2050_2055"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "methane_ch4",
@@ -9381,7 +9437,70 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_ch4_reduction_2050",
+                "kind": "mitigation_milestone",
+                "event_definition": "Global methane emissions are reduced substantially by 2050 in low-warming mitigation pathways.",
+                "metric": "global_CH4_emissions_change",
+                "unit": "% reduction",
+                "reference_baseline": "2019",
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 WGIII low-warming mitigation pathways",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "CH4_emissions_reduction",
+                    "year": 2050,
+                    "value": 45,
+                    "unit": "%",
+                    "reference": "2019",
+                    "reported_range": [
+                      29,
+                      64
+                    ]
+                  }
+                ],
+                "source": {
+                  "title": "IPCC AR6 WGIII, Chapter 3",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-3/",
+                  "version_note": null,
+                  "location": "Chapter 3; methane pathway reduction statement as quoted in the traceability report.",
+                  "traceability_excerpt": "“45% (29-64%) in 2050, relative to 2019”",
+                  "derivation": "2050 is retained as a mitigation milestone because no universal methane tipping year is identified in the report."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "A mitigation milestone is not a methane-system collapse threshold."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_ch4_reduction_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "nitrous_oxide_n2o",
@@ -9435,7 +9554,59 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_n2o_agricultural_peak_around_2065",
+                "kind": "trend_change",
+                "event_definition": "Projected global agricultural N2O emissions reach a peak around 2065.",
+                "metric": "agricultural_N2O_emissions",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global agricultural sector",
+                "scenario": "Source-specific crop/emissions projection",
+                "time": {
+                  "year": 2065,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "around",
+                  "approximate": true,
+                  "original_text": "around 2065"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Crop-Specific Emission Projection Suggests Peaking of Agricultural N2O by the Middle Century",
+                  "doi": "10.1021/acs.est.4c06592",
+                  "url": "https://pubs.acs.org/doi/10.1021/acs.est.4c06592",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“global agricultural N2O emissions will peak around 2065”",
+                  "derivation": "The source-reported agricultural emissions peak is retained as a process transition, not as a global atmospheric N2O tipping point."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B",
+                "limitations": [
+                  "Sector-specific agricultural result.",
+                  "Does not define a universal atmospheric N2O critical transition."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_n2o_agricultural_peak_around_2065"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "fluorinated_gases",
@@ -9489,7 +9660,68 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_f_gases_reduction_2050",
+                "kind": "mitigation_milestone",
+                "event_definition": "Fluorinated-gas emissions are deeply reduced by 2050 in 1.5 C-consistent pathways.",
+                "metric": "fluorinated_GHG_emissions_change",
+                "unit": "% reduction",
+                "reference_baseline": null,
+                "geographic_scope": "Global",
+                "scenario": "IPCC SR1.5 1.5 C-consistent mitigation pathways",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "fluorinated_GHG_emissions_reduction",
+                    "year": 2050,
+                    "value_range": [
+                      75,
+                      80
+                    ],
+                    "unit": "%"
+                  }
+                ],
+                "source": {
+                  "title": "IPCC Special Report on Global Warming of 1.5 C, Chapter 2",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/sr15/chapter/chapter-2/",
+                  "version_note": null,
+                  "location": "Chapter 2; fluorinated-gas mitigation pathway statement as quoted in the traceability report.",
+                  "traceability_excerpt": "“reduced by roughly 75-80% ... in 2050”",
+                  "derivation": "2050 is retained as a mitigation/pathway milestone rather than a critical transition."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "No single physical fluorinated-gas tipping year is identified."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_f_gases_reduction_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "aerosols_masking",
@@ -9543,7 +9775,58 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_aerosol_slcf_effect_levels_off_after_2040",
+                "kind": "trend_change",
+                "event_definition": "The warming contribution associated predominantly with sulphate-aerosol reduction levels off after 2040 in stringent mitigation scenarios.",
+                "metric": "SLCF_aerosol_warming_contribution",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 stringent mitigation scenarios",
+                "time": {
+                  "year": 2040,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "after",
+                  "approximate": false,
+                  "original_text": "after 2040"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGI, Chapter 6: Short-lived Climate Forcers",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg1/chapter/chapter-6/",
+                  "version_note": null,
+                  "location": "Chapter 6; SLCF/aerosol transition passage as quoted in the traceability report.",
+                  "traceability_excerpt": "“this effect levels off after 2040”",
+                  "derivation": "The year is retained as a source-reported trend change in aerosol/SLCF forcing, not as a collapse date."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B",
+                "limitations": [
+                  "Scenario-dependent trend change; not a singular Earth-system tipping point."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_aerosol_slcf_effect_levels_off_after_2040"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "anthropogenic_radiative_forcing",
@@ -9598,7 +9881,100 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_forcing_projection_point_2040",
+                "kind": "projection_period",
+                "event_definition": "Total anthropogenic forcing effects are evaluated at the 2040 projection point relative to 2019.",
+                "metric": "anthropogenic_radiative_forcing",
+                "unit": "W/m2",
+                "reference_baseline": "2019",
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 assessed scenarios",
+                "time": {
+                  "year": 2040,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2040"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGI, Figure 6.24",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg1/figures/chapter-6/figure-6-24/",
+                  "version_note": null,
+                  "location": "Figure 6.24.",
+                  "traceability_excerpt": "“for 2040 and 2100 relative to the year 2019”",
+                  "derivation": "2040 is retained as one of two explicit projection points in the cited figure."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "climate_forcing_ipcc_projection_points_2040_2100",
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection point only; not a critical forcing threshold."
+                ]
+              },
+              {
+                "id": "climate_forcing_projection_point_2100",
+                "kind": "projection_period",
+                "event_definition": "Total anthropogenic forcing effects are evaluated at the 2100 projection point relative to 2019.",
+                "metric": "anthropogenic_radiative_forcing",
+                "unit": "W/m2",
+                "reference_baseline": "2019",
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 assessed scenarios",
+                "time": {
+                  "year": 2100,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGI, Figure 6.24",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg1/figures/chapter-6/figure-6-24/",
+                  "version_note": null,
+                  "location": "Figure 6.24.",
+                  "traceability_excerpt": "“for 2040 and 2100 relative to the year 2019”",
+                  "derivation": "2100 is retained as the second explicit projection point in the cited figure."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "climate_forcing_ipcc_projection_points_2040_2100",
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection point only; not a critical forcing threshold."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_forcing_projection_point_2040",
+                "climate_forcing_projection_point_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "global_mean_surface_temperature",
@@ -9673,7 +10049,116 @@
             "source_ids": [
               "CL_R01",
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_gmst_15c_first_half_2030s",
+                "kind": "threshold_crossing",
+                "event_definition": "Midpoint of the first 20-year running-average period reaching 1.5 C global warming lies in the first half of the 2030s for the assessed scenarios described by the source.",
+                "metric": "global_mean_surface_temperature_change",
+                "unit": "degC",
+                "reference_baseline": "1850-1900",
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 assessed scenarios other than the earlier SSP5-8.5 timing described in the report",
+                "time": {
+                  "year": null,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": true,
+                  "original_text": "first half of the 2030s"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "global_mean_surface_temperature_change",
+                    "value": 1.5,
+                    "unit": "degC",
+                    "reference": "1850-1900"
+                  }
+                ],
+                "source": {
+                  "title": "IPCC AR6 Synthesis Report, Longer Report / Summary for Policymakers",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/syr/longer-report/",
+                  "version_note": null,
+                  "location": "AR6 Synthesis Report discussion of the 1.5 C 20-year running-average threshold.",
+                  "traceability_excerpt": "“lies in the first half of the 2030s”",
+                  "derivation": "The approximate textual period is preserved without inventing an exact year such as 2035."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "ipcc_ar6_1p5c_running_average_timing",
+                "report_timing_class": "A",
+                "limitations": [
+                  "Approximate textual period; no exact calendar year is manufactured.",
+                  "This is a temperature-threshold crossing, not the parent Climate Breakdown functional-failure time."
+                ]
+              },
+              {
+                "id": "climate_gmst_15c_ssp585_late_2020s",
+                "kind": "threshold_crossing",
+                "event_definition": "The report records an earlier midpoint in the late 2020s for SSP5-8.5.",
+                "metric": "global_mean_surface_temperature_change",
+                "unit": "degC",
+                "reference_baseline": "1850-1900",
+                "geographic_scope": "Global",
+                "scenario": "SSP5-8.5",
+                "time": {
+                  "year": null,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": true,
+                  "original_text": "late 2020s"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "global_mean_surface_temperature_change",
+                    "value": 1.5,
+                    "unit": "degC",
+                    "reference": "1850-1900"
+                  }
+                ],
+                "source": {
+                  "title": "IPCC AR6 Synthesis Report, Longer Report / Summary for Policymakers",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/syr/longer-report/",
+                  "version_note": null,
+                  "location": "Traceability-report interpretation of AR6 Synthesis Report.",
+                  "traceability_excerpt": null,
+                  "derivation": "The traceability report states that the SSP5-8.5 midpoint is in the late 2020s; the exact primary wording was not independently rechecked in this JSON pass."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "ipcc_ar6_1p5c_running_average_timing",
+                "report_timing_class": "A",
+                "limitations": [
+                  "Marked report_only because this specific wording was carried from the traceability report.",
+                  "No exact year is inferred from 'late 2020s'."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_gmst_15c_first_half_2030s",
+                "climate_gmst_15c_ssp585_late_2020s"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "earth_energy_imbalance",
@@ -9728,7 +10213,59 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_eei_heating_rate_reversal_not_before_early_2040s",
+                "kind": "trend_change",
+                "event_definition": "Earliest plausible reversal of the trend in Earth's heating rate is assessed as very unlikely before the early 2040s.",
+                "metric": "earth_heating_rate_trend",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global",
+                "scenario": "Observation-constrained climate-stabilization analysis",
+                "time": {
+                  "year": null,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "after",
+                  "approximate": true,
+                  "original_text": "very unlikely to occur before the early 2040s"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Douville & Allan, Constraints on Climate Change Stabilization Based on Observations of Earth's Energy Imbalance",
+                  "doi": "10.1029/2025GL121056",
+                  "url": "https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2025GL121056",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“very unlikely to occur before the early 2040s”",
+                  "derivation": "The original approximate bound is preserved. No exact year such as 2043 is created."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B",
+                "limitations": [
+                  "The statement concerns reversal of the heating-rate trend, not zero Earth energy imbalance.",
+                  "'Not before the early 2040s' is not an upper failure bound."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_eei_heating_rate_reversal_not_before_early_2040s"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "land_ocean_carbon_sinks",
@@ -9795,7 +10332,100 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_R03"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_land_sink_peak_around_2046",
+                "kind": "trend_change",
+                "event_definition": "The land carbon sink reaches a modelled peak around 2046.",
+                "metric": "land_carbon_sink",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global land sink",
+                "scenario": "Source-specific business-as-usual pathway/model",
+                "time": {
+                  "year": 2046,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "around",
+                  "approximate": true,
+                  "original_text": "around 2046"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Pathways for balancing CO2 emissions and sinks",
+                  "doi": null,
+                  "url": "https://www.nature.com/articles/ncomms14856",
+                  "version_note": null,
+                  "location": "Results/passage quoted in the traceability report.",
+                  "traceability_excerpt": "“land sink peaks ... around 2046”",
+                  "derivation": "The land-sink peak is preserved as its own event."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B",
+                "limitations": [
+                  "Model- and scenario-specific peak; not a global functional-failure threshold."
+                ]
+              },
+              {
+                "id": "climate_ocean_sink_peak_around_2065",
+                "kind": "trend_change",
+                "event_definition": "The ocean CO2 flux reaches a modelled peak around 2065.",
+                "metric": "ocean_CO2_flux",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global ocean sink",
+                "scenario": "Source-specific business-as-usual pathway/model",
+                "time": {
+                  "year": 2065,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "around",
+                  "approximate": true,
+                  "original_text": "around 2065"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Pathways for balancing CO2 emissions and sinks",
+                  "doi": null,
+                  "url": "https://www.nature.com/articles/ncomms14856",
+                  "version_note": null,
+                  "location": "Results/passage quoted in the traceability report.",
+                  "traceability_excerpt": "“ocean CO2 flux ... around 2065”",
+                  "derivation": "The ocean-sink peak is preserved as a separate event rather than treated as the upper end of one uncertainty interval."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B",
+                "limitations": [
+                  "Model- and scenario-specific peak; not an uncertainty bound for the land-sink event."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_land_sink_peak_around_2046",
+                "climate_ocean_sink_peak_around_2065"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "permafrost_carbon_feedback",
@@ -9849,7 +10479,59 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_SUB_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_subsea_permafrost_tipping_around_2080",
+                "kind": "threshold_crossing",
+                "event_definition": "A modelled tipping point in Arctic subsea permafrost occurs around 2080 CE under the high-emissions scenario used by the source.",
+                "metric": "subsea_permafrost_state",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Arctic subsea permafrost",
+                "scenario": "Source high-emissions scenario",
+                "time": {
+                  "year": 2080,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "around",
+                  "approximate": true,
+                  "original_text": "~2080 CE"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Glacial isostatic adjustment reduces past and future Arctic subsea permafrost",
+                  "doi": "10.1038/s41467-024-45906-8",
+                  "url": "https://www.nature.com/articles/s41467-024-45906-8",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“the tipping point occurs at ~2080 CE”",
+                  "derivation": "The source's approximate tipping year is preserved directly."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A",
+                "limitations": [
+                  "Applies to Arctic subsea permafrost, not the entire global permafrost domain.",
+                  "Model- and scenario-dependent."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_subsea_permafrost_tipping_around_2080"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "fast_climate_feedbacks",
@@ -9903,7 +10585,58 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_SUB_R01"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_fast_feedbacks_projection_to_2100",
+                "kind": "projection_period",
+                "event_definition": "Fast radiative feedback contributions are assessed in projected global warming out to 2100.",
+                "metric": "fast_climate_feedback_contribution",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 assessed climate projections",
+                "time": {
+                  "year": 2100,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "out to 2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGI, Chapter 7: Earth's Energy Budget, Climate Feedbacks, and Climate Sensitivity",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg1/chapter/chapter-7/",
+                  "version_note": null,
+                  "location": "Chapter 7; projection horizon quoted in the traceability report.",
+                  "traceability_excerpt": "“projected global warming out to 2100”",
+                  "derivation": "2100 is retained solely as the assessment horizon because no single aggregate fast-feedback tipping date is identified."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection horizon only; not a critical date for the aggregate feedback system."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_fast_feedbacks_projection_to_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "cryosphere",
@@ -9960,7 +10693,100 @@
             "source_ids": [
               "CL_R01",
               "CL_SUB_R04"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_arctic_first_ice_free_day_before_2030",
+                "kind": "threshold_crossing",
+                "event_definition": "First Arctic ice-free day can occur before 2030 in the earliest CMIP6 simulations considered by the source.",
+                "metric": "Arctic_sea_ice_area",
+                "unit": "km2",
+                "reference_baseline": null,
+                "geographic_scope": "Arctic Ocean",
+                "scenario": "CMIP6 simulations across assessed SSPs",
+                "time": {
+                  "year": 2030,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "before",
+                  "approximate": false,
+                  "original_text": "potentially before 2030"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Heuzé & Jahn, The first ice-free day in the Arctic Ocean could occur before 2030",
+                  "doi": "10.1038/s41467-024-54508-3",
+                  "url": "https://www.nature.com/articles/s41467-024-54508-3",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“potentially before 2030”",
+                  "derivation": "The first ice-free day is recorded as its own event; it is not merged with the September monthly-mean event."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "Arctic sea-ice submetric, not a threshold for the entire cryosphere."
+                ]
+              },
+              {
+                "id": "climate_arctic_first_ice_free_september_by_2050",
+                "kind": "threshold_crossing",
+                "event_definition": "Monthly-mean September Arctic ice-free conditions could occur by 2050.",
+                "metric": "September_Arctic_sea_ice",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Arctic Ocean",
+                "scenario": "CMIP6 simulations across assessed SSPs",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "could occur by 2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Heuzé & Jahn, The first ice-free day in the Arctic Ocean could occur before 2030",
+                  "doi": "10.1038/s41467-024-54508-3",
+                  "url": "https://www.nature.com/articles/s41467-024-54508-3",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“could occur by 2050”",
+                  "derivation": "The September monthly-mean event is retained separately from the first single ice-free day."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "Distinct event definition from the first ice-free day."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_arctic_first_ice_free_day_before_2030",
+                "climate_arctic_first_ice_free_september_by_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "sea_level_rise",
@@ -10016,7 +10842,100 @@
             "source_ids": [
               "CL_R01",
               "CL_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_gmsl_projection_2100",
+                "kind": "projection_period",
+                "event_definition": "Global mean sea-level change is explicitly assessed to 2100.",
+                "metric": "global_mean_sea_level_change",
+                "unit": "m",
+                "reference_baseline": null,
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 assessed scenarios",
+                "time": {
+                  "year": 2100,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 Synthesis Report, Figure 3.4",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/syr/figures/figure-3-4/",
+                  "version_note": null,
+                  "location": "Figure 3.4.",
+                  "traceability_excerpt": "“future changes to 2100 and for 2150”",
+                  "derivation": "2100 is retained as one explicit IPCC projection point."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "ipcc_ar6_gmsl_projection_2100_2150",
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection point only; no universal global functional-failure year is implied."
+                ]
+              },
+              {
+                "id": "climate_gmsl_projection_2150",
+                "kind": "projection_period",
+                "event_definition": "Global mean sea-level change is explicitly assessed to 2150.",
+                "metric": "global_mean_sea_level_change",
+                "unit": "m",
+                "reference_baseline": null,
+                "geographic_scope": "Global",
+                "scenario": "IPCC AR6 assessed scenarios",
+                "time": {
+                  "year": 2150,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2150"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 Synthesis Report, Figure 3.4",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/syr/figures/figure-3-4/",
+                  "version_note": null,
+                  "location": "Figure 3.4.",
+                  "traceability_excerpt": "“future changes to 2100 and for 2150”",
+                  "derivation": "2150 is retained as the real literature projection year and is not clipped to 2100."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "ipcc_ar6_gmsl_projection_2100_2150",
+                "report_timing_class": "C",
+                "limitations": [
+                  "Outside the current 2000-2100 compact display window; this does not make it statistically right-censored."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_gmsl_projection_2100",
+                "climate_gmsl_projection_2150"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "hydrological_cycle_disruption",
@@ -10073,7 +10992,59 @@
             "source_ids": [
               "CL_R02",
               "CL_SUB_R07"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_freshwater_boundary_mid_20th_century",
+                "kind": "historical_crossing",
+                "event_definition": "Planetary-boundary transgression for freshwater change is reported as occurring around the mid-twentieth century.",
+                "metric": "streamflow_and_root_zone_soil_moisture_change",
+                "unit": null,
+                "reference_baseline": "pre-industrial conditions",
+                "geographic_scope": "Global",
+                "scenario": "Historical observational/model reconstruction",
+                "time": {
+                  "year": null,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": true,
+                  "original_text": "around the mid-twentieth century"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Notable shifts beyond pre-industrial streamflow and soil moisture conditions transgress the planetary boundary for freshwater change",
+                  "doi": "10.1038/s44221-024-00208-7",
+                  "url": "https://www.nature.com/articles/s44221-024-00208-7",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“transgression ... already around the mid-twentieth century”",
+                  "derivation": "The source's approximate historical period is preserved without converting it to an exact year such as 1950."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A",
+                "limitations": [
+                  "Historical boundary crossing is evidence about initial state, not proof of completed global functional failure.",
+                  "No exact year is manufactured from 'mid-twentieth century'."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_freshwater_boundary_mid_20th_century"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "compound_climate_extremes",
@@ -10140,7 +11111,58 @@
             "calibration_grade": "C",
             "source_ids": [
               "CL_SUB_R03"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_compound_hot_dry_projection_2061_2100",
+                "kind": "projection_period",
+                "event_definition": "Compound hot-dry event risk is projected for the far-future period 2061-2100 relative to a historical baseline.",
+                "metric": "compound_hot_dry_event_risk",
+                "unit": null,
+                "reference_baseline": "1971-2010",
+                "geographic_scope": "Global",
+                "scenario": "CMIP6/socioeconomic projection framework used by the source",
+                "time": {
+                  "year": null,
+                  "start_year": 2061,
+                  "end_year": 2100,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2061-2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Global risk assessment of compound hot-dry events in the context of future climate change and socioeconomic factors",
+                  "doi": "10.1038/s41612-023-00401-7",
+                  "url": "https://doi.org/10.1038/s41612-023-00401-7",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“between the 2061-2100 and 1971-2010 periods”",
+                  "derivation": "The far-future study period is retained as a projection period, not as a singular tipping date."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection-period proxy; no universal compound-event tipping year is identified."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_compound_hot_dry_projection_2061_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "amoc_circulation",
@@ -10184,7 +11206,61 @@
             "source_ids": [
               "CL_SUB_R05",
               "CL_SUB_R06"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "amoc_ditlevsen_corrected_ci",
+                "kind": "threshold_crossing",
+                "event_definition": "Estimated critical transition time of the AMOC in the source's fitted stochastic model.",
+                "metric": "critical_transition_time",
+                "unit": "calendar_year",
+                "reference_baseline": null,
+                "geographic_scope": "Atlantic Meridional Overturning Circulation",
+                "scenario": "Source-specific statistical model and forcing assumptions; not automatically an SSP or the application's Baseline",
+                "time": {
+                  "year": null,
+                  "start_year": 2037,
+                  "end_year": 2109,
+                  "interval_kind": "confidence_interval",
+                  "confidence_level": 0.95,
+                  "bound_relation": "within",
+                  "approximate": false,
+                  "original_text": "2037-2109 (95% confidence interval)"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Warning of a forthcoming collapse of the Atlantic meridional overturning circulation",
+                  "doi": "10.1038/s41467-023-39810-w",
+                  "url": "https://www.nature.com/articles/s41467-023-39810-w",
+                  "version_note": "Current corrected article; author correction dated 2025-08-21",
+                  "location": "Results; bootstrap confidence interval",
+                  "traceability_excerpt": "“95% confidence interval is 2037-2109”",
+                  "derivation": "Interval reported by the source. No conversion to predictive time quantiles."
+                },
+                "verification_status": "primary_checked",
+                "shared_evidence_group": null,
+                "report_timing_class": "A",
+                "limitations": [
+                  "A confidence interval for an estimated transition parameter is not a predictive P10-P90 time interval.",
+                  "The current corrected text identifies 2065 as a bootstrap mean/optimal estimate; it is not entered as P50.",
+                  "Source-specific model assumptions; alternative AMOC studies disagree.",
+                  "Requires a separate mapping from this transition to the parent threat's functional-disruption criterion."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "amoc_ditlevsen_corrected_ci"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "climate_tipping_cascade",
@@ -10226,7 +11302,65 @@
             "source_ids": [
               "CL_R11",
               "CL_SUB_R04"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_tipping_network_probability_by_2300",
+                "kind": "probability_by_year",
+                "event_definition": "Probability of tipping in the source's four-element interacting tipping network under the assessed current-policy pathway.",
+                "metric": "tipping_risk",
+                "unit": "probability",
+                "reference_baseline": null,
+                "geographic_scope": "Four modelled Earth-system tipping elements",
+                "scenario": "Current-policy pathway as defined in the source; forcing pathway extends through 2100 with committed risk evaluated to 2300",
+                "time": {
+                  "year": 2300,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "45% tipping risk by 2300"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": {
+                  "year": 2300,
+                  "event_definition": "Tipping in the source's four-element interacting tipping network under the stated pathway",
+                  "probability": 0.45,
+                  "uncertainty": null
+                },
+                "physical_values": [],
+                "source": {
+                  "title": "Möller et al., Achieving net zero greenhouse gas emissions critical to limit climate tipping risks",
+                  "doi": "10.1038/s41467-024-49863-0",
+                  "url": "https://www.nature.com/articles/s41467-024-49863-0",
+                  "version_note": null,
+                  "location": "Results/discussion of tipping risk through 2300",
+                  "traceability_excerpt": "“45% tipping risk by 2300”",
+                  "derivation": "The literature statement is stored as a probability by a stated year. It is not converted into an event-time quantile."
+                },
+                "verification_status": "primary_checked",
+                "shared_evidence_group": null,
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "45% by 2300 is a point on a probability function, not P90=2300.",
+                  "The four-element network is not identical to the Apocalypse Clock parent functional-failure criterion.",
+                  "2300 is preserved as literature evidence even though it lies outside the present simulation window."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_tipping_network_probability_by_2300"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "adaptation_limits",
@@ -10280,7 +11414,73 @@
             "source_ids": [
               "CL_R05",
               "CL_R06"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "climate_adaptation_limit_15c_calendar_crosswalk",
+                "kind": "threshold_crossing",
+                "event_definition": "Calendar timing of the 1.5 C global-warming threshold used as a crosswalk for IPCC hard adaptation limits that begin at 1.5 C for some terrestrial and aquatic systems.",
+                "metric": "global_mean_surface_temperature_change",
+                "unit": "degC",
+                "reference_baseline": "1850-1900",
+                "geographic_scope": "Global climate threshold; adaptation-limit evidence applies to specified terrestrial and aquatic systems",
+                "scenario": "IPCC AR6 cross-source mapping: WGII adaptation-limit threshold + AR6 Synthesis Report timing",
+                "time": {
+                  "year": null,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": true,
+                  "original_text": "late 2020s to first half of the 2030s"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "global_mean_surface_temperature_change",
+                    "value": 1.5,
+                    "unit": "degC",
+                    "reference": "1850-1900"
+                  }
+                ],
+                "source": {
+                  "title": "IPCC AR6 WGII Chapter 16 + AR6 Synthesis Report",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-16/",
+                  "version_note": null,
+                  "location": "WGII Chapter 16; timing crosswalk from AR6 Synthesis Report.",
+                  "traceability_excerpt": "“Beginning at 1.5 C ... face hard limits”",
+                  "derivation": "The adaptation threshold is 1.5 C; calendar timing comes from the separate AR6 Synthesis Report. The crosswalk is displayed but not treated as a directly observed adaptation-failure date.",
+                  "supporting_sources": [
+                    {
+                      "title": "IPCC AR6 Synthesis Report, Longer Report",
+                      "url": "https://www.ipcc.ch/report/ar6/syr/longer-report/",
+                      "role": "calendar timing of the 1.5 C 20-year running-average threshold"
+                    }
+                  ]
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "ipcc_ar6_1p5c_running_average_timing",
+                "report_timing_class": "B",
+                "limitations": [
+                  "Derived calendar crosswalk rather than a single source-reported calendar adaptation-collapse date.",
+                  "Different ecological and human systems reach soft or hard adaptation limits at different warming levels and times."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "climate_adaptation_limit_15c_calendar_crosswalk"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           }
         ]
       },
@@ -10362,7 +11562,58 @@
             "source_ids": [
               "OCE_R01",
               "OCE_SUB_R08"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_warming_projection_2081_2100",
+                "kind": "projection_period",
+                "event_definition": "Ocean warming is assessed through the late-century period 2081-2100.",
+                "metric": "ocean_temperature_or_heat_content_change",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global ocean",
+                "scenario": "IPCC SROCC assessed scenarios",
+                "time": {
+                  "year": null,
+                  "start_year": 2081,
+                  "end_year": 2100,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2081-2100 / throughout the 21st century"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC Special Report on the Ocean and Cryosphere in a Changing Climate, Summary for Policymakers",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“continue to warm throughout the 21st century”",
+                  "derivation": "The late-century assessment window is retained as a projection horizon because no single global ocean-warming tipping year is identified."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection-horizon proxy, not an ocean functional-collapse threshold."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_warming_projection_2081_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "marine_heatwaves",
@@ -10424,7 +11675,58 @@
               "OCE_R04",
               "OCE_R05",
               "OCE_SUB_R08"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_mhw_projection_2081_2100",
+                "kind": "projection_period",
+                "event_definition": "Marine heatwave frequency is projected for the late-century period 2081-2100 relative to pre-industrial conditions.",
+                "metric": "marine_heatwave_frequency",
+                "unit": null,
+                "reference_baseline": "pre-industrial",
+                "geographic_scope": "Global ocean",
+                "scenario": "IPCC SROCC assessed scenarios",
+                "time": {
+                  "year": null,
+                  "start_year": 2081,
+                  "end_year": 2100,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2081-2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC SROCC, Summary for Policymakers",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“by 2081-2100”",
+                  "derivation": "The assessment window is retained as a projection period, not as a global MHW collapse date."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection-period proxy; marine heatwaves are events with regional heterogeneity."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_mhw_projection_2081_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "ocean_acidification",
@@ -10483,7 +11785,107 @@
             "source_ids": [
               "OCE_R01",
               "OCE_R06"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_acidification_revised_boundary_by_2000",
+                "kind": "historical_crossing",
+                "event_definition": "The source's revised 10% decline-from-preindustrial aragonite-saturation benchmark had been surpassed across the surface ocean by 2000.",
+                "metric": "aragonite_saturation_state_change",
+                "unit": "% decline",
+                "reference_baseline": "pre-industrial",
+                "geographic_scope": "Global surface ocean",
+                "scenario": "Historical observational/data-model reconstruction",
+                "time": {
+                  "year": 2000,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "surpassed by year 2000"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "aragonite_saturation_state_change",
+                    "threshold": -10,
+                    "unit": "%",
+                    "reference": "pre-industrial"
+                  }
+                ],
+                "source": {
+                  "title": "Findlay et al., Ocean Acidification: Another Planetary Boundary Crossed",
+                  "doi": "10.1111/gcb.70238",
+                  "url": "https://doi.org/10.1111/gcb.70238",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“surpassed by year 2000”",
+                  "derivation": "Historical crossing of the revised benchmark is retained as an initial-state evidence item."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A",
+                "limitations": [
+                  "Boundary crossing is not equivalent to completed global marine functional failure."
+                ]
+              },
+              {
+                "id": "ocean_acidification_boundary_uncertainty_range_by_2020",
+                "kind": "historical_crossing",
+                "event_definition": "Average global ocean conditions had crossed into the planetary-boundary uncertainty range by 2020.",
+                "metric": "ocean_acidification_planetary_boundary_state",
+                "unit": null,
+                "reference_baseline": "pre-industrial",
+                "geographic_scope": "Global ocean",
+                "scenario": "Historical observational/data-model assessment",
+                "time": {
+                  "year": 2020,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "by 2020 ... had already crossed"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Findlay et al., Ocean Acidification: Another Planetary Boundary Crossed",
+                  "doi": "10.1111/gcb.70238",
+                  "url": "https://doi.org/10.1111/gcb.70238",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“by 2020 ... had already crossed”",
+                  "derivation": "This is a second, distinct historical boundary statement and is not merged with the revised 10% benchmark event."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A",
+                "limitations": [
+                  "Different threshold definition from the revised 10% benchmark."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_acidification_revised_boundary_by_2000",
+                "ocean_acidification_boundary_uncertainty_range_by_2020"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "ocean_deoxygenation",
@@ -10544,7 +11946,68 @@
               "OCE_R06",
               "OCE_SUB_R08",
               "OCE_SUB_R09"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_deoxygenation_signal_emergence_2031_2050",
+                "kind": "signal_emergence",
+                "event_definition": "Climate-driven oxygen-loss signal emerges from historical variability across a large fraction of the ocean during 2031-2050 under the stated high-emissions scenario.",
+                "metric": "ocean_area_with_emergent_oxygen_loss_signal",
+                "unit": "% ocean area",
+                "reference_baseline": "historical variability",
+                "geographic_scope": "Global ocean",
+                "scenario": "RCP8.5 / IPCC SROCC assessment",
+                "time": {
+                  "year": null,
+                  "start_year": 2031,
+                  "end_year": 2050,
+                  "interval_kind": "event_window",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "affected by 2031-2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "ocean_area_affected",
+                    "value_range": [
+                      59,
+                      80
+                    ],
+                    "unit": "%",
+                    "period": "2031-2050"
+                  }
+                ],
+                "source": {
+                  "title": "IPCC SROCC, Technical Summary",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/srocc/chapter/technical-summary/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“affected by 2031-2050”",
+                  "derivation": "The period is retained as time of signal emergence rather than a global ecological collapse threshold."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B",
+                "limitations": [
+                  "Signal emergence is not identical to functional failure."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_deoxygenation_signal_emergence_2031_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "ocean_stratification",
@@ -10612,7 +12075,58 @@
             "calibration_grade": "C",
             "source_ids": [
               "OCE_SUB_R01"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_stratification_projection_2090_2100",
+                "kind": "projection_period",
+                "event_definition": "Global upper-ocean stratification change is projected for 2090-2100 relative to 2010-2020.",
+                "metric": "upper_2000m_ocean_stratification",
+                "unit": null,
+                "reference_baseline": "2010-2020",
+                "geographic_scope": "Global ocean upper 2000 m",
+                "scenario": "SSP1-2.6 / SSP2-4.5 / SSP5-8.5",
+                "time": {
+                  "year": null,
+                  "start_year": 2090,
+                  "end_year": 2100,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2090-2100 relative to 2010-2020"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Cheng et al., Ocean stratification in a warming climate",
+                  "doi": "10.1038/s43017-025-00715-5",
+                  "url": "https://www.nature.com/articles/s43017-025-00715-5",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“by 2090-2100 relative to 2010-2020”",
+                  "derivation": "The late-century projection period is retained because no universal critical stratification year is identified."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Physical projection horizon, not a marine functional-failure threshold."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_stratification_projection_2090_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "overfishing",
@@ -10670,7 +12184,67 @@
               "OCE_R02",
               "OCE_R03",
               "OCE_SUB_R02"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_overfishing_worm_2048_extrapolated_collapse",
+                "kind": "threshold_crossing",
+                "event_definition": "Extrapolated year in which the fisheries-collapse metric reaches all taxa then currently fished under the source's trend continuation.",
+                "metric": "fraction_of_fished_taxa_collapsed",
+                "unit": "%",
+                "reference_baseline": "historical maximum catches / source collapse definition",
+                "geographic_scope": "Global fisheries represented in the source dataset",
+                "scenario": "Worm et al. 2006 trend extrapolation",
+                "time": {
+                  "year": 2048,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "year 2048"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Worm et al., Impacts of Biodiversity Loss on Ocean Ecosystem Services",
+                  "doi": "10.1126/science.1132294",
+                  "url": "https://doi.org/10.1126/science.1132294",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“global collapse of all taxa currently fished ... year 2048”",
+                  "derivation": "The explicit literature year is preserved as a contested historical extrapolation, not as a consensus forecast.",
+                  "supporting_sources": [
+                    {
+                      "title": "Branch, Not all fisheries will be collapsed in 2048",
+                      "url": "https://doi.org/10.1016/j.marpol.2007.04.001",
+                      "role": "published critique of the extrapolation"
+                    }
+                  ]
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A (contested)",
+                "limitations": [
+                  "Contested extrapolation; subsequent literature challenged the inference.",
+                  "Must not be promoted to a consensus or default calibrated prediction.",
+                  "The source's collapse metric is not species extinction."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_overfishing_worm_2048_extrapolated_collapse"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "bycatch_destructive_fishing",
@@ -10740,7 +12314,100 @@
             "source_ids": [
               "OCE_SUB_R02",
               "OCE_SUB_R03"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_bycatch_southern_ocean_projection_2050",
+                "kind": "projection_period",
+                "event_definition": "Future overlap/distribution relevant to seabird-fisheries bycatch risk is evaluated for 2050.",
+                "metric": "seabird_fisheries_distribution_overlap",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Southern Ocean",
+                "scenario": "Climate-change scenarios used by the source",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Krüger et al., Projected distributions of Southern Ocean albatrosses, petrels and fisheries as a consequence of climatic change",
+                  "doi": null,
+                  "url": "https://nora.nerc.ac.uk/id/eprint/518992/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“climate change scenarios built ... for 2050 and 2100”",
+                  "derivation": "2050 is retained as one of two discrete projection years in a regional bycatch-risk study."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "southern_ocean_bycatch_projection_2050_2100",
+                "report_timing_class": "C",
+                "limitations": [
+                  "Regional bycatch-risk proxy; not a global destructive-fishing threshold."
+                ]
+              },
+              {
+                "id": "ocean_bycatch_southern_ocean_projection_2100",
+                "kind": "projection_period",
+                "event_definition": "Future overlap/distribution relevant to seabird-fisheries bycatch risk is evaluated for 2100.",
+                "metric": "seabird_fisheries_distribution_overlap",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Southern Ocean",
+                "scenario": "Climate-change scenarios used by the source",
+                "time": {
+                  "year": 2100,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Krüger et al., Projected distributions of Southern Ocean albatrosses, petrels and fisheries as a consequence of climatic change",
+                  "doi": null,
+                  "url": "https://nora.nerc.ac.uk/id/eprint/518992/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“climate change scenarios built ... for 2050 and 2100”",
+                  "derivation": "2100 is retained as the second discrete projection year in the same regional study."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "southern_ocean_bycatch_projection_2050_2100",
+                "report_timing_class": "C",
+                "limitations": [
+                  "Same underlying study as the 2050 record; do not treat as independent evidence."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_bycatch_southern_ocean_projection_2050",
+                "ocean_bycatch_southern_ocean_projection_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "fish_stock_biomass_decline",
@@ -10797,7 +12464,58 @@
             "source_ids": [
               "OCE_R04",
               "OCE_R03"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_fish_biomass_projection_2080_2099",
+                "kind": "projection_period",
+                "event_definition": "Global marine animal/fishery biomass changes are assessed for the late-century period 2080-2099 relative to a recent historical baseline.",
+                "metric": "marine_animal_biomass_or_fishery_biomass",
+                "unit": null,
+                "reference_baseline": "1995-2014",
+                "geographic_scope": "Global marine systems",
+                "scenario": "IPCC AR6 WGII assessed scenarios",
+                "time": {
+                  "year": null,
+                  "start_year": 2080,
+                  "end_year": 2099,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2080-2099 relative to 1995-2014"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGII, Technical Summary",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg2/chapter/technical-summary/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“by 2080-2099 relative to 1995-2014”",
+                  "derivation": "The late-century assessment interval is retained as a projection horizon because no universal stock-collapse year is defined."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection horizon; fish stocks differ greatly by region, management and species."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_fish_biomass_projection_2080_2099"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "recruitment_failure",
@@ -10853,7 +12571,68 @@
             "source_ids": [
               "OCE_SUB_R04",
               "OCE_R03"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_pollock_recruitment_projection_2040_2050",
+                "kind": "projection_period",
+                "event_definition": "Eastern Bering Sea walleye pollock recruitment is projected for 2040-2050, with substantial declines under future climate conditions.",
+                "metric": "walleye_pollock_recruitment",
+                "unit": "% change",
+                "reference_baseline": null,
+                "geographic_scope": "Eastern Bering Sea",
+                "scenario": "Source-specific future climate projection",
+                "time": {
+                  "year": null,
+                  "start_year": 2040,
+                  "end_year": 2050,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "recruitment in 2040-2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "recruitment_decline",
+                    "value_range": [
+                      32,
+                      58
+                    ],
+                    "unit": "%",
+                    "period": "2040-2050"
+                  }
+                ],
+                "source": {
+                  "title": "Mueter, Bond & Ianelli, Expected declines in recruitment of walleye pollock in the eastern Bering Sea under future climate change",
+                  "doi": null,
+                  "url": "https://academic.oup.com/icesjms/article/68/6/1284/700865",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“recruitment in 2040-2050 ... decline by 32-58%”",
+                  "derivation": "The regional recruitment projection period is retained explicitly and is not generalized to a global recruitment-failure year."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "B/C",
+                "limitations": [
+                  "Regional/species-specific projection."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_pollock_recruitment_projection_2040_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "trophic_web_disruption",
@@ -10911,7 +12690,59 @@
               "OCE_SUB_R02",
               "OCE_R05",
               "OCE_R06"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_north_atlantic_bloom_abrupt_change_2040_foodweb",
+                "kind": "trend_change",
+                "event_definition": "Abrupt change in timing and magnitude of the North Atlantic bloom begins from 2040, with implications for the wider food web.",
+                "metric": "North_Atlantic_bloom_timing_and_magnitude",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "North Atlantic",
+                "scenario": "Coupled-model projection used by the source",
+                "time": {
+                  "year": 2040,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "from the year 2040"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Kelly et al., Abrupt Changes in the Timing and Magnitude of the North Atlantic Bloom Over the 21st Century",
+                  "doi": "10.1029/2024JC022284",
+                  "url": "https://doi.org/10.1029/2024JC022284",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“abrupt changes occurring from the year 2040”",
+                  "derivation": "The bloom transition is used here as a regional trophic-base disruption marker."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "north_atlantic_bloom_abrupt_change_2040",
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "Regional abrupt transition, not a global trophic-web collapse.",
+                  "Same underlying event is also relevant to primary productivity/phytoplankton and must not be sampled independently."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_north_atlantic_bloom_abrupt_change_2040_foodweb"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "primary_productivity_phytoplankton",
@@ -10980,7 +12811,100 @@
             "source_ids": [
               "OCE_R05",
               "OCE_SUB_R08"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_north_atlantic_bloom_abrupt_change_2040_productivity",
+                "kind": "trend_change",
+                "event_definition": "Abrupt change in timing and magnitude of the North Atlantic bloom begins from 2040.",
+                "metric": "North_Atlantic_bloom_timing_and_magnitude",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "North Atlantic",
+                "scenario": "Coupled-model projection used by the source",
+                "time": {
+                  "year": 2040,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "from the year 2040"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Kelly et al., Abrupt Changes in the Timing and Magnitude of the North Atlantic Bloom Over the 21st Century",
+                  "doi": "10.1029/2024JC022284",
+                  "url": "https://doi.org/10.1029/2024JC022284",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“from the year 2040”",
+                  "derivation": "The same regional bloom transition is stored here because it is directly relevant to phytoplankton/primary production."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": "north_atlantic_bloom_abrupt_change_2040",
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "Same evidence group as the trophic-web record; not independent."
+                ]
+              },
+              {
+                "id": "ocean_global_npp_projection_2081_2100",
+                "kind": "projection_period",
+                "event_definition": "Global marine net primary production change is assessed for 2081-2100.",
+                "metric": "marine_net_primary_production",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global ocean",
+                "scenario": "IPCC SROCC assessed scenarios",
+                "time": {
+                  "year": null,
+                  "start_year": 2081,
+                  "end_year": 2100,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2081-2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC SROCC, Summary for Policymakers",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/srocc/chapter/summary-for-policymakers/",
+                  "version_note": null,
+                  "location": "Traceability-report global context; exact primary quotation not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": null,
+                  "derivation": "The traceability report records 2081-2100 as the global projection context for marine net primary production."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Global projection context, not a tipping date."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_north_atlantic_bloom_abrupt_change_2040_productivity",
+                "ocean_global_npp_projection_2081_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "habitat_loss_degradation",
@@ -11038,7 +12962,66 @@
             "source_ids": [
               "OCE_SUB_R06",
               "OCE_R08"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_shallow_water_habitat_projection_2100",
+                "kind": "projection_period",
+                "event_definition": "Global shallow-water ecosystem distributions are projected through 2100.",
+                "metric": "shallow_water_habitat_extent",
+                "unit": "% change",
+                "reference_baseline": null,
+                "geographic_scope": "Global shallow-water ecosystems",
+                "scenario": "Source future climate/coastal-development scenarios",
+                "time": {
+                  "year": 2100,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "by 2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "global_coral_habitat_change",
+                    "value": -75,
+                    "unit": "%",
+                    "year": 2100,
+                    "scenario": "RCP8.5 as summarized in the traceability report"
+                  }
+                ],
+                "source": {
+                  "title": "Moki et al., Projections of changes in the global distribution of shallow water ecosystems through 2100 due to climate change",
+                  "doi": null,
+                  "url": "https://journals.plos.org/climate/article?id=10.1371/journal.pclm.0000298",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“global coral habitat shrank by as much as 75% by 2100”",
+                  "derivation": "2100 is retained as the modelled projection horizon for shallow-water habitat redistribution/loss."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection horizon across habitat classes; not a single universal habitat-collapse threshold."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_shallow_water_habitat_projection_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "coral_reef_degradation",
@@ -11095,7 +13078,102 @@
             "source_ids": [
               "OCE_SUB_R05",
               "OCE_R08"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_coral_net_calcification_zero_around_2054",
+                "kind": "threshold_crossing",
+                "event_definition": "Average global coral-reef net ecosystem calcification is extrapolated to reach approximately zero around 2054 if the observed decline continues.",
+                "metric": "net_ecosystem_calcification",
+                "unit": "net_calcification",
+                "reference_baseline": null,
+                "geographic_scope": "Global synthesis of repeated coral-reef sites",
+                "scenario": "Linear continuation of the source's repeated-site trend",
+                "time": {
+                  "year": 2054,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "around",
+                  "approximate": true,
+                  "original_text": "reach 0 around 2054"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Davis et al., Global coral reef ecosystems exhibit declining calcification and increasing primary productivity",
+                  "doi": "10.1038/s43247-021-00168-w",
+                  "url": "https://www.nature.com/articles/s43247-021-00168-w",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“reach 0 around 2054”",
+                  "derivation": "The net-calcification transition is preserved as its own event."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "Trend extrapolation with substantial uncertainty.",
+                  "Not a calibrated global first-passage distribution."
+                ]
+              },
+              {
+                "id": "ocean_coral_sediment_net_dissolution_2031_2082",
+                "kind": "threshold_crossing",
+                "event_definition": "Cited reef-sediment experiments imply transition to net dissolution between 2031 and 2082.",
+                "metric": "reef_sediment_net_carbonate_balance",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Reef sediment systems represented by the cited experiments",
+                "scenario": "Experimental relationships summarized by Davis et al.",
+                "time": {
+                  "year": null,
+                  "start_year": 2031,
+                  "end_year": 2082,
+                  "interval_kind": "event_window",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "net-dissolving between 2031 and 2082"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Davis et al., Global coral reef ecosystems exhibit declining calcification and increasing primary productivity",
+                  "doi": "10.1038/s43247-021-00168-w",
+                  "url": "https://www.nature.com/articles/s43247-021-00168-w",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“net-dissolving between 2031 and 2082”",
+                  "derivation": "This sediment-dissolution window is distinct from the net-ecosystem-calcification transition and is therefore stored separately."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A/B",
+                "limitations": [
+                  "Different event definition from net ecosystem calcification reaching zero.",
+                  "The date range is mediated through studies cited by Davis et al.; underlying primary experiments were not independently rechecked in this JSON pass."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_coral_net_calcification_zero_around_2054",
+                "ocean_coral_sediment_net_dissolution_2031_2082"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "coastal_ecosystem_degradation",
@@ -11165,7 +13243,65 @@
             "source_ids": [
               "OCE_SUB_R06",
               "OCE_SUB_R07"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_coastal_tipping_slr_025m_around_2050",
+                "kind": "threshold_crossing",
+                "event_definition": "Multiple coastal-system tipping points are associated with 0.25 m or less of sea-level rise, corresponding to approximately 2050 in the study region.",
+                "metric": "relative_sea_level_rise",
+                "unit": "m",
+                "reference_baseline": null,
+                "geographic_scope": "Santa Barbara coastal systems, California, USA",
+                "scenario": "Study-specific coastal sea-level-rise scenarios",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "around",
+                  "approximate": true,
+                  "original_text": "0.25 m or less of SLR (~2050)"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [
+                  {
+                    "metric": "sea_level_rise",
+                    "threshold": 0.25,
+                    "unit": "m",
+                    "approximate_year": 2050
+                  }
+                ],
+                "source": {
+                  "title": "Multiple climate change-driven tipping points for coastal systems",
+                  "doi": "10.1038/s41598-021-94942-7",
+                  "url": "https://www.nature.com/articles/s41598-021-94942-7",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“0.25 m or less of SLR (~2050)”",
+                  "derivation": "The regional tipping year is retained with its geographic scope and must not be silently generalized globally."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "A",
+                "limitations": [
+                  "Regional case study; global transfer requires an explicit coverage/impact model."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_coastal_tipping_slr_025m_around_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "nutrient_loading_eutrophication",
@@ -11221,7 +13357,58 @@
             "calibration_grade": "U",
             "source_ids": [
               "OCE_SUB_R09"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_eutrophication_projection_horizon_2050",
+                "kind": "projection_period",
+                "event_definition": "The global review identifies 2050 as the available future projection horizon for eutrophication pressure.",
+                "metric": "eutrophication_pressure",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global ocean review",
+                "scenario": "Future human-pressure projections synthesized by the source",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "Eutrophication | 2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Vargas-Fonseca et al., Knowns and Unknowns in Future Human Pressures on the Ocean",
+                  "doi": "10.1029/2024EF004559",
+                  "url": "https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2024EF004559",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“Eutrophication | 2050”",
+                  "derivation": "2050 is retained explicitly as a review-derived projection horizon, not as a global eutrophication tipping date."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection-horizon proxy only."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_eutrophication_projection_horizon_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "marine_pollution",
@@ -11277,7 +13464,59 @@
             "calibration_grade": "U",
             "source_ids": [
               "OCE_SUB_R10"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_plastic_input_halt_milestone_2050",
+                "kind": "mitigation_milestone",
+                "event_definition": "Halting new marine plastic inputs by 2050 is evaluated as necessary but insufficient to avoid continued microplastic accumulation.",
+                "metric": "marine_plastic_input",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global marine plastic system",
+                "scenario": "Source system-dynamics intervention scenarios",
+                "time": {
+                  "year": 2050,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": "by",
+                  "approximate": false,
+                  "original_text": "Halting marine plastic inputs by 2050"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Uehara, Cordier & Lebreton, Halting marine plastic inputs by 2050 is necessary but not sufficient to avoid microplastic accumulation",
+                  "doi": "10.1038/s43247-026-04054-1",
+                  "url": "https://www.nature.com/articles/s43247-026-04054-1",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“Halting marine plastic inputs by 2050”",
+                  "derivation": "2050 is retained as an intervention/mitigation milestone, not as a pollution-system collapse date."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Plastic-specific result; does not represent all marine pollution classes.",
+                  "Mitigation milestone rather than critical failure time."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_plastic_input_halt_milestone_2050"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "invasive_species_redistribution",
@@ -11347,7 +13586,58 @@
             "source_ids": [
               "OCE_SUB_R11",
               "OCE_SUB_R12"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_invasive_species_projection_horizon_2060",
+                "kind": "projection_period",
+                "event_definition": "The global review identifies 2060 as the projection horizon for invasive-species pressure and redistribution.",
+                "metric": "marine_invasive_species_pressure",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global ocean review",
+                "scenario": "Future human-pressure projections synthesized by the source",
+                "time": {
+                  "year": 2060,
+                  "start_year": null,
+                  "end_year": null,
+                  "interval_kind": null,
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "Invasive species | 2060"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "Vargas-Fonseca et al., Knowns and Unknowns in Future Human Pressures on the Ocean",
+                  "doi": "10.1029/2024EF004559",
+                  "url": "https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2024EF004559",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“Invasive species | 2060”",
+                  "derivation": "2060 is retained as a review-derived projection horizon, not as a global invasion tipping year."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Projection-horizon proxy; redistribution continues beyond the cited year in other scenarios."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_invasive_species_projection_horizon_2060"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           },
           {
             "id": "overall_ecological_function_loss",
@@ -11410,7 +13700,58 @@
               "OCE_R07",
               "OCE_SUB_R10",
               "OCE_SUB_R11"
-            ]
+            ],
+            "timing_evidence": [
+              {
+                "id": "ocean_ecological_function_projection_2081_2100",
+                "kind": "projection_period",
+                "event_definition": "Integrated marine ecological changes, including zooplankton biomass decline, are assessed for the late-century period 2081-2100.",
+                "metric": "marine_ecosystem_function_indicators",
+                "unit": null,
+                "reference_baseline": null,
+                "geographic_scope": "Global ocean",
+                "scenario": "IPCC AR6 WGII assessed scenarios",
+                "time": {
+                  "year": null,
+                  "start_year": 2081,
+                  "end_year": 2100,
+                  "interval_kind": "projection_period",
+                  "confidence_level": null,
+                  "bound_relation": null,
+                  "approximate": false,
+                  "original_text": "2081-2100"
+                },
+                "reported_time_quantiles": {
+                  "p50_year": null,
+                  "p90_year": null
+                },
+                "probability_by_year": null,
+                "physical_values": [],
+                "source": {
+                  "title": "IPCC AR6 WGII, Chapter 3: Oceans and Coastal Ecosystems and their Services",
+                  "doi": null,
+                  "url": "https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-3/",
+                  "version_note": null,
+                  "location": "Traceability report passage; exact primary-source location not independently rechecked in this JSON pass.",
+                  "traceability_excerpt": "“decline in global zooplankton biomass ... 2081-2100”",
+                  "derivation": "The late-century window is retained as an integrated projection horizon because no single accepted global ecological-function tipping date is identified."
+                },
+                "verification_status": "report_only",
+                "shared_evidence_group": null,
+                "report_timing_class": "C",
+                "limitations": [
+                  "Integrated projection-horizon proxy, not a formal global ecological-function failure time."
+                ]
+              }
+            ],
+            "timing_model": {
+              "mode": "display_only",
+              "evidence_ids": [
+                "ocean_ecological_function_projection_2081_2100"
+              ],
+              "assumptions": [],
+              "reason": "Literature timing evidence is retained for display and auditability. No approved predictive event-time distribution or mapping to the parent functional-failure criterion is specified."
+            }
           }
         ]
       }
@@ -11428,7 +13769,65 @@
       "local_verification_digest_before": "6f172a8af93336e87c406ad202eb6bda394041be2c0d31f0ab7a7d14e4669ef5",
       "local_verification_digest_after": "6f172a8af93336e87c406ad202eb6bda394041be2c0d31f0ab7a7d14e4669ef5",
       "numerical_mu_lo_hi_unchanged": true,
-      "source_research_scope": "Reused current existing climate/ocean sources where adequate; added targeted sources only for missing subsystem coverage such as fast feedbacks, permafrost, hydrology, extremes, AMOC, stratification, bycatch, recruitment, coastal habitats, deoxygenation, eutrophication, pollution and invasive species."
+      "source_research_scope": "Reused current existing climate/ocean sources where adequate; added targeted sources only for missing subsystem coverage such as fast feedbacks, permafrost, hydrology, extremes, AMOC, stratification, bycatch, recruitment, coastal habitats, deoxygenation, eutrophication, pollution and invasive species.",
+      "timing_evidence_2026_09_23": {
+        "status": "complete_for_36_components",
+        "scope": "18 Climate Breakdown + 18 Ocean Degradation components",
+        "numerical_parent_parameters_changed": false,
+        "literature_horizon_fields_changed": false,
+        "model_horizon_fields_changed": false,
+        "runtime_effect": "none; all timing_model.mode values are display_only",
+        "notes": [
+          "No operational upper-year marker from the traceability paper was copied into literature_horizon.p90_year.",
+          "Different events from the same source are kept as separate timing_evidence records.",
+          "Regional findings retain their geographic scope.",
+          "Dates beyond 2100 are preserved as literature evidence rather than clipped to the simulation window.",
+          "Most records are conservatively marked report_only unless the implementation instruction explicitly states that the primary source was additionally checked."
+        ],
+        "validation": {
+          "components_with_timing_evidence": 36,
+          "timing_evidence_record_count": 45,
+          "unique_timing_evidence_ids": 45,
+          "kind_counts": {
+            "historical_crossing": 3,
+            "mitigation_milestone": 4,
+            "probability_by_year": 1,
+            "projection_period": 18,
+            "signal_emergence": 1,
+            "threshold_crossing": 11,
+            "trend_change": 7
+          },
+          "verification_status_counts": {
+            "primary_checked": 2,
+            "report_only": 43
+          },
+          "all_reported_time_quantiles_null": true,
+          "all_timing_models_display_only": true,
+          "existing_literature_horizons_unchanged": true,
+          "existing_model_horizons_unchanged": true,
+          "all_non_meta_threat_parameter_data_unchanged": true,
+          "preserved_out_of_window_years": [
+            2109,
+            2150,
+            2300
+          ]
+        }
+      }
+    },
+    "timing_evidence_schema": {
+      "version": "1.0",
+      "status": "additive_display_layer_not_yet_used_by_runtime_monte_carlo",
+      "semantics": "timing_evidence preserves literature-reported calendar information without converting projection horizons, confidence intervals, mitigation milestones, historical crossings or probability-by-year statements into false time quantiles.",
+      "reported_time_quantiles_rule": "p50_year and p90_year are populated only when the primary source explicitly reports those time quantiles for the same defined event. Otherwise both remain null.",
+      "timing_model_default": "display_only",
+      "report_timing_class_definition": {
+        "A": "Explicit critical, tipping, boundary, collapse, or comparable threshold timing.",
+        "B": "Explicit transition, peak, onset, first-passage, time-of-emergence, or comparable process timing.",
+        "C": "Projection-horizon proxy used only when no defensible critical calendar timing is available.",
+        "mixed": "The report used a mixed class (for example A/B or B/C); retained only as report metadata, not as evidence_grade/calibration_grade."
+      },
+      "source_report": "Apocalypse_Clock_Model_1_3_Literature_Timing_Traceability_Paper_2026-09-23.pdf",
+      "implementation_instruction": "Prilepljeno besedilo(20260923-181459).txt"
     }
   },
   "ai.scale": {
@@ -34732,6 +37131,8 @@
 <script src="./vendor/echarts.bundle.js"></script>
 <script src="./vendor/cytoscape.bundle.js"></script>
 <script src="./src/cascade-model.js"></script>
+<script src="./src/timing-evidence.js"></script>
+<script src="./src/transparency.js"></script>
 <script src="./src/app.js"></script>
 <div id="floatTip"></div>
 

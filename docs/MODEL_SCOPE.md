@@ -1,6 +1,6 @@
 # Model Scope
 
-Apocalypse Clock 1.3 with dataset 1.9.1 is an experimental browser-based model for comparing conditional systemic-risk scenarios. The initial 1.3 development baseline is a functional copy of model 1.2.9. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
+Apocalypse Clock 1.3 with dataset 1.3 is an experimental browser-based model for comparing conditional systemic-risk scenarios. The initial 1.3 development baseline is a functional copy of model 1.2.9. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
 
 ## Represented functions
 
@@ -14,7 +14,7 @@ The model retains 23 headline threats and eight metric entries per headline thre
 
 A functional boundary concerns failure to sustain a specified function despite the modeled allowance for buffers and substitutes. It does not require extinction, zero biomass, destruction of every asset or disappearance of every service. Conversely, the model does not infer current threshold crossing solely from a serious observed burden, rising indicator or high ordinal score.
 
-Definitions and assignments are in [data/data_v1_9_1_2026-09-23.json](../data/data_v1_9_1_2026-09-23.json). They are analyst judgments, not observed global capacity fractions.
+Definitions and assignments are in [data/data_v1_3_timing_2026-09-23.json](../data/data_v1_3_timing_2026-09-23.json). They are analyst judgments, not observed global capacity fractions.
 
 ## Two paths to activation
 

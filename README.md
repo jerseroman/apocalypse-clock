@@ -1,6 +1,6 @@
 # Apocalypse Clock v1.3.1-dev
 
-Version **1.3** started as a controlled copy of application 1.2.9. The current development revision uses dataset **1.9.1**, [data/data_v1_9_1_2026-09-23.json](./data/data_v1_9_1_2026-09-23.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). The active causal topology is defined once in [src/causal-graph.js](./src/causal-graph.js) and shared by the calculations and network view; source-map uploads cannot replace it.
+Version **1.3** started as a controlled copy of application 1.2.9. The current development revision uses dataset **1.3**, [data/data_v1_3_timing_2026-09-23.json](./data/data_v1_3_timing_2026-09-23.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). The active causal topology is defined once in [src/causal-graph.js](./src/causal-graph.js) and shared by the calculations and network view; source-map uploads cannot replace it.
 
 A single initial failure can propagate into initially right-censored targets. Fixed criticality weights, essential-service baskets, one-year dependency lags and explicit overlap grouping replace the former three-domain/transmission veto. Functional failure does not require disappearance of all organisms. The headline is a **functional-disruption threshold after propagation**, not a calibrated prediction of completed global collapse. Parameter scores, growth priors and coupling coefficients remain transparent model judgments.
 
@@ -22,7 +22,7 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard covering 59 
 
 - `index.html` - application entry point, page shell, and embedded dataset copy.
 - `404.html` - GitHub Pages fallback route with the same embedded dataset copy.
-- `data/data_v1_9_1_2026-09-23.json` - canonical dataset 1.9.1, dated 23 September 2026.
+- `data/data_v1_3_timing_2026-09-23.json` - canonical dataset 1.3, dated 23 September 2026.
 - `data_v1_7_1metadata_revision.json`, `data_v1_8_0_evidence_revision.json` - preserved historical inputs.
 - `src/cascade-model.js` - pure directed functional-cascade engine.
 - `src/causal-graph.js` - canonical, fixed directed topology used by calculations and network view.
@@ -60,9 +60,9 @@ The model uses a structured JSON parameter dataset as its primary input source.
 
 Current dataset:
 
-- [`data/data_v1_9_1_2026-09-23.json`](./data/data_v1_9_1_2026-09-23.json)
+- [`data/data_v1_3_timing_2026-09-23.json`](./data/data_v1_3_timing_2026-09-23.json)
 
-This file contains dataset v1.9.1: 23 headline threat categories and 8 metrics per headline threat, 184 parameter entries, 23 functional profiles and an expanded source registry. It also contains 36 nested Climate Breakdown and Ocean Degradation components through `_meta.subsystem_models`; they do not alter the 184-entry headline-threat contract or become 36 independently weighted top-level threats. The review is targeted, not systematic.
+This file contains dataset v1.3: 23 headline threat categories and 8 metrics per headline threat, 184 parameter entries, 23 functional profiles and an expanded source registry. It also contains 36 nested Climate Breakdown and Ocean Degradation components through `_meta.subsystem_models`, including literature timing records. Those records are displayed as evidence, not used as first-passage inputs, and do not alter the 184-entry headline-threat contract or become 36 independently weighted top-level threats. The review is targeted, not systematic.
 
 Unlike historical v1.7.1, this is an explicitly authorized numerical and methodological revision. It is not empirical recalibration: growth priors describe conditional latent functional pressure, not observed-indicator CAGR.
 

@@ -42,7 +42,7 @@ It verifies the current dataset structure and embedded copies, including:
 - 184 dataset parameters;
 - `lo <= mu <= hi` for every parameter;
 - required HTML metadata;
-- byte-equal UTF-8 JSON payloads across the configured `data/data_v1_9_1_2026-09-23.json`, `index.html`, and `404.html`, excluding enclosing whitespace;
+- byte-equal UTF-8 JSON payloads across the configured `data/data_v1_3_timing_2026-09-23.json`, `index.html`, and `404.html`, excluding enclosing whitespace;
 - exact agreement of all functional catalog fields with their importable threshold extensions, normalized known dependency IDs, nonnegative integer lags and registered source URLs;
 - direct growth semantics, with no raw observed-indicator CAGR imported as latent pressure.
 

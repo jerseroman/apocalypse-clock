@@ -6,10 +6,10 @@ const path = require('node:path');
 // No calendar-year golden or empirical forecast is asserted here. Small Monte
 // Carlo runs test plumbing, finite outputs and invariants, not tail precision.
 const ROOT = path.resolve(__dirname, '..');
-const FUNCTIONAL_FILE = 'data/data_v1_9_1_2026-09-23.json';
+const FUNCTIONAL_FILE = 'data/data_v1_3_timing_2026-09-23.json';
 const LEGACY_FILE = 'data_v1_8_0_evidence_revision.json';
 const EXPECTED_MODEL = 'Apocalypse Clock v1.3.1-dev';
-const EXPECTED_DATASET = '1.9.1';
+const EXPECTED_DATASET = '1.3';
 const RANGE_FIELDS = ['scale', 'urgency', 'acceleration', 'interdependence',
   'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
 
@@ -133,7 +133,7 @@ test.describe('functional model browser integration', () => {
   test('bundled UI starts with the functional model and dataset identities', async ({ page }) => {
     await expect(page).toHaveTitle(/Apocalypse Clock/);
     await expect(page.getByRole('heading', { name: 'Apocalypse Clock' })).toBeVisible();
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /59 modeled risk elements.*23 interacting headline threats.*36 climate\/ocean subsystem components/i);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /59 risk elements.*23 interacting headline threats.*36 climate\/ocean subsystem components/i);
     await expect(page.locator('.header-sub')).toContainText('23 interacting headline threats');
     await expect(page.locator('.header-sub')).toContainText('36 nested Climate Breakdown and Ocean Degradation subsystem components');
     await expect(page.locator('#hdrMeta')).toContainText('23 headline threats + 36 subsystem components');
@@ -154,6 +154,23 @@ test.describe('functional model browser integration', () => {
     }));
     expect(state.model).toBe(EXPECTED_MODEL);
     expect(state.dataset).toBe(EXPECTED_DATASET);
+    await openCollapseCard(page, 'sourceRegistryCard');
+    await expect(page.getByRole('button', { name: /Run new data/i })).toBeVisible();
+    await expect(page.locator('#aiPresetBtns')).toBeHidden();
+    const timing = await page.evaluate(() => {
+      const document = window._lastInterpretData.executionSnapshot.sourceDocument;
+      const models = document._meta.subsystem_models;
+      return {
+        climate: models.climate.components.length,
+        oceans: models.oceans.components.length,
+        evidence: [...models.climate.components, ...models.oceans.components]
+          .flatMap(component => component.timing_evidence || []).length,
+        modes: [...models.climate.components, ...models.oceans.components]
+          .map(component => component.timing_model?.mode),
+      };
+    });
+    expect(timing).toMatchObject({ climate: 18, oceans: 18, evidence: 45 });
+    expect(timing.modes.every(mode => mode === 'display_only')).toBe(true);
     expect(state.threatCount).toBe(23);
     expect(state.count).toBe(184);
     expect(state.snapshot.codeIdentifier).toBe(EXPECTED_MODEL);
@@ -163,6 +180,11 @@ test.describe('functional model browser integration', () => {
     expect(Object.keys(state.functional.domains).sort()).toEqual(['biosphere', 'civilization', 'technology']);
     Object.values(state.functional.domains).forEach(expectQuantiles);
     expectThreatSummaries(state.functional.propagated, state.functional.standalone);
+    await page.evaluate(() => { window.__beforeRunRef = window._lastInterpretData; });
+    await page.getByRole('button', { name: /Run new data/i }).click();
+    await page.waitForFunction(() => !_running && window._lastInterpretData !== window.__beforeRunRef,
+      undefined, { timeout: 45000 });
+    expect(await page.evaluate(() => _calculationTraceStatus)).toBe('complete');
   });
 
   test('main CDF follows the Dynamic Cascade clocks and Weibull reports censoring bounds without undefined values', async ({ page }) => {
@@ -313,6 +335,12 @@ test.describe('functional model browser integration', () => {
       const payload = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
       payload._meta = {
         ...payload._meta,
+        source_registry: [
+          ...(payload._meta.source_registry || []),
+          { id: 'fixture-climate', title: 'Fixture climate source', url: 'https://example.org/fixture-climate' },
+          { id: 'fixture-ocean', title: 'Fixture ocean source', url: 'https://example.org/fixture-ocean' },
+          { id: 'fixture-model', title: 'Fixture model source', url: 'https://example.org/fixture-model' },
+        ],
         subsystem_models: {
           climate: {
             title: 'Climate Breakdown',
@@ -383,6 +411,10 @@ test.describe('functional model browser integration', () => {
     await expect(page.locator('#subsystemModelsPanel')).toHaveCount(0);
     await expect(page.locator('[data-threat-card="climate"]')).toHaveCount(1);
     await expect(page.locator('[data-threat-card="oceans"]')).toHaveCount(1);
+    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-summary-parent="climate"]')).toBeVisible();
+    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-summary="global_mean_surface_temperature"]')).toContainText('2054');
+    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-summary="global_mean_surface_temperature"] .subsystem-compact-source')).toHaveAttribute('href', 'https://example.org/fixture-model');
+    await expect(page.locator('[data-threat-card="oceans"] [data-subsystem-summary="ocean_warming"] .subsystem-mini-range')).toHaveCount(1);
     await expect(page.locator('[data-threat-card="climate"] [data-subsystem-parent="climate"]')).toContainText('Aggregate not identified');
     await expect(page.locator('[data-threat-card="oceans"] [data-subsystem-parent="oceans"]')).toContainText('2058');
     await page.locator('[data-threat-card="climate"] [data-threat-action="toggle-collapse"]').click();

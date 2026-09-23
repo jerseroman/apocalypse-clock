@@ -4,7 +4,7 @@
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
 const MODEL_VERSION = 'Apocalypse Clock v1.3.1-dev';
-const PRIMARY_DATASET_NAME = 'data/data_v1_9_1_2026-09-23.json';
+const PRIMARY_DATASET_NAME = 'data/data_v1_3_timing_2026-09-23.json';
 const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
 const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
 
@@ -585,7 +585,7 @@ let ACTIVE_SOURCE_DATA = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
 let CUSTOM_SOURCE_DATA = null;
 let ACTIVE_EVIDENCE_DATA = null;
 let ACTIVE_SOURCE_DOCUMENT_META = cloneJsonValue(BUNDLED_SOURCE_DATA._meta || {});
-let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data/data_v1_9_1_2026-09-23.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data/data_v1_9_1_2026-09-23.json parameter map embedded in widget as the default primary source.', uploaded:false };
+let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data/data_v1_3_timing_2026-09-23.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget as the default primary source.', uploaded:false };
 let ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
 const cleanSourceText = s => String(s ?? '')
   .replace(/\s*\[(?:cite|web)\s*:[^\]]+\]/gi, '')
@@ -684,9 +684,9 @@ function modelScopeCountLabel() {
 
 function normalizeOptionalHorizonYear(value, fieldName) {
   if (value == null || value === '') return null;
-  const year = Number(value);
-  if (!Number.isFinite(year) || year < 1900 || year > 2200) {
-    throw new Error(`${fieldName} must be null or a finite year between 1900 and 2200.`);
+  const year = typeof value === 'number' ? value : NaN;
+  if (!Number.isFinite(year) || year < 1 || year > 9999) {
+    throw new Error(`${fieldName} must be null or a finite calendar year between 1 and 9999.`);
   }
   return year;
 }
@@ -767,6 +767,11 @@ function normalizeSubsystemComponent(value, parentId, index) {
   if (!Array.isArray(dependencies) || !dependencies.every(dep => typeof dep === 'string' && /^[a-z0-9_]+$/i.test(dep))) {
     throw new Error(`${fieldName}.dependencies must be an array of component ids.`);
   }
+  const timingEvidence = ClockTimingEvidence.normalizeEvidence(value.timing_evidence, `${fieldName}.timing_evidence`);
+  const timingModel = ClockTimingEvidence.normalizeTimingModel(value.timing_model, `${fieldName}.timing_model`);
+  const evidenceIds = new Set(timingEvidence.map(record => record.id));
+  const missingTimingRefs = (timingModel?.evidence_ids || []).filter(id => !evidenceIds.has(id));
+  if (missingTimingRefs.length) throw new Error(`${fieldName}.timing_model refers to unknown timing evidence: ${missingTimingRefs.join(', ')}.`);
   return {
     id,
     name,
@@ -774,6 +779,8 @@ function normalizeSubsystemComponent(value, parentId, index) {
     layer: cleanSourceText(value.layer || 'unspecified'),
     role: cleanSourceText(value.role || 'indicator'),
     timeline: normalizeSubsystemTimeline(value.timeline, `${fieldName}.timeline`),
+    timing_evidence: timingEvidence,
+    timing_model: timingModel,
     literature_horizon: normalizeSubsystemHorizon(value.literature_horizon ?? value.horizons?.literature, `${fieldName}.literature_horizon`),
     model_horizon: normalizeSubsystemHorizon(value.model_horizon ?? value.horizons?.model, `${fieldName}.model_horizon`),
     dependencies: [...new Set(dependencies)],
@@ -807,6 +814,7 @@ function normalizeSubsystemModel(value, parentId) {
     status: cleanSourceText(value.status || 'draft'),
     aggregation_method: cleanSourceText(value.aggregation_method || value.aggregation?.method || 'joint_first_passage'),
     aggregation_note: cleanSourceText(value.aggregation_note || value.aggregation?.note || ''),
+    timing_model: ClockTimingEvidence.normalizeTimingModel(value.timing_model, `${fieldName}.timing_model`),
     aggregate_horizon: normalizeSubsystemHorizon(value.aggregate_horizon ?? value.aggregation?.result, `${fieldName}.aggregate_horizon`),
     components,
   };
@@ -1452,12 +1460,12 @@ function renderSourceRegistry() {
   const overlayActive = !!(ACTIVE_EVIDENCE_META && ACTIVE_EVIDENCE_META.active);
   if (badge) badge.textContent = overlayActive ? 'Evidence overlay active' : ACTIVE_SOURCE_META.uploaded ? 'Custom source map active' : 'Bundled source map active';
   if (fileName) fileName.textContent = overlayActive
-    ? `${ACTIVE_SOURCE_META.fileName || 'data/data_v1_9_1_2026-09-23.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
-    : (ACTIVE_SOURCE_META.fileName || 'data/data_v1_9_1_2026-09-23.json');
+    ? `${ACTIVE_SOURCE_META.fileName || 'data/data_v1_3_timing_2026-09-23.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
+    : (ACTIVE_SOURCE_META.fileName || 'data/data_v1_3_timing_2026-09-23.json');
   if (entryCount) entryCount.textContent = `${summary.entryCount}/${THREAT_SPECS.length * PARAM_FIELDS.length}`;
   if (threatCoverage) threatCoverage.textContent = `${summary.threatCount}/${THREAT_SPECS.length} headline threats`;
   if (mode) mode.textContent = overlayActive ? (ACTIVE_SOURCE_META.uploaded ? 'Custom + Evidence' : 'Bundled + Evidence') : (ACTIVE_SOURCE_META.uploaded ? 'Custom merge' : 'Bundled');
-  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data/data_v1_9_1_2026-09-23.json parameter map embedded in widget as the default primary source.');
+  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget as the default primary source.');
   if (jsonView) jsonView.textContent = serializeActiveSourceMap();
 }
 
@@ -1476,11 +1484,11 @@ function applySourceMap(sourceMap, meta, rerender) {
   rebuildActiveSourceDataFromState();
   ACTIVE_SOURCE_META = {
     mode: meta && meta.mode ? meta.mode : 'bundled',
-    fileName: meta && meta.fileName ? meta.fileName : 'data/data_v1_9_1_2026-09-23.json',
+    fileName: meta && meta.fileName ? meta.fileName : 'data/data_v1_3_timing_2026-09-23.json',
     datasetVersion: meta && meta.datasetVersion
       ? meta.datasetVersion
       : ((meta && meta.uploaded) ? 'custom source map' : (datasetVersionFromSourceMap(sourceMap) || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown')),
-    message: meta && meta.message ? meta.message : 'Bundled data/data_v1_9_1_2026-09-23.json parameter map embedded in widget as the default primary source.',
+    message: meta && meta.message ? meta.message : 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget as the default primary source.',
     uploaded: !!(meta && meta.uploaded),
   };
   rebuildThreatState();
@@ -4142,7 +4150,7 @@ function buildNarrative(scKey, enriched, mcRes) {
 }
 
 
-const SOURCE_DATA_URL = './data/data_v1_9_1_2026-09-23.json';
+const SOURCE_DATA_URL = './data/data_v1_3_timing_2026-09-23.json';
 
 function threatPageUrl(t) {
   return SOURCE_DATA_URL;
@@ -4634,6 +4642,7 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
   const vm = priorityThreatViewModel(t, rank, enriched, mcRes);
   const featureNote = 'Leading systemic threat under selected settings';
   const actionLabel = 'Expand';
+  const compactSubsystem = subsystemCompactRowsHtml(t);
 
   return `<article class="climate-feature-card is-collapsed" data-color="${escapeHtml(threatCardColor(t.domain))}" data-threat-card="${escapeHtml(t.id)}" aria-label="${escapeHtml(t.name)} threat card">
     <div class="t-header">
@@ -4647,10 +4656,15 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
     </div>
     <div class="t-bar-section">
       ${renderTimelineBar(vm.low, vm.mid, vm.high, vm.low, vm.high, t)}
-      ${threatMechanismNoteHtml(t)}
-      ${priorityThreatMetricsHtml(vm)}
-      <div class="t-bar-caption"><strong style="color:var(--text2)">Threshold note:</strong> ${escapeHtml(vm.barMeaning)}</div>
-      <div class="ev-links">${threatSourceLinksHtml(t)}</div>
+      <div class="t-bar-lower${compactSubsystem ? ' has-subsystem' : ''}">
+        <div class="t-bar-context">
+          ${threatMechanismNoteHtml(t)}
+          ${priorityThreatMetricsHtml(vm)}
+          <div class="t-bar-caption"><strong style="color:var(--text2)">Threshold note:</strong> ${escapeHtml(vm.barMeaning)}</div>
+          <div class="ev-links">${threatSourceLinksHtml(t)}</div>
+        </div>
+        ${compactSubsystem}
+      </div>
     </div>
     <div class="t-actions">
       <div class="t-interactions"><strong>Declared interactions:</strong> ${escapeHtml(vm.depNames.join('  ') || 'none recorded')}</div>
@@ -4666,6 +4680,153 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
 
 function subsystemHorizonYearLabel(year) {
   return Number.isFinite(year) ? String(Math.round(year)) : 'Not identified';
+}
+
+function subsystemCompactHorizon(component) {
+  const model = component?.model_horizon;
+  const literature = component?.literature_horizon;
+  if (Number.isFinite(model?.p50_year) || Number.isFinite(model?.p90_year)) return model;
+  if (Number.isFinite(literature?.p50_year) || Number.isFinite(literature?.p90_year)) return literature;
+  return model || literature || normalizeSubsystemHorizon(null, 'component horizon');
+}
+
+function subsystemComponentSourceIds(component) {
+  const selectedHorizon = subsystemCompactHorizon(component);
+  return [...new Set([
+    ...(selectedHorizon?.source_ids || []),
+    ...(component?.timeline || []).flatMap(entry => entry.source_ids || []),
+    ...(component?.model_horizon?.source_ids || []),
+    ...(component?.literature_horizon?.source_ids || []),
+    ...(component?.source_ids || []),
+  ])];
+}
+
+function subsystemSourceRegistryEntries() {
+  return [
+    ACTIVE_SOURCE_DOCUMENT_META?.source_registry,
+    ACTIVE_SOURCE_DOCUMENT_META?.model_component_source_registry,
+  ].flatMap(registry => Array.isArray(registry)
+    ? registry
+    : registry && typeof registry === 'object' ? Object.values(registry) : []);
+}
+
+function subsystemPrimaryTiming(component) {
+  const records = component?.timing_evidence || [];
+  const requested = component?.timing_model?.evidence_ids || [];
+  return requested.map(id => records.find(record => record.id === id)).find(Boolean) || records[0] || null;
+}
+
+function subsystemSourceLinkHtml(component) {
+  const timing = subsystemPrimaryTiming(component);
+  if (timing) {
+    const url = ClockTimingEvidence.describeEvidence(timing).sourceUrl;
+    if (!url) return '<span class="subsystem-compact-source is-missing" title="No source URL for this timing record">Source</span>';
+    return `<a class="subsystem-compact-source" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${escapeHtml(timing.source?.title || timing.event_definition || timing.id)}">Source</a>`;
+  }
+  const records = new Map(subsystemSourceRegistryEntries()
+    .filter(entry => entry && typeof entry === 'object' && entry.id)
+    .map(entry => [String(entry.id), entry]));
+  const source = subsystemComponentSourceIds(component)
+    .map(id => records.get(String(id)))
+    .find(entry => /^https?:\/\//i.test(String(entry?.url || '').trim()));
+  if (!source) return '<span class="subsystem-compact-source is-missing" aria-label="No linked source available">Source</span>';
+  const label = cleanSourceText(source.title || source.source || source.id || 'Source');
+  return `<a class="subsystem-compact-source" href="${escapeHtml(String(source.url).trim())}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${escapeHtml(label)}">Source</a>`;
+}
+
+function subsystemTimelineEntries(component) {
+  const records = component?.timing_evidence || [];
+  if (!records.length) return component?.timeline || [];
+  // Render the same evidence record as the timing label and Source link.
+  // Other records remain available in the existing expanded threat details.
+  const record = subsystemPrimaryTiming(component);
+  const described = ClockTimingEvidence.describeEvidence(record);
+  return [{ year: described.startYear === described.endYear ? described.startYear : null,
+    start_year: described.startYear, end_year: described.endYear, label: `${described.label}: ${described.text}` }];
+}
+
+function subsystemTimelineAxis(components) {
+  const years = components.flatMap(component => subsystemTimelineEntries(component)
+    .flatMap(entry => [entry.year, entry.start_year, entry.end_year])).filter(Number.isFinite);
+  return { start: Math.floor(Math.min(2000, ...years) / 10) * 10,
+    end: Math.ceil(Math.max(2100, ...years) / 10) * 10 };
+}
+
+function subsystemCompactTimelineHtml(component, axis = subsystemTimelineAxis([component])) {
+  const axisStart = axis.start;
+  const axisEnd = axis.end;
+  const clampYear = year => clamp(year, axisStart, axisEnd);
+  const percent = year => ((clampYear(year) - axisStart) / (axisEnd - axisStart)) * 100;
+  const periods = [];
+  const marks = [];
+  const ranges = [];
+
+  subsystemTimelineEntries(component).forEach(entry => {
+    if (Number.isFinite(entry.year)) {
+      periods.push(entry.label || String(Math.round(entry.year)));
+      marks.push(percent(entry.year));
+      return;
+    }
+    if (Number.isFinite(entry.start_year) && Number.isFinite(entry.end_year)) {
+      periods.push(entry.label || `${Math.round(entry.start_year)}–${Math.round(entry.end_year)}`);
+      const left = percent(entry.start_year);
+      const right = percent(entry.end_year);
+      ranges.push({ left: Math.min(left, right), width: Math.max(1.5, Math.abs(right - left)) });
+      return;
+    }
+    const boundary = Number.isFinite(entry.start_year) ? entry.start_year : entry.end_year;
+    if (Number.isFinite(boundary)) {
+      periods.push(entry.label || String(Math.round(boundary)));
+      marks.push(percent(boundary));
+    }
+  });
+
+  if (!periods.length) {
+    return '<span class="subsystem-mini-timeline is-empty" aria-label="No timeline available">—</span>';
+  }
+
+  const uniqueMarks = [...new Set(marks.map(value => value.toFixed(2)))];
+  const ariaLabel = `Timeline ${axisStart}-${axisEnd}: ${periods.join(', ')}`;
+  return `<span class="subsystem-mini-timeline" role="img" aria-label="${escapeHtml(ariaLabel)}" title="${escapeHtml(ariaLabel)}">
+    <span class="subsystem-mini-track" style="--timeline-now:${percent(NOW).toFixed(2)}%" aria-hidden="true">
+      ${ranges.map(range => `<span class="subsystem-mini-range" style="--timeline-left:${range.left.toFixed(2)}%;--timeline-width:${range.width.toFixed(2)}%"></span>`).join('')}
+      ${uniqueMarks.map(left => `<span class="subsystem-mini-mark" style="--timeline-left:${left}%"></span>`).join('')}
+    </span>
+  </span>`;
+}
+
+function subsystemCompactComponentHtml(component, axis) {
+  const horizon = subsystemCompactHorizon(component);
+  const p50 = Number.isFinite(horizon.p50_year) ? String(Math.round(horizon.p50_year)) : '—';
+  const p90 = Number.isFinite(horizon.p90_year) ? String(Math.round(horizon.p90_year)) : '—';
+  const usage = ClockTimingEvidence.componentUsage(component);
+  const timing = subsystemPrimaryTiming(component);
+  const described = timing ? ClockTimingEvidence.describeEvidence(timing) : null;
+  const quantileOrigin = horizon === component.model_horizon ? 'Imported model quantile; not calculated by this run' : 'Reported literature quantile; not used by this run';
+  const timingHtml = described
+    ? `<span class="subsystem-compact-marker" title="${escapeHtml(timing.event_definition)}"><small>${escapeHtml(described.label)}</small><strong>${escapeHtml(described.text)}</strong></span>`
+    : `<span class="subsystem-compact-quant" title="${escapeHtml(quantileOrigin)}"><small>P50</small><strong>${escapeHtml(p50)}</strong></span>
+       <span class="subsystem-compact-quant" title="${escapeHtml(quantileOrigin)}"><small>P90</small><strong>${escapeHtml(p90)}</strong></span>`;
+  return `<div class="subsystem-compact-row" data-subsystem-summary="${escapeHtml(component.id)}">
+    <span class="subsystem-compact-identity"><span class="subsystem-compact-name">${escapeHtml(component.name)}</span><span class="subsystem-usage" data-usage="${escapeHtml(usage.status)}" title="${escapeHtml(usage.reason)}">${escapeHtml(usage.label)}</span></span>
+    ${subsystemCompactTimelineHtml(component, axis)}
+    ${timingHtml}
+    ${subsystemSourceLinkHtml(component)}
+  </div>`;
+}
+
+function subsystemCompactRowsHtml(t) {
+  const model = ACTIVE_SOURCE_DOCUMENT_META?.subsystem_models?.[t.id];
+  if (!model?.components?.length) return '';
+  const axis = subsystemTimelineAxis(model.components);
+  return `<section class="subsystem-compact-panel" data-subsystem-summary-parent="${escapeHtml(t.id)}" aria-label="${escapeHtml(model.title)} subsystem threats">
+    <div class="subsystem-compact-title"><span>Subsystem threats</span><small>${model.components.length}</small></div>
+    <p class="subsystem-use-note">0/${model.components.length} component timelines drive this calculation. This parent still uses headline-level model inputs.</p>
+    <div class="subsystem-compact-columns" aria-hidden="true">
+      <span>Threat / use</span><span>Timeline ${axis.start}-${axis.end}</span><span class="subsystem-timing-heading">Reported timing / quantiles</span><span>Source</span>
+    </div>
+    <div class="subsystem-compact-list">${model.components.map(component => subsystemCompactComponentHtml(component, axis)).join('')}</div>
+  </section>`;
 }
 
 function subsystemHorizonPairHtml(label, horizon) {
@@ -4707,6 +4868,7 @@ function subsystemTimelineHtml(component) {
 }
 
 function subsystemComponentHtml(component) {
+  const usage = ClockTimingEvidence.componentUsage(component);
   const dependencyText = component.dependencies.length
     ? `Direct downstream: ${component.dependencies.join(', ')}`
     : 'No direct downstream component declared.';
@@ -4731,10 +4893,12 @@ function subsystemComponentHtml(component) {
       <div class="subsystem-component-id">${escapeHtml(component.id)}</div>
     </div>
     ${component.description ? `<p class="subsystem-component-description">${escapeHtml(component.description)}</p>` : ''}
+    <p class="subsystem-use-note"><strong>${escapeHtml(usage.label)}.</strong> ${escapeHtml(usage.reason)}</p>
+    ${subsystemTimingEvidenceHtml(component)}
     <div class="subsystem-component-grid">
       <div class="subsystem-timeline-wrap"><div class="subsystem-cell-label">Timeline</div>${subsystemTimelineHtml(component)}</div>
       ${subsystemHorizonPairHtml('Literature horizon', component.literature_horizon)}
-      ${subsystemHorizonPairHtml('Model horizon', component.model_horizon)}
+      ${subsystemHorizonPairHtml('Imported model horizon (not this run)', component.model_horizon)}
     </div>
     <div class="subsystem-component-foot">
       <span>${escapeHtml(dependencyText)}</span>
@@ -4742,6 +4906,27 @@ function subsystemComponentHtml(component) {
       ${sourceIds.length ? `<span>Sources: ${escapeHtml(sourceIds.join(', '))}</span>` : '<span>Sources not yet assigned.</span>'}
     </div>
   </article>`;
+}
+
+function subsystemTimingEvidenceHtml(component) {
+  const records = component.timing_evidence || [];
+  if (!records.length) return '';
+  return `<div class="subsystem-timing-evidence">${records.map(record => {
+    const described = ClockTimingEvidence.describeEvidence(record);
+    const source = described.sourceUrl
+      ? `<a href="${escapeHtml(described.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source</a>` : 'Source URL missing';
+    const quantiles = record.reported_time_quantiles || {};
+    const finiteQuantiles = ['p50_year', 'p90_year'].filter(key => Number.isFinite(quantiles[key]));
+    return `<div class="subsystem-timing-record"><strong>${escapeHtml(described.label)}: ${escapeHtml(described.text)}</strong>
+      <p>${escapeHtml(record.event_definition || '')}</p>
+      <p>${escapeHtml(record.scenario || 'Scenario not specified')} · ${escapeHtml(record.geographic_scope || 'Area not specified')}</p>
+      <p>${source} · ${escapeHtml(record.verification_status || 'Verification not specified')}</p>
+      ${finiteQuantiles.length ? `<p>Reported time quantiles: ${finiteQuantiles.map(key => `${key === 'p50_year' ? 'P50' : 'P90'} ${quantiles[key]}`).join(', ')}</p>` : ''}
+      ${(record.limitations || []).length ? `<p>${record.limitations.map(escapeHtml).join(' ')}</p>` : ''}
+    </div>`;
+  }).join('')}
+    ${component.timing_model ? `<details><summary>Declared mapping (not executed)</summary><pre>${escapeHtml(JSON.stringify(component.timing_model, null, 2))}</pre></details>` : ''}
+  </div>`;
 }
 
 function subsystemInlineDetailHtml(t) {
@@ -4767,7 +4952,7 @@ function subsystemInlineDetailHtml(t) {
       </div>
     </header>
     <div class="subsystem-aggregation-note ${aggregateIdentified ? 'is-identified' : 'is-pending'}">
-      <strong>${aggregateIdentified ? 'Joint subsystem result' : 'Aggregate not identified'}</strong>
+      <strong>${aggregateIdentified ? 'Imported joint result (not this calculation)' : 'Aggregate not identified'}</strong>
       <span>${escapeHtml(model.aggregation_note || horizon.note || defaultNote)}</span>
     </div>
     <div class="subsystem-component-list">${model.components.map(subsystemComponentHtml).join('')}</div>
@@ -5670,6 +5855,8 @@ function exportClockJSON() {
   const sourceTraceabilityLimitations = getSourceTraceabilityLimitations(sourceParameters);
   const payload = {
     exportedAt: new Date().toISOString(),
+    resultStatus: _calculationTraceStatus,
+    resultStatusMeaning: 'The payload always describes its frozen executionSnapshot, not any later edited inputs. Only complete denotes the currently completed run.',
     modelVersion: snapshot.codeIdentifier,
     datasetVersion: snapshot.dataIdentifier,
     primaryDataset: snapshot.primaryDataset,
@@ -5680,6 +5867,8 @@ function exportClockJSON() {
     monteCarloIterations: snapshot.parameters.nSim,
     scenario: d.scenario,
     executionSnapshot: snapshot,
+    sourceDocument: snapshot.sourceDocument || null,
+    transparency: d.transparency || null,
     baselineResult: d.baselineResult || {
       headlineRule: 'Dynamic cascade P90',
       cascadeP10: d.cascadeP10,
@@ -5723,6 +5912,11 @@ function exportClockCSV() {
   };
   const rows = [
     ['metadata_key','metadata_value'],
+    ['resultStatus', _calculationTraceStatus],
+    ['transparencyJson', JSON.stringify(d.transparency || {})],
+    ['sourceDocumentJson', JSON.stringify(snapshot.sourceDocument || {})],
+    ['inputSha256', snapshot.inputSha256 || 'unavailable'],
+    ['inputHashScope', snapshot.inputHashScope || 'unavailable'],
     ['functionalResultsJson', JSON.stringify(d.functionalResults || {})],
     ['executedAt', snapshot.executedAt],
     ['modelVersion', snapshot.codeIdentifier],
@@ -5941,8 +6135,16 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
       cascadeP50: fmtY(mcRes.ensemble.dynamicCascade.p50),
       cascadeP90: fmtY(mcRes.ensemble.dynamicCascade.p90),
       executionSnapshot: runSnapshot,
+      transparency: ClockTransparency.createReport(runSnapshot || {}, {
+        p50: mcRes.ensemble.dynamicCascade.p50,
+        p90: mcRes.ensemble.dynamicCascade.p90,
+        censorFraction: mcRes.ensemble.dynamicCascade.censorFraction,
+        actualRunCount: mcRes.ensemble.dynamicCascade.crossing?.length ?? null,
+      }),
       enriched: JSON.parse(JSON.stringify(enriched)),
     };
+    _calculationTraceStatus = 'complete';
+    renderCalculationTransparency();
     document.getElementById('hyLead').textContent   = fmtY(leadP50);
     if (leadName) leadName.textContent = lead ? `${lead.name} P50` : 'Top threat P50';
     if (leadBox) leadBox.title = lead ? `Top-priority threat: ${lead.name}; individual P50 horizon ${fmtY(leadP50)}` : '';
@@ -6031,6 +6233,12 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
 
 let _running = false;
 let _resultVersion = 0;
+let _calculationTraceStatus = 'pending';
+
+function renderCalculationTransparency() {
+  const host = document.getElementById('calculationTransparencyBody');
+  if (host) ClockTransparency.render(host, window._lastInterpretData?.transparency || null, _calculationTraceStatus);
+}
 
 function updateLoadingProgress(progress) {
   const percent = Math.round(progress * 100);
@@ -6196,6 +6404,7 @@ function numericalCodeFingerprint() {
 
 function createExecutionSnapshot(params) {
   const sourceData = JSON.parse(JSON.stringify(ACTIVE_SOURCE_DATA || {}));
+  const sourceDocument = JSON.parse(serializeActiveSourceMap());
   const numericFields = ['scale', 'urgency', 'acceleration', 'interdependence', 'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
   return freezeDeepCopy({
     executedAt: new Date().toISOString(),
@@ -6237,6 +6446,13 @@ function createExecutionSnapshot(params) {
       threat_specific_cap: growthMetaOfThreat(t).threat_specific_cap ?? null,
     })),
     sourceData,
+    sourceDocument,
+    inputImport: {
+      sourceMode: ACTIVE_SOURCE_META.mode,
+      uploaded: ACTIVE_SOURCE_META.uploaded,
+      mergePolicy: 'Partial source maps inherit unspecified inputs and metadata from the bundled dataset. sourceDocument records the effective merged values, not original upload bytes.',
+      overlay: cloneJsonValue(ACTIVE_EVIDENCE_META),
+    },
     timeBaseline: { nowYear: NOW, horizonStartYear: YS, horizonEndYear: YE },
     quantileRules: { method: 'Type 7 linear interpolation', p10: 0.10, p50: 0.50, p90: 0.90, centralIntervalWidth: 'P90 - P10 (central 80%)' },
     censoringRules: { noCrossingMarker: YE + 1, display: '>2100', weibullUndefinedMedian: 'Finite median beyond horizon: right_censored; non-finite supplied median: invalid. Both retain null point quantiles/probabilities, without fallback; censored medians imply only probability bounds.' },
@@ -6248,6 +6464,23 @@ function createExecutionSnapshot(params) {
   });
 }
 
+async function addExecutionInputHash(snapshot) {
+  const inputHashScope = 'SHA-256 of UTF-8 JSON.stringify(sourceDocument), the effective merged dataset including metadata. Not the original uploaded file bytes.';
+  let inputSha256 = null;
+  let inputHashStatus = 'unavailable';
+  if (globalThis.crypto?.subtle) {
+    try {
+      const bytes = new TextEncoder().encode(JSON.stringify(snapshot.sourceDocument));
+      const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes);
+      inputSha256 = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+      inputHashStatus = 'available';
+    } catch (error) {
+      console.warn('Input digest unavailable; execution snapshot remains exportable.', error);
+    }
+  }
+  return freezeDeepCopy({ ...snapshot, inputSha256, inputHashScope, inputHashStatus });
+}
+
 function resetExploratorySensitivityText() {
   const warn = document.getElementById('exploratorySensWarn');
   if (warn) warn.textContent = 'Low-discrepancy Sobol sampling is used here, but the panel remains a reduced-order screen over 23 effective headline-threat parameters. The 36 nested subsystem components are not independent Sobol inputs in this diagnostic.';
@@ -6257,6 +6490,8 @@ function resetExploratorySensitivityText() {
 
 function invalidateCachedResults() {
   _resultVersion += 1;
+  _calculationTraceStatus = window._lastInterpretData ? 'stale' : 'pending';
+  renderCalculationTransparency();
   _cdfCurves = {};
   _sensData = null;
   _exploratoryData = null;
@@ -6282,6 +6517,8 @@ async function runAll() {
   if (_running) return;
   const runVersion = ++_resultVersion;
   _running = true;
+  _calculationTraceStatus = 'running';
+  renderCalculationTransparency();
   startLoadingIndicator();
   if (window._particleLoader) window._particleLoader.start();
   try {
@@ -6294,7 +6531,8 @@ async function runAll() {
     setCalcStepStatus('scenario', 'running', 'Applying scenario shifts, domain multipliers, and per-threat modifiers.', 'Preparing mathematical inputs for the next model pass.');
     await yieldForCalcConsole();
     const params = snapshotParams(scKey, nSim);
-    const executionSnapshot = createExecutionSnapshot(params);
+    const executionSnapshot = await addExecutionInputHash(createExecutionSnapshot(params));
+    if (runVersion !== _resultVersion) return;
     setCalcStepStatus('scenario', 'done', `${SC[scKey].label} scenario conditioning locked with ${nSim.toLocaleString()} Monte Carlo runs.`, 'Deterministic threat scoring is now running.');
 
     const prog = document.getElementById('mcProgress');
@@ -6424,6 +6662,8 @@ async function runAll() {
     finalizeCalcConsoleSummary();
   } catch (err) {
     console.error('Simulation run failed', err);
+    _calculationTraceStatus = 'failed';
+    renderCalculationTransparency();
     const badge = document.getElementById('simBadge');
     if (badge) badge.innerHTML = '<span class="live-dot"></span>Run failed';
     const state = ensureCalcConsoleState();
@@ -7578,8 +7818,8 @@ document.getElementById('resetSourcesBtn').addEventListener('click', () => {
   if (fileInput) fileInput.value = '';
   applySourceMap(BUNDLED_SOURCE_DATA, {
     mode: 'bundled',
-    fileName: 'data/data_v1_9_1_2026-09-23.json',
-      message: 'Bundled data/data_v1_9_1_2026-09-23.json parameter map restored. Active parameters now match the embedded data/data_v1_9_1_2026-09-23.json file.',
+    fileName: 'data/data_v1_3_timing_2026-09-23.json',
+      message: 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map restored. Active parameters now match the embedded data/data_v1_3_timing_2026-09-23.json file.',
     uploaded: false,
     clearEvidence: true,
   });
@@ -7976,7 +8216,7 @@ function initAiPresetSelector() {
         applySourceMap(BUNDLED_SOURCE_DATA, {
           mode: 'bundled',
           fileName: PRIMARY_DATASET_NAME,
-          message: `Primary Functional JSON restored from the embedded data/data_v1_9_1_2026-09-23.json source map. Active parameters now match the bundled primary dataset.`,
+          message: `Primary Functional JSON restored from the embedded data/data_v1_3_timing_2026-09-23.json source map. Active parameters now match the bundled primary dataset.`,
           uploaded: false,
           clearEvidence: true,
         });
@@ -8034,8 +8274,8 @@ function orderMissionActions() {
 async function initApp() {
   applySourceMap(BUNDLED_SOURCE_DATA, {
     mode: 'bundled',
-    fileName: 'data/data_v1_9_1_2026-09-23.json',
-    message: 'Bundled data/data_v1_9_1_2026-09-23.json parameter map embedded in widget and used as the default primary parameter source.',
+    fileName: 'data/data_v1_3_timing_2026-09-23.json',
+    message: 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget and used as the default primary parameter source.',
     uploaded: false,
   }, false);
   renderSourceRegistry();

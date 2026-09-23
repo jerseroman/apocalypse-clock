@@ -10,7 +10,7 @@ const { test, expect } = require('@playwright/test');
  *   - Seed: AC-1.2.6-2026 (DEFAULT_MC_SEED)
  *   - Monte Carlo iterations: 3000
  *
- * Golden values recorded for model 1.3.1-dev with dataset 1.9.1 on
+ * Golden values recorded for model 1.3.1-dev with dataset 1.3 on
  * 2026-09-23, Chromium-via-Playwright.
  * If you intentionally change model code, update
  * EXPECTED in a single edit and record the change in
@@ -27,7 +27,7 @@ const GOLDEN_NSIM = '3000';
 const EXPECTED = Object.freeze({
   pinnedAt: '2026-09-23',
   modelVersion: 'Apocalypse Clock v1.3.1-dev',
-  datasetVersion: '1.9.1',
+  datasetVersion: '1.3',
   scenario: 'baseline',
   weightProfile: 'expert',
   seed: GOLDEN_SEED,

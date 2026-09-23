@@ -1,6 +1,6 @@
 # Limitations
 
-Apocalypse Clock 1.3.1-dev and dataset 1.9.1 are experimental and not peer reviewed. The initial 1.3 development baseline was a functional copy of model 1.2.9; the current graph correction changes model outputs. A reproducible numerical implementation is distinct from a valid description of reality.
+Apocalypse Clock 1.3.1-dev and dataset 1.3 are experimental and not peer reviewed. The initial 1.3 development baseline was a functional copy of model 1.2.9; the current graph correction changes model outputs. A reproducible numerical implementation is distinct from a valid description of reality.
 
 ## Evidence does not calibrate the model
 
