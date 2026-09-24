@@ -12,7 +12,7 @@ Opredelitev ekosistemskega kolapsa preko značilne strukture in procesov, ne izu
 
 ## Datoteke in uporaba
 
-- [Novi JSON](../data_v1_9_0_functional.json): 23 groženj, osem osnovnih metrik, 184 vnosov, 23 funkcionalnih profilov in 61 različnih virov. Funkcionalni koeficienti so dodatni modelni parametri, ne vključeni v število 184.
+- [Novi JSON](../data_v1_9_0.json): 23 groženj, osem osnovnih metrik, 184 vnosov, 23 funkcionalnih profilov in 61 različnih virov. Funkcionalni koeficienti so dodatni modelni parametri, ne vključeni v število 184.
 - [Ura](../index.html): nova različica podatkov je že vgrajena; dodatni uvoz ni potreben. Potrebna je celotna mapa z `src` in `vendor`, ne le samostojni HTML.
 - [Jedro kaskade](../src/cascade-model.js), [aplikacijska integracija](../src/app.js), [celotna metodologija](../docs/METHODOLOGY.md), [omejitve](../docs/LIMITATIONS.md).
 - Varnostna kopija prejšnje aplikacije: `backups/pre-functional-cascade-2026-09-09`. Izvirna JSON 1.7.1 in 1.8.0 sta ohranjena, ne prepisana.

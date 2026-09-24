@@ -6,10 +6,10 @@ const path = require('node:path');
 // No calendar-year golden or empirical forecast is asserted here. Small Monte
 // Carlo runs test plumbing, finite outputs and invariants, not tail precision.
 const ROOT = path.resolve(__dirname, '..');
-const FUNCTIONAL_FILE = 'data/data_v1_3_timing_2026-09-23.json';
+const FUNCTIONAL_FILE = 'data_v1_9_0.json';
 const LEGACY_FILE = 'data_v1_8_0_evidence_revision.json';
-const EXPECTED_MODEL = 'Apocalypse Clock v1.3.1-dev';
-const EXPECTED_DATASET = '1.3';
+const EXPECTED_MODEL = 'Apocalypse Clock v1.3.0';
+const EXPECTED_DATASET = '1.9.0';
 const RANGE_FIELDS = ['scale', 'urgency', 'acceleration', 'interdependence',
   'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
 
@@ -70,16 +70,15 @@ async function openCollapseCard(page, id) {
 
 async function uploadDataset(page, fileName) {
   const data = readDataset(fileName);
-  const uploadedFileName = path.basename(fileName);
   await openCollapseCard(page, 'sourceRegistryCard');
   const chooserPromise = page.waitForEvent('filechooser');
   await page.locator('label[for="sourceFileInput"]').click();
   await (await chooserPromise).setFiles(path.join(ROOT, fileName));
   await page.waitForFunction(({ fileName, version }) =>
     ACTIVE_SOURCE_META.fileName === fileName && currentDatasetVersion() === version,
-  { fileName: uploadedFileName, version: data._meta.dataset_version }, { timeout: 10000 });
+  { fileName, version: data._meta.dataset_version }, { timeout: 10000 });
   await expect(page.locator('#sourceEntryCount')).toHaveText('184/184');
-  await expect(page.locator('#sourceThreatCoverage')).toHaveText('23/23 headline threats');
+  await expect(page.locator('#sourceThreatCoverage')).toHaveText('23/23 threats');
   await expect(page.locator('#sourceMessage')).not.toContainText('Upload failed');
   return data;
 }
@@ -133,11 +132,6 @@ test.describe('functional model browser integration', () => {
   test('bundled UI starts with the functional model and dataset identities', async ({ page }) => {
     await expect(page).toHaveTitle(/Apocalypse Clock/);
     await expect(page.getByRole('heading', { name: 'Apocalypse Clock' })).toBeVisible();
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /59 risk elements.*23 interacting headline threats.*36 climate\/ocean subsystem components/i);
-    await expect(page.locator('.header-sub')).toContainText('23 interacting headline threats');
-    await expect(page.locator('.header-sub')).toContainText('36 nested Climate Breakdown and Ocean Degradation subsystem components');
-    await expect(page.locator('#hdrMeta')).toContainText('23 headline threats + 36 subsystem components');
-    await expect(page.getByText('Full headline threat register (23) · climate/ocean subsystem layer (36)', { exact: true })).toBeVisible();
     await expect(page.locator('.validation-notice')).toContainText('Astra ULTRA');
     await expect(page.locator('#controlCard')).toHaveCount(0);
     await expect(page.locator('#structuralCard')).toHaveCount(0);
@@ -154,23 +148,6 @@ test.describe('functional model browser integration', () => {
     }));
     expect(state.model).toBe(EXPECTED_MODEL);
     expect(state.dataset).toBe(EXPECTED_DATASET);
-    await openCollapseCard(page, 'sourceRegistryCard');
-    await expect(page.getByRole('button', { name: /Run new data/i })).toBeVisible();
-    await expect(page.locator('#aiPresetBtns')).toBeHidden();
-    const timing = await page.evaluate(() => {
-      const document = window._lastInterpretData.executionSnapshot.sourceDocument;
-      const models = document._meta.subsystem_models;
-      return {
-        climate: models.climate.components.length,
-        oceans: models.oceans.components.length,
-        evidence: [...models.climate.components, ...models.oceans.components]
-          .flatMap(component => component.timing_evidence || []).length,
-        modes: [...models.climate.components, ...models.oceans.components]
-          .map(component => component.timing_model?.mode),
-      };
-    });
-    expect(timing).toMatchObject({ climate: 18, oceans: 18, evidence: 45 });
-    expect(timing.modes.every(mode => mode === 'display_only')).toBe(true);
     expect(state.threatCount).toBe(23);
     expect(state.count).toBe(184);
     expect(state.snapshot.codeIdentifier).toBe(EXPECTED_MODEL);
@@ -180,11 +157,6 @@ test.describe('functional model browser integration', () => {
     expect(Object.keys(state.functional.domains).sort()).toEqual(['biosphere', 'civilization', 'technology']);
     Object.values(state.functional.domains).forEach(expectQuantiles);
     expectThreatSummaries(state.functional.propagated, state.functional.standalone);
-    await page.evaluate(() => { window.__beforeRunRef = window._lastInterpretData; });
-    await page.getByRole('button', { name: /Run new data/i }).click();
-    await page.waitForFunction(() => !_running && window._lastInterpretData !== window.__beforeRunRef,
-      undefined, { timeout: 45000 });
-    expect(await page.evaluate(() => _calculationTraceStatus)).toBe('complete');
   });
 
   test('main CDF follows the Dynamic Cascade clocks and Weibull reports censoring bounds without undefined values', async ({ page }) => {
@@ -206,7 +178,7 @@ test.describe('functional model browser integration', () => {
         compensatoryP2050: result.cdf.find(point => point.year === 2050).prob,
       };
     });
-    expect(cdf.legend).toContain(`Baseline Dynamic Cascade P50: ${cdf.expectedQuantiles[1]}`);
+    expect(cdf.legend).toContain('Baseline Dynamic Cascade P50: 2036');
     expect(cdf.displayedMarkers).toEqual(cdf.expectedQuantiles);
     expect(cdf.displayedP2050).toBeCloseTo(cdf.expectedP2050, 4);
     expect(cdf.displayedP2050).not.toBeCloseTo(cdf.compensatoryP2050, 2);
@@ -268,159 +240,6 @@ test.describe('functional model browser integration', () => {
       expect(functionalFields(threat.threshold)).toEqual(expected);
       expect(functionalFields(threat)).toEqual(expected);
     }
-  });
-
-  test('explicit scientific evidence and parameter calibration grades remain separate on import', async ({ page }) => {
-    const state = await page.evaluate(() => {
-      const payload = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
-      payload._meta = {
-        ...payload._meta,
-        evidence_schema_version: '1.0',
-        threat_evidence: {
-          climate: {
-            phenomenon_grade: 'A',
-            causal_mechanism_grade: 'B',
-            systemic_relevance_grade: 'A',
-            rationale: 'Targeted evidence-schema regression fixture.',
-            source_ids: ['fixture-source'],
-            assessed_at: '2026-09-23',
-          },
-        },
-      };
-      payload['climate.scale'] = {
-        ...payload['climate.scale'],
-        parameter_evidence: {
-          calibration_grade: 'B',
-          mapping_type: 'validated_proxy_mapping',
-          rationale: 'Targeted parameter-grade regression fixture.',
-          source_ids: ['fixture-source'],
-        },
-      };
-      const sanitized = sanitizeSourceMap(payload);
-      applySourceMap(sanitized, {
-        mode: 'custom',
-        fileName: 'evidence-schema-fixture.json',
-        datasetVersion: 'evidence-schema-fixture',
-        uploaded: true,
-      }, false);
-      const climate = THREATS.find(threat => threat.id === 'climate');
-      return {
-        entryCount: summarizeSourceMap(ACTIVE_SOURCE_DATA).entryCount,
-        activeKeys: Object.keys(ACTIVE_SOURCE_DATA).length,
-        documentEvidence: ACTIVE_SOURCE_DOCUMENT_META.threat_evidence.climate,
-        parameterEvidence: ACTIVE_SOURCE_DATA['climate.scale'].parameter_evidence,
-        scientific: scientificEvidenceForThreat(climate),
-        calibration: parameterCalibrationProfileForThreat(climate),
-        scientificCell: scientificEvidenceCellHtml(climate),
-        calibrationCell: parameterCalibrationCellHtml(climate),
-        serialized: JSON.parse(serializeActiveSourceMap()),
-      };
-    });
-
-    expect(state.entryCount).toBe(184);
-    expect(state.activeKeys).toBe(184);
-    expect(state.documentEvidence.phenomenon_grade).toBe('A');
-    expect(state.parameterEvidence.calibration_grade).toBe('B');
-    expect(state.scientific).toMatchObject({ grade: 'A', phenomenonGrade: 'A', mechanismGrade: 'B', systemicGrade: 'A' });
-    expect(state.calibration.label).toBe('1B / 5C / 2D');
-    expect(state.calibration.legacyFallback).toBe(false);
-    expect(state.scientificCell).toContain('A/B/A');
-    expect(state.calibrationCell).toContain('1B / 5C / 2D');
-    expect(state.serialized._meta.threat_evidence.climate.phenomenon_grade).toBe('A');
-    expect(state.serialized['climate.scale'].parameter_evidence.calibration_grade).toBe('B');
-  });
-
-  test('climate and ocean subsystem metadata renders separate timelines and literature/model horizons', async ({ page }) => {
-    const state = await page.evaluate(() => {
-      const payload = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
-      payload._meta = {
-        ...payload._meta,
-        source_registry: [
-          ...(payload._meta.source_registry || []),
-          { id: 'fixture-climate', title: 'Fixture climate source', url: 'https://example.org/fixture-climate' },
-          { id: 'fixture-ocean', title: 'Fixture ocean source', url: 'https://example.org/fixture-ocean' },
-          { id: 'fixture-model', title: 'Fixture model source', url: 'https://example.org/fixture-model' },
-        ],
-        subsystem_models: {
-          climate: {
-            title: 'Climate Breakdown',
-            status: 'draft',
-            aggregation_method: 'joint_first_passage',
-            aggregation_note: 'Joint fixture result; not a median of component quantiles.',
-            aggregate_horizon: {
-              p50_year: null,
-              p90_year: null,
-              status: 'not_identified',
-              note: 'Awaiting joint simulation.',
-            },
-            components: [{
-              id: 'global_mean_surface_temperature',
-              name: 'Global mean surface temperature',
-              layer: 'physical_state',
-              role: 'indicator',
-              timeline: [{ year: 2050, label: 'Fixture projection', scenario: 'SSP2-4.5', metric: 'temperature', value: 1.8, unit: 'degC', source_ids: ['fixture-climate'] }],
-              literature_horizon: { p50_year: null, p90_year: null, status: 'not_reported', source_ids: ['fixture-climate'] },
-              model_horizon: { p50_year: 2054, p90_year: 2072, status: 'identified', distribution: 'fixture', source_ids: ['fixture-model'] },
-              dependencies: [],
-              overlap_group: 'temperature_state',
-              evidence_grade: 'A',
-              calibration_grade: 'C',
-              source_ids: ['fixture-climate'],
-            }],
-          },
-          oceans: {
-            title: 'Ocean Degradation',
-            status: 'draft',
-            aggregation_method: 'joint_first_passage',
-            aggregate_horizon: { p50_year: 2058, p90_year: 2084, status: 'identified', scenario: 'fixture' },
-            components: [{
-              id: 'ocean_warming',
-              name: 'Ocean warming',
-              layer: 'physical_state',
-              role: 'input',
-              timeline: [{ start_year: 2040, end_year: 2060, label: 'Fixture interval', source_ids: ['fixture-ocean'] }],
-              literature_horizon: { p50_year: 2051, p90_year: 2078, status: 'reported', source_ids: ['fixture-ocean'] },
-              model_horizon: { p50_year: 2055, p90_year: 2080, status: 'identified', source_ids: ['fixture-model'] },
-              dependencies: [],
-              evidence_grade: 'A',
-              calibration_grade: 'B',
-              source_ids: ['fixture-ocean'],
-            }],
-          },
-        },
-      };
-      const sanitized = sanitizeSourceMap(payload);
-      applySourceMap(sanitized, {
-        mode: 'custom',
-        fileName: 'subsystem-fixture.json',
-        datasetVersion: 'subsystem-fixture',
-        uploaded: true,
-      }, false);
-      renderClimateBreakdownDetail(buildEnriched(currentScenario()), null);
-      return {
-        climate: ACTIVE_SOURCE_DOCUMENT_META.subsystem_models.climate,
-        oceans: ACTIVE_SOURCE_DOCUMENT_META.subsystem_models.oceans,
-        serialized: JSON.parse(serializeActiveSourceMap())._meta.subsystem_models,
-      };
-    });
-
-    expect(state.climate.aggregate_horizon.p50_year).toBeNull();
-    expect(state.climate.components[0].model_horizon).toMatchObject({ p50_year: 2054, p90_year: 2072 });
-    expect(state.oceans.aggregate_horizon).toMatchObject({ p50_year: 2058, p90_year: 2084 });
-    expect(state.serialized.climate.components[0].literature_horizon.status).toBe('not_reported');
-    await expect(page.locator('#subsystemModelsPanel')).toHaveCount(0);
-    await expect(page.locator('[data-threat-card="climate"]')).toHaveCount(1);
-    await expect(page.locator('[data-threat-card="oceans"]')).toHaveCount(1);
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-summary-parent="climate"]')).toBeVisible();
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-summary="global_mean_surface_temperature"]')).toContainText('2054');
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-summary="global_mean_surface_temperature"] .subsystem-compact-source')).toHaveAttribute('href', 'https://example.org/fixture-model');
-    await expect(page.locator('[data-threat-card="oceans"] [data-subsystem-summary="ocean_warming"] .subsystem-mini-range')).toHaveCount(1);
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-parent="climate"]')).toContainText('Aggregate not identified');
-    await expect(page.locator('[data-threat-card="oceans"] [data-subsystem-parent="oceans"]')).toContainText('2058');
-    await page.locator('[data-threat-card="climate"] [data-threat-action="toggle-collapse"]').click();
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-component="global_mean_surface_temperature"]')).toBeVisible();
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-component="global_mean_surface_temperature"]')).toContainText('Fixture projection');
-    await expect(page.locator('[data-threat-card="climate"] [data-subsystem-component="global_mean_surface_temperature"]')).toContainText('2054');
   });
 
   test('a complete 1.8.0 source map imports while fixed functional catalog settings remain available', async ({ page }) => {
@@ -516,7 +335,7 @@ test.describe('functional model browser integration', () => {
     }));
     expect(run.snapshot.codeIdentifier).toBe(EXPECTED_MODEL);
     expect(run.snapshot.dataIdentifier).toBe(EXPECTED_DATASET);
-    expect(run.snapshot.activeDataset).toBe(path.basename(FUNCTIONAL_FILE));
+    expect(run.snapshot.activeDataset).toBe(FUNCTIONAL_FILE);
     expect(run.snapshot.threatInputs).toHaveLength(23);
     for (const input of run.snapshot.threatInputs) {
       expect(functionalFields(input)).toEqual(functionalFields(data[`${input.id}.threshold`]));

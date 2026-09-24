@@ -11,7 +11,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 BASELINE = ROOT / "data_v1_8_0_evidence_revision.json"
-OUTPUT = ROOT / "data_v1_9_0_functional.json"
+OUTPUT = ROOT / "data_v1_9_0.json"
 DATE = "2026-09-09"
 KINDS = {"near_flat": [0.0005, 0.003, 0.015], "slow": [0.001, 0.01, 0.025], "moderate": [0.003, 0.02, 0.04], "rapid": [0.006, 0.03, 0.05]}
 SERVICES = {"ecological_life_support": "Ecological and climatic regulation", "food_water": "Food and usable-water provision", "health_care": "Infection control and health-care continuity", "coordination_exchange": "Coordination, information and exchange", "critical_infrastructure": "Essential technical infrastructure"}

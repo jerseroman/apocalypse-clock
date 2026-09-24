@@ -1,6 +1,6 @@
 # Limitations
 
-Apocalypse Clock 1.3.1-dev and dataset 1.3 are experimental and not peer reviewed. The initial 1.3 development baseline was a functional copy of model 1.2.9; the current graph correction changes model outputs. A reproducible numerical implementation is distinct from a valid description of reality.
+Apocalypse Clock 1.3.0 and dataset 1.9.0 are experimental and not peer reviewed. A reproducible numerical implementation is distinct from a valid description of reality.
 
 ## Evidence does not calibrate the model
 
@@ -24,7 +24,7 @@ Standalone priorities retain the historical background depFactor. The new suscep
 
 Interdependence now measures target incoming vulnerability. Its transformation together with governance failure into kappa is heuristic. Related evidence may inform both scores; their combination must not be presented as independent statistical evidence.
 
-Most active incoming pathways receive equal fixed shares for each target. Climate is the exception: after removing the direct geopolitics link, its other three links retain weight 0.25 each, rather than being renormalized. Mechanism evidence does not establish equal strength, completeness or sign in every context. Some topology is retained rather than newly verified. A sole declared upstream pathway receives weight one, while adding a pathway and renormalizing changes every existing share. Coefficient comparisons are monotone only when existing weights and other inputs are held fixed. Older dependency declarations remain in the unchanged JSON for compatibility but are not active model inputs.
+All current incoming pathways receive equal fixed shares for each target. Mechanism evidence does not establish equal strength, completeness or sign in every context. Some topology is retained rather than newly verified. A sole declared upstream pathway receives weight one, while adding a pathway and renormalizing changes every existing share. Coefficient comparisons are monotone only when existing weights and other inputs are held fixed.
 
 The standard one-year lag is a resolution assumption. Zero- and five-year alternatives are structural sensitivity cases, not empirical lower and upper delay bounds. Synchronous fixed-point closure handles zero-lag chains without ordering bias, but does not resolve subannual dynamics. Binary activation also suppresses gradual, regional and partial functional losses.
 

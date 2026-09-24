@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
 async function main() {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const browser = await chromium.launch();
-  const report = { scope:'Engineering correctness and sensitivity, not predictive validity', seed:'AC-1.2.6-2026', dataset_sha256:hash(path.join(root,'data_v1_9_0_functional.json')) };
+  const report = { scope:'Engineering correctness and sensitivity, not predictive validity', seed:'AC-1.2.6-2026', dataset_sha256:hash(path.join(root,'data_v1_9_0.json')) };
   try {
     const page = await browser.newPage({ viewport:{width:1280,height:900} });
     const errors = []; page.on('pageerror', e => errors.push(e.message));

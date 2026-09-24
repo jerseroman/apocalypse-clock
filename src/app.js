@@ -3,8 +3,8 @@
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
-const MODEL_VERSION = 'Apocalypse Clock v1.3.1-dev';
-const PRIMARY_DATASET_NAME = 'data/data_v1_3_timing_2026-09-23.json';
+const MODEL_VERSION = 'Apocalypse Clock v1.3.0';
+const PRIMARY_DATASET_NAME = 'data_v1_9_0.json';
 const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
 const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
 
@@ -584,8 +584,8 @@ function currentDatasetVersion() {
 let ACTIVE_SOURCE_DATA = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
 let CUSTOM_SOURCE_DATA = null;
 let ACTIVE_EVIDENCE_DATA = null;
-let ACTIVE_SOURCE_DOCUMENT_META = cloneJsonValue(BUNDLED_SOURCE_DATA._meta || {});
-let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data/data_v1_3_timing_2026-09-23.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget as the default primary source.', uploaded:false };
+let ACTIVE_SOURCE_DOCUMENT_META = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA._meta || {}));
+let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data_v1_9_0.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data_v1_9_0.json parameter map embedded in widget as the default primary source.', uploaded:false };
 let ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
 const cleanSourceText = s => String(s ?? '')
   .replace(/\s*\[(?:cite|web)\s*:[^\]]+\]/gi, '')
@@ -614,261 +614,27 @@ function confidenceGradeFromStrength(strength) {
 
 const EVIDENCE_GRADES = Object.freeze(['A', 'B', 'C', 'D', 'U']);
 
-function normalizeEvidenceGrade(value, fallback = 'U', fieldName = 'evidence grade') {
+function normalizeEvidenceGrade(value, fallback = 'U') {
   if (value == null || String(value).trim() === '') return fallback;
   const grade = String(value).trim().toUpperCase();
-  if (!EVIDENCE_GRADES.includes(grade)) {
-    throw new Error(`Invalid ${fieldName}: ${value}. Expected A, B, C, D or U.`);
-  }
-  return grade;
-}
-
-function cleanEvidenceSourceIds(value) {
-  if (value == null) return [];
-  if (!Array.isArray(value) || !value.every(id => typeof id === 'string')) {
-    throw new Error('Evidence source_ids must be an array of strings.');
-  }
-  return [...new Set(value.map(id => id.trim()).filter(Boolean))];
-}
-
-function normalizeParameterEvidence(value) {
-  if (value == null) return null;
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error('parameter_evidence must be an object.');
-  }
-  const rawGrade = value.calibration_grade ?? value.parameter_calibration_grade ?? value.evidence_grade;
-  return {
-    calibration_grade: normalizeEvidenceGrade(rawGrade, 'U', 'parameter calibration grade'),
-    mapping_type: cleanSourceText(value.mapping_type || ''),
-    directness: cleanSourceText(value.directness || ''),
-    assessment_status: cleanSourceText(value.assessment_status || ''),
-    rationale: cleanSourceText(value.rationale || ''),
-    source_ids: cleanEvidenceSourceIds(value.source_ids),
-    assessed_at: typeof value.assessed_at === 'string' ? value.assessed_at.trim() : '',
-  };
-}
-
-function normalizeThreatEvidenceEntry(value, threatId = '') {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error(`Threat evidence for ${threatId || 'unknown threat'} must be an object.`);
-  }
-  return {
-    scientific_evidence_grade: normalizeEvidenceGrade(value.scientific_evidence_grade ?? value.summary_grade ?? value.evidence_grade, 'U', `${threatId}.scientific_evidence_grade`),
-    phenomenon_grade: normalizeEvidenceGrade(value.phenomenon_grade, 'U', `${threatId}.phenomenon_grade`),
-    causal_mechanism_grade: normalizeEvidenceGrade(value.causal_mechanism_grade, 'U', `${threatId}.causal_mechanism_grade`),
-    systemic_relevance_grade: normalizeEvidenceGrade(value.systemic_relevance_grade, 'U', `${threatId}.systemic_relevance_grade`),
-    assessment_status: cleanSourceText(value.assessment_status || ''),
-    rationale: cleanSourceText(value.rationale || ''),
-    source_ids: cleanEvidenceSourceIds(value.source_ids),
-    assessed_at: typeof value.assessed_at === 'string' ? value.assessed_at.trim() : '',
-  };
-}
-
-const SUBSYSTEM_PARENT_IDS = Object.freeze(['climate', 'oceans']);
-const EXPECTED_SUBSYSTEM_COMPONENT_COUNT = 36;
-
-function activeSubsystemComponentCount() {
-  const models = ACTIVE_SOURCE_DOCUMENT_META?.subsystem_models || {};
-  return SUBSYSTEM_PARENT_IDS.reduce((sum, parentId) => {
-    const components = models[parentId]?.components;
-    return sum + (Array.isArray(components) ? components.length : 0);
-  }, 0);
-}
-
-function modelScopeCountLabel() {
-  const activeComponents = activeSubsystemComponentCount();
-  return activeComponents
-    ? `${THREATS.length} headline threats + ${activeComponents} subsystem components`
-    : `${THREATS.length} headline threats + ${EXPECTED_SUBSYSTEM_COMPONENT_COUNT}-component subsystem schema`;
-}
-
-function normalizeOptionalHorizonYear(value, fieldName) {
-  if (value == null || value === '') return null;
-  const year = typeof value === 'number' ? value : NaN;
-  if (!Number.isFinite(year) || year < 1 || year > 9999) {
-    throw new Error(`${fieldName} must be null or a finite calendar year between 1 and 9999.`);
-  }
-  return year;
-}
-
-function normalizeSubsystemHorizon(value, fieldName) {
-  if (value == null) {
-    return {
-      p50_year: null,
-      p90_year: null,
-      status: 'not_identified',
-      scenario: '',
-      threshold_definition: '',
-      distribution: '',
-      note: '',
-      source_ids: [],
-    };
-  }
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error(`${fieldName} must be an object.`);
-  }
-  const p50 = normalizeOptionalHorizonYear(value.p50_year ?? value.p50, `${fieldName}.p50_year`);
-  const p90 = normalizeOptionalHorizonYear(value.p90_year ?? value.p90, `${fieldName}.p90_year`);
-  if (p50 != null && p90 != null && p90 < p50) {
-    throw new Error(`${fieldName}.p90_year must not be earlier than p50_year.`);
-  }
-  return {
-    p50_year: p50,
-    p90_year: p90,
-    status: cleanSourceText(value.status || (p50 == null && p90 == null ? 'not_identified' : 'identified')),
-    scenario: cleanSourceText(value.scenario || ''),
-    threshold_definition: cleanSourceText(value.threshold_definition || value.threshold || ''),
-    distribution: cleanSourceText(value.distribution || ''),
-    note: cleanSourceText(value.note || ''),
-    source_ids: cleanEvidenceSourceIds(value.source_ids),
-  };
-}
-
-function normalizeSubsystemTimeline(value, fieldName) {
-  if (value == null) return [];
-  if (!Array.isArray(value)) throw new Error(`${fieldName} must be an array.`);
-  return value.map((entry, index) => {
-    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
-      throw new Error(`${fieldName}[${index}] must be an object.`);
-    }
-    const year = normalizeOptionalHorizonYear(entry.year, `${fieldName}[${index}].year`);
-    const startYear = normalizeOptionalHorizonYear(entry.start_year, `${fieldName}[${index}].start_year`);
-    const endYear = normalizeOptionalHorizonYear(entry.end_year, `${fieldName}[${index}].end_year`);
-    if (startYear != null && endYear != null && endYear < startYear) {
-      throw new Error(`${fieldName}[${index}].end_year must not be earlier than start_year.`);
-    }
-    if (year == null && startYear == null && endYear == null) {
-      throw new Error(`${fieldName}[${index}] must identify a year or year range.`);
-    }
-    return {
-      year,
-      start_year: startYear,
-      end_year: endYear,
-      label: cleanSourceText(entry.label || entry.description || ''),
-      scenario: cleanSourceText(entry.scenario || ''),
-      metric: cleanSourceText(entry.metric || ''),
-      value: Number.isFinite(entry.value) ? Number(entry.value) : null,
-      unit: cleanSourceText(entry.unit || ''),
-      source_ids: cleanEvidenceSourceIds(entry.source_ids),
-    };
-  });
-}
-
-function normalizeSubsystemComponent(value, parentId, index) {
-  const fieldName = `_meta.subsystem_models.${parentId}.components[${index}]`;
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error(`${fieldName} must be an object.`);
-  }
-  const id = String(value.id || '').trim();
-  const name = cleanSourceText(value.name || '');
-  if (!/^[a-z0-9_]+$/i.test(id)) throw new Error(`${fieldName}.id is invalid.`);
-  if (!name) throw new Error(`${fieldName}.name is required.`);
-  const dependencies = value.dependencies == null ? [] : value.dependencies;
-  if (!Array.isArray(dependencies) || !dependencies.every(dep => typeof dep === 'string' && /^[a-z0-9_]+$/i.test(dep))) {
-    throw new Error(`${fieldName}.dependencies must be an array of component ids.`);
-  }
-  const timingEvidence = ClockTimingEvidence.normalizeEvidence(value.timing_evidence, `${fieldName}.timing_evidence`);
-  const timingModel = ClockTimingEvidence.normalizeTimingModel(value.timing_model, `${fieldName}.timing_model`);
-  const evidenceIds = new Set(timingEvidence.map(record => record.id));
-  const missingTimingRefs = (timingModel?.evidence_ids || []).filter(id => !evidenceIds.has(id));
-  if (missingTimingRefs.length) throw new Error(`${fieldName}.timing_model refers to unknown timing evidence: ${missingTimingRefs.join(', ')}.`);
-  return {
-    id,
-    name,
-    description: cleanSourceText(value.description || ''),
-    layer: cleanSourceText(value.layer || 'unspecified'),
-    role: cleanSourceText(value.role || 'indicator'),
-    timeline: normalizeSubsystemTimeline(value.timeline, `${fieldName}.timeline`),
-    timing_evidence: timingEvidence,
-    timing_model: timingModel,
-    literature_horizon: normalizeSubsystemHorizon(value.literature_horizon ?? value.horizons?.literature, `${fieldName}.literature_horizon`),
-    model_horizon: normalizeSubsystemHorizon(value.model_horizon ?? value.horizons?.model, `${fieldName}.model_horizon`),
-    dependencies: [...new Set(dependencies)],
-    overlap_group: /^[a-z0-9_]+$/i.test(String(value.overlap_group || '')) ? String(value.overlap_group) : '',
-    critical_gate: value.critical_gate === true,
-    evidence_grade: normalizeEvidenceGrade(value.evidence_grade ?? value.scientific_evidence_grade, 'U', `${fieldName}.evidence_grade`),
-    calibration_grade: normalizeEvidenceGrade(value.calibration_grade ?? value.parameter_calibration_grade, 'U', `${fieldName}.calibration_grade`),
-    source_ids: cleanEvidenceSourceIds(value.source_ids),
-  };
-}
-
-function normalizeSubsystemModel(value, parentId) {
-  const fieldName = `_meta.subsystem_models.${parentId}`;
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error(`${fieldName} must be an object.`);
-  }
-  const rawComponents = value.components ?? value.subthreats;
-  if (!Array.isArray(rawComponents)) throw new Error(`${fieldName}.components must be an array.`);
-  const components = rawComponents.map((entry, index) => normalizeSubsystemComponent(entry, parentId, index));
-  const ids = components.map(component => component.id);
-  const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
-  if (duplicates.length) throw new Error(`${fieldName} contains duplicate component ids: ${[...new Set(duplicates)].join(', ')}.`);
-  const idSet = new Set(ids);
-  const brokenDependencies = components.flatMap(component => component.dependencies
-    .filter(dep => !idSet.has(dep))
-    .map(dep => `${component.id} -> ${dep}`));
-  if (brokenDependencies.length) throw new Error(`${fieldName} contains unknown component dependencies: ${brokenDependencies.join(', ')}.`);
-  return {
-    parent_threat_id: parentId,
-    title: cleanSourceText(value.title || (parentId === 'climate' ? 'Climate Breakdown' : 'Ocean Degradation')),
-    status: cleanSourceText(value.status || 'draft'),
-    aggregation_method: cleanSourceText(value.aggregation_method || value.aggregation?.method || 'joint_first_passage'),
-    aggregation_note: cleanSourceText(value.aggregation_note || value.aggregation?.note || ''),
-    timing_model: ClockTimingEvidence.normalizeTimingModel(value.timing_model, `${fieldName}.timing_model`),
-    aggregate_horizon: normalizeSubsystemHorizon(value.aggregate_horizon ?? value.aggregation?.result, `${fieldName}.aggregate_horizon`),
-    components,
-  };
+  return EVIDENCE_GRADES.includes(grade) ? grade : fallback;
 }
 
 function cloneJsonValue(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
 }
 
-function mergeJsonObjects(base, override) {
-  const left = base && typeof base === 'object' && !Array.isArray(base) ? base : {};
-  const right = override && typeof override === 'object' && !Array.isArray(override) ? override : {};
-  const merged = { ...cloneJsonValue(left) };
-  Object.entries(right).forEach(([key, value]) => {
-    if (value && typeof value === 'object' && !Array.isArray(value) && merged[key] && typeof merged[key] === 'object' && !Array.isArray(merged[key])) {
-      merged[key] = mergeJsonObjects(merged[key], value);
-    } else {
-      merged[key] = cloneJsonValue(value);
-    }
-  });
-  return merged;
+function normalizeParameterEvidence(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  return {
+    calibration_grade: normalizeEvidenceGrade(value.calibration_grade ?? value.parameter_calibration_grade ?? value.evidence_grade),
+    mapping_type: cleanSourceText(value.mapping_type || ''),
+    directness: cleanSourceText(value.directness || ''),
+    assessment_status: cleanSourceText(value.assessment_status || ''),
+    rationale: cleanSourceText(value.rationale || ''),
+    assessed_at: typeof value.assessed_at === 'string' ? value.assessed_at.trim() : '',
+  };
 }
-
-function sanitizeSourceDocumentMeta(meta) {
-  if (meta == null) return {};
-  if (!meta || typeof meta !== 'object' || Array.isArray(meta)) {
-    throw new Error('_meta must be an object.');
-  }
-  const sanitized = cloneJsonValue(meta);
-  if (meta.threat_evidence != null) {
-    if (!meta.threat_evidence || typeof meta.threat_evidence !== 'object' || Array.isArray(meta.threat_evidence)) {
-      throw new Error('_meta.threat_evidence must be an object keyed by threat id.');
-    }
-    sanitized.threat_evidence = {};
-    Object.entries(meta.threat_evidence).forEach(([id, value]) => {
-      if (!/^[a-z0-9_]+$/i.test(id)) throw new Error(`Invalid threat evidence id: ${id}`);
-      sanitized.threat_evidence[id] = normalizeThreatEvidenceEntry(value, id);
-    });
-  }
-  if (meta.subsystem_models != null) {
-    if (!meta.subsystem_models || typeof meta.subsystem_models !== 'object' || Array.isArray(meta.subsystem_models)) {
-      throw new Error('_meta.subsystem_models must be an object keyed by parent threat id.');
-    }
-    sanitized.subsystem_models = {};
-    Object.entries(meta.subsystem_models).forEach(([id, value]) => {
-      if (!SUBSYSTEM_PARENT_IDS.includes(id)) {
-        throw new Error(`Unsupported subsystem parent id: ${id}. Expected climate or oceans.`);
-      }
-      sanitized.subsystem_models[id] = normalizeSubsystemModel(value, id);
-    });
-  }
-  return sanitized;
-}
-
 function rangeMetaOf(x) {
   const meta = x && typeof x === 'object' ? x : {};
   return {
@@ -950,7 +716,6 @@ function normalizeSourceEntry(entry, fallbackSource, fallbackStrength) {
           directness: entry.directness,
           assessment_status: entry.assessment_status,
           rationale: entry.rationale,
-          source_ids: entry.source_ids,
           assessed_at: entry.assessed_at,
         }
       : null
@@ -1026,9 +791,7 @@ function sourceBackedRange(spec, field) {
 
 function makeThreat(spec) {
   const threshold = sourceBackedRange(spec, 'threshold');
-  const fallback = ACTIVE_SOURCE_DOCUMENT_META?.functional_model?.nodes?.[spec.id]
-    || BUNDLED_SOURCE_DATA._meta?.functional_model?.nodes?.[spec.id]
-    || {};
+  const fallback = BUNDLED_SOURCE_DATA._meta?.functional_model?.nodes?.[spec.id] || {};
   const dependencyWeights = threshold.dependency_weights || fallback.dependency_weights;
   return {
     ...spec,
@@ -1056,136 +819,159 @@ const THREAT_SPECS = [
     source:'IPCC AR6 Synthesis Report, Summary for Policymakers (2023)',
     scale:5, urgency:5, acceleration:4.8, interdependence:5, irreversibility:4.8, gov_failure:4.2,
     growth_rate:0.010, threshold:8.8,
+    deps:['water','soils','geopolitics','oceans'],
     mechanism:'Warming, tipping cascades, crop loss, sea-level rise, compound extremes' }),
 
   ({ id:'biodiversity', name:'Biodiversity Loss', domain:'biosphere', category:'Biosphere', evStr:'strong', process_type:'continuous',
     source:'IPBES Global Assessment Report on Biodiversity and Ecosystem Services (2019)',
     scale:5, urgency:5, acceleration:4.7, interdependence:5, irreversibility:5, gov_failure:4.5,
     growth_rate:0.012, threshold:9.0,
+    deps:['climate','soils','oceans'],
     mechanism:'Mass extinction, ecosystem collapse, food-web breakdown' }),
 
   ({ id:'soils', name:'Soil & Food System', domain:'biosphere', category:'Food', evStr:'strong', process_type:'continuous',
     source:'FAO The State of the World’s Land and Water Resources for Food and Agriculture 2021',
     scale:4, urgency:4, acceleration:4.2, interdependence:5, irreversibility:4.0, gov_failure:4.2,
     growth_rate:0.009, threshold:8.0,
+    deps:['climate','water'],
     mechanism:'Topsoil depletion, desertification, agricultural capacity loss' }),
 
   ({ id:'water', name:'Freshwater Stress', domain:'biosphere', category:'Water', evStr:'strong', process_type:'continuous',
     source:'WMO State of Global Water Resources 2023 (2024)',
     scale:5, urgency:5, acceleration:4.6, interdependence:5, irreversibility:4.1, gov_failure:4.3,
     growth_rate:0.011, threshold:8.8,
+    deps:['climate','soils','geopolitics'],
     mechanism:'Aquifer depletion, glacial retreat, demand-supply gap' }),
 
   ({ id:'oceans', name:'Ocean Degradation', domain:'biosphere', category:'Oceans', evStr:'strong', process_type:'continuous',
     source:'UNESCO State of the Ocean Report 2024',
     scale:5, urgency:4, acceleration:4.1, interdependence:5, irreversibility:4.4, gov_failure:4.5,
     growth_rate:0.014, threshold:8.0,
+    deps:['climate','biodiversity'],
     mechanism:'Acidification, deoxygenation, marine ecosystem collapse' }),
 
   ({ id:'pollution', name:'Toxic Pollution & PFAS', domain:'biosphere', category:'Pollution', evStr:'moderate', process_type:'continuous',
     source:'UNEP Global Chemicals Outlook II (2019)',
     scale:4, urgency:3, acceleration:4.0, interdependence:4.2, irreversibility:4.2, gov_failure:2.8,
     growth_rate:0.006, threshold:7.5,
+    deps:['oceans','biodiversity'],
     mechanism:'PFAS persistence, microplastic bioaccumulation, endocrine disruption' }),
   ({ id:'pandemics', name:'Pandemic & Biosecurity', domain:'civilization', category:'Health', evStr:'strong', process_type:'event',
     source:'WHO Pathogens prioritization: a scientific framework for epidemic and pandemic research preparedness (2024)',
     scale:5, urgency:5, acceleration:4.4, interdependence:5, irreversibility:2.9, gov_failure:4.2,
     growth_rate:0.018, threshold:8.5,
+    deps:['amr','geopolitics','supply'],
     mechanism:'Zoonotic spillover, engineered pathogens, global spread vectors' }),
 
   ({ id:'amr', name:'Antimicrobial Resistance', domain:'civilization', category:'Health', evStr:'strong', process_type:'continuous',
     source:'WHO outlines 40 research priorities on antimicrobial resistance (2023)',
     scale:4, urgency:4, acceleration:4.2, interdependence:4.5, irreversibility:3.9, gov_failure:3.8,
     growth_rate:0.012, threshold:8.0,
+    deps:['pandemics','geopolitics'],
     mechanism:'Post-antibiotic era, surgical risk collapse, agricultural overuse' }),
 
   ({ id:'bioengineered', name:'Engineered Biological Event', domain:'civilization', category:'Biosecurity', evStr:'moderate', process_type:'event',
     source:'internal calibration convention',
     scale:5, urgency:4, acceleration:3.2, interdependence:4.7, irreversibility:4.8, gov_failure:5,
     growth_rate:0.025, threshold:9.0,
+    deps:['ai','geopolitics','pandemics'],
     mechanism:'AI-accelerated biodesign, dual-use research, state/non-state actors' }),
 
   ({ id:'nuclear', name:'Nuclear Conflict', domain:'civilization', category:'War', evStr:'moderate', process_type:'event',
     source:'SIPRI Yearbook 2024',
     scale:5, urgency:5, acceleration:2.7, interdependence:5, irreversibility:5, gov_failure:5,
     growth_rate:0.022, threshold:9.2,
+    deps:['geopolitics','ai','autonomousw'],
     mechanism:'Escalation ladder failure, accidental launch, arms-control collapse' }),
 
   ({ id:'supply', name:'Energy & Supply Chains', domain:'civilization', category:'Energy', evStr:'strong', process_type:'event',
     source:'World Economic Forum Global Risks Report 2025',
     scale:4, urgency:5, acceleration:4.6, interdependence:5, irreversibility:3.2, gov_failure:4.0,
     growth_rate:0.014, threshold:8.2,
+    deps:['geopolitics','climate','cyber','minerals'],
     mechanism:'Critical infrastructure fragility, just-in-time breakdown, energy transition risk' }),
 
   ({ id:'geopolitics', name:'Geopolitical Escalation', domain:'civilization', category:'Geopolitics', evStr:'strong', process_type:'event',
     source:'World Economic Forum Global Risks Report 2025',
     scale:5, urgency:5, acceleration:4.4, interdependence:5, irreversibility:3.5, gov_failure:4.1,
     growth_rate:0.016, threshold:8.8,
+    deps:['nuclear','supply','ai','pandemics'],
     mechanism:'Multi-polar rivalry, arms races, breakdown of international order' }),
 
   ({ id:'fragmentation_gov', name:'Global Governance Fragmentation', domain:'civilization', category:'Governance', evStr:'moderate', process_type:'regime',
     source:'World Economic Forum Global Risks Report 2025; internal calibration convention',
     scale:4, urgency:4, acceleration:4.0, interdependence:5, irreversibility:3.8, gov_failure:5,
     growth_rate:0.014, threshold:8.2,
+    deps:['geopolitics','authoritarian','epistemic'],
     mechanism:'Institutional paralysis, UN dysfunction, coordination failure on global commons' }),
 
   ({ id:'economic', name:'Economic Fracture', domain:'civilization', category:'Finance', evStr:'moderate', process_type:'regime',
     source:'World Economic Forum Global Risks Report 2025',
     scale:4, urgency:4, acceleration:3.8, interdependence:4.8, irreversibility:3.0, gov_failure:3.5,
     growth_rate:0.013, threshold:8.0,
+    deps:['geopolitics','supply','cyber'],
     mechanism:'Sovereign debt cascade, currency crises, financial system contagion' }),
 
   ({ id:'debt', name:'Debt / Financial Contagion', domain:'civilization', category:'Finance', evStr:'moderate', process_type:'continuous',
     source:'World Bank International Debt Report 2024',
     scale:4, urgency:3, acceleration:3.5, interdependence:4.5, irreversibility:2.8, gov_failure:3.2,
     growth_rate:0.010, threshold:7.8,
+    deps:['economic','geopolitics','supply'],
     mechanism:'Overleveraged sovereign balance sheets, contagion via global bond markets' }),
 
   ({ id:'displacement', name:'Mass Displacement', domain:'civilization', category:'Society', evStr:'moderate', process_type:'continuous',
     source:'UNHCR Global Trends Report 2024, published June 2025',
     scale:4, urgency:4, acceleration:4.0, interdependence:4.5, irreversibility:3.2, gov_failure:3.8,
     growth_rate:0.013, threshold:8.0,
+    deps:['climate','geopolitics','soils','water'],
     mechanism:'Climate and conflict migration, receiving-state capacity collapse' }),
 
   ({ id:'authoritarian', name:'Authoritarian Drift', domain:'civilization', category:'Governance', evStr:'moderate', process_type:'continuous',
     source:'V-Dem Democracy Report 2025',
     scale:4, urgency:4, acceleration:3.9, interdependence:4.0, irreversibility:3.5, gov_failure:3.6,
     growth_rate:0.010, threshold:7.8,
+    deps:['geopolitics','epistemic','economic'],
     mechanism:'Democratic backsliding, surveillance-state lock-in, political violence' }),
 
   ({ id:'epistemic', name:'Epistemic Breakdown', domain:'civilization', category:'Society', evStr:'moderate', process_type:'continuous',
     source:'World Economic Forum Global Risks Report 2025',
     scale:3, urgency:4, acceleration:4.0, interdependence:4.2, irreversibility:3.0, gov_failure:3.2,
     growth_rate:0.011, threshold:7.5,
+    deps:['ai','authoritarian'],
     mechanism:'Mass disinformation, AI-generated reality distortion, trust collapse' }),
   ({ id:'ai', name:'Advanced AI Destabilizer', domain:'technology', category:'AI', evStr:'moderate', process_type:'regime',
     source:'internal calibration convention',
     scale:4, urgency:4, acceleration:3.8, interdependence:5, irreversibility:3.7, gov_failure:4.6,
     growth_rate:0.020, threshold:8.5,
+    deps:['cyber','geopolitics','bioengineered','supply'],
     mechanism:'Misaligned AGI, AI-enabled disinformation, autonomous decision loops' }),
 
   ({ id:'cyber', name:'Systemic Cyberattacks', domain:'technology', category:'Cyber', evStr:'strong', process_type:'event',
     source:'ENISA Threat Landscape 2024',
     scale:4, urgency:5, acceleration:4.3, interdependence:5, irreversibility:2.5, gov_failure:3.9,
     growth_rate:0.018, threshold:8.2,
+    deps:['ai','geopolitics','supply'],
     mechanism:'Critical infrastructure breach, SCADA attacks, internet fragmentation' }),
 
   ({ id:'autonomousw', name:'Autonomous Weapons Escalation', domain:'technology', category:'AI', evStr:'weak', process_type:'regime',
     source:'internal calibration convention',
     scale:4, urgency:3, acceleration:3.0, interdependence:4.2, irreversibility:4.0, gov_failure:4.5,
     growth_rate:0.015, threshold:8.0,
+    deps:['ai','geopolitics','nuclear'],
     mechanism:'Autonomous weapon proliferation, speed-of-machine escalation, attribution failure' }),
 
   ({ id:'minerals', name:'Critical Minerals Bottleneck', domain:'technology', category:'Resources', evStr:'moderate', process_type:'continuous',
     source:'IEA Global Critical Minerals Outlook 2024',
     scale:3, urgency:3, acceleration:3.6, interdependence:3.8, irreversibility:3.1, gov_failure:2.6,
     growth_rate:0.008, threshold:7.0,
+    deps:['geopolitics','supply'],
     mechanism:'Rare-earth concentration, transition-metal demand surge, geopolitical weaponisation' }),
 
   ({ id:'space', name:'Space Infrastructure Disruption', domain:'technology', category:'Space', evStr:'weak', process_type:'event',
     source:'internal calibration convention',
     scale:4, urgency:2, acceleration:2.8, interdependence:4.0, irreversibility:3.5, gov_failure:3.8,
     growth_rate:0.012, threshold:7.8,
+    deps:['geopolitics','cyber','ai'],
     mechanism:'Kessler syndrome, satellite denial, GPS/comms loss, Carrington-scale solar event' }),
 ];
 
@@ -1289,12 +1075,7 @@ function validateModelConfig() {
 }
 
 function summarizeSourceMap(sourceMap) {
-  const validThreatIds = new Set(THREAT_SPECS.map(t => t.id));
-  const keys = Object.keys(sourceMap || {}).filter(key => {
-    if (key === '_meta') return false;
-    const [id, field, extra] = String(key).split('.');
-    return !extra && validThreatIds.has(id) && PARAM_FIELDS.includes(field);
-  });
+  const keys = Object.keys(sourceMap || {}).filter(key => key !== '_meta');
   const threats = new Set(keys.map(k => String(k).split('.')[0]).filter(Boolean));
   return { entryCount: keys.length, threatCount: threats.size };
 }
@@ -1304,25 +1085,15 @@ function sanitizeSourceMap(raw) {
     throw new Error('Source file must be a JSON object keyed by "threat.parameter".');
   }
   const sanitized = {};
-  const validThreatIds = new Set(THREAT_SPECS.map(t => t.id));
-  const invalidEntries = [];
-  if (raw._meta != null) sanitized._meta = sanitizeSourceDocumentMeta(raw._meta);
+  if (raw._meta && typeof raw._meta === 'object' && !Array.isArray(raw._meta)) {
+    sanitized._meta = cloneJsonValue(raw._meta);
+  }
   Object.entries(raw).forEach(([key, value]) => {
-    if (key === '_meta') return;
     if (!/^[a-z0-9_]+\.[a-z_]+$/i.test(key)) return;
-    const [id, field] = key.split('.');
-    if (!validThreatIds.has(id) || !PARAM_FIELDS.includes(field)) {
-      invalidEntries.push(key);
-      return;
-    }
     const entry = normalizeSourceEntry(value, 'expert judgment uploaded source map', 'uploaded');
     if (entry) sanitized[key] = { ...entry };
-    else invalidEntries.push(key);
   });
-  if (invalidEntries.length) {
-    throw new Error(`Invalid or unsupported parameter entries: ${invalidEntries.slice(0, 8).join(', ')}${invalidEntries.length > 8 ? '…' : ''}`);
-  }
-  if (!summarizeSourceMap(sanitized).entryCount) {
+  if (!Object.keys(sanitized).length) {
     throw new Error('Uploaded file contains no valid parameter entries.');
   }
   return sanitized;
@@ -1427,7 +1198,6 @@ function rebuildActiveSourceDataFromState() {
   const baseRaw = { ...BUNDLED_SOURCE_DATA, ...(CUSTOM_SOURCE_DATA || {}) };
   const normalized = {};
   Object.entries(baseRaw).forEach(([key, value]) => {
-    if (key === '_meta') return;
     const normalizedEntry = normalizeSourceEntry(value, (value && value.source) || 'source map entry', (value && value.strength) || 'moderate');
     if (normalizedEntry) normalized[key] = normalizedEntry;
   });
@@ -1445,7 +1215,7 @@ function rebuildActiveSourceDataFromState() {
 }
 
 function serializeActiveSourceMap() {
-  return JSON.stringify({ _meta: ACTIVE_SOURCE_DOCUMENT_META, ...ACTIVE_SOURCE_DATA }, null, 2);
+  return JSON.stringify(ACTIVE_SOURCE_DATA, null, 2);
 }
 
 function renderSourceRegistry() {
@@ -1460,23 +1230,21 @@ function renderSourceRegistry() {
   const overlayActive = !!(ACTIVE_EVIDENCE_META && ACTIVE_EVIDENCE_META.active);
   if (badge) badge.textContent = overlayActive ? 'Evidence overlay active' : ACTIVE_SOURCE_META.uploaded ? 'Custom source map active' : 'Bundled source map active';
   if (fileName) fileName.textContent = overlayActive
-    ? `${ACTIVE_SOURCE_META.fileName || 'data/data_v1_3_timing_2026-09-23.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
-    : (ACTIVE_SOURCE_META.fileName || 'data/data_v1_3_timing_2026-09-23.json');
+    ? `${ACTIVE_SOURCE_META.fileName || 'data_v1_9_0.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
+    : (ACTIVE_SOURCE_META.fileName || 'data_v1_9_0.json');
   if (entryCount) entryCount.textContent = `${summary.entryCount}/${THREAT_SPECS.length * PARAM_FIELDS.length}`;
-  if (threatCoverage) threatCoverage.textContent = `${summary.threatCount}/${THREAT_SPECS.length} headline threats`;
+  if (threatCoverage) threatCoverage.textContent = `${summary.threatCount}/${THREAT_SPECS.length} threats`;
   if (mode) mode.textContent = overlayActive ? (ACTIVE_SOURCE_META.uploaded ? 'Custom + Evidence' : 'Bundled + Evidence') : (ACTIVE_SOURCE_META.uploaded ? 'Custom merge' : 'Bundled');
-  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget as the default primary source.');
+  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data_v1_9_0.json parameter map embedded in widget as the default primary source.');
   if (jsonView) jsonView.textContent = serializeActiveSourceMap();
 }
 
 function applySourceMap(sourceMap, meta, rerender) {
-  const sourceCopy = cloneJsonValue(sourceMap || {});
-  const uploadedDocumentMeta = sanitizeSourceDocumentMeta(sourceCopy._meta || {});
-  delete sourceCopy._meta;
-  CUSTOM_SOURCE_DATA = meta && meta.mode === 'bundled' ? null : sourceCopy;
-  ACTIVE_SOURCE_DOCUMENT_META = meta && meta.mode === 'bundled'
-    ? cloneJsonValue(BUNDLED_SOURCE_DATA._meta || {})
-    : mergeJsonObjects(BUNDLED_SOURCE_DATA._meta || {}, uploadedDocumentMeta);
+  CUSTOM_SOURCE_DATA = meta && meta.mode === 'bundled' ? null : JSON.parse(JSON.stringify(sourceMap || {}));
+  ACTIVE_SOURCE_DOCUMENT_META = {
+    ...cloneJsonValue(BUNDLED_SOURCE_DATA._meta || {}),
+    ...cloneJsonValue((sourceMap && sourceMap._meta) || {}),
+  };
   if (meta && meta.clearEvidence) {
     ACTIVE_EVIDENCE_DATA = null;
     ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
@@ -1484,11 +1252,11 @@ function applySourceMap(sourceMap, meta, rerender) {
   rebuildActiveSourceDataFromState();
   ACTIVE_SOURCE_META = {
     mode: meta && meta.mode ? meta.mode : 'bundled',
-    fileName: meta && meta.fileName ? meta.fileName : 'data/data_v1_3_timing_2026-09-23.json',
+    fileName: meta && meta.fileName ? meta.fileName : 'data_v1_9_0.json',
     datasetVersion: meta && meta.datasetVersion
       ? meta.datasetVersion
       : ((meta && meta.uploaded) ? 'custom source map' : (datasetVersionFromSourceMap(sourceMap) || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown')),
-    message: meta && meta.message ? meta.message : 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget as the default primary source.',
+    message: meta && meta.message ? meta.message : 'Bundled data_v1_9_0.json parameter map embedded in widget as the default primary source.',
     uploaded: !!(meta && meta.uploaded),
   };
   rebuildThreatState();
@@ -1507,7 +1275,7 @@ function applyEvidenceOverlay(evidenceMap, meta, rerender) {
     active: true,
     fileName: meta && meta.fileName ? meta.fileName : 'evidence overlay.json',
     datasetVersion: meta && meta.datasetVersion ? meta.datasetVersion : '',
-    message: meta && meta.message ? meta.message : `Evidence overlay adjusted ${stats.entryCount} parameters across ${stats.threatCount} headline threats by precision-weighted pooling on the current source ranges.`,
+    message: meta && meta.message ? meta.message : `Evidence overlay adjusted ${stats.entryCount} parameters across ${stats.threatCount} threats by precision-weighted pooling on the current source ranges.`,
     entryCount: stats.entryCount,
     threatCount: stats.threatCount,
   };
@@ -1855,8 +1623,8 @@ function baseScore(t, w) {
 
 /**
  * Dependency amplification factor for threat i given all threats.
- * Neighbour pressure is the mean salience of listed upstream sources on [0, 1].
- * Topology scaling uses the target's incoming-dependency count relative to the network mean.
+ * Neighbour pressure is the mean direct-neighbour salience on [0, 1], and topology scaling uses the current graph's
+ * out-degree relative to the network mean so dense neighbourhoods amplify without introducing an unconstrained tuning constant.
  * This is a degree-normalized exposure heuristic inspired by Bonacich-style network influence. (Bonacich 1987)
  */
 function depFactor(t, all, params) {
@@ -1987,43 +1755,6 @@ function buildCdf(sortedCrossings, n) {
   return cdf;
 }
 
-function discreteSupport(values) {
-  const support = [...new Set(values)].sort((a, b) => a - b);
-  const indexByValue = new Map(support.map((value, index) => [value, index]));
-  return { support, indexByValue };
-}
-
-function valueAtCountRank(support, counts, rank) {
-  let cumulative = 0;
-  for (let i = 0; i < counts.length; i++) {
-    cumulative += counts[i];
-    if (rank < cumulative) return support[i];
-  }
-  return support[support.length - 1] ?? 0;
-}
-
-function quantileFromCounts(support, counts, n, q) {
-  if (!n || !support.length) return 0;
-  const pos = (n - 1) * q;
-  const lo = Math.floor(pos), hi = Math.ceil(pos);
-  const loValue = valueAtCountRank(support, counts, lo);
-  const hiValue = valueAtCountRank(support, counts, hi);
-  return loValue + (hiValue - loValue) * (pos - lo);
-}
-
-function buildCdfFromCounts(support, counts, n) {
-  const cdf = [];
-  let supportIndex = 0;
-  let cumulative = 0;
-  for (let yr = YS; yr <= YE; yr++) {
-    while (supportIndex < support.length && support[supportIndex] <= yr) {
-      cumulative += counts[supportIndex++];
-    }
-    cdf.push({ year: yr, prob: cumulative / n });
-  }
-  return cdf;
-}
-
 function summarizeCrossings(crossing, nSim, rng) {
   const sorted = [...crossing].sort((a, b) => a - b);
   const cdf = buildCdf(sorted, nSim);
@@ -2031,16 +1762,10 @@ function summarizeCrossings(crossing, nSim, rng) {
   const BS = 160;
   const bsP50s = [];
   const bsCdfs = [];
-  const { support, indexByValue } = discreteSupport(sorted);
-  const sampleSupportIndices = sorted.map(value => indexByValue.get(value));
   for (let b = 0; b < BS; b++) {
-    const counts = new Uint32Array(support.length);
-    for (let i = 0; i < nSim; i++) {
-      const sampleIndex = 0 | bootstrapRng.random01() * nSim;
-      counts[sampleSupportIndices[sampleIndex]]++;
-    }
-    bsP50s.push(quantileFromCounts(support, counts, nSim, 0.5));
-    bsCdfs.push(buildCdfFromCounts(support, counts, nSim).map(x => x.prob));
+    const sample = Array.from({ length: nSim }, () => sorted[0 | bootstrapRng.random01() * nSim]).sort((a, c) => a - c);
+    bsP50s.push(quantile(sample, 0.5));
+    bsCdfs.push(buildCdf(sample, nSim).map(x => x.prob));
   }
   bsP50s.sort((a, b) => a - b);
   const bLo = [], bHi = [];
@@ -2345,22 +2070,13 @@ function pairedQuantileContrastStandardError(baseYears, alternativeYears, q, rng
   const n = baseYears.length;
   if (n < 2) return 0;
   const contrasts = [];
-  const baseDiscrete = discreteSupport(baseYears);
-  const alternativeDiscrete = discreteSupport(alternativeYears);
-  const baseSupportIndices = baseYears.map(value => baseDiscrete.indexByValue.get(value));
-  const alternativeSupportIndices = alternativeYears.map(value => alternativeDiscrete.indexByValue.get(value));
   for (let b = 0; b < 160; b++) {
-    const baseCounts = new Uint32Array(baseDiscrete.support.length);
-    const alternativeCounts = new Uint32Array(alternativeDiscrete.support.length);
+    const base = [], alternative = [];
     for (let i = 0; i < n; i++) {
       const index = Math.floor(rng.random01() * n);
-      baseCounts[baseSupportIndices[index]]++;
-      alternativeCounts[alternativeSupportIndices[index]]++;
+      base.push(baseYears[index]); alternative.push(alternativeYears[index]);
     }
-    contrasts.push(
-      quantileFromCounts(alternativeDiscrete.support, alternativeCounts, n, q)
-      - quantileFromCounts(baseDiscrete.support, baseCounts, n, q)
-    );
+    contrasts.push(quantile(alternative.sort((a, c) => a - c), q) - quantile(base.sort((a, c) => a - c), q));
   }
   const mean = contrasts.reduce((sum, value) => sum + value, 0) / contrasts.length;
   return Math.sqrt(contrasts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (contrasts.length - 1));
@@ -2915,7 +2631,7 @@ function updateNetworkSide(hoverNode) {
 
   if (!hoverNode) {
     titleEl.textContent = 'Full system view';
-    summaryEl.textContent = 'All 23 headline threats are arranged in broad domain lanes. The 36 climate/ocean subsystem components are displayed separately in their dedicated cards. Hover a node to isolate only the headline threats it directly influences.';
+    summaryEl.textContent = 'All 23 threats are arranged in broad domain lanes. Hover a node to isolate only the threats it directly influences through declared dependencies.';
     priorityEl.textContent = 'Hover state will show adjusted score, domain, and outbound dependency count.';
     impactEl.innerHTML = `<div class="network-impact-item"><div class="network-impact-name">Hover a node to list the threats it can amplify in the current dependency graph.</div><div class="network-impact-meta">0 links</div></div>`;
     return;
@@ -2943,11 +2659,11 @@ function renderDomainComp(enriched) {
   el.innerHTML = ['civilization','biosphere','technology'].map(d => {
     const col=domCol(d), frac=totals[d]/total, count=enriched.filter(t=>t.domain===d).length;
     const label=d.charAt(0).toUpperCase()+d.slice(1);
-    const tip = `<strong>${label} stress share</strong><br>${pct(frac)} of the current model pressure comes from ${count} headline ${count === 1 ? 'threat' : 'threats'} in this domain. The bar compares this domain's adjusted priority share against the total priority across all domains.`;
+    const tip = `<strong>${label} stress share</strong><br>${pct(frac)} of the current model pressure comes from ${count} ${count === 1 ? 'threat' : 'threats'} in this domain. The bar compares this domain's adjusted priority share against the total priority across all domains.`;
     return `<div data-tip="${escapeHtml(tip)}" style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
         <span style="color:${col};font-weight:600">${label}</span>
-        <span style="color:var(--text3);font-family:var(--mono)">${pct(frac)}  ${count} headline threats</span>
+        <span style="color:var(--text3);font-family:var(--mono)">${pct(frac)}  ${count} threats</span>
       </div>
       <div class="dom-bar-bg"><div class="dom-bar-fill" style="width:${pct(frac)};background:${col};color:${col}"></div></div>
     </div>`;
@@ -3079,7 +2795,7 @@ function renderOverviewStrip(enriched, mcRes) {
   el.innerHTML = `
     <div style="padding:0 0 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="card-title" style="margin:0">All-threat overview</span>
-      <span style="font-family:var(--mono);font-size:9px;color:var(--text-3)">${items.length} headline threats</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-3)">${items.length} threats</span>
     </div>
     <div style="padding-top:10px">
       <div class="mini-row" style="border-bottom:2px solid var(--border2);padding-bottom:2px">
@@ -3403,10 +3119,10 @@ function sourceTooltip(rangeObj) {
   parts.push(`<div><strong>${escapeHtml(src)}</strong></div>`);
   if (rangeObj && rangeObj.type) parts.push(`<div>Type: ${escapeHtml(rangeObj.type)}</div>`);
   if (rangeObj && rangeObj.parameter_evidence) {
-    const parameterEvidence = rangeObj.parameter_evidence;
-    parts.push(`<div>Parameter calibration grade: ${escapeHtml(parameterEvidence.calibration_grade || 'U')}</div>`);
-    if (parameterEvidence.mapping_type) parts.push(`<div>Mapping type: ${escapeHtml(parameterEvidence.mapping_type)}</div>`);
-    if (parameterEvidence.rationale) parts.push(`<div style="margin-top:6px">${escapeHtml(parameterEvidence.rationale)}</div>`);
+    const evidence = rangeObj.parameter_evidence;
+    parts.push(`<div>Input calibration grade: ${escapeHtml(evidence.calibration_grade || 'U')}</div>`);
+    if (evidence.mapping_type) parts.push(`<div>Mapping type: ${escapeHtml(evidence.mapping_type)}</div>`);
+    if (evidence.rationale) parts.push(`<div style="margin-top:6px">${escapeHtml(evidence.rationale)}</div>`);
   } else if (rangeObj && rangeObj.confidence) {
     parts.push(`<div>Legacy input-strength grade: ${escapeHtml(rangeObj.confidence)}</div>`);
   }
@@ -3428,84 +3144,55 @@ function scientificEvidenceForThreat(t) {
       phenomenonGrade: 'U',
       mechanismGrade: 'U',
       systemicGrade: 'U',
-      supplied: false,
       rationale: 'No explicit threat-level scientific evidence assessment is supplied in the active JSON.',
-      sourceIds: [],
-      assessedAt: '',
     };
   }
-  const phenomenonGrade = normalizeEvidenceGrade(raw.phenomenon_grade, 'U');
-  const mechanismGrade = normalizeEvidenceGrade(raw.causal_mechanism_grade, 'U');
-  const systemicGrade = normalizeEvidenceGrade(raw.systemic_relevance_grade, 'U');
-  const explicitSummary = normalizeEvidenceGrade(raw.scientific_evidence_grade, 'U');
   return {
-    grade: explicitSummary !== 'U' ? explicitSummary : phenomenonGrade,
-    phenomenonGrade,
-    mechanismGrade,
-    systemicGrade,
-    supplied: true,
-    rationale: raw.rationale || '',
-    sourceIds: Array.isArray(raw.source_ids) ? raw.source_ids : [],
-    assessedAt: raw.assessed_at || '',
+    grade: normalizeEvidenceGrade(raw.scientific_evidence_grade ?? raw.overall_grade ?? raw.summary_grade ?? raw.evidence_grade),
+    phenomenonGrade: normalizeEvidenceGrade(raw.phenomenon_grade),
+    mechanismGrade: normalizeEvidenceGrade(raw.causal_mechanism_grade),
+    systemicGrade: normalizeEvidenceGrade(raw.systemic_relevance_grade),
+    rationale: cleanSourceText(raw.rationale || ''),
   };
 }
 
 function parameterCalibrationGrade(rangeObj) {
   if (rangeObj?.parameter_evidence?.calibration_grade) {
-    return { grade: normalizeEvidenceGrade(rangeObj.parameter_evidence.calibration_grade, 'U'), legacy: false };
+    return { grade: normalizeEvidenceGrade(rangeObj.parameter_evidence.calibration_grade), legacy: false };
   }
-  if (rangeObj?.confidence) return { grade: normalizeEvidenceGrade(rangeObj.confidence, 'U'), legacy: true };
+  if (rangeObj?.confidence) return { grade: normalizeEvidenceGrade(rangeObj.confidence), legacy: true };
   if (rangeObj?.strength) return { grade: confidenceGradeFromStrength(rangeObj.strength), legacy: true };
   return { grade: 'U', legacy: true };
 }
 
 function parameterCalibrationProfileForThreat(t) {
   const counts = Object.fromEntries(EVIDENCE_GRADES.map(grade => [grade, 0]));
-  const details = [];
   let legacyFallback = false;
   PARAM_FIELDS.forEach(field => {
     const result = parameterCalibrationGrade(t[field]);
     counts[result.grade] += 1;
     legacyFallback = legacyFallback || result.legacy;
-    details.push({ field, grade: result.grade, legacy: result.legacy });
   });
   const label = EVIDENCE_GRADES.filter(grade => counts[grade] > 0)
     .map(grade => `${counts[grade]}${grade}`)
     .join(' / ');
-  return { counts, details, label: label || '8U', legacyFallback };
+  return { counts, label: label || '8U', legacyFallback };
 }
 
 function evidenceChipClass(grade) {
-  if (grade === 'A') return 'chip-h';
-  if (grade === 'B') return 'chip-m';
-  if (grade === 'C') return 'chip-l';
-  if (grade === 'D') return 'chip-d';
-  return 'chip-u';
+  return grade === 'A' ? 'chip-h' : grade === 'B' ? 'chip-m' : grade === 'C' ? 'chip-l' : 'chip-d';
 }
 
 function scientificEvidenceCellHtml(t) {
   const evidence = scientificEvidenceForThreat(t);
-  const components = [
-    `Phenomenon ${evidence.phenomenonGrade}`,
-    `Mechanism ${evidence.mechanismGrade}`,
-    `Systemic relevance ${evidence.systemicGrade}`,
-  ].join(' · ');
-  const tooltip = [components, evidence.rationale, evidence.assessedAt ? `Assessed ${evidence.assessedAt}` : '']
-    .filter(Boolean)
-    .join(' | ');
-  return `<div class="evidence-grade-cell" title="${escapeHtml(tooltip)}">
-    <span class="chip ${evidenceChipClass(evidence.grade)}">${escapeHtml(evidence.grade)}</span>
-    <span class="evidence-grade-components">${escapeHtml(evidence.supplied ? `${evidence.phenomenonGrade}/${evidence.mechanismGrade}/${evidence.systemicGrade}` : 'not supplied')}</span>
-  </div>`;
+  const detail = `Phenomenon ${evidence.phenomenonGrade} · Mechanism ${evidence.mechanismGrade} · Systemic relevance ${evidence.systemicGrade}${evidence.rationale ? ` | ${evidence.rationale}` : ''}`;
+  return `<span class="chip ${evidenceChipClass(evidence.grade)}" title="${escapeHtml(detail)}">${escapeHtml(evidence.grade)}</span>`;
 }
 
 function parameterCalibrationCellHtml(t) {
-  const profile = parameterCalibrationProfileForThreat(t);
-  const detail = profile.details.map(item => `${fieldDisplayName(item.field)} ${item.grade}${item.legacy ? ' (legacy strength)' : ''}`).join(' · ');
-  return `<div class="parameter-calibration-cell" title="${escapeHtml(detail)}">
-    <span class="parameter-calibration-profile">${escapeHtml(profile.label)}</span>
-    ${profile.legacyFallback ? '<span class="parameter-calibration-legacy">legacy mapping</span>' : '<span class="parameter-calibration-explicit">explicit grades</span>'}
-  </div>`;
+  const calibration = parameterCalibrationProfileForThreat(t);
+  const legacy = calibration.legacyFallback ? ' Legacy strength labels were used where explicit calibration grades were not supplied.' : '';
+  return `<span class="chip ${evidenceChipClass(calibration.counts.D ? 'D' : calibration.counts.C ? 'C' : calibration.counts.B ? 'B' : calibration.counts.A ? 'A' : 'U')}" title="Eight parameter-level grades; they are not averaged.${escapeHtml(legacy)}">${escapeHtml(calibration.label)}</span>`;
 }
 
 function confidenceGradeForThreat(t) {
@@ -3843,12 +3530,12 @@ function renderAdvancedMethod(enriched, mcRes) {
       ${[2035,2045,2055,2065].map(yr => `<button type="button" data-action="rerun-advanced" data-year="${yr}"
         style="font-family:var(--mono);font-size:9px;padding:4px 12px;border-radius:4px;cursor:pointer;border:1px solid;transition:all .15s;
         background:${yr===CMP?'var(--blue)':'var(--bg3)'};color:${yr===CMP?'#fff':'var(--text-3)'};border-color:${yr===CMP?'var(--blue)':'var(--border2)'}">${yr}</button>`).join('')}
-      <span style="font-family:var(--mono);font-size:8.5px;color:var(--text-3);margin-left:4px">· ${allW.length} headline threats by priority</span>
+      <span style="font-family:var(--mono);font-size:8.5px;color:var(--text-3);margin-left:4px">· ${allW.length} threats  by priority</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       ${[
         {l:'Mean β',v:betaMean.toFixed(2),note:'β > 1 means accelerating hazard',tip:'<b>Mean β shows the average speed of risk acceleration across all threats.</b> A value above 1 means that, on average, hazards are not just present, but are increasing dynamically. Higher values mean the model sees faster escalation pressure.'},
-        {l:`Mean P by ${CMP}`,v:wMeanLabel,note:`All ${allW.length} headline threats; ${meanRef.censoredCount} censored, ${meanRef.invalidCount} invalid`,tip:`<b>This mean retains every headline threat.</b> Right-censored medians imply probability bounds [0, 0.5] within the horizon. Invalid inputs leave the full-population mean undefined.`},
+        {l:`Mean P by ${CMP}`,v:wMeanLabel,note:`All ${allW.length} threats; ${meanRef.censoredCount} censored, ${meanRef.invalidCount} invalid`,tip:`<b>This mean retains every threat.</b> Right-censored medians imply probability bounds [0, 0.5] within the horizon. Invalid inputs leave the full-population mean undefined.`},
         {l:'Fastest hazard',v:fastestW?fastestW.beta.toFixed(2):' ',note:fastestW?escapeHtml(fastestW.name):' ',tip:'<b>This shows which threat is currently accelerating fastest in the model.</b> It is not necessarily the biggest threat overall; it is the one whose modeled risk pressure grows fastest under the current settings.'},
       ].map(x=>`<div class="advanced-kpi-tooltip-card" data-tip="${escapeHtml(x.tip || '')}" tabindex="0" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r4);padding:12px 26px 12px 12px;text-align:center;position:relative">
         <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--red);line-height:1">${x.v}</div>
@@ -3900,7 +3587,7 @@ function renderAdvancedMethod(enriched, mcRes) {
       const extra = allW.length > SHOW ? `
         <div id="weibullExtraRows" style="display:none">${hidden}</div>
         <button type="button" data-action="toggle-weibull-extra" data-hidden-count="${allW.length - SHOW}" id="weibullShowMoreBtn"
-          style="margin-top:10px;width:100%;padding:7px;background:transparent;border:1px solid var(--border2);border-radius:var(--r4);font-family:var(--mono);font-size:9px;color:var(--text-3);cursor:pointer;letter-spacing:.08em;transition:border-color .15s">Show ${allW.length - SHOW} more headline threats ▾</button>` : '';
+          style="margin-top:10px;width:100%;padding:7px;background:transparent;border:1px solid var(--border2);border-radius:var(--r4);font-family:var(--mono);font-size:9px;color:var(--text-3);cursor:pointer;letter-spacing:.08em;transition:border-color .15s">Show ${allW.length - SHOW} more threats ▾</button>` : '';
       return visible + extra;
     })()}
     <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:9px;color:var(--text-3)">
@@ -4029,8 +3716,8 @@ function renderAdvancedMethod(enriched, mcRes) {
   const shRight = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
       ${[
-        {label:'Entropy H',val:sh.h.toFixed(2),unit:'bits',col:'var(--blue)',desc:'How widely priority is spread across headline threats. Higher means broader risk.',tip:'<b>Entropy shows how widely risk priority is spread across the 23 headline threats.</b> The 36 nested subsystem components are not counted again as independent nodes in this diagnostic.'},
-        {label:'H_max = log₂(N)',val:sh.hMax.toFixed(2),unit:'bits',col:'var(--text-2)',desc:'Maximum possible spread if all headline threats were equally weighted.',tip:'<b>Hmax is the theoretical maximum entropy for the 23-node headline model.</b> It is not based on treating the 36 nested subsystem components as additional independent threats.'},
+        {label:'Entropy H',val:sh.h.toFixed(2),unit:'bits',col:'var(--blue)',desc:'How widely priority is spread across threats. Higher means broader risk.',tip:'<b>Entropy shows how widely risk priority is spread across the 23 threats.</b> Higher entropy means many threats matter at the same time. Lower entropy means only a few threats dominate the model.'},
+        {label:'H_max = log₂(N)',val:sh.hMax.toFixed(2),unit:'bits',col:'var(--text-2)',desc:'Maximum possible spread if all threats were equally weighted.',tip:'<b>Hmax is the theoretical maximum entropy for this model.</b> It is the value entropy would reach if all 23 threats were weighted equally. It is used as a reference point, not as a separate warning signal.'},
         {label:'Concentration C',val:(shC*100).toFixed(1)+'%',unit:'1−H/H_max',col:shCol,desc:'How much risk is dominated by a few threats. Lower means more diffuse.',tip:'<b>Concentration shows whether risk is dominated by only a few threats.</b> A low value means risk is diffuse and spread broadly. A high value means the model is concentrated around a small number of dominant threats.'},
       ].map(x=>`<div class="advanced-kpi-tooltip-card" data-tip="${escapeHtml(x.tip || '')}" tabindex="0" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r4);padding:14px 26px 12px 12px;text-align:center;position:relative">
         <div style="font-family:var(--mono);font-size:24px;font-weight:700;color:${x.col};line-height:1">${x.val}</div>
@@ -4076,7 +3763,7 @@ function renderAdvancedMethod(enriched, mcRes) {
         <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">4 Internal Quantitative Diagnostics</div>
         <div style="font-size:11px;color:var(--text-3);line-height:1.7;max-width:820px">
           These methods compare different internal summaries of the same model inputs and assumptions. Agreement is an internal diagnostic comparison; it does not independently validate the primary MCDA model. Read as an <strong style="color:var(--text-2)">optional diagnostic layer</strong>.
-          <span style="color:var(--text-3)">  Active headline threats: ${enriched.length}  Evidence: ${evidence.strong}× strong / ${evidence.moderate}× moderate / ${evidence.weak}× weak</span>
+          <span style="color:var(--text-3)">  Active threats: ${enriched.length}  Evidence: ${evidence.strong}× strong / ${evidence.moderate}× moderate / ${evidence.weak}× weak</span>
         </div>
       </div>
       <div style="flex-shrink:0;text-align:right" data-tip="<strong>ρ_eff (scenario coupling)</strong>A graph-derived scenario assumption used only for the displayed spread formula. It is not an estimated Bernoulli correlation and does not determine joint failures or correlated tails. A value of 0 recovers the independent-reference variance; larger values increase the assumed spread without defining a joint distribution.">
@@ -4139,7 +3826,7 @@ function buildNarrative(scKey, enriched, mcRes) {
   };
 
   return `${intro[scKey]||''} The Global Stress Index stands at <strong>${gsi}/100</strong>.
-  The three highest-priority headline threats are ${top3}, with the earliest individual headline-threat horizon at <strong>${earliest}</strong>.
+  The three highest-priority threats are ${top3}, with the earliest individual threat horizon at <strong>${earliest}</strong>.
   The <em>compensatory</em> aggregate model (weighted threat-mass crossing) gives a central horizon of <strong>${p50}</strong> (${p50Band}),
   with approximately <strong>${p2050}</strong> probability of compensatory crossing by 2050.
   The <em>dynamic functional cascade</em> follows directed losses of supporting functions. Its P50 is <strong>${cascadeP50}</strong> and its P90 is <strong>${cascadeP90}</strong>; both are shown in the paired headline clocks. A single initial failure can propagate; simultaneous initial failure in all three domains is not required. The trigger is the selected share of fixed criticality weights globally or within any essential-service basket, not a measured fraction of service output.
@@ -4150,7 +3837,7 @@ function buildNarrative(scKey, enriched, mcRes) {
 }
 
 
-const SOURCE_DATA_URL = './data/data_v1_3_timing_2026-09-23.json';
+const SOURCE_DATA_URL = './data_v1_9_0.json';
 
 function threatPageUrl(t) {
   return SOURCE_DATA_URL;
@@ -4224,7 +3911,8 @@ function renderTable(enriched, mcRes) {
 function metricSourceSummary(rangeObj) {
   if (!rangeObj || typeof rangeObj !== 'object') return '';
   const src = sourceOf(rangeObj) || '';
-  const grade = rangeObj.confidence ? `Evidence ${escapeHtml(rangeObj.confidence)}` : '';
+  const parameterGrade = parameterCalibrationGrade(rangeObj);
+  const grade = `Input calibration ${escapeHtml(parameterGrade.grade)}${parameterGrade.legacy ? ' (legacy)' : ''}`;
   const yr = rangeObj.accessed ? `accessed ${escapeHtml(rangeObj.accessed)}` : '';
   return [src ? escapeHtml(src) : '', grade, yr].filter(Boolean).join('  ');
 }
@@ -4546,7 +4234,7 @@ function priorityThreatViewModel(t, rank, enriched, mcRes) {
     fallbackToWeibullProbability: true,
     requireMcForWeibullProbability: true,
   });
-  const evidence = scientificEvidenceForThreat(t);
+  const evidence = scientificEvidenceForThreat(t).grade;
   const calibration = parameterCalibrationProfileForThreat(t);
   const priorityThreshold = getThreatThreshold(t);
   const depNames = (t.deps || []).map(id => {
@@ -4557,8 +4245,7 @@ function priorityThreatViewModel(t, rank, enriched, mcRes) {
   return {
     t,
     rank,
-    evidence: evidence.grade,
-    evidenceDetail: evidence,
+    evidence,
     calibration,
     priorityThreshold,
     depNames,
@@ -4580,14 +4267,12 @@ function priorityThreatViewModel(t, rank, enriched, mcRes) {
 
 function priorityThreatPillsHtml(vm) {
   const { t, evidence, calibration, currentStatus, alert } = vm;
-  const subsystemModel = ACTIVE_SOURCE_DOCUMENT_META?.subsystem_models?.[t.id];
   return `<div class="t-pills">
     <span class="t-pill">${escapeHtml(t.domain === 'biosphere' ? 'Planetary-scale' : t.domain === 'technology' ? 'High-connectivity' : 'System-wide')}</span>
     <span class="t-pill">${escapeHtml(t.process_type ? String(t.process_type).replace(/^./, s => s.toUpperCase()) : 'Systemic')}</span>
     <span class="t-pill good">Scientific evidence: ${escapeHtml(evidence)}</span>
     <span class="t-pill">Input calibration: ${escapeHtml(calibration.label)}</span>
     <span class="t-pill current status-${escapeHtml(currentStatus)}">Current: ${escapeHtml(currentStatus)}</span>
-    ${subsystemModel ? `<span class="t-pill subsystem-count">${subsystemModel.components.length} subsystem components</span>` : ''}
     ${threatReversibilityPillHtml(t)}
     ${alert ? `<span class="t-pill alert">⚠ ≤10yr</span>` : ''}
   </div>`;
@@ -4628,7 +4313,6 @@ function priorityThreatMetricsHtml(vm) {
 function priorityThreatDetailHtml(vm, enriched) {
   const { t, low, mid, high, p2050, p2050Lower, p2050Upper, evidence, calibration } = vm;
   return `<div class="t-detail">
-    ${subsystemInlineDetailHtml(t)}
     <div class="detail-box"><div class="detail-box-title">Risk structure captured here</div><div class="detail-box-body">${threatRiskStructureHtml(t, enriched)}</div></div>
     <div class="detail-box"><div class="detail-box-title">Dependency pathways in the model</div><div class="detail-box-body">${threatDependencyPathwaysHtml(t, enriched)}</div></div>
     <div class="detail-box"><div class="detail-box-title">Methodological notes</div><div class="detail-box-body">${threatMethodNotesHtml(t, low, mid, high, p2050, p2050Lower, p2050Upper)}</div></div>
@@ -4642,7 +4326,6 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
   const vm = priorityThreatViewModel(t, rank, enriched, mcRes);
   const featureNote = 'Leading systemic threat under selected settings';
   const actionLabel = 'Expand';
-  const compactSubsystem = subsystemCompactRowsHtml(t);
 
   return `<article class="climate-feature-card is-collapsed" data-color="${escapeHtml(threatCardColor(t.domain))}" data-threat-card="${escapeHtml(t.id)}" aria-label="${escapeHtml(t.name)} threat card">
     <div class="t-header">
@@ -4656,15 +4339,10 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
     </div>
     <div class="t-bar-section">
       ${renderTimelineBar(vm.low, vm.mid, vm.high, vm.low, vm.high, t)}
-      <div class="t-bar-lower${compactSubsystem ? ' has-subsystem' : ''}">
-        <div class="t-bar-context">
-          ${threatMechanismNoteHtml(t)}
-          ${priorityThreatMetricsHtml(vm)}
-          <div class="t-bar-caption"><strong style="color:var(--text2)">Threshold note:</strong> ${escapeHtml(vm.barMeaning)}</div>
-          <div class="ev-links">${threatSourceLinksHtml(t)}</div>
-        </div>
-        ${compactSubsystem}
-      </div>
+      ${threatMechanismNoteHtml(t)}
+      ${priorityThreatMetricsHtml(vm)}
+      <div class="t-bar-caption"><strong style="color:var(--text2)">Threshold note:</strong> ${escapeHtml(vm.barMeaning)}</div>
+      <div class="ev-links">${threatSourceLinksHtml(t)}</div>
     </div>
     <div class="t-actions">
       <div class="t-interactions"><strong>Declared interactions:</strong> ${escapeHtml(vm.depNames.join('  ') || 'none recorded')}</div>
@@ -4678,306 +4356,16 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
   </article>`;
 }
 
-function subsystemHorizonYearLabel(year) {
-  return Number.isFinite(year) ? String(Math.round(year)) : 'Not identified';
-}
-
-function subsystemCompactHorizon(component) {
-  const model = component?.model_horizon;
-  const literature = component?.literature_horizon;
-  if (Number.isFinite(model?.p50_year) || Number.isFinite(model?.p90_year)) return model;
-  if (Number.isFinite(literature?.p50_year) || Number.isFinite(literature?.p90_year)) return literature;
-  return model || literature || normalizeSubsystemHorizon(null, 'component horizon');
-}
-
-function subsystemComponentSourceIds(component) {
-  const selectedHorizon = subsystemCompactHorizon(component);
-  return [...new Set([
-    ...(selectedHorizon?.source_ids || []),
-    ...(component?.timeline || []).flatMap(entry => entry.source_ids || []),
-    ...(component?.model_horizon?.source_ids || []),
-    ...(component?.literature_horizon?.source_ids || []),
-    ...(component?.source_ids || []),
-  ])];
-}
-
-function subsystemSourceRegistryEntries() {
-  return [
-    ACTIVE_SOURCE_DOCUMENT_META?.source_registry,
-    ACTIVE_SOURCE_DOCUMENT_META?.model_component_source_registry,
-  ].flatMap(registry => Array.isArray(registry)
-    ? registry
-    : registry && typeof registry === 'object' ? Object.values(registry) : []);
-}
-
-function subsystemPrimaryTiming(component) {
-  const records = component?.timing_evidence || [];
-  const requested = component?.timing_model?.evidence_ids || [];
-  return requested.map(id => records.find(record => record.id === id)).find(Boolean) || records[0] || null;
-}
-
-function subsystemSourceLinkHtml(component) {
-  const timing = subsystemPrimaryTiming(component);
-  if (timing) {
-    const url = ClockTimingEvidence.describeEvidence(timing).sourceUrl;
-    if (!url) return '<span class="subsystem-compact-source is-missing" title="No source URL for this timing record">Source</span>';
-    return `<a class="subsystem-compact-source" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${escapeHtml(timing.source?.title || timing.event_definition || timing.id)}">Source</a>`;
-  }
-  const records = new Map(subsystemSourceRegistryEntries()
-    .filter(entry => entry && typeof entry === 'object' && entry.id)
-    .map(entry => [String(entry.id), entry]));
-  const source = subsystemComponentSourceIds(component)
-    .map(id => records.get(String(id)))
-    .find(entry => /^https?:\/\//i.test(String(entry?.url || '').trim()));
-  if (!source) return '<span class="subsystem-compact-source is-missing" aria-label="No linked source available">Source</span>';
-  const label = cleanSourceText(source.title || source.source || source.id || 'Source');
-  return `<a class="subsystem-compact-source" href="${escapeHtml(String(source.url).trim())}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${escapeHtml(label)}">Source</a>`;
-}
-
-function subsystemTimelineEntries(component) {
-  const records = component?.timing_evidence || [];
-  if (!records.length) return component?.timeline || [];
-  // Render the same evidence record as the timing label and Source link.
-  // Other records remain available in the existing expanded threat details.
-  const record = subsystemPrimaryTiming(component);
-  const described = ClockTimingEvidence.describeEvidence(record);
-  return [{ year: described.startYear === described.endYear ? described.startYear : null,
-    start_year: described.startYear, end_year: described.endYear, label: `${described.label}: ${described.text}` }];
-}
-
-function subsystemTimelineAxis(components) {
-  const years = components.flatMap(component => subsystemTimelineEntries(component)
-    .flatMap(entry => [entry.year, entry.start_year, entry.end_year])).filter(Number.isFinite);
-  return { start: Math.floor(Math.min(2000, ...years) / 10) * 10,
-    end: Math.ceil(Math.max(2100, ...years) / 10) * 10 };
-}
-
-function subsystemCompactTimelineHtml(component, axis = subsystemTimelineAxis([component])) {
-  const axisStart = axis.start;
-  const axisEnd = axis.end;
-  const clampYear = year => clamp(year, axisStart, axisEnd);
-  const percent = year => ((clampYear(year) - axisStart) / (axisEnd - axisStart)) * 100;
-  const periods = [];
-  const marks = [];
-  const ranges = [];
-
-  subsystemTimelineEntries(component).forEach(entry => {
-    if (Number.isFinite(entry.year)) {
-      periods.push(entry.label || String(Math.round(entry.year)));
-      marks.push(percent(entry.year));
-      return;
-    }
-    if (Number.isFinite(entry.start_year) && Number.isFinite(entry.end_year)) {
-      periods.push(entry.label || `${Math.round(entry.start_year)}–${Math.round(entry.end_year)}`);
-      const left = percent(entry.start_year);
-      const right = percent(entry.end_year);
-      ranges.push({ left: Math.min(left, right), width: Math.max(1.5, Math.abs(right - left)) });
-      return;
-    }
-    const boundary = Number.isFinite(entry.start_year) ? entry.start_year : entry.end_year;
-    if (Number.isFinite(boundary)) {
-      periods.push(entry.label || String(Math.round(boundary)));
-      marks.push(percent(boundary));
-    }
-  });
-
-  if (!periods.length) {
-    return '<span class="subsystem-mini-timeline is-empty" aria-label="No timeline available">—</span>';
-  }
-
-  const uniqueMarks = [...new Set(marks.map(value => value.toFixed(2)))];
-  const ariaLabel = `Timeline ${axisStart}-${axisEnd}: ${periods.join(', ')}`;
-  return `<span class="subsystem-mini-timeline" role="img" aria-label="${escapeHtml(ariaLabel)}" title="${escapeHtml(ariaLabel)}">
-    <span class="subsystem-mini-track" style="--timeline-now:${percent(NOW).toFixed(2)}%" aria-hidden="true">
-      ${ranges.map(range => `<span class="subsystem-mini-range" style="--timeline-left:${range.left.toFixed(2)}%;--timeline-width:${range.width.toFixed(2)}%"></span>`).join('')}
-      ${uniqueMarks.map(left => `<span class="subsystem-mini-mark" style="--timeline-left:${left}%"></span>`).join('')}
-    </span>
-  </span>`;
-}
-
-function subsystemCompactComponentHtml(component, axis) {
-  const horizon = subsystemCompactHorizon(component);
-  const p50 = Number.isFinite(horizon.p50_year) ? String(Math.round(horizon.p50_year)) : '—';
-  const p90 = Number.isFinite(horizon.p90_year) ? String(Math.round(horizon.p90_year)) : '—';
-  const usage = ClockTimingEvidence.componentUsage(component);
-  const timing = subsystemPrimaryTiming(component);
-  const described = timing ? ClockTimingEvidence.describeEvidence(timing) : null;
-  const quantileOrigin = horizon === component.model_horizon ? 'Imported model quantile; not calculated by this run' : 'Reported literature quantile; not used by this run';
-  const timingHtml = described
-    ? `<span class="subsystem-compact-marker" title="${escapeHtml(timing.event_definition)}"><small>${escapeHtml(described.label)}</small><strong>${escapeHtml(described.text)}</strong></span>`
-    : `<span class="subsystem-compact-quant" title="${escapeHtml(quantileOrigin)}"><small>P50</small><strong>${escapeHtml(p50)}</strong></span>
-       <span class="subsystem-compact-quant" title="${escapeHtml(quantileOrigin)}"><small>P90</small><strong>${escapeHtml(p90)}</strong></span>`;
-  return `<div class="subsystem-compact-row" data-subsystem-summary="${escapeHtml(component.id)}">
-    <span class="subsystem-compact-identity"><span class="subsystem-compact-name">${escapeHtml(component.name)}</span><span class="subsystem-usage" data-usage="${escapeHtml(usage.status)}" title="${escapeHtml(usage.reason)}">${escapeHtml(usage.label)}</span></span>
-    ${subsystemCompactTimelineHtml(component, axis)}
-    ${timingHtml}
-    ${subsystemSourceLinkHtml(component)}
-  </div>`;
-}
-
-function subsystemCompactRowsHtml(t) {
-  const model = ACTIVE_SOURCE_DOCUMENT_META?.subsystem_models?.[t.id];
-  if (!model?.components?.length) return '';
-  const axis = subsystemTimelineAxis(model.components);
-  return `<section class="subsystem-compact-panel" data-subsystem-summary-parent="${escapeHtml(t.id)}" aria-label="${escapeHtml(model.title)} subsystem threats">
-    <div class="subsystem-compact-title"><span>Subsystem threats</span><small>${model.components.length}</small></div>
-    <p class="subsystem-use-note">0/${model.components.length} component timelines drive this calculation. This parent still uses headline-level model inputs.</p>
-    <div class="subsystem-compact-columns" aria-hidden="true">
-      <span>Threat / use</span><span>Timeline ${axis.start}-${axis.end}</span><span class="subsystem-timing-heading">Reported timing / quantiles</span><span>Source</span>
-    </div>
-    <div class="subsystem-compact-list">${model.components.map(component => subsystemCompactComponentHtml(component, axis)).join('')}</div>
-  </section>`;
-}
-
-function subsystemHorizonPairHtml(label, horizon) {
-  const value = horizon || normalizeSubsystemHorizon(null, label);
-  const status = value.status ? String(value.status).replace(/_/g, ' ') : 'not identified';
-  const scenario = value.scenario ? `<div class="subsystem-horizon-scenario">${escapeHtml(value.scenario)}</div>` : '';
-  return `<div class="subsystem-horizon-block">
-    <div class="subsystem-horizon-label">${escapeHtml(label)}</div>
-    <div class="subsystem-horizon-values">
-      <span><small>P50</small><strong>${escapeHtml(subsystemHorizonYearLabel(value.p50_year))}</strong></span>
-      <span><small>P90</small><strong>${escapeHtml(subsystemHorizonYearLabel(value.p90_year))}</strong></span>
-    </div>
-    <div class="subsystem-horizon-status">${escapeHtml(status)}</div>
-    ${scenario}
-  </div>`;
-}
-
-function subsystemTimelineEntryHtml(entry) {
-  let period = '';
-  if (Number.isFinite(entry.year)) period = String(Math.round(entry.year));
-  else if (Number.isFinite(entry.start_year) && Number.isFinite(entry.end_year)) period = `${Math.round(entry.start_year)}–${Math.round(entry.end_year)}`;
-  else if (Number.isFinite(entry.start_year)) period = `from ${Math.round(entry.start_year)}`;
-  else if (Number.isFinite(entry.end_year)) period = `by ${Math.round(entry.end_year)}`;
-  const numericValue = Number.isFinite(entry.value)
-    ? `<span class="subsystem-timeline-value">${escapeHtml(String(entry.value))}${entry.unit ? ` ${escapeHtml(entry.unit)}` : ''}</span>`
-    : '';
-  const context = [entry.metric, entry.scenario].filter(Boolean).map(escapeHtml).join(' · ');
-  return `<li>
-    <time>${escapeHtml(period)}</time>
-    <div><strong>${escapeHtml(entry.label || 'Literature-derived timeline point')}</strong>${numericValue}${context ? `<small>${context}</small>` : ''}</div>
-  </li>`;
-}
-
-function subsystemTimelineHtml(component) {
-  if (!component.timeline.length) {
-    return '<div class="subsystem-empty">No literature timeline encoded.</div>';
-  }
-  return `<ol class="subsystem-timeline">${component.timeline.map(subsystemTimelineEntryHtml).join('')}</ol>`;
-}
-
-function subsystemComponentHtml(component) {
-  const usage = ClockTimingEvidence.componentUsage(component);
-  const dependencyText = component.dependencies.length
-    ? `Direct downstream: ${component.dependencies.join(', ')}`
-    : 'No direct downstream component declared.';
-  const sourceIds = [...new Set([
-    ...component.source_ids,
-    ...component.literature_horizon.source_ids,
-    ...component.model_horizon.source_ids,
-    ...component.timeline.flatMap(entry => entry.source_ids || []),
-  ])];
-  return `<article class="subsystem-component" data-subsystem-component="${escapeHtml(component.id)}">
-    <div class="subsystem-component-head">
-      <div>
-        <h4>${escapeHtml(component.name)}</h4>
-        <div class="subsystem-component-pills">
-          <span>${escapeHtml(component.layer)}</span>
-          <span>${escapeHtml(component.role)}</span>
-          ${component.critical_gate ? '<span class="is-gate">critical gate</span>' : ''}
-          <span>evidence ${escapeHtml(component.evidence_grade)}</span>
-          <span>calibration ${escapeHtml(component.calibration_grade)}</span>
-        </div>
-      </div>
-      <div class="subsystem-component-id">${escapeHtml(component.id)}</div>
-    </div>
-    ${component.description ? `<p class="subsystem-component-description">${escapeHtml(component.description)}</p>` : ''}
-    <p class="subsystem-use-note"><strong>${escapeHtml(usage.label)}.</strong> ${escapeHtml(usage.reason)}</p>
-    ${subsystemTimingEvidenceHtml(component)}
-    <div class="subsystem-component-grid">
-      <div class="subsystem-timeline-wrap"><div class="subsystem-cell-label">Timeline</div>${subsystemTimelineHtml(component)}</div>
-      ${subsystemHorizonPairHtml('Literature horizon', component.literature_horizon)}
-      ${subsystemHorizonPairHtml('Imported model horizon (not this run)', component.model_horizon)}
-    </div>
-    <div class="subsystem-component-foot">
-      <span>${escapeHtml(dependencyText)}</span>
-      ${component.overlap_group ? `<span>Overlap group: ${escapeHtml(component.overlap_group)}</span>` : ''}
-      ${sourceIds.length ? `<span>Sources: ${escapeHtml(sourceIds.join(', '))}</span>` : '<span>Sources not yet assigned.</span>'}
-    </div>
-  </article>`;
-}
-
-function subsystemTimingEvidenceHtml(component) {
-  const records = component.timing_evidence || [];
-  if (!records.length) return '';
-  return `<div class="subsystem-timing-evidence">${records.map(record => {
-    const described = ClockTimingEvidence.describeEvidence(record);
-    const source = described.sourceUrl
-      ? `<a href="${escapeHtml(described.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source</a>` : 'Source URL missing';
-    const quantiles = record.reported_time_quantiles || {};
-    const finiteQuantiles = ['p50_year', 'p90_year'].filter(key => Number.isFinite(quantiles[key]));
-    return `<div class="subsystem-timing-record"><strong>${escapeHtml(described.label)}: ${escapeHtml(described.text)}</strong>
-      <p>${escapeHtml(record.event_definition || '')}</p>
-      <p>${escapeHtml(record.scenario || 'Scenario not specified')} · ${escapeHtml(record.geographic_scope || 'Area not specified')}</p>
-      <p>${source} · ${escapeHtml(record.verification_status || 'Verification not specified')}</p>
-      ${finiteQuantiles.length ? `<p>Reported time quantiles: ${finiteQuantiles.map(key => `${key === 'p50_year' ? 'P50' : 'P90'} ${quantiles[key]}`).join(', ')}</p>` : ''}
-      ${(record.limitations || []).length ? `<p>${record.limitations.map(escapeHtml).join(' ')}</p>` : ''}
-    </div>`;
-  }).join('')}
-    ${component.timing_model ? `<details><summary>Declared mapping (not executed)</summary><pre>${escapeHtml(JSON.stringify(component.timing_model, null, 2))}</pre></details>` : ''}
-  </div>`;
-}
-
-function subsystemInlineDetailHtml(t) {
-  const model = ACTIVE_SOURCE_DOCUMENT_META?.subsystem_models?.[t.id];
-  if (!model) return '';
-  const parentId = t.id;
-  const horizon = model.aggregate_horizon;
-  const aggregateIdentified = Number.isFinite(horizon.p50_year) || Number.isFinite(horizon.p90_year);
-  const status = model.status ? String(model.status).replace(/_/g, ' ') : 'draft';
-  const method = model.aggregation_method ? String(model.aggregation_method).replace(/_/g, ' ') : 'joint first passage';
-  const defaultNote = 'The parent P50 and P90 must come from one joint correlated first-passage distribution. They are not an average or median of the component horizons.';
-  return `<section class="detail-box subsystem-inline-panel" data-subsystem-parent="${escapeHtml(parentId)}">
-    <div class="detail-box-title">Subsystem components and horizons</div>
-    <header class="subsystem-inline-head">
-      <div>
-        <div class="subsystem-model-kicker">${escapeHtml(parentId === 'climate' ? 'Climate subsystem model' : 'Ocean subsystem model')}</div>
-        <h3>${escapeHtml(model.title)} components</h3>
-        <div class="subsystem-model-meta">${model.components.length} components · ${escapeHtml(status)} · ${escapeHtml(method)}</div>
-      </div>
-      <div class="subsystem-parent-horizons" aria-label="Joint parent horizon">
-        <div><small>Joint P50</small><strong>${escapeHtml(subsystemHorizonYearLabel(horizon.p50_year))}</strong></div>
-        <div><small>Joint P90</small><strong>${escapeHtml(subsystemHorizonYearLabel(horizon.p90_year))}</strong></div>
-      </div>
-    </header>
-    <div class="subsystem-aggregation-note ${aggregateIdentified ? 'is-identified' : 'is-pending'}">
-      <strong>${aggregateIdentified ? 'Imported joint result (not this calculation)' : 'Aggregate not identified'}</strong>
-      <span>${escapeHtml(model.aggregation_note || horizon.note || defaultNote)}</span>
-    </div>
-    <div class="subsystem-component-list">${model.components.map(subsystemComponentHtml).join('')}</div>
-  </section>`;
-}
-
 function renderClimateBreakdownDetail(enriched, mcRes) {
   const shell = document.getElementById('climateBreakdownEnhancedCard');
   if (!shell || !Array.isArray(enriched)) return;
   cachePriorityRenderContext(enriched, mcRes);
-  const ranked = [...enriched].sort((a, b) => b.priority - a.priority);
-  const top = ranked.slice(0, 5);
-  const subsystemParents = SUBSYSTEM_PARENT_IDS
-    .filter(parentId => ACTIVE_SOURCE_DOCUMENT_META?.subsystem_models?.[parentId])
-    .map(parentId => ranked.find(t => t.id === parentId))
-    .filter(Boolean);
-  const displayed = [...top];
-  subsystemParents.forEach(parent => {
-    if (!displayed.some(t => t.id === parent.id)) displayed.push(parent);
-  });
-  if (!displayed.length) {
+  const sorted = [...enriched].sort((a, b) => b.priority - a.priority).slice(0, 5);
+  if (!sorted.length) {
     shell.innerHTML = '<div class="climate-feature-card" data-color="priority"><div style="padding:14px 16px;color:var(--text3);font-family:var(--mono);font-size:10px">Top threat cards will update after the model run.</div></div>';
     return;
   }
-  shell.innerHTML = displayed.map(t => priorityThreatCardHtml(t, ranked.findIndex(candidate => candidate.id === t.id) + 1, enriched, mcRes)).join('');
+  shell.innerHTML = sorted.map((t, idx) => priorityThreatCardHtml(t, idx + 1, enriched, mcRes)).join('');
   initClimateDetailControls();
 }
 
@@ -5855,8 +5243,6 @@ function exportClockJSON() {
   const sourceTraceabilityLimitations = getSourceTraceabilityLimitations(sourceParameters);
   const payload = {
     exportedAt: new Date().toISOString(),
-    resultStatus: _calculationTraceStatus,
-    resultStatusMeaning: 'The payload always describes its frozen executionSnapshot, not any later edited inputs. Only complete denotes the currently completed run.',
     modelVersion: snapshot.codeIdentifier,
     datasetVersion: snapshot.dataIdentifier,
     primaryDataset: snapshot.primaryDataset,
@@ -5867,8 +5253,6 @@ function exportClockJSON() {
     monteCarloIterations: snapshot.parameters.nSim,
     scenario: d.scenario,
     executionSnapshot: snapshot,
-    sourceDocument: snapshot.sourceDocument || null,
-    transparency: d.transparency || null,
     baselineResult: d.baselineResult || {
       headlineRule: 'Dynamic cascade P90',
       cascadeP10: d.cascadeP10,
@@ -5912,11 +5296,6 @@ function exportClockCSV() {
   };
   const rows = [
     ['metadata_key','metadata_value'],
-    ['resultStatus', _calculationTraceStatus],
-    ['transparencyJson', JSON.stringify(d.transparency || {})],
-    ['sourceDocumentJson', JSON.stringify(snapshot.sourceDocument || {})],
-    ['inputSha256', snapshot.inputSha256 || 'unavailable'],
-    ['inputHashScope', snapshot.inputHashScope || 'unavailable'],
     ['functionalResultsJson', JSON.stringify(d.functionalResults || {})],
     ['executedAt', snapshot.executedAt],
     ['modelVersion', snapshot.codeIdentifier],
@@ -6135,16 +5514,8 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
       cascadeP50: fmtY(mcRes.ensemble.dynamicCascade.p50),
       cascadeP90: fmtY(mcRes.ensemble.dynamicCascade.p90),
       executionSnapshot: runSnapshot,
-      transparency: ClockTransparency.createReport(runSnapshot || {}, {
-        p50: mcRes.ensemble.dynamicCascade.p50,
-        p90: mcRes.ensemble.dynamicCascade.p90,
-        censorFraction: mcRes.ensemble.dynamicCascade.censorFraction,
-        actualRunCount: mcRes.ensemble.dynamicCascade.crossing?.length ?? null,
-      }),
       enriched: JSON.parse(JSON.stringify(enriched)),
     };
-    _calculationTraceStatus = 'complete';
-    renderCalculationTransparency();
     document.getElementById('hyLead').textContent   = fmtY(leadP50);
     if (leadName) leadName.textContent = lead ? `${lead.name} P50` : 'Top threat P50';
     if (leadBox) leadBox.title = lead ? `Top-priority threat: ${lead.name}; individual P50 horizon ${fmtY(leadP50)}` : '';
@@ -6227,18 +5598,12 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
 
   document.getElementById('hdrMeta').innerHTML =
     mcRes
-      ? `Scenario: ${SC[scKey].label}<br>Last run: ${new Date().toLocaleTimeString()}<br>${modelScopeCountLabel()}`
-      : `Scenario: ${SC[scKey].label}<br>Status: pending rerun<br>${modelScopeCountLabel()}`;
+      ? `Scenario: ${SC[scKey].label}<br>Last run: ${new Date().toLocaleTimeString()}<br>${THREATS.length} threats  6 dims`
+      : `Scenario: ${SC[scKey].label}<br>Status: pending rerun<br>${THREATS.length} threats  6 dims`;
 }
 
 let _running = false;
 let _resultVersion = 0;
-let _calculationTraceStatus = 'pending';
-
-function renderCalculationTransparency() {
-  const host = document.getElementById('calculationTransparencyBody');
-  if (host) ClockTransparency.render(host, window._lastInterpretData?.transparency || null, _calculationTraceStatus);
-}
 
 function updateLoadingProgress(progress) {
   const percent = Math.round(progress * 100);
@@ -6404,7 +5769,6 @@ function numericalCodeFingerprint() {
 
 function createExecutionSnapshot(params) {
   const sourceData = JSON.parse(JSON.stringify(ACTIVE_SOURCE_DATA || {}));
-  const sourceDocument = JSON.parse(serializeActiveSourceMap());
   const numericFields = ['scale', 'urgency', 'acceleration', 'interdependence', 'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
   return freezeDeepCopy({
     executedAt: new Date().toISOString(),
@@ -6427,7 +5791,6 @@ function createExecutionSnapshot(params) {
       cascadeRule: 'max(global fixed-weight loss, essential-service fixed-weight loss) >= cascadeThreshold',
       cascadeWeightMeaning: 'Fixed criticality judgments, not probability or sampled MCDA priority.',
       cascadeTimeMeaning: 'Absorbing first functional-threshold crossing; no recovery or physical permanence claim.',
-      causalGraphSource: 'active source JSON threshold dependency fields, with bundled functional-model metadata as fallback',
       regimeHorizonRule: 'Sampled latent-pressure first passage; regime abruptness does not add an uncalibrated geometric waiting-time draw.',
       domainHorizonRule: 'Within-domain functional-loss first crossing reconstructed from full-system propagated activation histories using the headline criticality, overlap, service and threshold rules.',
     },
@@ -6446,13 +5809,6 @@ function createExecutionSnapshot(params) {
       threat_specific_cap: growthMetaOfThreat(t).threat_specific_cap ?? null,
     })),
     sourceData,
-    sourceDocument,
-    inputImport: {
-      sourceMode: ACTIVE_SOURCE_META.mode,
-      uploaded: ACTIVE_SOURCE_META.uploaded,
-      mergePolicy: 'Partial source maps inherit unspecified inputs and metadata from the bundled dataset. sourceDocument records the effective merged values, not original upload bytes.',
-      overlay: cloneJsonValue(ACTIVE_EVIDENCE_META),
-    },
     timeBaseline: { nowYear: NOW, horizonStartYear: YS, horizonEndYear: YE },
     quantileRules: { method: 'Type 7 linear interpolation', p10: 0.10, p50: 0.50, p90: 0.90, centralIntervalWidth: 'P90 - P10 (central 80%)' },
     censoringRules: { noCrossingMarker: YE + 1, display: '>2100', weibullUndefinedMedian: 'Finite median beyond horizon: right_censored; non-finite supplied median: invalid. Both retain null point quantiles/probabilities, without fallback; censored medians imply only probability bounds.' },
@@ -6464,34 +5820,15 @@ function createExecutionSnapshot(params) {
   });
 }
 
-async function addExecutionInputHash(snapshot) {
-  const inputHashScope = 'SHA-256 of UTF-8 JSON.stringify(sourceDocument), the effective merged dataset including metadata. Not the original uploaded file bytes.';
-  let inputSha256 = null;
-  let inputHashStatus = 'unavailable';
-  if (globalThis.crypto?.subtle) {
-    try {
-      const bytes = new TextEncoder().encode(JSON.stringify(snapshot.sourceDocument));
-      const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes);
-      inputSha256 = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
-      inputHashStatus = 'available';
-    } catch (error) {
-      console.warn('Input digest unavailable; execution snapshot remains exportable.', error);
-    }
-  }
-  return freezeDeepCopy({ ...snapshot, inputSha256, inputHashScope, inputHashStatus });
-}
-
 function resetExploratorySensitivityText() {
   const warn = document.getElementById('exploratorySensWarn');
-  if (warn) warn.textContent = 'Low-discrepancy Sobol sampling is used here, but the panel remains a reduced-order screen over 23 effective headline-threat parameters. The 36 nested subsystem components are not independent Sobol inputs in this diagnostic.';
+  if (warn) warn.textContent = 'Low-discrepancy Sobol sampling is used here, but the panel remains a reduced-order screen over 23 effective threat parameters rather than a full raw-parameter decomposition.';
   const text = document.getElementById('exploratorySensText');
   if (text) text.textContent = 'This chart shows which threats contribute most to uncertainty in the Apocalypse Clock result when many possible combinations are tested. The first-order bar shows a threat\'s direct effect. The total-order bar includes both its direct effect and its interaction with other threats. This helps reveal which risks matter not only alone, but also as part of a connected systemic-risk network.';
 }
 
 function invalidateCachedResults() {
   _resultVersion += 1;
-  _calculationTraceStatus = window._lastInterpretData ? 'stale' : 'pending';
-  renderCalculationTransparency();
   _cdfCurves = {};
   _sensData = null;
   _exploratoryData = null;
@@ -6517,8 +5854,6 @@ async function runAll() {
   if (_running) return;
   const runVersion = ++_resultVersion;
   _running = true;
-  _calculationTraceStatus = 'running';
-  renderCalculationTransparency();
   startLoadingIndicator();
   if (window._particleLoader) window._particleLoader.start();
   try {
@@ -6531,14 +5866,13 @@ async function runAll() {
     setCalcStepStatus('scenario', 'running', 'Applying scenario shifts, domain multipliers, and per-threat modifiers.', 'Preparing mathematical inputs for the next model pass.');
     await yieldForCalcConsole();
     const params = snapshotParams(scKey, nSim);
-    const executionSnapshot = await addExecutionInputHash(createExecutionSnapshot(params));
-    if (runVersion !== _resultVersion) return;
+    const executionSnapshot = createExecutionSnapshot(params);
     setCalcStepStatus('scenario', 'done', `${SC[scKey].label} scenario conditioning locked with ${nSim.toLocaleString()} Monte Carlo runs.`, 'Deterministic threat scoring is now running.');
 
     const prog = document.getElementById('mcProgress');
     const badge = document.getElementById('simBadge');
     prog.style.width = '0%';
-    setCalcStepStatus('base', 'running', `Recomputing weighted six-dimension base scores for ${THREATS.length} headline threats.`);
+    setCalcStepStatus('base', 'running', `Recomputing weighted six-dimension base scores for ${THREATS.length} threats.`);
     setCalcStepStatus('dependency', 'queued', 'Heuristic dependency amplification will be applied immediately after base scoring.');
     setCalcStepStatus('domainweights', 'queued', 'Domain sliders will be normalized into relative multipliers around the equal-weight baseline.');
     setCalcStepStatus('horizon', 'queued', 'Process-specific horizon heuristics will be remapped once adjusted priorities are available.');
@@ -6630,7 +5964,7 @@ async function runAll() {
     let entropyStats = { h: 0, hMax: 0, concentration: 0, effectiveN: 1 };
 
     try { weibullMeanBeta = enriched.reduce((s, t) => s + weibullParamsForThreat(t, ts[t.id] || null).beta, 0) / Math.max(1, enriched.length); } catch(e) { console.warn('Weibull mean beta failed', e); }
-    setCalcStepStatus('weibull', 'done', `Weibull-shaped diagnostic completed with mean β ${weibullMeanBeta.toFixed(2)} across ${enriched.length} headline threats; this is not an empirical survival fit.`);
+    setCalcStepStatus('weibull', 'done', `Weibull-shaped diagnostic completed with mean β ${weibullMeanBeta.toFixed(2)} across ${enriched.length} threats; this is not an empirical survival fit.`);
 
     try { centralityRows = networkEigenvectorCentrality(enriched).sort((a, b) => b.weightedCentrality - a.weightedCentrality); } catch(e) { console.warn('Eigenvector centrality failed', e); }
     setCalcStepStatus('eigen', 'done', centralityRows.length ? `Eigenvector centrality completed. Current structural hub: ${centralityRows[0].name}.` : 'Eigenvector centrality completed.');
@@ -6639,10 +5973,10 @@ async function runAll() {
       jointTail = jointFailureByDecade(enriched, mcRes);
       joint2050 = (jointTail && jointTail.rows && jointTail.rows.length) ? (jointTail.rows.find(r => r.year === 2050) || jointTail.rows[jointTail.rows.length - 1]) : { at80: 0 };
     } catch(e) { console.warn('Poisson-binomial tail failed', e); }
-    setCalcStepStatus('poissonbinomial', 'done', jointTail.rows.length ? `Independent Poisson-binomial reference completed: P(≥${jointTail.k80}/${enriched.length} model-active headline threats by 2050) ${joint2050.censoredCount ? `is bounded by ${advancedPct(joint2050.at80Lower)}–${advancedPct(joint2050.at80Upper)} with ${joint2050.censoredCount} right-censored headline threats` : `= ${advancedPct(joint2050.at80)}`}.` : 'Independent Poisson-binomial reference completed.');
+    setCalcStepStatus('poissonbinomial', 'done', jointTail.rows.length ? `Independent Poisson-binomial reference completed: P(≥${jointTail.k80}/${enriched.length} model-active threats by 2050) ${joint2050.censoredCount ? `is bounded by ${advancedPct(joint2050.at80Lower)}–${advancedPct(joint2050.at80Upper)} with ${joint2050.censoredCount} right-censored threats` : `= ${advancedPct(joint2050.at80)}`}.` : 'Independent Poisson-binomial reference completed.');
 
     try { entropyStats = shannonEntropyRisk(enriched); } catch(e) { console.warn('Shannon entropy failed', e); }
-    setCalcStepStatus('entropy', 'done', `Shannon entropy completed: H=${entropyStats.h.toFixed(2)} bits, effective N=${entropyStats.effectiveN.toFixed(1)} headline threats.`);
+    setCalcStepStatus('entropy', 'done', `Shannon entropy completed: H=${entropyStats.h.toFixed(2)} bits, effective N=${entropyStats.effectiveN.toFixed(1)} threats.`);
 
     try { updateUI(mcRes, scKey, enriched, executionSnapshot); } catch(uiErr) { console.error('updateUI error (non-fatal):', uiErr); }
 
@@ -6662,8 +5996,6 @@ async function runAll() {
     finalizeCalcConsoleSummary();
   } catch (err) {
     console.error('Simulation run failed', err);
-    _calculationTraceStatus = 'failed';
-    renderCalculationTransparency();
     const badge = document.getElementById('simBadge');
     if (badge) badge.innerHTML = '<span class="live-dot"></span>Run failed';
     const state = ensureCalcConsoleState();
@@ -7818,8 +7150,8 @@ document.getElementById('resetSourcesBtn').addEventListener('click', () => {
   if (fileInput) fileInput.value = '';
   applySourceMap(BUNDLED_SOURCE_DATA, {
     mode: 'bundled',
-    fileName: 'data/data_v1_3_timing_2026-09-23.json',
-      message: 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map restored. Active parameters now match the embedded data/data_v1_3_timing_2026-09-23.json file.',
+    fileName: 'data_v1_9_0.json',
+      message: 'Bundled data_v1_9_0.json parameter map restored. Active parameters now match the embedded data_v1_9_0.json file.',
     uploaded: false,
     clearEvidence: true,
   });
@@ -7837,7 +7169,7 @@ document.getElementById('sourceFileInput').addEventListener('change', async e =>
       applyEvidenceOverlay(sanitized, {
         fileName: file.name,
         datasetVersion: datasetVersionFromSourceMap(raw),
-        message: `Loaded evidence overlay ${file.name}. ${stats.entryCount} parameters across ${stats.threatCount} headline threats now update the current source ranges through precision-weighted pooling.`,
+        message: `Loaded evidence overlay ${file.name}. ${stats.entryCount} parameters across ${stats.threatCount} threats now update the current source ranges through precision-weighted pooling.`,
       });
     } else {
       const sanitized = sanitizeSourceMap(raw);
@@ -7846,7 +7178,7 @@ document.getElementById('sourceFileInput').addEventListener('change', async e =>
         mode: 'custom',
         fileName: file.name,
         datasetVersion: datasetVersionFromSourceMap(raw) || 'custom source map',
-        message: `Loaded ${file.name} and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} headline threats with the bundled defaults.`,
+        message: `Loaded ${file.name} and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} threats with the bundled defaults.`,
         uploaded: true,
       });
     }
@@ -7948,7 +7280,7 @@ async function runSelfTests() {
       && Number.isFinite(advEntropy.h)
       && Number.isFinite(advEntropy.effectiveN);
 
-    logSelfTestWarning(THREATS.length === 23, `Headline threat count is ${THREATS.length}, expected 23.`);
+    logSelfTestWarning(THREATS.length === 23, `Threat count is ${THREATS.length}, expected 23.`);
     logSelfTestWarning(finiteThreatNumbers && Number.isFinite(calcGSI(baselineCheckRows)), 'NaN detected in deterministic threat outputs.');
     logSelfTestWarning(crossingYearsOk && mcCrossingsOk, 'Some threshold horizons are non-finite instead of finite or explicit no-crossing markers.');
     logSelfTestWarning(Math.abs(normSum - 1) < 1e-9, `Normalized domain weights sum to ${normSum.toFixed(6)}, expected 1.0.`);
@@ -7964,6 +7296,12 @@ async function runSelfTests() {
 }
 
 function scheduleInitialRun(task) {
+  const mobileLike = window.matchMedia && window.matchMedia('(max-width: 700px)').matches;
+  const lowCore = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+  if ((mobileLike || lowCore) && typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(() => task(), { timeout: 1500 });
+    return;
+  }
   requestAnimationFrame(() => setTimeout(task, 0));
 }
 
@@ -8079,7 +7417,7 @@ function applyPresetJsonPayload(raw, preset) {
     applyEvidenceOverlay(sanitized, {
       fileName,
       datasetVersion: datasetVersionFromSourceMap(raw),
-      message: `Loaded ${preset.label} evidence preset from external JSON. ${stats.entryCount} parameters across ${stats.threatCount} headline threats now update the current source ranges.`,
+      message: `Loaded ${preset.label} evidence preset from external JSON. ${stats.entryCount} parameters across ${stats.threatCount} threats now update the current source ranges.`,
     });
     return stats;
   }
@@ -8090,7 +7428,7 @@ function applyPresetJsonPayload(raw, preset) {
     mode: 'custom',
     fileName,
     datasetVersion: datasetVersionFromSourceMap(raw) || `${preset.label} source map`,
-    message: `Loaded ${preset.label} preset from external JSON and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} headline threats with the bundled defaults.`,
+    message: `Loaded ${preset.label} preset from external JSON and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} threats with the bundled defaults.`,
     uploaded: true,
   });
   return stats;
@@ -8114,7 +7452,7 @@ async function loadAiPresetJson(ai, btn) {
     const raw = parseJsonText(await res.text());
     const stats = applyPresetJsonPayload(raw, preset);
     if (viewer) viewer.open = false;
-    if (msg) msg.textContent = `${preset.label} preset loaded from external JSON. ${stats.entryCount} parameter entries across ${stats.threatCount} headline threats are now active. Running model with new data...`;
+    if (msg) msg.textContent = `${preset.label} preset loaded from external JSON. ${stats.entryCount} parameter entries across ${stats.threatCount} threats are now active. Running model with new data...`;
     if (typeof runAll === 'function') {
       try {
         await runAll();
@@ -8216,12 +7554,12 @@ function initAiPresetSelector() {
         applySourceMap(BUNDLED_SOURCE_DATA, {
           mode: 'bundled',
           fileName: PRIMARY_DATASET_NAME,
-          message: `Primary Functional JSON restored from the embedded data/data_v1_3_timing_2026-09-23.json source map. Active parameters now match the bundled primary dataset.`,
+          message: `Primary Functional JSON restored from the embedded data_v1_9_0.json source map. Active parameters now match the bundled primary dataset.`,
           uploaded: false,
           clearEvidence: true,
         });
         if (viewer) viewer.open = false;
-        if (msg) msg.textContent = `Primary Functional JSON is active. ${stats.entryCount} parameter entries across ${stats.threatCount} headline threats are now loaded. Running model with primary data...`;
+        if (msg) msg.textContent = `Primary Functional JSON is active. ${stats.entryCount} parameter entries across ${stats.threatCount} threats are now loaded. Running model with primary data...`;
         if (typeof runAll === 'function') {
           try {
             await runAll();
@@ -8274,8 +7612,8 @@ function orderMissionActions() {
 async function initApp() {
   applySourceMap(BUNDLED_SOURCE_DATA, {
     mode: 'bundled',
-    fileName: 'data/data_v1_3_timing_2026-09-23.json',
-    message: 'Bundled data/data_v1_3_timing_2026-09-23.json parameter map embedded in widget and used as the default primary parameter source.',
+    fileName: 'data_v1_9_0.json',
+    message: 'Bundled data_v1_9_0.json parameter map embedded in widget and used as the default primary parameter source.',
     uploaded: false,
   }, false);
   renderSourceRegistry();
@@ -8286,7 +7624,7 @@ async function initApp() {
   renderStaticBaseline();
   scheduleInitialRun(async () => {
     await runAll();
-    if (window.ApocalypseClockDebug) runSelfTests();
+    runSelfTests();
   });
 }
 

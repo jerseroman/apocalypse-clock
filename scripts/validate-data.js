@@ -68,18 +68,12 @@ for (const key of keys) {
 
 const catalog = data._meta.functional_model.nodes;
 assert(stableJson(Object.keys(catalog).sort()) === stableJson(threats), 'functional catalog must contain exactly the dataset threats');
-const declaredServices = data._meta.functional_model.services;
-const services = declaredServices && typeof declaredServices === 'object'
-  ? new Set(Object.keys(declaredServices))
-  : null;
+const services = new Set(Object.keys(data._meta.functional_model.services));
 const registeredUrls = new Set(data._meta.source_registry.map(source => source.url));
-const registeredSourceIds = new Set(data._meta.source_registry.map(source => source.id).filter(Boolean));
 for (const id of threats) {
   const threshold = data[`${id}.threshold`], growth = data[`${id}.growth_rate`];
   assert([1, 2, 3].includes(threshold.functional_weight), `${id}: invalid fixed criticality tier`);
-  assert(Array.isArray(threshold.critical_services) && threshold.critical_services.length > 0, `${id}: missing critical services`);
-  assert(threshold.critical_services.every(service => typeof service === 'string' && /^[a-z_]+$/.test(service)), `${id}: invalid service id`);
-  if (services) assert(threshold.critical_services.every(service => services.has(service)), `${id}: unknown service`);
+  assert(Array.isArray(threshold.critical_services) && threshold.critical_services.every(service => services.has(service)), `${id}: unknown service`);
   assert(typeof threshold.functional_failure === 'string' && threshold.functional_failure.length > 20, `${id}: missing functional definition`);
   assert(typeof threshold.functional_inducible === 'boolean', `${id}: missing initiating-event policy`);
   let sum = 0;
@@ -92,14 +86,7 @@ for (const id of threats) {
   assert(sum === 0 || Math.abs(sum - 1) < 1e-10, `${id}: incoming weights do not normalize`);
   assert(growth.effective_growth_calibrated === true && growth.risk_conversion === 1, `${id}: direct growth must not be reconverted`);
   assert(!('raw_indicator_growth' in growth), `${id}: observed indicator CAGR is not a latent-pressure prior`);
-  for (const field of EXPECTED_FIELDS) {
-    const entry = data[`${id}.${field}`];
-    const hasRegisteredUrl = Boolean(entry.url) && registeredUrls.has(entry.url);
-    const hasRegisteredIds = Array.isArray(entry.source_ids)
-      && entry.source_ids.length > 0
-      && entry.source_ids.every(sourceId => registeredSourceIds.has(sourceId));
-    assert(hasRegisteredUrl || hasRegisteredIds, `${id}.${field}: missing registry source`);
-  }
+  for (const field of EXPECTED_FIELDS) assert(registeredUrls.has(data[`${id}.${field}`].url), `${id}.${field}: missing registry source`);
   for (const field of ['functional_weight', 'critical_services', 'dependency_weights', 'functional_failure', 'functional_overlap_group', 'functional_inducible', 'dependency_lags']) {
     assert(stableJson(threshold[field]) === stableJson(catalog[id][field]), `${id}: threshold/catalog ${field} mismatch`);
   }

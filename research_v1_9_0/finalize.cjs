@@ -4,11 +4,11 @@ const root=path.resolve(__dirname,'..');
 const hash=file=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex');
 const testState=JSON.parse(fs.readFileSync(path.join(root,'test-results/.last-run.json'),'utf8'));
 assert.equal(testState.status,'passed'); assert.deepEqual(testState.failedTests,[]);
-const data=JSON.parse(fs.readFileSync(path.join(root,'data_v1_9_0_functional.json'),'utf8'));
+const data=JSON.parse(fs.readFileSync(path.join(root,'data_v1_9_0.json'),'utf8'));
 const historical=['data_v1_7_1metadata_revision.json','data_v1_8_0_evidence_revision.json'];
 for(const file of historical) assert.equal(hash(file),hash('backups/pre-functional-cascade-2026-09-09/'+file));
 const links=JSON.parse(fs.readFileSync(path.join(__dirname,'live-link-validation.json'),'utf8'));
-const files=['src/app.js','src/cascade-model.js','index.html','404.html','data_v1_9_0_functional.json','package.json','package-lock.json',...historical];
+const files=['src/app.js','src/cascade-model.js','index.html','404.html','data_v1_9_0.json','package.json','package-lock.json',...historical];
 const report={
   completedAt:new Date().toISOString(),model:'1.2.8',dataset:'1.9.0',scope:'Local MODEL + DATASET implementation; no deployment or predictive-validation claim',
   hashes:Object.fromEntries(files.map(file=>[file,hash(file)])),

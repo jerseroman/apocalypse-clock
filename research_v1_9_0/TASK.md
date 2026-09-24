@@ -10,7 +10,7 @@ Implementation plan: model 1.2.8 and dataset 1.9.0. Preserve the 23-threat / 8-m
 
 Numerical risks: new headline estimand and weights; uncertain conversion of normalized scores into time; absorbing first-failure states (not physical permanence); within-year cascade timing; possible double counting of baseline coupling and dynamic transmission; positive-growth conditional scenarios omit endogenous recovery. Coefficients, service baskets and loss thresholds are explicit hypotheses, not empirical probability estimates.
 
-Files: new src/cascade-model.js; src/app.js ingestion, wrappers, MC accumulation, snapshots/exports and method wording; new data_v1_9_0_functional.json; index.html and 404.html matching embeds/script/method text; scripts/validate-data.js, scripts/check-links.js; package.json and lock version; tests; CHANGELOG.md, README.md, docs/METHODOLOGY.md, docs/LIMITATIONS.md, ai-governance/model-invariants.md, review-log.md; research_v1_9_0 evidence, assembly and verification artifacts.
+Files: new src/cascade-model.js; src/app.js ingestion, wrappers, MC accumulation, snapshots/exports and method wording; new data_v1_9_0.json; index.html and 404.html matching embeds/script/method text; scripts/validate-data.js, scripts/check-links.js; package.json and lock version; tests; CHANGELOG.md, README.md, docs/METHODOLOGY.md, docs/LIMITATIONS.md, ai-governance/model-invariants.md, review-log.md; research_v1_9_0 evidence, assembly and verification artifacts.
 
 Not touched: vendor libraries, CSS/layout apart from essential existing text, public accounts/deployment, legal/license/author documents, original 1.7.1 and standalone 1.8.0 JSON. No unrelated engine or manuscript migration.
 

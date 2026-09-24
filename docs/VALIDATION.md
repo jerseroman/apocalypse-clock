@@ -37,12 +37,11 @@ It checks JavaScript files under `src/`, `scripts/`, and `tests/` with Node's sy
 It verifies the current dataset structure and embedded copies, including:
 
 - the expected schema version;
-- 23 headline threats and 184 headline parameter entries;
-- up to 36 nested Climate Breakdown and Ocean Degradation subsystem components in `_meta.subsystem_models`;
+- 23 threats;
 - 184 dataset parameters;
 - `lo <= mu <= hi` for every parameter;
 - required HTML metadata;
-- byte-equal UTF-8 JSON payloads across the configured `data/data_v1_3_timing_2026-09-23.json`, `index.html`, and `404.html`, excluding enclosing whitespace;
+- byte-equal UTF-8 JSON payloads across the configured `data_v1_9_0.json`, `index.html`, and `404.html`, excluding enclosing whitespace;
 - exact agreement of all functional catalog fields with their importable threshold extensions, normalized known dependency IDs, nonnegative integer lags and registered source URLs;
 - direct growth semantics, with no raw observed-indicator CAGR imported as latent pressure.
 

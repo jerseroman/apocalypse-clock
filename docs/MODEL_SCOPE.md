@@ -1,10 +1,10 @@
 # Model Scope
 
-Apocalypse Clock 1.3 with dataset 1.3 is an experimental browser-based model for comparing conditional systemic-risk scenarios. The initial 1.3 development baseline is a functional copy of model 1.2.9. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
+Apocalypse Clock 1.3.0 with dataset 1.9.0 is an experimental browser-based model for comparing conditional systemic-risk scenarios. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
 
 ## Represented functions
 
-The model retains 23 headline threats and eight metric entries per headline threat. Model 1.3 additionally supports 36 nested Climate Breakdown and Ocean Degradation subsystem components, for 59 modeled risk elements in total. Those components expose finer causal layers, timelines and horizons; they do not become 36 additional independently weighted headline threats. Additional metadata defines functional boundaries, directed dependencies, fixed criticality weights and five essential-service baskets:
+The model retains 23 threats and eight metric entries per threat. Additional metadata defines functional boundaries, directed dependencies, fixed criticality weights and five essential-service baskets:
 
 - ecological and climatic regulation;
 - food and usable-water provision;
@@ -14,7 +14,7 @@ The model retains 23 headline threats and eight metric entries per headline thre
 
 A functional boundary concerns failure to sustain a specified function despite the modeled allowance for buffers and substitutes. It does not require extinction, zero biomass, destruction of every asset or disappearance of every service. Conversely, the model does not infer current threshold crossing solely from a serious observed burden, rising indicator or high ordinal score.
 
-Definitions and assignments are in [data/data_v1_3_timing_2026-09-23.json](../data/data_v1_3_timing_2026-09-23.json). They are analyst judgments, not observed global capacity fractions.
+Definitions and assignments are in [data_v1_9_0.json](../data_v1_9_0.json). They are analyst judgments, not observed global capacity fractions.
 
 ## Two paths to activation
 
@@ -44,7 +44,7 @@ Growth values are directly selected common-class priors for annual latent functi
 
 Sources can support mechanisms and present conditions while leaving normalized scores, fixed tiers 1/2/3, equal incoming weights and one-year propagation lags unidentified. The standard lag has zero- and five-year sensitivity alternatives. Such comparisons test assumptions; they do not estimate real causal delays.
 
-Model 1.2.8 introduced the functional estimand and propagation rules. Model 1.2.9 applies sampled growth to regime first passage and makes domain horizons use the propagated functional estimand instead of a separate 40-percent priority-mass rule. Dataset 1.9.1 adds the dated subsystem source map used by model 1.3. Older importers may ignore the functional metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
+Model 1.2.8 introduced the functional estimand and propagation rules. Model 1.2.9 applies sampled growth to regime first passage and makes domain horizons use the propagated functional estimand instead of a separate 40-percent priority-mass rule. Dataset values remain 1.9.0 and unchanged. Older importers may ignore the functional metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
 
 ## Use boundary
 

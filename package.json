@@ -1,17 +1,15 @@
 {
   "name": "apocalypse-clock",
-  "version": "1.3.1-dev.0",
-  "config": { "primaryDataset": "data/data_v1_3_timing_2026-09-23.json", "datasetVersion": "1.3" },
+  "version": "1.3.0",
+  "config": { "primaryDataset": "data_v1_9_0.json", "datasetVersion": "1.9.0" },
   "private": true,
-  "description": "Systemic-risk dashboard covering 23 headline threats and 36 climate/ocean subsystem components.",
+  "description": "Static browser-based systemic-risk dashboard.",
   "scripts": {
     "check": "npm run check:js && npm run validate:data && npm run check:links",
     "check:js": "node scripts/check-js.js",
-    "sync:data": "node scripts/sync-primary-dataset.cjs",
     "validate:data": "node scripts/validate-data.js",
     "check:links": "node scripts/check-links.js",
-    "test": "npm run check && npm run test:timing && npm run test:smoke",
-    "test:timing": "node --test tests/timing-evidence.unit.cjs",
+    "test": "npm run check && npm run test:smoke",
     "test:smoke": "playwright test"
   },
   "devDependencies": {
