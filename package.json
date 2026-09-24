@@ -5,6 +5,7 @@
   "private": true,
   "description": "Static browser-based systemic-risk dashboard.",
   "scripts": {
+    "start": "node scripts/serve.js",
     "check": "npm run check:js && npm run validate:data && npm run check:links",
     "check:js": "node scripts/check-js.js",
     "validate:data": "node scripts/validate-data.js",

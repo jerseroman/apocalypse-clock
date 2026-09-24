@@ -30,7 +30,7 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 - `src/aria-status.js` - accessibility status helper.
 - `src/styles.css` - application styles.
 - `tests/` - Playwright smoke, unit-contract, and headline-determinism regression tests.
-- `scripts/` - repository validation scripts for JavaScript syntax, dataset integrity, and link format checks.
+- `scripts/` - local development server (`serve.js`) and repository validation scripts for JavaScript syntax, dataset integrity, and link format checks.
 - `docs/` - public methodology, scope, validation, limitations, and change-class documentation.
 - `ai-governance/` - internal change policy, protected paths, model invariants, validation checklist, methodological review, and review log.
 - `.github/ISSUE_TEMPLATE/` - structured GitHub issue templates for bugs, methodology concerns, and source corrections.
@@ -47,7 +47,7 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 - `SECURITY.md` - security, integrity, and responsible-reporting guidance.
 - `LICENSE` - source-available non-commercial fork license.
 - `package.json` and `package-lock.json` - Node/Playwright validation dependencies and scripts.
-- `playwright.config.js` - Playwright test-server configuration.
+- `playwright.config.js` - Playwright test configuration; starts `scripts/serve.js` for the tests.
 - `.nojekyll` - disables Jekyll processing on GitHub Pages.
 - `.gitattributes` - line-ending and text-file handling rules.
 - `.gitignore` - ignored local and system files.
@@ -110,10 +110,11 @@ For full interpretation guidance, see [`docs/MODEL_SCOPE.md`](./docs/MODEL_SCOPE
 
 ## Local Test
 
-Run from this folder:
+Requires [Node.js](https://nodejs.org/) 22 or newer. Run from this folder:
 
 ```bash
-python -m http.server 8766 --bind 127.0.0.1
+npm install
+npm start
 ```
 
 Then open:
@@ -121,6 +122,17 @@ Then open:
 ```text
 http://127.0.0.1:8766/index.html
 ```
+
+`npm start` runs `scripts/serve.js`, a dependency-free Node static server that serves `404.html` for unknown paths, as GitHub Pages does. Set `PORT` to use another port. Stop it with Ctrl+C. On Windows PowerShell, use `npm.cmd` if script execution policy blocks `npm.ps1`.
+
+To run the full test suite locally, install the Playwright browser once and then run the tests:
+
+```bash
+npx playwright install chromium
+npm test
+```
+
+The tests start the same server automatically.
 
 Validation checklist:
 
