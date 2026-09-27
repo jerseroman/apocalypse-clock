@@ -1138,21 +1138,25 @@ body.has-section-nav #scientificPanelBody{display:block;padding:0}
   .section-nav-drawer .header-last-update{font-size:8px;line-height:1.35;padding-top:1px}
   .section-title-row{gap:8px;margin:2px 0 10px}
   .section-page-title{
-    font-size:clamp(18px,5.4vw,21px);
-    line-height:1.08;
-    letter-spacing:.065em;
+    font-size:clamp(15px,4.5vw,17px);
+    line-height:1.05;
+    letter-spacing:.055em;
   }
   .validation-notice{
-    margin-bottom:10px;
-    padding:6px 8px;
-    gap:0 .25em;
-    font-size:9.5px;
-    line-height:1.45;
+    margin-bottom:6px;
+    padding:4px 6px;
+    gap:0 .2em;
+    border-left-width:2px;
+    border-radius:5px;
+    font-size:8px;
+    line-height:1.25;
   }
-  .validation-notice-close{padding-right:5px;font-size:14px}
-  .page-search-box{padding:5px 8px}
-  .page-search-icon{width:14px;height:14px}
-  .page-search-box input{font-size:16px;line-height:18px;height:18px}
+  .validation-notice strong{font-size:8.5px;line-height:1.2}
+  .validation-detail{display:none}
+  .validation-notice-close{padding:0 3px 0 0;font-size:11px}
+  .page-search-box{padding:3px 6px;border-radius:6px}
+  .page-search-icon{width:12px;height:12px}
+  .page-search-box input{font-size:12px;line-height:15px;height:15px}
   .panel{padding:12px}
   .panel-copy{font-size:10px;line-height:1.55}
   .card-title,.section-label{margin-bottom:8px}
@@ -1169,6 +1173,6 @@ body.has-section-nav #scientificPanelBody{display:block;padding:0}
 @media(max-width:390px){
   .section-nav-title{font-size:11px;letter-spacing:.09em}
   .section-nav-drawer .section-nav-link{font-size:9.5px}
-  .section-page-title{font-size:18px}
+  .section-page-title{font-size:15px}
   .panel{padding:10px}
 }

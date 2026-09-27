@@ -6874,8 +6874,60 @@ function scheduleInitialRun(task) {
 }
 
 function renderStaticBaseline() {
-  resetCalcConsole('Waiting for the initial model pass. Each mathematical model stage will receive a check mark as it completes.', 'Idle');
+  resetCalcConsole('Loading the bundled reference result. A fresh Monte Carlo calculation runs only when requested.', 'Loading reference');
   refreshCurrentView(null);
+}
+
+function loadBundledBaselineSnapshot() {
+  if (typeof BUNDLED_BASELINE_SNAPSHOT === 'undefined' || !BUNDLED_BASELINE_SNAPSHOT) return null;
+  const bundle = BUNDLED_BASELINE_SNAPSHOT;
+  const result = bundle.result;
+  const execution = result && result.executionSnapshot;
+  const cascade = result && result.ensemble && result.ensemble.dynamicCascade;
+  const currentDataHash = fnv1aHex(JSON.stringify(ACTIVE_SOURCE_DATA || {}));
+  const currentCodeHash = numericalCodeFingerprint().codeHashFNV1a32;
+  const valid = bundle.schema === 'apocalypse-clock-baseline-snapshot-v1'
+    && bundle.modelVersion === MODEL_VERSION
+    && bundle.modelHashFNV1a32 === currentCodeHash
+    && bundle.datasetVersion === currentDatasetVersion()
+    && bundle.datasetHashFNV1a32 === currentDataHash
+    && bundle.scenario === 'baseline'
+    && bundle.monteCarloIterations === 3000
+    && bundle.seed === DEFAULT_MC_SEED
+    && execution && execution.parameters
+    && execution.parameters.scenario === 'baseline'
+    && execution.parameters.nSim === 3000
+    && execution.parameters.seed === DEFAULT_MC_SEED
+    && cascade && Array.isArray(cascade.crossing) && cascade.crossing.length === 3000
+    && Array.isArray(cascade.cdf) && cascade.cdf.length === YR
+    && Number.isFinite(cascade.p50) && Number.isFinite(cascade.p90);
+  if (!valid) {
+    console.error('Bundled baseline snapshot failed its model/data/configuration integrity checks.');
+    return null;
+  }
+  return JSON.parse(JSON.stringify(result));
+}
+
+function renderBundledBaseline() {
+  const result = loadBundledBaselineSnapshot();
+  if (!result) return false;
+  const scKey = 'baseline';
+  const enriched = buildEnriched(scKey, result.executionSnapshot.parameters);
+  _cdfCurves[scKey] = result;
+  updateUI(result, scKey, enriched, result.executionSnapshot);
+  const runCount = Number(result.executionSnapshot.parameters.nSim || 0);
+  const badge = document.getElementById('simBadge');
+  if (badge) badge.innerHTML = `<span class="live-dot"></span>${runCount.toLocaleString()} precomputed ✓`;
+  const meta = document.getElementById('hdrMeta');
+  if (meta) meta.innerHTML = `Scenario: ${SC[scKey].label}<br>Reference: ${runCount.toLocaleString()} runs<br>${THREATS.length} threats  6 dims`;
+  const progress = document.getElementById('mcProgress');
+  if (progress) progress.style.width = '100%';
+  resetCalcConsole(
+    `Reference result loaded instantly from the verified ${runCount.toLocaleString()}-run baseline snapshot. Use “Run new data” after changing a dataset or when a fresh calculation is required.`,
+    `Precomputed baseline · ${runCount.toLocaleString()} runs`,
+  );
+  announceRunStatus(`Precomputed baseline loaded. Dynamic cascade P50 ${fmtY(result.ensemble.dynamicCascade.p50)}, P90 ${fmtY(result.ensemble.dynamicCascade.p90)}.`);
+  return true;
 }
 
 const AI_PRESETS = {
@@ -7263,10 +7315,11 @@ async function initApp() {
   initScientificPanelToggle();
   initFloatTip();
   renderStaticBaseline();
-  scheduleInitialRun(async () => {
-    await runAll();
-    runSelfTests();
-  });
+  if (!renderBundledBaseline()) {
+    const badge = document.getElementById('simBadge');
+    if (badge) badge.innerHTML = '<span class="live-dot"></span>Run required';
+    resetCalcConsole('The bundled reference result failed validation. Use “Run new data” to calculate a fresh result.', 'Run required');
+  }
 }
 
 function setSafeTooltipHTML(target, rawHtml) {
