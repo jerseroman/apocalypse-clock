@@ -1,12 +1,12 @@
-# Apocalypse Clock v1.3.0
+# Apocalypse Clock v1.5.0
 
-Version **1.3.0** uses dataset **1.9.0**, [data_v1_9_0.json](./data_v1_9_0.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). It preserves the restored 23-threat calculation and the established functional-cascade rules while updating the application identity and primary dataset filename.
+Version **1.5.0** uses dataset **1.9.0**, [data_v1_9_0.json](./data_v1_9_0.json), and the directed functional first-failure engine in [src/cascade-model.js](./src/cascade-model.js). It keeps the 23-threat calculation and functional-cascade rules of 1.3.0 and adds structural uncertainty: every Monte Carlo run also samples the cascade threshold (0.40 to 0.60), the criticality tier values (±0.5), the dependency weights (Dirichlet around equal shares), the dependency lags (0 to 5 years) and each threat's growth class (one class down or up, 25% each). It also adds pressure turns and recovery: in every run each threat has a 50% chance that its pressure peaks in a year between 2027 and 2100 and then falls at the rate it rose, after which failed threats recover according to their reversibility class. No historical data sets these values. A Conditional scenario panel shows the full first-crossing curve, the range across the four aggregation rules and which essential-service basket sets off the clocks.
 
-A single initial failure can propagate into initially right-censored targets. Fixed criticality weights, essential-service baskets, one-year dependency lags and explicit overlap grouping replace the former three-domain/transmission veto. Functional failure does not require disappearance of all organisms. The headline is a **functional-disruption threshold after propagation**, not a calibrated prediction of completed global collapse. Parameter scores, growth priors and coupling coefficients remain transparent model judgments.
+A single initial failure can propagate into initially right-censored targets. Criticality weights, essential-service baskets, dependency lags and explicit overlap grouping replace the former three-domain/transmission veto. Functional failure does not require disappearance of all organisms. The headline is a **functional-disruption threshold after propagation**, not a calibrated prediction of completed global collapse. Parameter scores, growth priors and coupling coefficients remain transparent model judgments.
 
-The dataset values remain unchanged from the restored baseline. The fixed-seed Dynamic Cascade P10/P50/P90 is 2033/2036/2042; domain functional P50 values are civilization 2045, biosphere 2036 and technology 2040. These are conditional model quantiles, not validated dates of completed global collapse.
+The dataset values remain unchanged from the restored baseline. The fixed-seed Dynamic Cascade P10/P50/P90 is 2034/2038/2046, and 0.2% of runs do not reach the threshold by 2100. With pressure turns switched off it is 2034/2038/2044 (structural sampling alone); with structural sampling also off it is 2033/2036/2042, as in 1.3.0. Domain functional P50 values are civilization 2047, biosphere 2038 and technology 2041. These are conditional model quantiles, not validated dates of completed global collapse.
 
-The dataset's `_meta.model_compatibility` value remains 1.2.8 because that is the earliest application version implementing its functional fields. Application 1.3.0 does not reinterpret that historical compatibility marker.
+The dataset's `_meta.model_compatibility` value remains 1.2.8 because that is the earliest application version implementing its functional fields. Application 1.5.0 does not reinterpret that historical compatibility marker.
 
 Live application: https://jerseroman.github.io/apocalypse-clock/
 
@@ -28,16 +28,19 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 - `src/app.js` - model logic, simulation workflow, rendering, exports, and initialization.
 - `src/action-delegation.js` - early UI action delegation.
 - `src/aria-status.js` - accessibility status helper.
+- `src/section-nav.js` - left-hand section menu (phone: top bar and drawer), link buttons and section page titles.
+- `src/page-search.js` - page search across all sections (Ctrl+K).
+- `src/diagnostics-view.js` - tabbed layout of the Model Diagnostics section.
 - `src/styles.css` - application styles.
 - `tests/` - Playwright smoke, unit-contract, and headline-determinism regression tests.
-- `scripts/` - repository validation scripts for JavaScript syntax, dataset integrity, and link format checks.
+- `scripts/` - local development server (`serve.js`) and repository validation scripts for JavaScript syntax, dataset integrity, and link format checks.
 - `docs/` - public methodology, scope, validation, limitations, and change-class documentation.
 - `ai-governance/` - internal change policy, protected paths, model invariants, validation checklist, methodological review, and review log.
 - `.github/ISSUE_TEMPLATE/` - structured GitHub issue templates for bugs, methodology concerns, and source corrections.
 - `.github/pull_request_template.md` - governance-aware pull request checklist.
 - `.github/workflows/validate.yml` - GitHub Actions validation workflow.
 - `vendor/echarts.bundle.js` - local ECharts runtime.
-- `vendor/cytoscape.bundle.js` - local Cytoscape runtime.
+- `src/threat-network.html` - the Causal dependency network (canvas, no library), shown in the dashboard and usable on its own.
 - `Statement.md` - project statement.
 - `CITATION.cff` - citation metadata for academic, public, and review references.
 - `.zenodo.json` - Zenodo archival and release metadata.
@@ -47,7 +50,7 @@ Apocalypse Clock is a static, browser-based systemic-risk dashboard for explorin
 - `SECURITY.md` - security, integrity, and responsible-reporting guidance.
 - `LICENSE` - source-available non-commercial fork license.
 - `package.json` and `package-lock.json` - Node/Playwright validation dependencies and scripts.
-- `playwright.config.js` - Playwright test-server configuration.
+- `playwright.config.js` - Playwright test configuration; starts `scripts/serve.js` for the tests.
 - `.nojekyll` - disables Jekyll processing on GitHub Pages.
 - `.gitattributes` - line-ending and text-file handling rules.
 - `.gitignore` - ignored local and system files.
@@ -110,10 +113,11 @@ For full interpretation guidance, see [`docs/MODEL_SCOPE.md`](./docs/MODEL_SCOPE
 
 ## Local Test
 
-Run from this folder:
+Requires [Node.js](https://nodejs.org/) 22 or newer. Run from this folder:
 
 ```bash
-python -m http.server 8766 --bind 127.0.0.1
+npm install
+npm start
 ```
 
 Then open:
@@ -121,6 +125,17 @@ Then open:
 ```text
 http://127.0.0.1:8766/index.html
 ```
+
+`npm start` runs `scripts/serve.js`, a dependency-free Node static server that serves `404.html` for unknown paths, as GitHub Pages does. Set `PORT` to use another port. Stop it with Ctrl+C. On Windows PowerShell, use `npm.cmd` if script execution policy blocks `npm.ps1`.
+
+To run the full test suite locally, install the Playwright browser once and then run the tests:
+
+```bash
+npx playwright install chromium
+npm test
+```
+
+The tests start the same server automatically. Each test page runs the full 3,000-run model, so the suite takes several minutes.
 
 Validation checklist:
 
@@ -159,7 +174,7 @@ These metadata files support citation and archival discovery. They do not imply 
 
 If you use, cite, review, or discuss this project, please cite it as:
 
-Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.3.0.
+Roman Jerše. *Apocalypse Clock: Global Systemic Risk Monitor*. Version 1.5.0.
 https://github.com/jerseroman/apocalypse-clock
 
 ## Changelog

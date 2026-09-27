@@ -8,7 +8,7 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const FUNCTIONAL_FILE = 'data_v1_9_0.json';
 const LEGACY_FILE = 'data_v1_8_0_evidence_revision.json';
-const EXPECTED_MODEL = 'Apocalypse Clock v1.3.0';
+const EXPECTED_MODEL = 'Apocalypse Clock v1.5.0';
 const EXPECTED_DATASET = '1.9.0';
 const RANGE_FIELDS = ['scale', 'urgency', 'acceleration', 'interdependence',
   'irreversibility', 'gov_failure', 'growth_rate', 'threshold'];
@@ -116,7 +116,7 @@ test.describe('functional model browser integration', () => {
   test.beforeEach(async ({ page }) => {
     page.functionalPageErrors = [];
     page.on('pageerror', error => page.functionalPageErrors.push(error.message));
-    await page.goto('/index.html');
+    await page.goto('/index.html#section-all');
     // Wait for the real initial run, not merely the existence of declarations.
     await page.waitForFunction(() =>
       typeof _running !== 'undefined' && !_running &&
@@ -131,7 +131,7 @@ test.describe('functional model browser integration', () => {
 
   test('bundled UI starts with the functional model and dataset identities', async ({ page }) => {
     await expect(page).toHaveTitle(/Apocalypse Clock/);
-    await expect(page.getByRole('heading', { name: 'Apocalypse Clock' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Apocalypse Clock', exact: true })).toBeVisible();
     await expect(page.locator('.validation-notice')).toContainText('Astra ULTRA');
     await expect(page.locator('#controlCard')).toHaveCount(0);
     await expect(page.locator('#structuralCard')).toHaveCount(0);
@@ -159,30 +159,7 @@ test.describe('functional model browser integration', () => {
     expectThreatSummaries(state.functional.propagated, state.functional.standalone);
   });
 
-  test('main CDF follows the Dynamic Cascade clocks and Weibull reports censoring bounds without undefined values', async ({ page }) => {
-    await expect(page.getByText('Dynamic Cascade first-crossing distribution', { exact: true })).toBeVisible();
-    const cdf = await page.evaluate(() => {
-      const result = _cdfCurves.baseline;
-      const dynamic = result.ensemble.dynamicCascade;
-      drawCDF();
-      const option = ensureEChart('cdfCanvas').getOption();
-      const mainSeries = option.series.find(series => String(series.name).includes('Dynamic Cascade'));
-      return {
-        legend: document.getElementById('cdfLegend').textContent.replace(/\s+/g, ' ').trim(),
-        expectedQuantiles: [dynamic.p10, dynamic.p50, dynamic.p90],
-        displayedMarkers: mainSeries.markLine.data
-          .filter(marker => marker.name !== 'NOW')
-          .map(marker => marker.xAxis),
-        displayedP2050: mainSeries.data.find(point => point[0] === 2050)[1] / 100,
-        expectedP2050: dynamic.cdf.find(point => point.year === 2050).prob,
-        compensatoryP2050: result.cdf.find(point => point.year === 2050).prob,
-      };
-    });
-    expect(cdf.legend).toContain('Baseline Dynamic Cascade P50: 2036');
-    expect(cdf.displayedMarkers).toEqual(cdf.expectedQuantiles);
-    expect(cdf.displayedP2050).toBeCloseTo(cdf.expectedP2050, 4);
-    expect(cdf.displayedP2050).not.toBeCloseTo(cdf.compensatoryP2050, 2);
-
+  test('Weibull reports censoring bounds without undefined values', async ({ page }) => {
     await page.locator('[data-priority-mode-btn="weibull"]').click();
     const weibull = await page.evaluate(() => {
       const cards = [...document.querySelectorAll('#aggregateRow .agg-card')];

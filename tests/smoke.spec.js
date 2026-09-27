@@ -10,10 +10,10 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
     if (message.type() === 'warning' || message.type() === 'warn') warnings.push(message.text());
   });
 
-  await page.goto('/index.html');
+  await page.goto('/index.html#section-all');
 
   await expect(page).toHaveTitle(/Apocalypse Clock/);
-  await expect(page.getByRole('heading', { name: 'Apocalypse Clock' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Apocalypse Clock', exact: true })).toBeVisible();
   await expect(page.locator('.validation-notice')).toContainText('not been scientifically validated');
   await expect(page.locator('.validation-notice')).toContainText('Astra ULTRA');
   await expect(page.locator('#controlCard')).toHaveCount(0);
@@ -26,6 +26,9 @@ test('static dashboard loads and core controls respond', async ({ page }) => {
   await expect(page.locator('#cascadeMedianYearWrap')).toBeVisible();
   await expect(page.locator('#cascadeHeadlineYearWrap')).toBeVisible();
 
+  await expect(page.locator('#missionMore')).toBeVisible();
+  await page.locator('#missionToggle').click();
+  await expect(page.locator('#missionMore')).toBeHidden();
   await page.locator('#missionToggle').click();
   await expect(page.locator('#missionMore')).toBeVisible();
 

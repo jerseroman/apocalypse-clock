@@ -466,7 +466,8 @@ test.describe('pure-function model contracts', () => {
       const captured = [];
       ensureScientificPlotly = async () => ({ react: async (el, traces, layout) => { captured.push({ id: el.id, traces, layout }); } });
       const summary = summarizeCrossings([2030, 2101, 2101, 2101], 4, createRngContext('CENSOR-PLOT'));
-      const result = { ...summary, ensemble: { compensatory: summary }, domainStats: { civilization: summary, biosphere: summary, technology: summary } };
+      // The histogram and its quantile lines read the Dynamic Cascade distribution, like the clocks.
+      const result = { ...summary, ensemble: { compensatory: summary, dynamicCascade: summary }, domainStats: { civilization: summary, biosphere: summary, technology: summary } };
       try {
         await drawDistributionDiagnosticsPlotly(result);
         const hist = captured.find(x => x.id === 'plotlyHistogramChart');

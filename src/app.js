@@ -3,7 +3,7 @@
  * (c) 2026 Apocalypse Clock project authors. See LICENSE.
  */
 const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
-const MODEL_VERSION = 'Apocalypse Clock v1.3.0';
+const MODEL_VERSION = 'Apocalypse Clock v1.5.0';
 const PRIMARY_DATASET_NAME = 'data_v1_9_0.json';
 const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
 const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
@@ -37,7 +37,6 @@ const AXIS_START = 2000, AXIS_END = 2100;
 const AXIS_YEARS = [2000,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100];
 const yearPos = y => clamp(((Math.min(y, AXIS_END) - AXIS_START) / (AXIS_END - AXIS_START)) * 100, 0, 100);
 const nowStamp = () => new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-const yearsLeft = y => y > YE ? 'No cross' : `${Math.max(0, Math.round(y - NOW))} yr`;
 const fmtYearsLeft = y => {
   if (!Number.isFinite(y)) return ' ';
   if (y > YE) return 'No cross';
@@ -46,7 +45,6 @@ const fmtYearsLeft = y => {
   return `${val.toFixed(Math.abs(val) >= 10 ? 0 : 1)} yr`;
 };
 const daysLeft = y => y > YE ? ' ' : `${Math.max(0, Math.round((y - NOW) * 365.25))} d`;
-const logistic = x => 1 / (1 + Math.exp(-x));
 const describeHorizonBand = y => {
   if (!Number.isFinite(y) || y > YE) return 'no crossing ≤ 2100';
   const decade = Math.floor(y / 10) * 10;
@@ -54,8 +52,6 @@ const describeHorizonBand = y => {
   const band = pos <= 2 ? 'early' : pos <= 6 ? 'mid' : 'late';
   return `${band}-${decade}s`;
 };
-const describeIntervalSummary = (p10, p50, p90) =>
-  p50 > YE ? 'no crossing ≤ 2100' : `${describeHorizonBand(p50)}${p10 <= YE && p90 <= YE ? ` (${fmtY(p10)}–${fmtY(p90)})` : ''}`;
 
 function quantile(sorted, q) {
   if (!sorted.length) return 0;
@@ -120,10 +116,6 @@ function resetMonteCarloSeed(seed) {
   _mcSeedString = normalizeMonteCarloSeed(seed);
   _mcRng = makeSeededRandom(_mcSeedString);
   return _mcSeedString;
-}
-
-function currentMonteCarloSeed() {
-  return _mcSeedString || DEFAULT_MC_SEED;
 }
 
 function random01() {
@@ -476,90 +468,6 @@ const SC = {
 };
 
 
-function buildProfileParams(profileKey) {
-  const key = WEIGHT_PROFILES[profileKey] ? profileKey : 'expert';
-  return {
-    ...P,
-    weightProfile: key,
-    weights: normalizedWeightProfileWeights(key),
-    domW: { ...(WEIGHT_PROFILES[key].domainWeights || WEIGHT_PROFILES.expert.domainWeights) }
-  };
-}
-
-function joinedNaturalList(items) {
-  const arr = (items || []).filter(Boolean);
-  if (!arr.length) return '';
-  if (arr.length === 1) return arr[0];
-  if (arr.length === 2) return `${arr[0]} and ${arr[1]}`;
-  return `${arr.slice(0, -1).join(', ')}, and ${arr[arr.length - 1]}`;
-}
-
-function topWeightShiftLabels(profileKey) {
-  const labels = { scale:'scale', urgency:'urgency', acceleration:'acceleration', interdependence:'interdependence', irreversibility:'irreversibility', gov_failure:'governance failure' };
-  const base = normalizedWeightProfileWeights('expert');
-  const current = normalizedWeightProfileWeights(profileKey);
-  return Object.keys(labels)
-    .map(k => ({ label: labels[k], delta: (current[k] || 0) - (base[k] || 0) }))
-    .filter(x => x.delta > 0.015)
-    .sort((a, b) => b.delta - a.delta)
-    .slice(0, 2)
-    .map(x => x.label);
-}
-
-function emphasizedDomains(profileKey) {
-  const dom = (WEIGHT_PROFILES[profileKey] && WEIGHT_PROFILES[profileKey].domainWeights) || WEIGHT_PROFILES.expert.domainWeights;
-  return Object.entries(dom)
-    .filter(([, v]) => Number(v) > 1.08)
-    .sort((a, b) => Number(b[1]) - Number(a[1]))
-    .map(([k]) => k);
-}
-
-function computeDeterministicProfileYear(scKey, profileKey) {
-  const params = buildProfileParams(profileKey);
-  const enriched = buildEnriched(scKey, params);
-  initNetwork(enriched);
-  return { year: computeAggregateYears(enriched, params).dynamicCascade, enriched };
-}
-
-function buildWhyChangedSummary(scKey, profileKey, currentEnriched) {
-  const profile = WEIGHT_PROFILES[profileKey] || WEIGHT_PROFILES.expert;
-  if (profileKey === 'expert') {
-    return `Expert Baseline is the reference configuration under ${SC[scKey].label}. It balances scale, urgency, and interdependence without giving any one domain an extra prior, so it serves as the comparison point for the other weighting models.`;
-  }
-  const base = computeDeterministicProfileYear(scKey, 'expert');
-  const current = computeDeterministicProfileYear(scKey, profileKey);
-  const delta = Math.round(current.year - base.year);
-  const shifts = topWeightShiftLabels(profileKey);
-  const domains = emphasizedDomains(profileKey);
-  let moveText = 'leaves the deterministic cascade horizon broadly unchanged relative to Expert Baseline';
-  if (delta < 0) moveText = `pulls the deterministic cascade horizon ${Math.abs(delta)} year${Math.abs(delta) === 1 ? '' : 's'} earlier than Expert Baseline`;
-  if (delta > 0) moveText = `pushes the deterministic cascade horizon ${delta} year${delta === 1 ? '' : 's'} later than Expert Baseline`;
-  let because = [];
-  if (shifts.length) because.push(`places more weight on ${joinedNaturalList(shifts)}`);
-  if (domains.length) because.push(`adds extra prior emphasis to the ${domains[0]} domain`);
-  const becauseText = because.length ? ` It does so because it ${because.join(' and ')}.` : '';
-  const stabilityText = delta === 0 ? ' The unchanged timing suggests the headline result remains fairly robust under this weighting shift.' : '';
-  if (currentEnriched) initNetwork(currentEnriched);
-  return `${profile.label} ${moveText} under ${SC[scKey].label}.${becauseText}${stabilityText}`;
-}
-
-function computeWeightProfileRobustness(scKey, currentEnriched) {
-  const years = Object.keys(WEIGHT_PROFILES).map(key => computeDeterministicProfileYear(scKey, key).year).filter(y => Number.isFinite(y));
-  const minY = Math.min(...years);
-  const maxY = Math.max(...years);
-  const spread = Math.max(0, Math.round(maxY - minY));
-  let level = 'High';
-  let className = 'is-high';
-  if (spread > 1 && spread <= 3) { level = 'Moderate'; className = 'is-moderate'; }
-  else if (spread > 3) { level = 'Sensitive'; className = 'is-sensitive'; }
-  if (currentEnriched) initNetwork(currentEnriched);
-  return {
-    level,
-    className,
-    detail: `Across the five weighting models, the deterministic Dynamic cascade horizon spans ${fmtY(minY)} to ${fmtY(maxY)} (${spread}-year spread).`
-  };
-}
-
 /* MCDA inputs use 1-5 ordinal ranges; growth_rate and threshold remain judgment-based model fields. */
 const PARAM_FIELDS = ['scale','urgency','acceleration','interdependence','irreversibility','gov_failure','growth_rate','threshold'];
 const ORD_RANGE = { strong:0.40, moderate:0.65, weak:0.95 };
@@ -592,7 +500,6 @@ const cleanSourceText = s => String(s ?? '')
   .replace(/\[([^\]\n]{1,160})\]\((https?:\/\/[^\s)]+(?:\([^\)]*\)[^\s)]*)?)\)/gi, '$1')
   .replace(/\s{2,}/g, ' ')
   .trim();
-const fieldDisplayName = field => field === 'growth_rate' ? 'risk-growth proxy' : field.replace(/_/g, ' ');
 function classifySourceType(source, url, strength) {
   const s = `${source || ''} ${url || ''}`.toLowerCase();
   if ((strength || '').toLowerCase().includes('expert') || s.includes('expert judgment')) return 'expert judgment';
@@ -1295,6 +1202,8 @@ let P = {
   seed: DEFAULT_MC_SEED,
   threshold: 0.40,          // compensatory: fraction of weighted threat mass for aggregate event
   cascadeThreshold: 0.50,   // cascade-only: stricter mass fraction before cascade can trigger
+  structuralUncertainty: true, // Monte Carlo samples the cascade structure (STRUCTURAL_UNCERTAINTY)
+  pressureTurns: true,      // Monte Carlo samples pressure turns and recovery (PRESSURE_TURNS)
   depAlpha: 0.22,           // dependency amplification factor
   uncMult: 1.0,             // uncertainty multiplier on fitted parameter ranges
   tailDependence: 0.15,     // optional diagnostic: probability of correlated systemic tail-shock draw
@@ -1303,6 +1212,11 @@ let P = {
   weightProfile: 'expert',
   weights: { scale:0.20, urgency:0.18, acceleration:0.14, interdependence:0.18, irreversibility:0.16, gov_failure:0.14 },
 };
+
+// The dashboard runs the Baseline scenario; the other SC scenarios remain available to runMC and buildEnriched.
+function currentScenario() {
+  return 'baseline';
+}
 
 const WEIGHT_PROFILES = {
   expert: {
@@ -1497,12 +1411,6 @@ function sampleThreatNumerics(scThreat, spreadMult, rng) {
   };
 }
 
-/**
- * Sample the first-arrival year of an event process from a non-homogeneous Poisson hazard.
- * λ(t) = λ0 × (1 + g)^(t − NOW) keeps event risk pressure growing through time instead of freezing it at NOW. (Ross 2014 non-homogeneous Poisson process)
- * Annual hazard is clamped to [1e-5, 5] for numerical stability.
- */
-
 const EFFECTIVE_GROWTH_CAP = 0.08;
 
 /* Raw-indicator to systemic-risk growth calibration. */
@@ -1558,14 +1466,23 @@ function effectiveRiskGrowthForThreat(t, rawGrowthRate) {
   return clamp(converted, Math.min(0.0005, cap), cap);
 }
 
-function sampleEventHorizon(priority, growthRate, threshold, rng) {
+/**
+ * Sample the first-arrival year of an event process from a non-homogeneous Poisson hazard.
+ * λ(t) = λ0 × (1 + g)^(t − NOW) lets event risk pressure grow through time instead of freezing it at NOW;
+ * after an optional pressure turn (PRESSURE_TURNS) the hazard retraces its rise. (Ross 2014 non-homogeneous Poisson process)
+ * Annual hazard is clamped to [1e-5, 5] for numerical stability.
+ */
+function sampleEventHorizon(priority, growthRate, threshold, rng, turnYear) {
   const u = clamp(rng ? rng.random01() : random01(), 1e-9, 1 - 1e-9);
   const g = Math.max(0, Number(growthRate) || 0);
   // The baseline hazard floor is distinct from the already capped growth rate.
   const lambda0 = Math.max(1e-5, (priority / threshold) * g * 2);
+  const turned = Number.isFinite(turnYear);
   let cumHazard = 0;
   for (let yr = NOW; yr <= YE; yr++) {
-    const lambdaYr = clamp(lambda0 * Math.pow(1 + g, yr - NOW), 1e-5, 5);
+    // After a sampled pressure turn the hazard retraces its rise with the pressure.
+    const years = turned && yr > turnYear ? 2 * turnYear - yr - NOW : yr - NOW;
+    const lambdaYr = clamp(lambda0 * Math.pow(1 + g, years), 1e-5, 5);
     cumHazard += lambdaYr;
     if (1 - Math.exp(-cumHazard) >= u) return yr;
   }
@@ -1600,14 +1517,23 @@ function deterministicRegimeHorizon(priority, growthRate, threshold) {
   return computeHorizon(priority, growthRate, threshold);
 }
 
-function computeThreatHorizon(priority, growthRate, threshold, processType, stochastic, rng) {
+/**
+ * First passage when the pressure peaks in turnYear and then declines (PRESSURE_TURNS): a
+ * crossing that has not happened by the turn year never happens.
+ */
+function turnedHorizon(horizon, turnYear) {
+  return Number.isFinite(turnYear) && horizon > turnYear ? YE + 1 : horizon;
+}
+
+// turnYear is optional and used only by the Monte Carlo; stochastic event horizons follow the mirrored hazard.
+function computeThreatHorizon(priority, growthRate, threshold, processType, stochastic, rng, turnYear) {
   threshold = Number(threshold);
   if (!Number.isFinite(threshold)) threshold = GLOBAL_THRESHOLD;
   threshold = clamp(threshold, THRESHOLD_MIN, THRESHOLD_MAX);
   if (priority <= 0 || !Number.isFinite(priority)) return YE + 1;
-  if (processType === 'event') return stochastic ? sampleEventHorizon(priority, growthRate, threshold, rng) : deterministicEventHorizon(priority, growthRate, threshold);
-  if (processType === 'regime') return stochastic ? sampleRegimeHorizon(priority, growthRate, threshold, rng) : deterministicRegimeHorizon(priority, growthRate, threshold);
-  return computeHorizon(priority, growthRate, threshold);
+  if (processType === 'event') return stochastic ? sampleEventHorizon(priority, growthRate, threshold, rng, turnYear) : deterministicEventHorizon(priority, growthRate, threshold);
+  if (processType === 'regime') return turnedHorizon(stochastic ? sampleRegimeHorizon(priority, growthRate, threshold, rng) : deterministicRegimeHorizon(priority, growthRate, threshold), turnYear);
+  return turnedHorizon(computeHorizon(priority, growthRate, threshold), turnYear);
 }
 
 
@@ -1879,7 +1805,8 @@ function functionalCascadeNodes(enriched, params) {
       inducible: t.functional_inducible ?? true,
       pressureRatio: cascadePressureRatio(t, NOW, params),
       growth: t.growth_rate_effective ?? effectiveRiskGrowthForThreat(t, muOf(t.growth_rate)),
-      vulnerability: cascadeVulnerability(t), spontaneousYear: Number.isFinite(t.horizon) ? t.horizon : YE + 1 };
+      vulnerability: cascadeVulnerability(t), spontaneousYear: Number.isFinite(t.horizon) ? t.horizon : YE + 1,
+      ...(Number.isFinite(t.pressure_turn_year) ? { turnYear: t.pressure_turn_year, recoveryDrop: t.pressure_recovery_drop ?? null } : {}) };
   });
 }
 
@@ -1905,6 +1832,7 @@ function computeDomainFunctionalCrossing(enriched, cascadeResult, domain, params
     nodes: configuredFunctionalCascadeNodes(enriched, params),
     activationYears: cascadeResult.firstActivationYears,
     activationCauses: cascadeResult.activationCauses,
+    activeIntervals: cascadeResult.activeIntervals,
     startYear: YS,
     endYear: YE,
     threshold: params.cascadeThreshold ?? 0.50,
@@ -1991,6 +1919,8 @@ function createMonteCarloAccumulator() {
     maxCrossing: [],
     graphCrossing: [],
     cascadeCrossing: [],
+    cascadeAboveAtEnd: [],
+    cascadeBackBelowYear: [],
     globalThresholdCascadeCrossing: [],
     domainCrossing: {
       civilization: [],
@@ -2009,7 +1939,7 @@ function enrichMonteCarloThreats(sampled, params, rng) {
     const threshold = getThreatThreshold(t, params.thresholdPolicy || THRESHOLD_POLICY);
     const rawGrowth = t.growth_rate;
     const effectiveGrowth = effectiveRiskGrowthForThreat(t, rawGrowth);
-    const horizon = computeThreatHorizon(priority, effectiveGrowth, threshold, t.process_type, true, rng);
+    const horizon = computeThreatHorizon(priority, effectiveGrowth, threshold, t.process_type, true, rng, t.pressure_turn_year);
 
     return {
       ...t,
@@ -2029,7 +1959,7 @@ function applyGlobalThresholdToSample(enriched, rng) {
     return {
       ...t,
       threshold_value: threshold,
-      horizon: computeThreatHorizon(t.priority, t.growth_rate_effective, threshold, t.process_type, true, rng),
+      horizon: computeThreatHorizon(t.priority, t.growth_rate_effective, threshold, t.process_type, true, rng, t.pressure_turn_year),
     };
   });
 }
@@ -2039,6 +1969,8 @@ function recordMonteCarloSample(acc, enriched, globalThresholdEnriched, params) 
 
   const functional = simulateFunctionalCascade(enriched, params, { collectAll: true });
   enriched.forEach(t => acc.functionalHorizonSamples[t.id].push(functional.firstActivationYears[t.id]));
+  acc.cascadeAboveAtEnd.push(functional.aboveThresholdAtEnd);
+  acc.cascadeBackBelowYear.push(functional.backBelowYear);
   const years = computeAggregateYears(enriched, params, functional);
   acc.compCrossing.push(years.comp);
   acc.maxCrossing.push(years.maxRule);
@@ -2082,6 +2014,28 @@ function pairedQuantileContrastStandardError(baseYears, alternativeYears, q, rng
   return Math.sqrt(contrasts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (contrasts.length - 1));
 }
 
+/** How many Dynamic Cascade runs that reached the threshold are below it again in the last model year. */
+function summarizeCascadeRecovery(acc) {
+  let crossedRuns = 0;
+  let backBelowAtEnd = 0;
+  const firstBackBelow = [];
+  acc.cascadeCrossing.forEach((year, i) => {
+    if (year > YE) return;
+    crossedRuns++;
+    if (!acc.cascadeAboveAtEnd[i]) backBelowAtEnd++;
+    if (acc.cascadeBackBelowYear[i] <= YE) firstBackBelow.push(acc.cascadeBackBelowYear[i]);
+  });
+  firstBackBelow.sort((a, b) => a - b);
+  return {
+    crossedRuns,
+    backBelowAtEnd,
+    shareOfCrossed: crossedRuns ? backBelowAtEnd / crossedRuns : 0,
+    everBackBelow: firstBackBelow.length,
+    firstBackBelowP50: firstBackBelow.length ? quantile(firstBackBelow, 0.5) : null,
+    meaning: `Runs that reached the Dynamic Cascade threshold and are below it again in ${YE} because failed threats recovered after a pressure turn. The clocks still date the first crossing.`,
+  };
+}
+
 function summarizeMonteCarloAccumulator(acc, nSim, seed, thresholdPolicy = THRESHOLD_POLICY) {
   const summaryRng = label => createRngContext(`${normalizeMonteCarloSeed(seed)}:bootstrap:${label}`);
   const thresholdMcStandardError = pairedQuantileContrastStandardError(acc.cascadeCrossing,
@@ -2102,7 +2056,8 @@ function summarizeMonteCarloAccumulator(acc, nSim, seed, thresholdPolicy = THRES
     functionalStats: summarizeThreatHorizonSamples(acc.functionalHorizonSamples),
     functionalStatsMeaning: 'First functional-threshold activation, spontaneous or induced. Not extinction, permanent failure or completion of collapse.',
     domainStats,
-    domainStatsMeaning: 'Within-domain functional-loss first crossing after full-system directed propagation, using the same fixed criticality, overlap, essential-service and cascade-threshold rules as the headline model. Domain-specific denominators mean these are not additive parts of the system horizon.',
+    cascadeRecovery: summarizeCascadeRecovery(acc),
+    domainStatsMeaning: 'Within-domain functional-loss first crossing after full-system directed propagation, using the same criticality, overlap, essential-service and cascade-threshold rules as the headline model, including each run’s sampled structure. Domain-specific denominators mean these are not additive parts of the system horizon.',
     structuralSigma,
     ensemble: {
       compensatory: compSummary,
@@ -2129,9 +2084,144 @@ function summarizeMonteCarloAccumulator(acc, nSim, seed, thresholdPolicy = THRES
   };
 }
 
+/**
+ * Structural uncertainty of the functional cascade (model 1.5.0). These choices are model
+ * judgments rather than measurements, so every main Monte Carlo run samples them around the
+ * dataset's declared values:
+ * - cascade threshold: uniform 0.40 to 0.60 (declared 0.50);
+ * - criticality levels 1/2/3: each level value uniform within ±0.5, so levels keep their order;
+ * - dependency weights: Dirichlet with the declared weights as mean, concentration 2 per edge;
+ * - dependency lags: whole years, uniform 0 to 5 (declared 1);
+ * - growth class: each threat moves one class down (25%), stays (50%) or moves up (25%) on the
+ *   ladder 0.003 / 0.01 / 0.02 / 0.03, continued beyond both ends by the adjacent step ratio.
+ *   The shifted growth still passes through effectiveRiskGrowthForThreat, whose caps can cut an
+ *   upward move short (Climate Breakdown and AI at their central growth).
+ * Structural draws use their own seeded streams, one per component, so a run's parameter and
+ * process draws are the same with structural sampling on or off. With
+ * params.structuralUncertainty === false the Monte Carlo reproduces model 1.3.0 exactly.
+ * Deterministic views and the sensitivity diagnostics keep the declared structure.
+ */
+const STRUCTURAL_UNCERTAINTY = Object.freeze({
+  cascadeThreshold: Object.freeze({ lo: 0.40, hi: 0.60 }),
+  criticalityLevelHalfWidth: 0.5,
+  dependencyWeightConcentration: 2,
+  dependencyLagYears: Object.freeze({ lo: 0, hi: 5 }),
+  growthClassLadder: Object.freeze([0.003, 0.01, 0.02, 0.03]),
+  growthClassShift: Object.freeze({ down: 0.25, up: 0.25 }),
+});
+const STRUCTURAL_COMPONENTS = Object.freeze(['threshold', 'criticality', 'dependencyWeights', 'lags', 'growthClass']);
+
+function structuralComponentsOf(params) {
+  if (!params || params.structuralUncertainty === false) return [];
+  const selected = params.structuralComponents;
+  return STRUCTURAL_COMPONENTS.filter(name => !selected || selected[name]);
+}
+
+function growthClassFactors(declaredMu) {
+  const ladder = STRUCTURAL_UNCERTAINTY.growthClassLadder;
+  const last = ladder.length - 1;
+  const extended = [ladder[0] * ladder[0] / ladder[1], ...ladder, ladder[last] * ladder[last] / ladder[last - 1]];
+  let index = 1;
+  for (let i = 2; i <= ladder.length; i++) {
+    if (Math.abs(Math.log(declaredMu / extended[i])) < Math.abs(Math.log(declaredMu / extended[index]))) index = i;
+  }
+  return { down: extended[index - 1] / extended[index], up: extended[index + 1] / extended[index] };
+}
+
+/** Per-run-series state for structural sampling, or null when it is switched off. */
+function createStructuralContext(params) {
+  const components = structuralComponentsOf(params);
+  if (!components.length) return null;
+  const base = `${normalizeMonteCarloSeed(params.seed || DEFAULT_MC_SEED)}:structure`;
+  const context = { growthFactors: new Map(THREATS.map(t => [t.id, growthClassFactors(muOf(t.growth_rate))])) };
+  STRUCTURAL_COMPONENTS.forEach(name => { context[name] = components.includes(name) ? createRngContext(`${base}:${name}`) : null; });
+  return context;
+}
+
+/** Draws one run's structural choices; returns the structured threats and the run's parameters. */
+function applyStructuralUncertainty(sampled, params, context) {
+  if (!context) return { threats: sampled, params };
+  const spec = STRUCTURAL_UNCERTAINTY;
+  const runParams = context.threshold
+    ? { ...params, cascadeThreshold: spec.cascadeThreshold.lo + context.threshold.random01() * (spec.cascadeThreshold.hi - spec.cascadeThreshold.lo) }
+    : params;
+  let levelValues = null;
+  if (context.criticality) {
+    const levels = [...new Set(sampled.map(t => t.functional_weight ?? 1))].sort((a, b) => a - b);
+    levelValues = new Map(levels.map(level => [level, level + (2 * context.criticality.random01() - 1) * spec.criticalityLevelHalfWidth]));
+  }
+  const lagSpan = spec.dependencyLagYears.hi - spec.dependencyLagYears.lo + 1;
+  const threats = sampled.map(t => {
+    const next = { ...t };
+    if (levelValues) next.functional_weight = levelValues.get(t.functional_weight ?? 1);
+    if (context.growthClass) {
+      const u = context.growthClass.random01();
+      const factors = context.growthFactors.get(t.id);
+      if (factors && u < spec.growthClassShift.down) next.growth_rate = t.growth_rate * factors.down;
+      else if (factors && u >= 1 - spec.growthClassShift.up) next.growth_rate = t.growth_rate * factors.up;
+    }
+    const deps = [...(t.deps || [])].sort();
+    if (context.dependencyWeights && deps.length) {
+      const declared = deps.map(id => t.dependency_weights?.[id] ?? 1 / deps.length);
+      const total = declared.reduce((sum, weight) => sum + weight, 0);
+      const draws = declared.map(weight => (total > 0 ? sampleGamma(spec.dependencyWeightConcentration * deps.length * weight / total, context.dependencyWeights) : 0));
+      const drawSum = draws.reduce((sum, value) => sum + value, 0);
+      if (drawSum > 0) next.dependency_weights = { ...t.dependency_weights, ...Object.fromEntries(deps.map((id, i) => [id, total * draws[i] / drawSum])) };
+    }
+    if (context.lags && deps.length) {
+      next.dependency_lags = { ...t.dependency_lags, ...Object.fromEntries(deps.map(id => [id, spec.dependencyLagYears.lo + Math.floor(context.lags.random01() * lagSpan)])) };
+    }
+    return next;
+  });
+  return { threats, params: runParams };
+}
+
+/**
+ * Pressure turns and recovery (model 1.5.0). The dataset's growth priors describe continued
+ * pressure and say nothing about whether or when a threat's pressure could peak and decline; no
+ * historical base rates are used. Each main Monte Carlo run therefore gives every threat,
+ * independently, an even chance of a turn by 2100, in a year drawn uniformly from 2027 to 2100.
+ * After the turn the pressure retraces its rise at the same rate, so a crossing that has not
+ * happened by the turn year never happens. After its turn, a failed cascade node recovers once its
+ * drive has fallen by recoveryDrop below its level at failure; the drop follows the declared
+ * reversibility class, and irreversible threats do not recover. Turn draws use their own seeded
+ * stream, two per threat per run, so parameter, structural and process draws stay paired. With
+ * params.pressureTurns === false the Monte Carlo reproduces the structural-sampling-only result exactly. Deterministic
+ * views and the sensitivity diagnostics keep the declared continued-pressure path.
+ */
+const PRESSURE_TURNS = Object.freeze({
+  probabilityBy2100: 0.5,
+  firstYear: NOW + 1,
+  lastYear: YE,
+  recoveryDrop: Object.freeze({ reversible: 0.25, partial: 0.5, irreversible: null }),
+});
+
+/** Per-run-series state for pressure turns, or null when they are switched off. */
+function createPressureTurnContext(params) {
+  if (!params || params.pressureTurns === false) return null;
+  return {
+    rng: createRngContext(`${normalizeMonteCarloSeed(params.seed || DEFAULT_MC_SEED)}:turn`),
+    recoveryDrop: new Map(THREATS.map(t => [t.id, PRESSURE_TURNS.recoveryDrop[reversibilityTypeForThreat(t)] ?? null])),
+  };
+}
+
+/** Draws one run's pressure turns; returns new objects for turned threats and leaves the inputs untouched. */
+function applyPressureTurns(threats, context) {
+  if (!context) return threats;
+  const spec = PRESSURE_TURNS;
+  const span = spec.lastYear - spec.firstYear + 1;
+  return threats.map(t => {
+    const turns = context.rng.random01() < spec.probabilityBy2100;
+    const turnYear = spec.firstYear + Math.floor(context.rng.random01() * span);
+    return turns ? { ...t, pressure_turn_year: turnYear, pressure_recovery_drop: context.recoveryDrop.get(t.id) ?? null } : t;
+  });
+}
+
 async function runMC(scKey, nSim, onProg, params) {
   params = params || P;
   const runRng = createRngContext(params.seed || DEFAULT_MC_SEED);
+  const structure = createStructuralContext(params);
+  const turns = createPressureTurnContext(params);
   const sc = SC[scKey] || SC.baseline;
   const spreadMult = params.uncMult * sc.uncWidthMult;
   const scenarioThreats = THREATS.map(t => applyScenario(t, scKey));
@@ -2143,8 +2233,10 @@ async function runMC(scKey, nSim, onProg, params) {
     const n = Math.min(CHUNK, nSim - done);
     for (let i = 0; i < n; i++) {
       const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult, runRng));
+      const run = applyStructuralUncertainty(sampled, params, structure);
+      const threats = applyPressureTurns(run.threats, turns);
       const processDraws = [];
-      const enriched = enrichMonteCarloThreats(sampled, params, { random01: () => {
+      const enriched = enrichMonteCarloThreats(threats, run.params, { random01: () => {
         const draw = runRng.random01();
         processDraws.push(draw);
         return draw;
@@ -2155,7 +2247,7 @@ async function runMC(scKey, nSim, onProg, params) {
         return processDraws[replayIndex++];
       } });
       if (replayIndex !== processDraws.length) throw new Error('Threshold-policy process draw pairing mismatch.');
-      recordMonteCarloSample(acc, enriched, globalThresholdEnriched, params);
+      recordMonteCarloSample(acc, enriched, globalThresholdEnriched, run.params);
     }
     done += n;
     if (onProg) onProg(done / nSim);
@@ -2163,6 +2255,112 @@ async function runMC(scKey, nSim, onProg, params) {
   }
 
   return summarizeMonteCarloAccumulator(acc, nSim, params.seed, params.thresholdPolicy || THRESHOLD_POLICY);
+}
+
+const CASCADE_SYSTEM_BASKET = 'system_wide';
+
+/**
+ * Reporting-basket structure for trigger attribution. Each basket is split into overlap
+ * groups counted once at their largest member weight, as FunctionalCascade.metrics does, and
+ * records the fewest groups whose failure reaches the cascade threshold.
+ */
+function cascadeBasketLayout(nodes, threshold) {
+  const baskets = Object.create(null);
+  const add = (key, node) => {
+    const basket = baskets[key] || (baskets[key] = { groups: Object.create(null) });
+    const group = basket.groups[node.overlapGroup] || (basket.groups[node.overlapGroup] = { id: node.overlapGroup, members: [], weight: 0 });
+    group.members.push(node.id);
+    group.weight = Math.max(group.weight, node.weight);
+  };
+  nodes.forEach(node => {
+    add(CASCADE_SYSTEM_BASKET, node);
+    node.services.forEach(service => add(service, node));
+  });
+  Object.values(baskets).forEach(basket => {
+    const weights = Object.values(basket.groups).map(group => group.weight).sort((a, b) => b - a);
+    const total = weights.reduce((sum, weight) => sum + weight, 0);
+    let lost = 0;
+    let needed = 0;
+    while (needed < weights.length && lost / total < threshold) lost += weights[needed++];
+    basket.groupCount = weights.length;
+    basket.minGroupsToCross = needed;
+  });
+  return baskets;
+}
+
+/**
+ * Which reporting basket triggers the Dynamic cascade clocks. Diagnostic only, not a model
+ * output. Replays runMC's draw streams (same scenario, seed, run count, call order and
+ * structural draws), so replayed run i is headline run i, and records every basket whose
+ * functional loss had reached that run's cascade threshold in the first-crossing year. If the
+ * replayed crossing years differ from the headline distribution the trace is marked
+ * inconsistent and must not be shown. Several baskets can reach the threshold in the same
+ * year, so basket shares can add up to more than 100%. groupsNeeded counts, over all runs, how
+ * many failing groups each basket needs to reach the run's sampled threshold.
+ */
+async function traceCascadeTriggers(inputs, headline, isCurrent) {
+  const { scKey, nSim, params } = inputs;
+  const runRng = createRngContext(params.seed || DEFAULT_MC_SEED);
+  const structure = createStructuralContext(params);
+  const turns = createPressureTurnContext(params);
+  const sc = SC[scKey] || SC.baseline;
+  const spreadMult = params.uncMult * sc.uncWidthMult;
+  const scenarioThreats = THREATS.map(t => applyScenario(t, scKey));
+  const crossings = [];
+  const counts = Object.create(null);
+  const groupsNeeded = Object.create(null);
+  let layout = null;
+  let crossedRuns = 0;
+  let multiBasketRuns = 0;
+
+  for (let i = 0; i < nSim; i++) {
+    const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult, runRng));
+    const run = applyStructuralUncertainty(sampled, params, structure);
+    const enriched = enrichMonteCarloThreats(applyPressureTurns(run.threats, turns), run.params, { random01: () => runRng.random01() });
+    const threshold = run.params.cascadeThreshold ?? 0.50;
+    layout = cascadeBasketLayout(configuredFunctionalCascadeNodes(enriched, run.params), threshold);
+    Object.entries(layout).forEach(([key, basket]) => {
+      const histogram = groupsNeeded[key] || (groupsNeeded[key] = Object.create(null));
+      histogram[basket.minGroupsToCross] = (histogram[basket.minGroupsToCross] || 0) + 1;
+    });
+    const result = simulateFunctionalCascade(enriched, run.params);
+    crossings.push(result.year);
+    if (result.year <= YE) {
+      crossedRuns++;
+      const reached = Object.keys(result.serviceLosses).filter(key => result.serviceLosses[key] >= threshold);
+      if (result.activeMass >= threshold) reached.push(CASCADE_SYSTEM_BASKET);
+      if (reached.length > 1) multiBasketRuns++;
+      const active = new Set(result.activeThreats);
+      reached.forEach(key => {
+        const count = counts[key] || (counts[key] = { runs: 0, groups: Object.create(null) });
+        count.runs++;
+        Object.values(layout[key].groups).forEach(group => {
+          if (group.members.some(id => active.has(id))) count.groups[group.id] = (count.groups[group.id] || 0) + 1;
+        });
+      });
+    }
+    if (i % 60 === 59) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      if (!isCurrent()) return null;
+    }
+  }
+
+  crossings.sort((a, b) => a - b);
+  const expected = (headline && headline.crossing) || [];
+  const consistent = crossings.length === expected.length && crossings.every((year, i) => year === expected[i]);
+  const baskets = Object.entries(counts).map(([key, count]) => ({
+    key,
+    runs: count.runs,
+    share: count.runs / crossedRuns,
+    groupCount: layout[key].groupCount,
+    groupsNeeded: Object.fromEntries(Object.entries(groupsNeeded[key]).map(([needed, runs]) => [needed, runs / nSim])),
+    groups: Object.values(layout[key].groups)
+      .map(group => ({ id: group.id, members: [...group.members], runs: count.groups[group.id] || 0, share: (count.groups[group.id] || 0) / count.runs }))
+      .sort((a, b) => b.runs - a.runs || a.id.localeCompare(b.id)),
+  })).sort((a, b) => b.runs - a.runs || a.key.localeCompare(b.key));
+  const declaredThreshold = params.cascadeThreshold ?? 0.50;
+  const threshold = structure && structure.threshold ? { ...STRUCTURAL_UNCERTAINTY.cascadeThreshold } : { lo: declaredThreshold, hi: declaredThreshold };
+  return { consistent, nSim, crossedRuns, multiBasketRuns, threshold, baskets };
 }
 
 /* One-at-a-time growth-rate sensitivity diagnostic. */
@@ -2196,39 +2394,46 @@ const CALC_STEP_KIND = {
     note: 'Audit or rendering summary rather than a numerical model calculation.',
   },
 };
+// Console steps in display order. core: sets the clocks; diagnostic: describes the result without
+// changing the clocks; optional: Model Diagnostics, run on request. async steps finish after the run.
 const CALC_STEPS = [
-  { id:'scenario', kind:'exact', label:'Scenario conditioning', pending:'Scenario multipliers have not yet been applied.' },
-  { id:'base', kind:'exact', label:'Base MCDA scoring', pending:'Weighted six-dimension base scores are waiting for a rerun.' },
-  { id:'dependency', kind:'heuristic', label:'Dependency amplification', pending:'Dependency-adjusted priorities are waiting for a rerun.' },
-  { id:'domainweights', kind:'exact', label:'Normalized domain weighting', pending:'Domain slider shares have not yet been normalized for scoring.' },
-  { id:'horizon', kind:'heuristic', label:'Process-specific threat horizon model', pending:'Continuous, event, and regime horizons are not yet recomputed.' },
-  { id:'gsi', kind:'exact', label:'Global Stress Index', pending:'Aggregate systemic stress has not yet been recomputed.' },
-  { id:'priorityrank', kind:'exact', label:'Lead-threat priority ranking', pending:'Top-priority threat ranking is waiting for deterministic scores.' },
-  { id:'domainlayers', kind:'exact', label:'Domain layer preparation', pending:'Civilization, biosphere, and technology reporting baskets are pending.' },
-  { id:'sampling', kind:'mc', label:'Beta / log-normal parameter sampling', pending:'Parameter sampling has not started yet.' },
-  { id:'montecarlo', kind:'mc', label:'Monte Carlo crossing simulation', pending:'Monte Carlo crossing simulation has not started yet.' },
-  { id:'compensatory', kind:'exact', label:'Compensatory aggregation', pending:'Weighted-share threshold aggregation is pending.' },
-  { id:'maxrule', kind:'exact', label:'Non-compensatory max-rule aggregation', pending:'Earliest single-threat crossing aggregation is pending.' },
-  { id:'graph', kind:'heuristic', label:'Graph-weighted heuristic index', pending:'Dependency-linked heuristic index is pending.' },
-  { id:'cascade', kind:'heuristic', label:'Dynamic cascade propagation', pending:'Year-by-year dependency propagation is pending.' },
-  { id:'domainmc', kind:'mc', label:'Domain functional-cascade distributions', pending:'Domain-specific functional first-crossing summaries are pending.' },
-  { id:'structural', kind:'exact', label:'Structural ensemble spread', pending:'Cross-aggregator structural spread has not yet been computed.' },
-  { id:'bootstrap', kind:'mc', label:'Bootstrap interval estimation', pending:'Bootstrap uncertainty summaries are pending.' },
-  { id:'weibull', kind:'heuristic', label:'Weibull survival analysis', pending:'Accelerating hazard diagnostics are pending.' },
-  { id:'eigen', kind:'exact', label:'Network eigenvector centrality', pending:'Cascade hub centrality ranking is pending.' },
-  { id:'poissonbinomial', kind:'exact', label:'Poisson-binomial convergence tail', pending:'Exact unequal-probability convergence tail is pending.' },
-  { id:'entropy', kind:'exact', label:'Shannon entropy risk landscape', pending:'Risk concentration / spread entropy has not yet been computed.' },
-  { id:'oat', kind:'heuristic', label:'Fast OAT sensitivity', pending:'Idle. Use “Run Additional Scientific Calculations” to run OAT sensitivity.' },
-  { id:'sobol', kind:'mc', label:'Sobol low-discrepancy Jansen S1/ST', pending:'Idle. Use “Run Additional Scientific Calculations” to run Sobol/Jansen sensitivity.' },
-  { id:'smaa', kind:'mc', label:'SMAA weight robustness', pending:'Idle. Use “Run Additional Scientific Calculations” to run SMAA robustness.' },
-  { id:'veto', kind:'stress', label:'Non-compensatory veto diagnostic', pending:'Idle. Use “Run Additional Scientific Calculations” to run veto-rule stress testing.' },
-  { id:'tailshock', kind:'stress', label:'Tail-dependence stress test', pending:'Idle. Use “Run Additional Scientific Calculations” to run tail-dependence stress testing.' },
-  { id:'audit', kind:'report', label:'Scientific audit summary', pending:'Idle. Use “Run Additional Scientific Calculations” to build the audit summary.' },
+  { group:'core', id:'scenario', kind:'exact', label:'Scenario conditioning', pending:'Scenario multipliers have not yet been applied.' },
+  { group:'core', id:'base', kind:'exact', label:'Base MCDA scoring', pending:'Weighted six-dimension base scores are waiting for a rerun.' },
+  { group:'core', id:'dependency', kind:'heuristic', label:'Dependency amplification', pending:'Dependency-adjusted priorities are waiting for a rerun.' },
+  { group:'core', id:'domainweights', kind:'exact', label:'Normalized domain weighting', pending:'Domain slider shares have not yet been normalized for scoring.' },
+  { group:'core', id:'horizon', kind:'heuristic', label:'Process-specific threat horizon model', pending:'Continuous, event, and regime horizons are not yet recomputed.' },
+  { group:'core', id:'gsi', kind:'exact', label:'Global Stress Index', pending:'Aggregate systemic stress has not yet been recomputed.' },
+  { group:'core', id:'priorityrank', kind:'exact', label:'Lead-threat priority ranking', pending:'Top-priority threat ranking is waiting for deterministic scores.' },
+  { group:'core', id:'structuresample', kind:'mc', label:'Structural uncertainty sampling', pending:'Cascade threshold, criticality levels, dependency weights and lags, and growth class are sampled in every run.' },
+  { group:'core', id:'turns', kind:'mc', label:'Pressure turns and recovery', pending:'Pressure turns and recovery by reversibility class are sampled in every run.' },
+  { group:'core', id:'montecarlo', kind:'mc', label:'Monte Carlo sampling and crossing simulation', pending:'Beta / log-normal parameter sampling and the crossing simulation have not started yet.' },
+  { group:'core', id:'compensatory', kind:'exact', label:'Compensatory aggregation', pending:'Weighted-share threshold aggregation is pending.' },
+  { group:'core', id:'maxrule', kind:'exact', label:'Non-compensatory max-rule aggregation', pending:'Earliest single-threat crossing aggregation is pending.' },
+  { group:'core', id:'cascade', kind:'heuristic', label:'Dynamic cascade propagation', pending:'Year-by-year dependency propagation is pending.' },
+  { group:'core', id:'domainmc', kind:'mc', label:'Domain functional-cascade distributions', pending:'Domain-specific functional first-crossing summaries are pending.' },
+  { group:'core', id:'structural', kind:'exact', label:'Aggregation-rule spread', pending:'Cross-aggregator structural spread has not yet been computed.' },
+  { group:'core', id:'bootstrap', kind:'mc', label:'Bootstrap interval estimation', pending:'Bootstrap uncertainty summaries are pending.' },
+  { group:'core', id:'recovery', kind:'exact', label:'Recovery check', pending:'Runs still below the threshold in 2100 and runs that fall back below it are counted after the simulation.' },
+  { group:'core', async:true, id:'triggers', kind:'mc', label:'Trigger attribution', pending:'The runs are replayed to find which essential-service basket sets the clocks off.' },
+  { group:'diagnostic', id:'graph', kind:'heuristic', label:'Graph-weighted heuristic index', pending:'Dependency-linked heuristic index is pending.' },
+  { group:'diagnostic', id:'weibull', kind:'heuristic', label:'Weibull survival analysis', pending:'Accelerating hazard diagnostics are pending.' },
+  { group:'diagnostic', id:'eigen', kind:'exact', label:'Network eigenvector centrality', pending:'Cascade hub centrality ranking is pending.' },
+  { group:'diagnostic', id:'poissonbinomial', kind:'exact', label:'Poisson-binomial convergence tail', pending:'Exact unequal-probability convergence tail is pending.' },
+  { group:'diagnostic', id:'entropy', kind:'exact', label:'Shannon entropy risk landscape', pending:'Risk concentration / spread entropy has not yet been computed.' },
+  { group:'optional', id:'oat', kind:'heuristic', label:'Fast OAT sensitivity', pending:'Idle. Use “Run diagnostics” to run OAT sensitivity.' },
+  { group:'optional', id:'sobol', kind:'mc', label:'Sobol low-discrepancy Jansen S1/ST', pending:'Idle. Use “Run diagnostics” to run Sobol/Jansen sensitivity.' },
+  { group:'optional', id:'smaa', kind:'mc', label:'SMAA weight robustness', pending:'Idle. Use “Run diagnostics” to run SMAA robustness.' },
+  { group:'optional', id:'veto', kind:'stress', label:'Non-compensatory veto diagnostic', pending:'Idle. Use “Run diagnostics” to run veto-rule stress testing.' },
+  { group:'optional', id:'tailshock', kind:'stress', label:'Tail-dependence stress test', pending:'Idle. Use “Run diagnostics” to run tail-dependence stress testing.' },
+  { group:'optional', id:'audit', kind:'report', label:'Scientific audit summary', pending:'Idle. Use “Run diagnostics” to build the audit summary.' },
 ];
-const CORE_CALC_STEPS = CALC_STEPS.slice(0, 21);
-const ADDITIONAL_CALC_STEPS = CALC_STEPS.slice(21);
+const CORE_CALC_STEPS = CALC_STEPS.filter(step => step.group !== 'optional');
+const ADDITIONAL_CALC_STEPS = CALC_STEPS.filter(step => step.group === 'optional');
+// Steps the loading bar and the completion message wait for (the trigger replay runs afterwards).
+const BLOCKING_CALC_STEPS = CORE_CALC_STEPS.filter(step => !step.async);
+const calcStepRange = steps => `${CALC_STEPS.indexOf(steps[0]) + 1}–${CALC_STEPS.indexOf(steps[steps.length - 1]) + 1}`;
 let _calcConsoleState = null;
-let _calcConsoleExpanded = false;
+let _calcConsoleExpanded = true;
 
 function makeCalcConsoleState(summary, runLabel) {
   const steps = {};
@@ -2268,9 +2473,14 @@ function calcDuration(step) {
   return sec >= 10 ? `${Math.round(sec)} s` : `${sec.toFixed(1)} s`;
 }
 
+const CALC_GROUP_TITLES = { diagnostic: 'Diagnostics of the result: they describe it and do not change the clocks' };
+
 function calcStepGroupHtml(stepDefs, state, numberOffset) {
   return stepDefs.map((def, idx) => {
     const step = state.steps[def.id];
+    const heading = idx > 0 && def.group !== stepDefs[idx - 1].group && CALC_GROUP_TITLES[def.group]
+      ? `<div class="calc-step-group">${escapeHtml(CALC_GROUP_TITLES[def.group])}</div>`
+      : '';
     const icon = step.status === 'done' ? '✓'
       : step.status === 'running' ? '…'
       : step.status === 'queued' ? '○'
@@ -2289,7 +2499,7 @@ function calcStepGroupHtml(stepDefs, state, numberOffset) {
     const numberedLabel = `${String(numberOffset + idx + 1).padStart(2, '0')}  ${def.label}`;
     const kind = CALC_STEP_KIND[def.kind] || CALC_STEP_KIND.heuristic;
     const kindTitle = `${kind.label}: ${kind.note}`;
-    return `<div class="calc-step calc-${step.status}">
+    return `${heading}<div class="calc-step calc-${step.status}">
       <div class="calc-step-icon">${icon}</div>
       <div class="calc-step-body">
         <div class="calc-step-label"><span class="calc-step-name">${escapeHtml(numberedLabel)}</span><span class="calc-step-kind calc-kind-${kind.key}" title="${escapeHtml(kindTitle)}">${escapeHtml(kind.label)}</span></div>
@@ -2324,10 +2534,10 @@ function renderAdditionalCalcConsole(state) {
       : anyError
         ? 'One or more additional scientific calculations failed. Main clock result remains valid.'
         : done === ADDITIONAL_CALC_STEPS.length
-          ? 'Complete. Additional diagnostic graphs 22–27 are rendered below with type badges.'
+          ? `Complete. Additional diagnostic graphs ${calcStepRange(ADDITIONAL_CALC_STEPS)} are rendered below with type badges.`
           : done > 0
             ? `${done}/${ADDITIONAL_CALC_STEPS.length} additional diagnostic calculations completed.`
-            : 'Idle. Use “Run Additional Scientific Calculations” to run optional diagnostics 22–27.';
+            : `Idle. Use “Run diagnostics” to run optional diagnostics ${calcStepRange(ADDITIONAL_CALC_STEPS)}.`;
   }
   if (rail) rail.innerHTML = calcRailHtml(ADDITIONAL_CALC_STEPS, state, CORE_CALC_STEPS.length);
   if (list) list.innerHTML = calcStepGroupHtml(ADDITIONAL_CALC_STEPS, state, CORE_CALC_STEPS.length);
@@ -2356,7 +2566,7 @@ function renderCalcConsole() {
 }
 
 function resetCalcConsole(summary, runLabel) {
-  _calcConsoleExpanded = false;
+  _calcConsoleExpanded = true;
   _calcConsoleState = makeCalcConsoleState(summary, runLabel);
   renderCalcConsole();
 }
@@ -2389,11 +2599,16 @@ function setCalcStepStatus(id, status, detail, summary) {
   }
   step.status = status;
   if (detail !== undefined) step.detail = detail;
+  const blockingIndex = BLOCKING_CALC_STEPS.findIndex(def => def.id === id);
+  const stepLine = document.getElementById('cascadeLoadingStep');
+  if (stepLine && status === 'running' && blockingIndex >= 0) {
+    stepLine.textContent = `Step ${blockingIndex + 1} of ${BLOCKING_CALC_STEPS.length} · ${BLOCKING_CALC_STEPS[blockingIndex].label}`;
+  }
   if (summary) state.summary = summary;
   state.updatedAt = now;
   if (window._particleLoader) {
-    const total = CORE_CALC_STEPS.length;
-    const done = CORE_CALC_STEPS.filter(s => state.steps[s.id] && state.steps[s.id].status === 'done').length;
+    const total = BLOCKING_CALC_STEPS.length;
+    const done = BLOCKING_CALC_STEPS.filter(s => state.steps[s.id] && state.steps[s.id].status === 'done').length;
     window._particleLoader.setProgress(done / total);
   }
   renderCalcConsole();
@@ -2401,15 +2616,13 @@ function setCalcStepStatus(id, status, detail, summary) {
 
 function finalizeCalcConsoleSummary() {
   const state = ensureCalcConsoleState();
-  const statuses = CORE_CALC_STEPS.map(step => state.steps[step.id].status);
+  const statuses = BLOCKING_CALC_STEPS.map(step => state.steps[step.id].status);
   if (statuses.every(status => status === 'done')) {
-    state.summary = 'Main model run complete. Core calculations 1–21 finished; badges separate exact internal math from estimates and heuristics. Optional diagnostics 22–27 are available in the Scientific Panel.';
-    _calcConsoleExpanded = false;
-    if (window._particleLoader) window._particleLoader.stop();
-  } else if (statuses.every(s => s === 'done' || s === 'error')) {
+    state.summary = `Main model run complete. Calculations ${calcStepRange(CORE_CALC_STEPS)} finished; badges separate exact internal math from estimates and heuristics. Optional diagnostics ${calcStepRange(ADDITIONAL_CALC_STEPS)} are available in Model Diagnostics.`;
     if (window._particleLoader) window._particleLoader.stop();
   } else if (statuses.includes('error')) {
     state.summary = 'One or more core model stages failed. Main outputs may still be partially available.';
+    if (statuses.every(s => s === 'done' || s === 'error') && window._particleLoader) window._particleLoader.stop();
   }
   renderCalcConsole();
 }
@@ -2620,37 +2833,6 @@ function shortThreatLabel(name, maxLen = 24) {
   return name.length > maxLen ? name.slice(0, maxLen - 1) + '…' : name;
 }
 
-let _netNodes = null, _netEdges = null, _netHover = null, _netAnim = null;
-
-function updateNetworkSide(hoverNode) {
-  const titleEl = document.getElementById('netTitle');
-  const summaryEl = document.getElementById('netSummary');
-  const priorityEl = document.getElementById('netPriority');
-  const impactEl = document.getElementById('netImpactList');
-  if (!titleEl || !summaryEl || !priorityEl || !impactEl || !_netNodes) return;
-
-  if (!hoverNode) {
-    titleEl.textContent = 'Full system view';
-    summaryEl.textContent = 'All 23 threats are arranged in broad domain lanes. Hover a node to isolate only the threats it directly influences through declared dependencies.';
-    priorityEl.textContent = 'Hover state will show adjusted score, domain, and outbound dependency count.';
-    impactEl.innerHTML = `<div class="network-impact-item"><div class="network-impact-name">Hover a node to list the threats it can amplify in the current dependency graph.</div><div class="network-impact-meta">0 links</div></div>`;
-    return;
-  }
-
-  const targets = (hoverNode.deps || [])
-    .map(id => _netNodes.find(n => n.id === id))
-    .filter(Boolean)
-    .sort((a, b) => b.priority - a.priority);
-  const domainLabel = hoverNode.domain.charAt(0).toUpperCase() + hoverNode.domain.slice(1);
-  titleEl.textContent = shortThreatLabel(hoverNode.name, 34);
-  summaryEl.textContent = targets.length
-    ? `Outbound view isolates ${targets.length} directly influenced threat${targets.length === 1 ? '' : 's'}. Unrelated nodes are hidden until you move away.`
-    : 'This node currently has no outbound dependencies recorded in the declared graph.';
-  priorityEl.textContent = `${domainLabel} domain  adjusted score ${hoverNode.priority.toFixed(2)}  ${targets.length} outbound link${targets.length === 1 ? '' : 's'}`;
-  impactEl.innerHTML = targets.length
-    ? targets.map(t => `<div class="network-impact-item"><div class="network-impact-name">${t.name}</div><div class="network-impact-meta">${t.priority.toFixed(2)} adj</div></div>`).join('')
-    : `<div class="network-impact-item"><div class="network-impact-name">No outbound influence targets are declared for this threat.</div><div class="network-impact-meta">0 links</div></div>`;
-}
 function renderDomainComp(enriched) {
   const el = document.getElementById('domainComp'); if (!el) return;
   const totals = {};
@@ -2670,9 +2852,7 @@ function renderDomainComp(enriched) {
   }).join('');
 }
 
-function buildTimelineRiskGradient() {
-  return `linear-gradient(to right, #2a9d6e 0%, #d4a017 50%, #c94040 100%)`;
-}
+const TIMELINE_RISK_GRADIENT = 'linear-gradient(to right, #2a9d6e 0%, #d4a017 50%, #c94040 100%)';
 
 function renderTimelineBar(low, mid, high, uncLow, uncHigh, threatEntryOrShowPercentileLabels = false, showPercentileLabels = false) {
   const threatEntry = threatEntryOrShowPercentileLabels && typeof threatEntryOrShowPercentileLabels === 'object'
@@ -2690,7 +2870,6 @@ function renderTimelineBar(low, mid, high, uncLow, uncHigh, threatEntryOrShowPer
   ].filter(p => Number.isFinite(p.year));
   const core = percentilePoints.map(p => p.year).filter(v => v <= AXIS_END).sort((a, b) => a - b);
   const lo = core[0];
-  const md = core[1] ?? core[0];
   const hi = core[2] ?? core[1] ?? core[0];
   const uVals = [uncLow, uncHigh].filter(v => Number.isFinite(v)).sort((a, b) => a - b);
   const uLo = uVals[0];
@@ -2717,10 +2896,10 @@ function renderTimelineBar(low, mid, high, uncLow, uncHigh, threatEntryOrShowPer
     `;
   }
 
-  const loX = yearPos(lo), mdX = yearPos(md), hiX = yearPos(hi);
+  const loX = yearPos(lo), hiX = yearPos(hi);
   const uLoX = Number.isFinite(uLo) && uLo <= AXIS_END ? yearPos(uLo) : loX;
   const uHiX = Number.isFinite(uHi) ? yearPos(uHi > AXIS_END && uLo <= AXIS_END ? AXIS_END : uHi) : hiX;
-  const gradient = buildTimelineRiskGradient(loX, mdX, hiX);
+  const gradient = TIMELINE_RISK_GRADIENT;
   const percentileTickHtml = percentilePoints
     .filter(p => p.year <= AXIS_END)
     .map(p => {
@@ -2766,12 +2945,11 @@ function renderOverviewStrip(enriched, mcRes) {
     const low = stats ? stats.p10 : t.horizon;
     const mid = stats ? stats.p50 : t.horizon;
     const high = stats ? stats.p90 : t.horizon;
-    const loPos = Number.isFinite(low) ? yearPos(low) : 100;
     const midPos = Number.isFinite(mid) ? yearPos(mid) : 100;
     const visibleYears = [low, mid, high].filter(v => Number.isFinite(v) && v <= AXIS_END).sort((a, b) => a - b);
     const solidEndYear = visibleYears.length ? visibleYears[visibleYears.length - 1] : high;
     const solidEndPos = Number.isFinite(solidEndYear) ? yearPos(solidEndYear) : 100;
-    const miniGradient = buildTimelineRiskGradient(loPos, midPos, solidEndPos);
+    const miniGradient = TIMELINE_RISK_GRADIENT;
     const isAmplifierRisk = mechanismTypeForThreat(t) === 'amplifier_risk';
     const miniAmplifierTail = isAmplifierRisk && solidEndPos < 100
       ? `<div class="amplifier-continuation-tail" style="left:${solidEndPos}%;right:0" role="img" aria-label="${escapeHtml(AMPLIFIER_CONTINUATION_A11Y)}" title="${escapeHtml(AMPLIFIER_CONTINUATION_A11Y)}"></div>`
@@ -3093,7 +3271,7 @@ function renderPriorityPanel(enriched, mcRes) {
   const mid = stats ? stats.p50 : top.horizon;
   const high = stats ? stats.p90 : top.horizon;
   const p2050 = mcRes ? (mcRes.cdf.find(entry => entry.year === 2050) || { prob: 0 }).prob : 0;
-  const hilp = isHilpThreat(top, low, high);
+  const hilp = isHilpThreat(top);
   if (labelEl) labelEl.textContent = 'Highest-priority threat  current weighting + scenario';
 
   nameEl.textContent = top.name;
@@ -3193,10 +3371,6 @@ function parameterCalibrationCellHtml(t) {
   const calibration = parameterCalibrationProfileForThreat(t);
   const legacy = calibration.legacyFallback ? ' Legacy strength labels were used where explicit calibration grades were not supplied.' : '';
   return `<span class="chip ${evidenceChipClass(calibration.counts.D ? 'D' : calibration.counts.C ? 'C' : calibration.counts.B ? 'B' : calibration.counts.A ? 'A' : 'U')}" title="Eight parameter-level grades; they are not averaged.${escapeHtml(legacy)}">${escapeHtml(calibration.label)}</span>`;
-}
-
-function confidenceGradeForThreat(t) {
-  return scientificEvidenceForThreat(t).grade;
 }
 
 function sourceBadge(value, rangeObj, digits = 1, suffix = '') {
@@ -3303,8 +3477,6 @@ function setPriorityViewMode(mode) {
   renderPriorityViewFromCache();
   syncPriorityModeButtons();
 }
-
-document.addEventListener('DOMContentLoaded', () => bindPriorityModeToggle());
 
 function networkEigenvectorCentrality(enriched) {
   const n = enriched.length;
@@ -3456,30 +3628,6 @@ function advancedPct(v) {
   if (!Number.isFinite(v)) return ' ';
   if (v > 0 && v < 0.005) return '<1%';
   return pct(v);
-}
-
-function advancedBarRow(name, value, label, max, color, sub) {
-  const width = max > 0 ? clamp((value / max) * 100, 2, 100) : 2;
-  return `<div class="advanced-row">
-    <div class="advanced-row-name">${escapeHtml(name)}${sub ? `<br><span class="advanced-domain-pill">${escapeHtml(sub)}</span>` : ''}</div>
-    <div class="advanced-bar"><span style="width:${width.toFixed(1)}%;background:${color}"></span></div>
-    <div class="advanced-row-val">${escapeHtml(label)}</div>
-  </div>`;
-}
-
-function advancedAlgoCard(num, color, title, formula, leftBody, refStr, rightBody) {
-  return `<div class="advanced-algo-card" style="border-top-color:${color}">
-    <div class="advanced-algo-grid">
-      <div>
-        <div class="advanced-overline" style="color:${color}">Algorithm ${num}</div>
-        <div class="advanced-algo-title">${title}</div>
-        <div class="advanced-formula" style="border-color:${color}33;border-left-color:${color}">${formula}</div>
-        <div class="advanced-copy">${leftBody}</div>
-        <div class="advanced-ref"><em>${refStr}</em></div>
-      </div>
-      <div>${rightBody}</div>
-    </div>
-  </div>`;
 }
 
 let _wAdvCmpYear = 2035;
@@ -3689,14 +3837,13 @@ function renderAdvancedMethod(enriched, mcRes) {
               const val = d[`pGe${th.k}`];
               if (!val) return '<td style="text-align:center;padding:6px 8px;color:var(--text-3)">n/a</td>';
               const pctLo = Math.round(val.lower*100), pctHi = Math.round(val.upper*100);
-              const pct2 = pctLo;
-              const bg = pct2>80?'rgba(201,64,64,.12)':pct2>50?'rgba(212,160,23,.10)':pct2>20?'rgba(58,120,201,.08)':'transparent';
+              const bg = pctLo>80?'rgba(201,64,64,.12)':pctLo>50?'rgba(212,160,23,.10)':pctLo>20?'rgba(58,120,201,.08)':'transparent';
               return `<td style="text-align:center;padding:6px 8px;color:${th.col};background:${bg}">${pctLo===pctHi?pctLo+'%':pctLo+'–'+pctHi+'%'}</td>`;
             }).join('')}
           </tr>`).join('')}
           <tr style="border-bottom:1px solid var(--border);opacity:.5">
             <td style="padding:6px 8px;color:var(--text-3)">μ ± σ</td>
-            ${jfRows.map(d=>`<td style="text-align:center;padding:6px 8px;color:var(--text-3)">${d.mu}±${d.sigma}</td>`).join('')}
+            ${jfRows.map(d=>`<td style="text-align:center;padding:6px 8px;color:var(--text-3)">${Number.isFinite(d.muValue) ? `${d.mu}±${d.sigma}` : 'n/a'}</td>`).join('')}
           </tr>
         </tbody>
       </table>
@@ -3798,7 +3945,6 @@ function renderAdvancedMethod(enriched, mcRes) {
 }
 
 function buildNarrative(scKey, enriched, mcRes) {
-  const sc = SC[scKey];
   const sorted = [...enriched].sort((a,b) => b.priority-a.priority);
   const top3 = sorted.slice(0,3).map(t=>`<strong>${t.name}</strong>`).join(', ');
   const gsi = calcGSI(enriched).toFixed(0);
@@ -3829,7 +3975,7 @@ function buildNarrative(scKey, enriched, mcRes) {
   The three highest-priority threats are ${top3}, with the earliest individual threat horizon at <strong>${earliest}</strong>.
   The <em>compensatory</em> aggregate model (weighted threat-mass crossing) gives a central horizon of <strong>${p50}</strong> (${p50Band}),
   with approximately <strong>${p2050}</strong> probability of compensatory crossing by 2050.
-  The <em>dynamic functional cascade</em> follows directed losses of supporting functions. Its P50 is <strong>${cascadeP50}</strong> and its P90 is <strong>${cascadeP90}</strong>; both are shown in the paired headline clocks. A single initial failure can propagate; simultaneous initial failure in all three domains is not required. The trigger is the selected share of fixed criticality weights globally or within any essential-service basket, not a measured fraction of service output.
+  The <em>dynamic functional cascade</em> follows directed losses of supporting functions. Its P50 is <strong>${cascadeP50}</strong> and its P90 is <strong>${cascadeP90}</strong>; both are shown in the paired headline clocks. A single initial failure can propagate; simultaneous initial failure in all three domains is not required. The trigger is a share of criticality weights, globally or within any essential-service basket, reaching the run’s cascade threshold (sampled from 0.40 to 0.60); it is not a measured fraction of service output.
   <br><br><strong>Standalone → propagated functional P50:</strong> ${['oceans','biodiversity','amr','supply'].map(id => { const t = enriched.find(item => item.id === id); return t && mcRes?.functionalStats?.[id] ? `${t.name}: ${fmtY(mcRes.threatStats[id].p50)} → ${fmtY(mcRes.functionalStats[id].p50)}` : ''; }).filter(Boolean).join('; ')}.
   <br><br><em style="color:var(--text3);font-size:10px">Functional failure can precede disappearance of all organisms. The model records first threshold crossings, not permanent destruction or completion of global collapse. A narrow interval does not establish calibration: common assumptions and threshold structure can create it. P90 is a time-distribution quantile, not a physical tipping threshold.</em>
   <br><br><em style="color:var(--text3);font-size:10px">These are model-generated scenario intervals, not empirical probabilities.
@@ -3839,12 +3985,8 @@ function buildNarrative(scKey, enriched, mcRes) {
 
 const SOURCE_DATA_URL = './data_v1_9_0.json';
 
-function threatPageUrl(t) {
-  return SOURCE_DATA_URL;
-}
-
 function threatReadMoreLink(t) {
-  const url = threatPageUrl(t);
+  const url = SOURCE_DATA_URL;
   const label = escapeHtml(t?.name || 'this threat');
   return `<a class="threat-read-more" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="View source data for ${label}">VIEW SOURCE DATA</a>`;
 }
@@ -3862,10 +4004,8 @@ function threatTableMetaHtml(t) {
 function renderTable(enriched, mcRes) {
   const tbody = document.getElementById('tbody'); if (!tbody) return;
   const sorted = [...enriched].sort((a,b) => b.priority-a.priority);
-  const tableItems = sorted;
-
-  tbody.innerHTML = tableItems.map((t,i) => {
-    const displayRank = Math.max(1, sorted.findIndex(x => x.id === t.id) + 1);
+  tbody.innerHTML = sorted.map((t, i) => {
+    const displayRank = i + 1;
     const stats = mcRes && mcRes.threatStats ? mcRes.threatStats[t.id] : null;
     const horizonMid = stats ? stats.p50 : t.horizon;
     const intervalCell = stats
@@ -3917,15 +4057,12 @@ function metricSourceSummary(rangeObj) {
   return [src ? escapeHtml(src) : '', grade, yr].filter(Boolean).join('  ');
 }
 
-function isHilpThreat(t, low, high) {
+/** High impact, low probability: an event-like (event or regime) threat with high priority, scale or irreversibility. */
+function isHilpThreat(t) {
   if (!t) return false;
-  if (t.id === 'climate') return false;
-  const process = t.process_type || '';
-  const eventLike = process === 'event' || process === 'regime';
+  const eventLike = t.process_type === 'event' || t.process_type === 'regime';
   const highImpact = (Number.isFinite(t.priority) && t.priority >= 4.5) || muOf(t.scale) >= 4.5 || muOf(t.irreversibility) >= 4.5;
-  const notContinuousTrend = process !== 'continuous';
-  const wideUncertaintyAlone = Number.isFinite(low) && Number.isFinite(high) && (high - low) >= 18;
-  return Boolean(highImpact && eventLike && notContinuousTrend && !(!eventLike && wideUncertaintyAlone));
+  return eventLike && highImpact;
 }
 
 function metricTooltip(label) {
@@ -3936,7 +4073,7 @@ function metricTooltip(label) {
     'Severity': '<strong>Severity</strong>How large the damage could be if this threat unfolds. 1 means limited impact, 5 means global or planetary-scale impact.',
     'Urgency': '<strong>Urgency</strong>How quickly this threat is becoming relevant. A high value means it matters on a near-term timeline, not only in the distant future.',
     'Cascade': '<strong>Cascade</strong>How strongly this threat can speed up itself or pull connected threats forward. High values make the model treat it as an amplifier.',
-    'Interdependence': '<strong>Incoming functional vulnerability</strong>How strongly this target function depends on upstream systems. It is not the source threat’s outgoing importance. Directed edge weights and fixed criticality tiers are separate model assumptions.',
+    'Interdependence': '<strong>Incoming functional vulnerability</strong>How strongly this target function depends on upstream systems. It is not the source threat’s outgoing importance. Directed edge weights and criticality tiers are separate model assumptions.',
     'Irreversibility': '<strong>Irreversibility</strong>How hard the damage is to undo. A high value means effects can last for decades, centuries, or become practically permanent.',
     'Gov. failure': '<strong>Governance failure</strong>How poorly institutions, treaties, regulation, or coordination can control this threat. High means society is less prepared to manage it.',
     'Growth proxy': '<strong>Effective risk-growth proxy</strong>Annualized effective systemic risk-growth proxy used by the model. It may be derived from empirical indicators, but it is not necessarily the raw empirical CAGR itself.',
@@ -3975,75 +4112,6 @@ function collectThreatSourceLinks(t) {
   return Array.from(byUrl.values());
 }
 
-function climateJsonMetricNotesHtml(t) {
-  const fields = [
-    ['Scale', t.scale], ['Urgency', t.urgency], ['Acceleration', t.acceleration], ['Interdependence', t.interdependence],
-    ['Irreversibility', t.irreversibility], ['Governance failure', t.gov_failure], ['Growth proxy', t.growth_rate], ['Threshold', t.threshold]
-  ];
-  return fields.map(([label, r]) => {
-    const source = sourceOf(r) || 'No JSON source recorded';
-    const note = r && r.note ? String(r.note) : 'No JSON note recorded.';
-    const strength = r && (r.strength || r.confidence) ? String(r.strength || r.confidence) : '';
-    return `<div style="margin-bottom:7px"><strong>${escapeHtml(label)}:</strong> ${escapeHtml(source)}${strength ? `  ${escapeHtml(strength)}` : ''}<br><span style="color:var(--text3)">${escapeHtml(note)}</span></div>`;
-  }).join('');
-}
-
-function climateJsonSourcePanelHtml(t) {
-  const links = collectThreatSourceLinks(t);
-  if (!links.length) return 'No metric-level source URLs are present in the current embedded JSON for this threat.';
-  return links.map(x => `<div style="margin-bottom:6px"><strong>${escapeHtml(x.fields.join(', '))}:</strong> <a href="${escapeHtml(x.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(x.source)}</a>${x.strength ? `  ${escapeHtml(String(x.strength))}` : ''}</div>`).join('');
-}
-
-function climateSourceLinksHtml(t) {
-  return collectThreatSourceLinks(t).map(x => {
-    const label = `${x.fields.join('+')}  ${shortThreatLabel(x.source, 32)}`;
-    const tip = `<strong>${escapeHtml(x.source)}</strong><br>JSON fields: ${escapeHtml(x.fields.join(', '))}${x.notes.length ? `<br>${escapeHtml(x.notes[0]).slice(0, 340)}` : ''}`;
-    return `<a class="ev-link" data-s="${escapeHtml(String(x.strength || 'moderate'))}" href="${escapeHtml(x.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}<span class="tt">${tip}</span></a>`;
-  }).join('');
-}
-
-
-function climateAllJsonNotes(t) {
-  return PARAM_FIELDS.map(field => t[field] && t[field].note ? String(t[field].note) : '').filter(Boolean).join(' ');
-}
-
-function climateJsonRiskInventoryHtml(t) {
-  const notes = climateAllJsonNotes(t);
-  const has = pattern => pattern.test(notes);
-  const items = [];
-  function add(label, basis) {
-    items.push(`<li><strong>${escapeHtml(label)}:</strong> ${escapeHtml(basis)}</li>`);
-  }
-  if (has(/greenhouse gas concentrations|warming/i)) add('Greenhouse-gas concentrations and warming pathway', 'The current JSON mentions record greenhouse-gas concentrations, warming beyond 1.5–2°C, WMO 2024 ~1.55°C, and current-policy warming pressure. It does not split this field into individual gases such as CO₂, methane, or nitrous oxide.');
-  if (has(/warmest year on record/i)) add('Observed heat record', 'The current JSON notes the warmest year on record as part of the acceleration evidence.');
-  if (has(/ocean heat content|ocean warming/i)) add('Ocean heat accumulation', 'The current JSON mentions record ocean heat content and ocean warming.');
-  if (has(/sea-level rise/i)) add('Sea-level rise', 'The current JSON describes sea-level rise as accelerating and effectively irreversible over very long timescales.');
-  if (has(/glacier/i)) add('Glacier and cryosphere loss', 'The current JSON mentions unprecedented or record glacier mass loss.');
-  if (has(/ice-sheet|permafrost|coral reef|tipping points/i)) add('Tipping-point systems', 'The current JSON mentions ice-sheet, permafrost, and coral-reef tipping risks between about 1.5–2.5°C.');
-  if (has(/natural and human systems|ecosystems and human systems/i)) add('Damage to natural and human systems', 'The current JSON describes widespread damage to natural systems, ecosystems, and human systems.');
-  if (has(/biosphere integrity|land use|biogeochemical flows|planetary boundaries/i)) add('Planetary-boundary coupling', 'The current JSON connects climate change with biosphere integrity, land use, and biogeochemical flows.');
-  if (has(/mitigation|adaptation|current policies|Paris Agreement|renewables/i)) add('Governance and transition gap', 'The current JSON describes insufficient mitigation/adaptation, current-policy warming near 2.4°C by 2100, the Paris framework, and partial progress in renewables.');
-  if (!items.length) {
-    return 'No specific component-risk phrases were detected in the current JSON notes for this threat.';
-  }
-  return `<ul class="detail-list">${items.join('')}</ul>`;
-}
-
-function climateJsonExposureHtml(t) {
-  const notes = climateAllJsonNotes(t);
-  const exposures = [];
-  function add(label, rx) { if (rx.test(notes)) exposures.push(label); }
-  add('natural and human systems globally', /natural and human systems globally|human systems/i);
-  add('ecosystems', /ecosystems/i);
-  add('ocean systems and sea-level rise', /ocean warming|ocean heat content|sea-level rise/i);
-  add('glaciers and cryosphere', /glacier|ice-sheet|permafrost/i);
-  add('coral reefs', /coral reef/i);
-  add('biosphere integrity', /biosphere integrity/i);
-  add('land-use systems', /land use/i);
-  add('biogeochemical flows', /biogeochemical flows/i);
-  add('mitigation and adaptation governance', /mitigation|adaptation|current policies/i);
-  return exposures.length ? escapeHtml(exposures.join('  ')) : 'No exposure landscape is manually added; current JSON notes do not expose a specific geographic hotspot list.';
-}
 
 function formatYear(y) {
   if (!Number.isFinite(y)) return 'Not identified';
@@ -4051,39 +4119,6 @@ function formatYear(y) {
   return String(Math.round(y));
 }
 
-function climateMethodNotesHtml(t, low, mid, high, p2050) {
-  const processType = t.process_type ? String(t.process_type) : 'unspecified';
-  const useWeibull = priorityViewMode() === 'weibull';
-  const sourceLabel = useWeibull ? 'Weibull' : 'Monte Carlo';
-  const lines = [
-    `<li>Climate Breakdown is treated in the current calculator as a <strong>${escapeHtml(processType)}</strong> process, not as a single isolated event.</li>`,
-    useWeibull
-      ? `<li>The displayed lower / central / upper horizon is computed from the Weibull diagnostic layer calibrated to the current model horizon after MCDA scoring and dependency amplification.</li>`
-      : `<li>The displayed lower / central / upper horizon is computed from the current model run after MCDA scoring, dependency amplification, and Monte Carlo sampling.</li>`,
-    `<li>The current model interval for this threat is <strong>${escapeHtml(formatYear(low))}–${escapeHtml(formatYear(high))}</strong>, with central horizon <strong>${escapeHtml(formatYear(mid))}</strong>.</li>`,
-    `<li>P/2050 is read from the current <strong>${escapeHtml(sourceLabel)}</strong> view: <strong>${p2050 == null ? (useWeibull && !Number.isFinite(mid) ? 'Not identified from a right-censored median' : 'Run Monte Carlo') : escapeHtml(pct(p2050))}</strong>. It is model-implied, not an empirical measured probability of collapse.</li>`
-  ];
-  return `<ul class="detail-list">${lines.join('')}</ul>`;
-}
-
-function climateDependencyPathwaysHtml(t, enriched) {
-  const depNames = (t.deps || []).map(id => {
-    const target = enriched.find(x => x.id === id);
-    return target ? target.name : id;
-  });
-  if (!depNames.length) return 'No outgoing dependencies are declared for this threat in the current calculator specification.';
-  const arrows = depNames.map(name => `<li><strong>Climate Breakdown</strong> → ${escapeHtml(name)}</li>`).join('');
-  return `<ul class="detail-list">${arrows}<li>These are declared outgoing model dependencies; this card does not add extra dependency links beyond the current calculator specification.</li></ul>`;
-}
-
-
-function threatCardDomainLabel(t) {
-  const domain = String((t && t.domain) || '').toLowerCase();
-  if (domain === 'biosphere') return 'Biosphere';
-  if (domain === 'civilization') return 'Civilization';
-  if (domain === 'technology') return 'Technology';
-  return domain ? domain.charAt(0).toUpperCase() + domain.slice(1) : 'System';
-}
 
 function threatCardColor(domain) {
   const d = String(domain || '').toLowerCase();
@@ -4149,7 +4184,7 @@ function threatScientificDescription(t, enriched) {
   if (curated) return curated;
   const depCount = (t.deps || []).length;
   const processType = t.process_type ? String(t.process_type) : 'systemic';
-  return `${t.name} is treated in this model as a ${processType} systemic pressure with multi-domain consequences. Its current ranking reflects a combination of severity, urgency, interdependence, irreversibility, and governance stress, with ${depCount} declared downstream interaction${depCount === 1 ? '' : 's'} in the threat network.`;
+  return `${t.name} is treated in this model as a ${processType} systemic pressure with multi-domain consequences. Its current ranking reflects a combination of severity, urgency, interdependence, irreversibility, and governance stress, with ${depCount} declared upstream dependenc${depCount === 1 ? 'y' : 'ies'} in the threat network.`;
 }
 
 function threatExposureLandscapeHtml(t) {
@@ -4211,21 +4246,24 @@ function threatMethodNotesHtml(t, low, mid, high, p2050, p2050Lower = null, p205
 }
 
 function threatDependencyPathwaysHtml(t, enriched) {
-  const depNames = (t.deps || []).map(id => {
-    const target = enriched.find(x => x.id === id);
-    return target ? target.name : id;
-  });
-  if (!depNames.length) return 'No outgoing dependencies are declared for this threat in the current model specification.';
-  const arrows = depNames.map(name => `<li><strong>${escapeHtml(t.name)}</strong> → ${escapeHtml(name)}</li>`).join('');
-  return `<ul class="detail-list">${arrows}<li>These are declared outgoing dependency links in the current model network.</li></ul>`;
+  const nameOf = id => (enriched.find(x => x.id === id) || { name: id }).name;
+  const upstream = (t.deps || []).map(nameOf);
+  const downstream = enriched.filter(x => (x.deps || []).includes(t.id)).map(x => x.name);
+  if (!upstream.length && !downstream.length) return 'No dependency links to or from this threat are declared in the current model specification.';
+  const rows = [
+    ...upstream.map(name => `<li>${escapeHtml(name)} → <strong>${escapeHtml(t.name)}</strong></li>`),
+    ...downstream.map(name => `<li><strong>${escapeHtml(t.name)}</strong> → ${escapeHtml(name)}</li>`),
+  ].join('');
+  return `<ul class="detail-list">${rows}<li>Each arrow points from a threat whose functional failure adds exposure to the threat that depends on it, as declared in the current model network.</li></ul>`;
 }
 
 function threatRiskStructureHtml(t, enriched) {
   const growthPct = (Number.isFinite(t.growth_rate_effective) ? t.growth_rate_effective : effectiveRiskGrowthForThreat(t, muOf(t.growth_rate))) * 100;
   const evidence = scientificEvidenceForThreat(t);
   const calibration = parameterCalibrationProfileForThreat(t);
-  const depCount = (t.deps || []).length;
-  return `${threatScientificDescription(t, enriched)}<ul class="detail-list"><li><strong>Why it ranks highly here:</strong> severity ${muOf(t.scale).toFixed(1)}/5, urgency ${muOf(t.urgency).toFixed(1)}/5, interdependence ${muOf(t.interdependence).toFixed(1)}/5, and irreversibility ${muOf(t.irreversibility).toFixed(1)}/5 under the current weighting scheme.</li><li><strong>Amplification profile:</strong> acceleration ${muOf(t.acceleration).toFixed(1)}/5, governance stress ${muOf(t.gov_failure).toFixed(1)}/5, and an effective modeled growth proxy of ${growthPct.toFixed(2)}%/yr.</li><li><strong>Evidence posture:</strong> threat-level scientific evidence ${escapeHtml(evidence.grade)}; numerical input calibration profile ${escapeHtml(calibration.label)}${calibration.legacyFallback ? ' using legacy strength labels' : ''}. The model threshold is ${getThreatThreshold(t).toFixed(2)} on the shared destabilization scale.</li><li><strong>Network role:</strong> ${depCount} declared downstream interaction${depCount === 1 ? '' : 's'} in the current cross-threat network.</li></ul>`;
+  const upstreamCount = (t.deps || []).length;
+  const downstreamCount = enriched.filter(x => (x.deps || []).includes(t.id)).length;
+  return `${threatScientificDescription(t, enriched)}<ul class="detail-list"><li><strong>Why it ranks highly here:</strong> severity ${muOf(t.scale).toFixed(1)}/5, urgency ${muOf(t.urgency).toFixed(1)}/5, interdependence ${muOf(t.interdependence).toFixed(1)}/5, and irreversibility ${muOf(t.irreversibility).toFixed(1)}/5 under the current weighting scheme.</li><li><strong>Amplification profile:</strong> acceleration ${muOf(t.acceleration).toFixed(1)}/5, governance stress ${muOf(t.gov_failure).toFixed(1)}/5, and an effective modeled growth proxy of ${growthPct.toFixed(2)}%/yr.</li><li><strong>Evidence posture:</strong> threat-level scientific evidence ${escapeHtml(evidence.grade)}; numerical input calibration profile ${escapeHtml(calibration.label)}${calibration.legacyFallback ? ' using legacy strength labels' : ''}. The model threshold is ${getThreatThreshold(t).toFixed(2)} on the shared destabilization scale.</li><li><strong>Network role:</strong> depends on ${upstreamCount} declared upstream threat${upstreamCount === 1 ? '' : 's'}; ${downstreamCount} threat${downstreamCount === 1 ? ' depends' : 's depend'} on it in the current cross-threat network.</li></ul>`;
 }
 
 function priorityThreatViewModel(t, rank, enriched, mcRes) {
@@ -4345,10 +4383,10 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
       <div class="ev-links">${threatSourceLinksHtml(t)}</div>
     </div>
     <div class="t-actions">
-      <div class="t-interactions"><strong>Declared interactions:</strong> ${escapeHtml(vm.depNames.join('  ') || 'none recorded')}</div>
+      <div class="t-interactions"><strong>Depends on:</strong> ${escapeHtml(vm.depNames.join('  ') || 'none recorded')}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap">
         <button class="a-chip" type="button" data-threat-action="watch">Watch</button>
-        <a class="a-chip" href="${escapeHtml(threatPageUrl(t))}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">VIEW SOURCE DATA</a>
+        <a class="a-chip" href="${escapeHtml(SOURCE_DATA_URL)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">VIEW SOURCE DATA</a>
         <button class="a-chip" type="button" data-threat-action="toggle-collapse">${actionLabel}</button>
       </div>
     </div>
@@ -4360,9 +4398,10 @@ function renderClimateBreakdownDetail(enriched, mcRes) {
   const shell = document.getElementById('climateBreakdownEnhancedCard');
   if (!shell || !Array.isArray(enriched)) return;
   cachePriorityRenderContext(enriched, mcRes);
-  const sorted = [...enriched].sort((a, b) => b.priority - a.priority).slice(0, 5);
+  // Every threat, highest adjusted priority first.
+  const sorted = [...enriched].sort((a, b) => b.priority - a.priority);
   if (!sorted.length) {
-    shell.innerHTML = '<div class="climate-feature-card" data-color="priority"><div style="padding:14px 16px;color:var(--text3);font-family:var(--mono);font-size:10px">Top threat cards will update after the model run.</div></div>';
+    shell.innerHTML = '<div class="climate-feature-card" data-color="priority"><div style="padding:14px 16px;color:var(--text3);font-family:var(--mono);font-size:10px">Threats by rank will update after the model run.</div></div>';
     return;
   }
   shell.innerHTML = sorted.map((t, idx) => priorityThreatCardHtml(t, idx + 1, enriched, mcRes)).join('');
@@ -4395,8 +4434,6 @@ function initClimateDetailControls() {
 }
 
 let _chartRegistry = Object.create(null);
-let _netCyInstance = null;
-let _netCyFocusId = null;
 
 function readVizPalette() {
   const root = getComputedStyle(document.documentElement);
@@ -4440,13 +4477,6 @@ function rgba(color, alpha) {
     return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
   }
   return value;
-}
-
-function toneForGSI(gsi, palette) {
-  if (gsi === null || !Number.isFinite(gsi)) return palette.text3;
-  if (gsi < 35) return palette.slate;
-  if (gsi < 70) return palette.watch;
-  return palette.critical;
 }
 
 function ensureEChart(id) {
@@ -4495,206 +4525,113 @@ function threatHorizonLabel(threat, mcRes) {
   return horizon > YE ? 'No crossing ≤ 2100' : fmtY(horizon);
 }
 
-function drawClock(gsi) {
-  const chart = ensureEChart('clockCanvas');
+
+const CASCADE_BASKET_LABELS = Object.freeze({
+  [CASCADE_SYSTEM_BASKET]: 'System-wide functional loss',
+  ecological_life_support: 'Ecological life support',
+  food_water: 'Food and water',
+  health_care: 'Health care',
+  critical_infrastructure: 'Critical infrastructure',
+  coordination_exchange: 'Coordination and exchange',
+});
+
+// The alternative rules are context lines: one muted gray, told apart by line pattern.
+const CONDITIONAL_RULES = Object.freeze([
+  { key: 'dynamicCascade', label: 'Dynamic cascade (the clocks)' },
+  { key: 'maxRule', label: 'Max-rule', pattern: 'solid' },
+  { key: 'compensatory', label: 'Compensatory', pattern: 'dashed' },
+  { key: 'graphWeighted', label: 'Graph heuristic', pattern: 'dotted' },
+]);
+
+function conditionalShare(value) {
+  // Whole percent from 10% up, one decimal below it, so shares such as 0.2% stay visible.
+  const percent = value * 100;
+  return percent >= 10 || percent === 0 ? `${Math.round(percent)}%` : `${percent.toFixed(1)}%`;
+}
+
+function conditionalStructureText(components) {
+  const spec = STRUCTURAL_UNCERTAINTY;
+  const parts = {
+    threshold: `cascade threshold ${spec.cascadeThreshold.lo.toFixed(2)} to ${spec.cascadeThreshold.hi.toFixed(2)}`,
+    criticality: `criticality levels 1/2/3 each ±${spec.criticalityLevelHalfWidth}`,
+    dependencyWeights: 'dependency weights around the declared shares (Dirichlet)',
+    lags: `dependency lags ${spec.dependencyLagYears.lo} to ${spec.dependencyLagYears.hi} years`,
+    growthClass: `growth class one step down or up (${Math.round(spec.growthClassShift.down * 100)}% each)`,
+  };
+  return `Each run also samples the model structure: ${components.map(name => parts[name]).join('; ')}.`;
+}
+
+function conditionalTurnsText() {
+  const spec = PRESSURE_TURNS;
+  const drop = value => `${Math.round(value * 100)}%`;
+  return `Each threat’s pressure also has a ${drop(spec.probabilityBy2100)} chance of peaking in a year between ${spec.firstYear} and ${spec.lastYear} and then falling at the rate it rose. After that turn a failed threat recovers once its combined own and upstream pressure is ${drop(spec.recoveryDrop.reversible)} (reversible) or ${drop(spec.recoveryDrop.partial)} (partly reversible) below its level at failure; irreversible threats do not recover. These are assumptions, not estimates from historical data.`;
+}
+
+function conditionalRecoveryText(recovery) {
+  const crossed = recovery.crossedRuns.toLocaleString();
+  if (!recovery.backBelowAtEnd) return `None of the ${crossed} runs that reach the threshold is back below it in ${YE}.`;
+  const typical = Number.isFinite(recovery.firstBackBelowP50) ? ` Half of the runs that fall back below do so by ${fmtY(recovery.firstBackBelowP50)}.` : '';
+  return `Of the ${crossed} runs that reach the threshold, ${recovery.backBelowAtEnd.toLocaleString()} (${conditionalShare(recovery.shareOfCrossed)}) are back below it in ${YE} because failed threats recovered after their pressure turned; the clocks still date the first crossing.${typical}`;
+}
+
+function conditionalBasketLabel(key) {
+  return CASCADE_BASKET_LABELS[key] || key.replace(/_/g, ' ').replace(/^\w/, letter => letter.toUpperCase());
+}
+
+function conditionalGroupLabel(group) {
+  return group.members.map(id => (THREATS.find(t => t.id === id) || { name: id }).name).join(' + ');
+}
+
+function conditionalRules(mcRes) {
+  const ensemble = mcRes.ensemble;
+  const length = ensemble.dynamicCascade.cdf.length;
+  return CONDITIONAL_RULES.map(rule => ({ ...rule, summary: ensemble[rule.key] }))
+    .filter(rule => rule.summary && Array.isArray(rule.summary.cdf) && rule.summary.cdf.length === length);
+}
+
+function conditionalBarRows(rows) {
+  return rows.map(row => `<div class="conditional-bar-row" role="listitem">
+      <span class="conditional-bar-label">${escapeHtml(row.label)}</span>
+      <span class="conditional-bar-track" aria-hidden="true"><span class="conditional-bar-fill" style="width:${(row.share * 100).toFixed(2)}%"></span></span>
+      <span class="conditional-bar-value">${conditionalShare(row.share)}</span>
+    </div>`).join('');
+}
+
+function drawConditionalCdf(mcRes, rules) {
+  const chart = ensureEChart('conditionalCdfChart');
   if (!chart) return;
+  // The panel is hidden during reruns; a window resize meanwhile would leave a zero-size canvas.
+  chart.resize();
   const palette = readVizPalette();
-  const tone = toneForGSI(gsi, palette);
-
-  chart.setOption({
-    animationDuration: 260,
-    animationDurationUpdate: 260,
-    backgroundColor: 'transparent',
-    series: [{
-      type: 'gauge',
-      startAngle: 225,
-      endAngle: -45,
-      min: 0,
-      max: 100,
-      splitNumber: 4,
-      center: ['50%', '55%'],
-      radius: '82%',
-      progress: {
-        show: gsi !== null && Number.isFinite(gsi),
-        width: 10,
-        roundCap: true,
-        itemStyle: { color: tone },
-      },
-      axisLine: {
-        lineStyle: {
-          width: 10,
-          color: [[1, rgba(palette.text, 0.10)]],
-          cap: 'round',
-        },
-      },
-      axisTick: {
-        distance: -16,
-        splitNumber: 4,
-        lineStyle: { color: rgba(palette.text, 0.14), width: 1 },
-        length: 4,
-      },
-      splitLine: {
-        distance: -16,
-        length: 10,
-        lineStyle: { color: rgba(palette.text, 0.32), width: 1.4 },
-      },
-      axisLabel: {
-        distance: -34,
-        color: palette.text3,
-        fontSize: 9,
-        fontFamily: palette.font,
-        formatter: value => (value % 25 === 0 ? String(value) : ''),
-      },
-      pointer: {
-        show: gsi !== null && Number.isFinite(gsi),
-        width: 3,
-        length: '60%',
-        itemStyle: { color: rgba(palette.text, 0.92) },
-      },
-      anchor: {
-        show: gsi !== null && Number.isFinite(gsi),
-        size: 10,
-        itemStyle: {
-          color: rgba(palette.text, 0.92),
-          borderColor: tone,
-          borderWidth: 3,
-        },
-      },
-      title: { show: false },
-      detail: { show: false },
-      data: [{ value: gsi === null || !Number.isFinite(gsi) ? 0 : gsi }],
-    }],
-  }, true);
-
-  const labelEl = document.getElementById('clockGSI');
-  if (labelEl) {
-    labelEl.textContent = gsi === null || !Number.isFinite(gsi) ? ' ' : Math.round(gsi);
-    labelEl.style.color = gsi === null || !Number.isFinite(gsi) ? 'var(--text-3)' : tone;
-  }
-  const metaEl = document.getElementById('clockMeta');
-  if (metaEl) {
-    metaEl.textContent = gsi === null || !Number.isFinite(gsi)
-      ? 'Gauge shows the current composite score on a fixed 0–100 scale with quarter-step labels.'
-      : `Current reading ${Math.round(gsi)}/100. Gauge shows the current composite score on a fixed 0–100 scale with quarter-step labels.`;
-  }
-}
-
-function drawHeroSpark(mcRes) {
-}
-
-function displayedCascadeCdfSummary(result) {
-  return result && result.ensemble ? result.ensemble.dynamicCascade || null : null;
-}
-
-function drawCDF() {
-  const chart = ensureEChart('cdfCanvas');
-  if (!chart) return;
-  const palette = readVizPalette();
-  const tip = document.getElementById('cdfTip');
-  if (tip) tip.style.display = 'none';
-  const activeScenario = currentScenario();
-  const entries = Object.entries(_cdfCurves)
-    .map(([scenarioKey, result]) => [scenarioKey, displayedCascadeCdfSummary(result)])
-    .filter(([, summary]) => summary && summary.cdf && summary.cdf.length);
-  if (!entries.length) {
-    chart.setOption(emptyChartOption('Run simulation to populate the cumulative probability surface', palette), true);
-    return;
-  }
-
-  const series = [];
-  const activeRes = displayedCascadeCdfSummary(_cdfCurves[activeScenario]);
-  if (activeRes && activeRes.bLo && activeRes.bHi) {
-    series.push({
-      name: 'Active lower',
-      type: 'line',
-      step: 'end',
-      stack: 'cdf-band',
-      data: activeRes.bLo.map((value, idx) => [YS + idx, +(value * 100).toFixed(4)]),
-      symbol: 'none',
-      lineStyle: { opacity: 0 },
-      areaStyle: { opacity: 0 },
-      tooltip: { show: false },
-      z: 1,
-    });
-    series.push({
-      name: 'Active band',
-      type: 'line',
-      step: 'end',
-      stack: 'cdf-band',
-      data: activeRes.bHi.map((value, idx) => [YS + idx, +Math.max(0, (value - activeRes.bLo[idx]) * 100).toFixed(4)]),
-      symbol: 'none',
-      lineStyle: { opacity: 0 },
-      areaStyle: { color: rgba(SC[activeScenario].color, 0.12) },
-      tooltip: { show: false },
-      z: 1,
-    });
-  }
-
-  entries
-    .sort(([left], [right]) => (left === activeScenario ? 1 : 0) - (right === activeScenario ? 1 : 0))
-    .forEach(([scKey, res]) => {
-      const isActive = scKey === activeScenario;
-      const markers = isActive ? [
-        { xAxis: NOW, name: 'NOW', lineStyle: { color: rgba(palette.text, 0.18), type: 'dashed', width: 1 } },
-        { xAxis: res.p10, name: 'P10', lineStyle: { color: rgba(palette.text, 0.14), type: 'dashed', width: 1 } },
-        { xAxis: res.p50, name: 'P50', lineStyle: { color: rgba(palette.text, 0.34), type: 'dashed', width: 1.2 } },
-        { xAxis: res.p90, name: 'P90', lineStyle: { color: rgba(palette.text, 0.14), type: 'dashed', width: 1 } },
-      ].filter(entry => Number.isFinite(entry.xAxis) && entry.xAxis <= YE) : [];
-
-      series.push({
-        name: `${SC[scKey].label} — Dynamic Cascade`,
-        type: 'line',
-        step: 'end',
-        data: res.cdf.map(point => [point.year, +(point.prob * 100).toFixed(4)]),
-        symbol: 'none',
-        lineStyle: {
-          color: SC[scKey].color,
-          width: isActive ? 3 : 1.8,
-          opacity: isActive ? 1 : 0.48,
-          type: isActive ? 'solid' : 'dashed',
-        },
-        emphasis: { focus: 'series' },
-        markLine: isActive ? {
-          silent: true,
-          symbol: 'none',
-          label: {
-            show: true,
-            color: palette.text3,
-            fontSize: 8,
-            fontFamily: palette.font,
-            formatter: ({ data }) => data.name,
-            padding: [2, 4],
-            backgroundColor: rgba(palette.surface, 0.92),
-            borderColor: rgba(palette.text, 0.14),
-            borderWidth: 1,
-          },
-          data: markers,
-        } : undefined,
-        z: isActive ? 4 : 2,
-      });
-    });
+  const cascade = mcRes.ensemble.dynamicCascade;
+  const probAt = (summary, idx) => summary.cdf[idx].prob * 100;
+  // Labels sit right of and just below each point: under the rising curve, where no line runs.
+  const quantiles = [
+    { name: 'P50', year: cascade.p50, color: palette.blue },
+    { name: 'P90', year: cascade.p90, color: palette.red },
+  ].filter(q => Number.isFinite(q.year) && q.year <= YE);
 
   chart.setOption({
     animationDuration: 320,
     animationDurationUpdate: 280,
     backgroundColor: 'transparent',
+    grid: { left: 40, right: 12, top: 12, bottom: 24 },
     tooltip: {
       trigger: 'axis',
       confine: true,
       backgroundColor: palette.surface2,
       borderColor: palette.border2,
       textStyle: { color: palette.text, fontFamily: palette.font, fontSize: 11 },
-      axisPointer: { type: 'cross', lineStyle: { color: rgba(palette.text, 0.20), width: 1 } },
+      axisPointer: { type: 'line', lineStyle: { color: rgba(palette.text, 0.20), width: 1 } },
       formatter: params => {
-        const rows = (Array.isArray(params) ? params : [params])
-          .filter(item => item.seriesName && !item.seriesName.includes('band') && !item.seriesName.includes('lower'))
-          .map(item => `<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${item.color}"></span>${item.seriesName}: ${item.value[1].toFixed(1)}%</div>`)
-          .join('');
-        const year = Array.isArray(params) && params.length ? Math.round(params[0].value[0]) : '';
-        return `<div style="margin-bottom:4px">Year ${year}</div>${rows}`;
+        const first = Array.isArray(params) ? params[0] : params;
+        const year = first ? Math.round(first.value[0]) : NaN;
+        const idx = year - YS;
+        if (!Number.isInteger(idx) || idx < 0 || idx >= cascade.cdf.length) return '';
+        const rows = rules.map(rule => `<div>${rule.label}: ${probAt(rule.summary, idx).toFixed(1)}%</div>`).join('');
+        return `<div style="margin-bottom:4px">Threshold reached by ${year}</div>${rows}`;
       },
     },
-    grid: { left: 50, right: 20, top: 16, bottom: 34 },
     xAxis: {
       type: 'value',
       min: YS,
@@ -4705,6 +4642,7 @@ function drawCDF() {
       axisLabel: {
         color: palette.text3,
         fontFamily: palette.font,
+        fontSize: 10,
         formatter: value => (Math.round(value) % 10 === 0 ? Math.round(value) : ''),
       },
     },
@@ -4712,18 +4650,189 @@ function drawCDF() {
       type: 'value',
       min: 0,
       max: 100,
-      interval: 10,
+      interval: 50,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { lineStyle: { color: rgba(palette.text, 0.05) } },
-      axisLabel: {
-        color: palette.text3,
-        fontFamily: palette.font,
-        formatter: value => `${Math.round(value)}%`,
-      },
+      axisLabel: { color: palette.text3, fontFamily: palette.font, fontSize: 10, formatter: value => `${Math.round(value)}%` },
     },
-    series,
+    series: [
+      ...rules.filter(rule => rule.pattern).map(rule => ({
+        name: rule.label, type: 'line', step: 'end', data: rule.summary.cdf.map(point => [point.year, point.prob * 100]), symbol: 'none',
+        lineStyle: { color: rgba(palette.text, 0.42), width: 1.5, type: rule.pattern }, z: 2,
+      })),
+      { name: 'Dynamic cascade', type: 'line', step: 'end', data: cascade.cdf.map(point => [point.year, point.prob * 100]), symbol: 'none',
+        lineStyle: { color: rgba(palette.text, 0.9), width: 2, cap: 'round', join: 'round' }, z: 3 },
+      { name: 'Clock quantiles', type: 'scatter', symbolSize: 10, z: 4,
+        data: quantiles.map(q => ({
+          value: [q.year, probabilityByDisplayedYear(cascade, q.year) * 100],
+          itemStyle: { color: q.color, borderColor: palette.surface, borderWidth: 2 },
+          label: { show: true, position: 'right', distance: 6, offset: [0, 9], formatter: `${q.name} · ${fmtY(q.year)}`, color: palette.text2, fontFamily: palette.font, fontSize: 10 },
+        })) },
+    ],
   }, true);
+}
+
+function renderConditionalTriggers(el, mcRes) {
+  const trace = mcRes.triggerTrace;
+  const runs = mcRes.ensemble.dynamicCascade.crossing.length;
+  el.dataset.state = trace ? (trace.failed ? 'failed' : 'ready') : mcRes.triggerReplayInputs ? 'pending' : 'unavailable';
+  if (trace && !trace.failed) el.dataset.consistent = String(trace.consistent);
+  else delete el.dataset.consistent;
+
+  if (!trace && !mcRes.triggerReplayInputs) {
+    el.innerHTML = '<p class="conditional-note">Trigger attribution is traced after a full model run.</p>';
+    return;
+  }
+  if (!trace) {
+    el.innerHTML = `<p class="conditional-note">Tracing which essential-service basket reaches the threshold in each of the ${runs.toLocaleString()} runs…</p>`;
+    return;
+  }
+  if (trace.failed) {
+    el.innerHTML = '<p class="conditional-note">Trigger attribution could not be computed for this result.</p>';
+    return;
+  }
+  if (!trace.consistent) {
+    el.innerHTML = '<p class="conditional-note">Trigger attribution withheld: the diagnostic replay did not reproduce the clock distribution.</p>';
+    return;
+  }
+  if (!trace.crossedRuns || !trace.baskets.length) {
+    el.innerHTML = '<p class="conditional-note">No run reaches the threshold by 2100, so there is no trigger to attribute.</p>';
+    return;
+  }
+
+  const lead = trace.baskets[0];
+  const leadLabel = conditionalBasketLabel(lead.key);
+  const { lo, hi } = trace.threshold;
+  const thresholdText = lo === hi ? `the ${lo.toFixed(2)} threshold` : `the sampled threshold (${lo.toFixed(2)} to ${hi.toFixed(2)})`;
+  const listedGroups = lead.groups.slice(0, 4).map(conditionalGroupLabel);
+  const moreGroups = lead.groupCount > listedGroups.length ? `; and ${lead.groupCount - listedGroups.length} more` : '';
+  const singleShare = lead.groupsNeeded[1] || 0;
+  const larger = Object.keys(lead.groupsNeeded).map(Number).filter(count => count > 1).sort((a, b) => a - b);
+  const largerText = larger.length && larger[0] === lead.groupCount
+    ? (lead.groupCount === 2 ? 'both groups' : `all ${lead.groupCount} groups`)
+    : `at least ${larger[0]}${larger[larger.length - 1] > larger[0] ? `–${larger[larger.length - 1]}` : ''} of its ${lead.groupCount} groups`;
+  const structure = !larger.length
+    ? `One failing group is enough to reach ${thresholdText}.`
+    : !singleShare
+      ? `${largerText.charAt(0).toUpperCase()}${largerText.slice(1)} must fail to reach ${thresholdText}.`
+      : `One failing group is enough to reach ${thresholdText} in ${conditionalShare(singleShare)} of runs; in the others ${largerText} must fail.`;
+  const overlap = trace.multiBasketRuns
+    ? ` In ${trace.multiBasketRuns.toLocaleString()} runs (${conditionalShare(trace.multiBasketRuns / trace.crossedRuns)}) more than one basket crosses in the same year, so the shares add up to more than 100%.`
+    : '';
+
+  el.innerHTML = `
+    <p class="conditional-trigger-lead">In <strong>${conditionalShare(lead.share)}</strong> of the runs that reach the threshold, the <strong>${escapeHtml(leadLabel)}</strong> basket crosses it.</p>
+    <p class="conditional-note">${escapeHtml(leadLabel)} has ${lead.groupCount} ${lead.groupCount === 1 ? 'group' : 'groups'}: ${escapeHtml(listedGroups.join('; '))}${moreGroups}. ${structure}</p>
+    <div class="conditional-bars" role="list" aria-label="Share of runs in which each basket crosses the threshold">${conditionalBarRows(trace.baskets.map(basket => ({ label: conditionalBasketLabel(basket.key), share: basket.share })))}</div>
+    <div class="conditional-subtitle">Failed groups when ${escapeHtml(leadLabel)} crosses</div>
+    <div class="conditional-bars" role="list" aria-label="Share of ${escapeHtml(leadLabel)} crossings in which each group had failed">${conditionalBarRows(lead.groups.slice(0, 4).map(group => ({ label: conditionalGroupLabel(group), share: group.share })))}</div>
+    <p class="conditional-note">Same ${trace.nSim.toLocaleString()} runs as the clocks, traced by replaying the model's random draws.${overlap}</p>`;
+}
+
+function ensureCascadeTriggerTrace(mcRes) {
+  const inputs = mcRes.triggerReplayInputs;
+  if (!inputs || mcRes.triggerTrace || mcRes.triggerTracePending) return;
+  mcRes.triggerTracePending = true;
+  const version = _resultVersion;
+  const isCurrent = () => version === _resultVersion && currentScenario() === inputs.scKey && _cdfCurves[inputs.scKey] === mcRes;
+  traceCascadeTriggers(inputs, mcRes.ensemble.dynamicCascade, isCurrent)
+    .then(trace => { if (trace) mcRes.triggerTrace = trace; })
+    .catch(error => { mcRes.triggerTrace = { failed: true, message: String((error && error.message) || error) }; })
+    .finally(() => {
+      mcRes.triggerTracePending = false;
+      if (!isCurrent()) return;
+      const trace = mcRes.triggerTrace;
+      const lead = trace && !trace.failed && trace.baskets && trace.baskets[0];
+      if (trace && trace.failed) setCalcStepStatus('triggers', 'error', 'Trigger attribution failed; the clocks are unaffected.');
+      else setCalcStepStatus('triggers', 'done', lead ? `Runs replayed: the ${conditionalBasketLabel(lead.key)} basket sets the clocks off in ${conditionalShare(lead.share)} of crossing runs.` : 'Runs replayed; no crossing run to attribute.');
+      renderConditionalScenario(mcRes);
+    });
+}
+
+/**
+ * Conditional-scenario context for the paired clocks: the Dynamic cascade first-crossing curve,
+ * the range spanned by the four aggregation rules over the same runs, the share of runs still
+ * below the threshold in 2100, and which essential-service basket sets the clocks off.
+ * Reads existing summaries only; the clocks themselves are rendered elsewhere and unchanged.
+ */
+function renderConditionalScenario(mcRes) {
+  const root = document.getElementById('conditionalScenario');
+  if (!root) return;
+  const cascade = mcRes && mcRes.ensemble && mcRes.ensemble.dynamicCascade;
+  if (!cascade || !Array.isArray(cascade.crossing) || !cascade.crossing.length || !Array.isArray(cascade.cdf) || !cascade.cdf.length) {
+    root.hidden = true;
+    return;
+  }
+  root.hidden = false;
+  const rules = conditionalRules(mcRes);
+  drawConditionalCdf(mcRes, rules);
+
+  const runs = cascade.crossing.length;
+  const censored = cascade.crossing.filter(year => year > YE).length;
+  const quantileKey = (name, year, className) => (Number.isFinite(year) && year <= YE
+    ? `<span class="conditional-key"><span class="conditional-key-dot ${className}" aria-hidden="true"></span>${name} ${fmtY(year)} · ${pct(probabilityByDisplayedYear(cascade, year))} reached</span>`
+    : `<span class="conditional-key"><span class="conditional-key-dot ${className}" aria-hidden="true"></span>${name} ${fmtY(year)}</span>`);
+  const legend = document.getElementById('conditionalLegend');
+  if (legend) {
+    legend.innerHTML = `
+      <div class="conditional-legend-row">
+        <span class="conditional-key"><span class="conditional-key-line" aria-hidden="true"></span>Dynamic cascade (the clocks)</span>
+        ${rules.filter(rule => rule.pattern).map(rule => `<span class="conditional-key"><span class="conditional-key-rule conditional-key-${rule.pattern}" aria-hidden="true"></span>${rule.label}</span>`).join('')}
+      </div>
+      <div class="conditional-legend-row">
+        ${quantileKey('P50', cascade.p50, 'conditional-key-p50')}
+        ${quantileKey('P90', cascade.p90, 'conditional-key-p90')}
+      </div>`;
+  }
+
+  const censoredNote = document.getElementById('conditionalCensored');
+  if (censoredNote) {
+    censoredNote.textContent = censored
+      ? `${censored.toLocaleString()} of ${runs.toLocaleString()} runs (${conditionalShare(censored / runs)}) are still below the threshold in 2100.`
+      : `All ${runs.toLocaleString()} runs reach the threshold by 2100 under these assumptions, so the curve shows when the threshold is reached, not whether it is.`;
+  }
+
+  const runParams = (mcRes.triggerReplayInputs && mcRes.triggerReplayInputs.params) || (mcRes.executionSnapshot && mcRes.executionSnapshot.parameters) || null;
+  const turnsOn = Boolean(runParams) && runParams.pressureTurns !== false;
+  const structureNote = document.getElementById('conditionalStructure');
+  if (structureNote) {
+    const components = runParams ? structuralComponentsOf(runParams) : [];
+    structureNote.hidden = !components.length;
+    structureNote.textContent = components.length ? conditionalStructureText(components) : '';
+  }
+
+  const turnsNote = document.getElementById('conditionalTurns');
+  if (turnsNote) {
+    turnsNote.hidden = !turnsOn;
+    turnsNote.textContent = turnsOn ? conditionalTurnsText() : '';
+  }
+  const recoveryNote = document.getElementById('conditionalRecovery');
+  if (recoveryNote) {
+    const recovery = mcRes.cascadeRecovery;
+    const show = turnsOn && Boolean(recovery && recovery.crossedRuns);
+    recoveryNote.hidden = !show;
+    recoveryNote.textContent = show ? conditionalRecoveryText(recovery) : '';
+  }
+
+  const table = document.getElementById('conditionalRules');
+  if (table) {
+    table.innerHTML = `<thead><tr><th scope="col">Aggregation rule</th><th scope="col">P50</th><th scope="col">P90</th><th scope="col">Not reached by 2100</th></tr></thead>
+      <tbody>${rules.map(rule => `<tr${rule.key === 'dynamicCascade' ? ' class="is-clock"' : ''}><th scope="row">${rule.label}</th><td>${fmtY(rule.summary.p50)}</td><td>${fmtY(rule.summary.p90)}</td><td>${conditionalShare(rule.summary.censorFraction)}</td></tr>`).join('')}</tbody>`;
+  }
+
+  const rulesNote = document.getElementById('conditionalRulesNote');
+  if (rulesNote && rules.length) {
+    const medians = rules.map(rule => rule.summary.p50);
+    const low = Math.min(...medians);
+    const high = Math.max(...medians);
+    const spread = high <= YE ? `, ${high - low} years apart` : '';
+    rulesNote.textContent = `All four rules read the same ${runs.toLocaleString()} runs. Their P50 spans ${fmtY(low)} to ${fmtY(high)}${spread}; the clocks use the Dynamic cascade rule.`;
+  }
+
+  const triggers = document.getElementById('conditionalTriggers');
+  if (triggers) renderConditionalTriggers(triggers, mcRes);
+  ensureCascadeTriggerTrace(mcRes);
 }
 
 function drawBarChart(enriched, mcRes) {
@@ -4817,393 +4926,40 @@ function drawBarChart(enriched, mcRes) {
     }],
   }, true);
 }
+// The Causal dependency network is src/threat-network.html, shown in an iframe. The page sends it the
+// adjusted priorities of the current scenario (node sizes); the frame reports its height back.
+let _threatNetworkMessage = null;
+let _threatNetworkBound = false;
+
+function sendThreatNetworkPriorities() {
+  const frame = document.getElementById('threatNetworkFrame');
+  if (frame && frame.contentWindow && _threatNetworkMessage) frame.contentWindow.postMessage(_threatNetworkMessage, '*');
+}
+
 function initNetwork(enriched) {
-  const el = document.getElementById('netCanvas');
-  if (!el) return;
-  _netNodes = enriched.map(threat => ({ ...threat }));
-  _netHover = null;
-  _netCyFocusId = null;
-  const palette = readVizPalette();
-
-  if (!window.cytoscape) {
-    el.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:var(--text-3);font-size:11px">Cytoscape.js failed to load.</div>';
-    updateNetworkSide(null);
-    return;
-  }
-
-  if (_netCyInstance) {
-    _netCyInstance.destroy();
-    _netCyInstance = null;
-  }
-
-  const stageWidth = Math.max(760, el.clientWidth || 960);
-  const stageHeight = Math.max(500, el.clientHeight || 520);
-  const domainColors = {
-    civilization: { fill: rgba(palette.red, 0.84), border: rgba(palette.red, 0.98), light: '#f07878', dark: '#6b1010' },
-    biosphere:    { fill: rgba(palette.green, 0.84), border: rgba(palette.green, 0.98), light: '#5de8ae', dark: '#0f5535' },
-    technology:   { fill: rgba(palette.blue, 0.84), border: rgba(palette.blue, 0.98), light: '#78aff5', dark: '#12305c' },
+  const frame = document.getElementById('threatNetworkFrame');
+  if (!frame) return;
+  _threatNetworkMessage = {
+    type: 'threat-network:priorities',
+    priorities: Object.fromEntries(enriched.map(threat => [threat.id, threat.priority])),
   };
-  const minPri = Math.min(..._netNodes.map(node => node.priority));
-  const maxPri = Math.max(..._netNodes.map(node => node.priority));
-  const prioritySize = priority => {
-    const frac = (priority - minPri) / Math.max(1e-6, maxPri - minPri);
-    return 24 + frac * 20;
-  };
-  const networkLabel = name => {
-    const words = String(name || '').split(' ');
-    if (words.length <= 2) return words.join('\n');
-    const lines = [];
-    let current = words[0];
-    for (let i = 1; i < words.length; i++) {
-      if ((current + ' ' + words[i]).length <= 16 && lines.length < 2) {
-        current += ' ' + words[i];
-      } else {
-        lines.push(current);
-        current = words[i];
-      }
-    }
-    lines.push(current);
-    return lines.slice(0, 3).join('\n');
-  };
-  const elements = [];
-  _netNodes.forEach(node => {
-    const colors = domainColors[node.domain] || { fill: rgba(palette.text, 0.64), border: rgba(palette.text, 0.82) };
-    const size = prioritySize(node.priority);
-    elements.push({
-      data: {
-        id: node.id,
-        label: networkLabel(node.name),
-        priority: +node.priority.toFixed(3),
-        domain: node.domain,
-        size,
-        focusSize: size + 8,
-        neighborSize: size + 4,
-        nodeColor: colors.fill,
-        nodeBorder: colors.border,
-        nodeColorLight: colors.light,
-        nodeColorDark: colors.dark,
-      },
-    });
-  });
-  _netNodes.forEach(node => {
-    (node.deps || []).forEach(depId => {
-      if (_netNodes.some(target => target.id === depId)) {
-        elements.push({ data: { id: `${node.id}->${depId}`, source: node.id, target: depId } });
+  if (!_threatNetworkBound) {
+    _threatNetworkBound = true;
+    window.addEventListener('message', event => {
+      if (event.source !== frame.contentWindow || !event.data) return;
+      if (event.data.type === 'threat-network:ready') sendThreatNetworkPriorities();
+      if (event.data.type === 'threat-network:height' && Number.isFinite(event.data.height)) {
+        frame.style.height = `${Math.max(320, Math.ceil(event.data.height))}px`;
       }
     });
-  });
-
-  function buildDomainLanePositions() {
-    const domainX = { biosphere: stageWidth * 0.18, civilization: stageWidth * 0.5, technology: stageWidth * 0.82 };
-    const usableTop = 60;
-    const usableBottom = stageHeight - 60;
-    const totalH = usableBottom - usableTop;
-    const positions = {};
-
-    ['biosphere', 'civilization', 'technology'].forEach(domain => {
-      const bucket = _netNodes
-        .filter(node => node.domain === domain)
-        .sort((a, b) => b.priority - a.priority);
-      const count = bucket.length;
-      if (!count) return;
-
-      if (domain === 'civilization') {
-        const leftX  = domainX[domain] - 52;
-        const rightX = domainX[domain] + 52;
-        const step   = totalH / count;
-        bucket.forEach((node, idx) => {
-          const x = idx % 2 === 0 ? leftX : rightX;
-          const y = usableTop + step * 0.5 + idx * step;
-          positions[node.id] = { x, y: clamp(y, usableTop, usableBottom) };
-        });
-      } else {
-        const step = count === 1 ? 0 : totalH / (count - 1);
-        bucket.forEach((node, idx) => {
-          const jitter = idx % 2 === 0 ? -22 : 22;
-          const y = count === 1
-            ? (usableTop + usableBottom) / 2
-            : usableTop + idx * step;
-          positions[node.id] = { x: domainX[domain] + jitter, y: clamp(y, usableTop, usableBottom) };
-        });
-      }
-    });
-    return positions;
   }
-
-  function buildFocusPositions(sourceId) {
-    const source = _netNodes.find(node => node.id === sourceId);
-    const targets = _netNodes
-      .filter(node => source && (source.deps || []).includes(node.id))
-      .sort((a, b) => b.priority - a.priority);
-    const positions = {};
-    positions[sourceId] = { x: stageWidth * 0.24, y: stageHeight * 0.5 };
-    if (!targets.length) return positions;
-    const usableTop = 92;
-    const usableBottom = stageHeight - 92;
-    const step = targets.length === 1 ? 0 : (usableBottom - usableTop) / Math.max(1, targets.length - 1);
-    targets.forEach((node, idx) => {
-      positions[node.id] = {
-        x: stageWidth * 0.72,
-        y: targets.length === 1 ? stageHeight * 0.5 : usableTop + idx * step,
-      };
-    });
-    return positions;
-  }
-
-  function runPresetLayout(positions, animate = false, padding = 30) {
-    if (!_netCyInstance) return;
-    _netCyInstance.layout({
-      name: 'preset',
-      fit: true,
-      padding,
-      animate,
-      animationDuration: animate ? 480 : 0,
-      animationEasing: 'ease-in-out-cubic',
-      positions: node => positions[node.id()] || node.position(),
-    }).run();
-  }
-
-  _netCyInstance = window.cytoscape({
-    container: el,
-    elements,
-    autoungrabify: true,
-    autounselectify: true,
-    boxSelectionEnabled: false,
-    minZoom: 0.8,
-    maxZoom: 1.4,
-    userZoomingEnabled: false,
-    userPanningEnabled: false,
-    pixelRatio: window.devicePixelRatio || 1,
-    style: [
-      {
-        selector: 'node',
-        style: {
-          width: 'data(size)',
-          height: 'data(size)',
-          'background-color': 'data(nodeColor)',
-          'border-width': 2,
-          'border-color': 'data(nodeBorder)',
-          label: 'data(label)',
-          color: 'rgba(220,228,242,0.92)',
-          'font-size': 11,
-          'font-family': 'Segoe UI',
-          'font-weight': 300,
-          'text-wrap': 'wrap',
-          'text-max-width': 100,
-          'text-valign': 'bottom',
-          'text-halign': 'center',
-          'text-margin-y': 6,
-          'text-outline-color': 'transparent',
-          'text-outline-width': 0,
-          'text-background-opacity': 0,
-          'transition-duration': '220ms',
-          'transition-timing-function': 'ease-in-out',
-        },
-      },
-      {
-        selector: 'edge',
-        style: {
-          width: 1.2,
-          'line-color': rgba(palette.text, 0.18),
-          'target-arrow-color': rgba(palette.text, 0.18),
-          'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier',
-          opacity: 0.55,
-          'arrow-scale': 0.7,
-          'transition-property': 'opacity width line-color',
-          'transition-duration': '220ms',
-        },
-      },
-      {
-        selector: '.focus',
-        style: {
-          width: 'data(focusSize)',
-          height: 'data(focusSize)',
-          'border-width': 2.5,
-          'border-color': 'rgba(255,255,255,0.75)',
-          'font-size': 13,
-          'font-weight': 700,
-          'text-outline-width': 0,
-          'text-background-opacity': 0,
-          'transition-duration': '420ms',
-          'transition-timing-function': 'ease-in-out',
-        },
-      },
-      {
-        selector: '.neighbor',
-        style: {
-          width: 'data(neighborSize)',
-          height: 'data(neighborSize)',
-          'border-width': 2.5,
-          'border-color': rgba(palette.text, 0.70),
-          'font-size': 11,
-          'text-outline-width': 0,
-          'text-background-opacity': 0,
-        },
-      },
-      {
-        selector: '.dimmed',
-        style: { opacity: 0.15 },
-      },
-      {
-        selector: '.secondary',
-        style: {
-          opacity: 0.38,
-          'font-size': 9,
-          'text-opacity': 0.45,
-          'border-width': 1,
-        },
-      },
-      {
-        selector: '.secondary-edge',
-        style: {
-          opacity: 0.20,
-          width: 0.8,
-          'line-style': 'dashed',
-          'line-dash-pattern': [4, 4],
-        },
-      },
-      {
-        selector: '.active-edge',
-        style: {
-          width: 2.5,
-          'line-color': rgba('#e8f0ff', 0.88),
-          'target-arrow-color': rgba('#e8f0ff', 0.88),
-          opacity: 1,
-          'arrow-scale': 0.9,
-        },
-      },
-      {
-        selector: '.hidden',
-        style: { display: 'none' },
-      },
-      {
-        selector: 'node[domain="civilization"]',
-        style: {
-          'background-fill': 'radial-gradient',
-          'background-gradient-stop-colors': '#f07878 #c94040 #6b1010',
-          'background-gradient-stop-positions': '0% 52% 100%',
-        },
-      },
-      {
-        selector: 'node[domain="biosphere"]',
-        style: {
-          'background-fill': 'radial-gradient',
-          'background-gradient-stop-colors': '#5de8ae #2a9d6e #0f5535',
-          'background-gradient-stop-positions': '0% 52% 100%',
-        },
-      },
-      {
-        selector: 'node[domain="technology"]',
-        style: {
-          'background-fill': 'radial-gradient',
-          'background-gradient-stop-colors': '#78aff5 #3a78c9 #12305c',
-          'background-gradient-stop-positions': '0% 52% 100%',
-        },
-      },
-    ],
-    layout: { name: 'preset', positions: buildDomainLanePositions(), fit: true, padding: 30, animate: false },
-  });
-
-  let _pulseActive = false;
-
-  function stopPulse() {
-    _pulseActive = false;
-  }
-
-  function pulseNode(node) {
-    stopPulse();
-    if (!node || node.empty()) return;
-    _pulseActive = true;
-    function step(hi) {
-      if (!_pulseActive || !_netCyInstance || _netCyFocusId === null) return;
-      node.stop(true, true);
-      node.animate(
-        { style: { 'border-width': hi ? 6 : 1.5, 'border-color': hi ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.35)' } },
-        { duration: 520, easing: 'ease-in-out', complete: function() { step(!hi); } }
-      );
-    }
-    step(true);
-  }
-
-  function restoreFullNetwork(force = false) {
-    if (!_netCyInstance || (!force && _netCyFocusId === null)) return;
-    stopPulse();
-    _netCyFocusId = null;
-    _netHover = null;
-    _netCyInstance.batch(() => {
-      _netCyInstance.elements().removeClass('hidden focus neighbor active-edge secondary secondary-edge');
-    });
-    runPresetLayout(buildDomainLanePositions(), true, 34);
-    updateNetworkSide(null);
-  }
-
-  function focusOutboundNetwork(sourceId) {
-    if (!_netCyInstance || _netCyFocusId === sourceId) return;
-    const sourceNode = _netCyInstance.getElementById(sourceId);
-    if (!sourceNode || sourceNode.empty()) return;
-    _netCyFocusId = sourceId;
-
-    const targetNodes = sourceNode.outgoers('node');
-    const targetEdges = sourceNode.outgoers('edge');
-    let secondaryNodes = _netCyInstance.collection();
-    let secondaryEdges = _netCyInstance.collection();
-    targetNodes.forEach(tNode => {
-      secondaryNodes = secondaryNodes.union(tNode.outgoers('node').not(sourceNode).not(targetNodes));
-      secondaryEdges = secondaryEdges.union(tNode.outgoers('edge'));
-    });
-    secondaryEdges = secondaryEdges.not(targetEdges);
-
-    _netCyInstance.batch(() => {
-      _netCyInstance.elements().addClass('hidden');
-      sourceNode.union(targetNodes).union(targetEdges).union(secondaryNodes).union(secondaryEdges).removeClass('hidden');
-      _netCyInstance.elements().removeClass('focus neighbor active-edge secondary secondary-edge');
-      sourceNode.addClass('focus');
-      targetNodes.addClass('neighbor');
-      targetEdges.addClass('active-edge');
-      secondaryNodes.addClass('secondary');
-      secondaryEdges.addClass('secondary-edge');
-    });
-    const pos = buildFocusPositions(sourceId);
-    const secArr = secondaryNodes.toArray();
-    if (secArr.length > 0) {
-      const secX = stageWidth * 0.90;
-      const top = 60, bot = stageHeight - 60;
-      const step = secArr.length === 1 ? 0 : (bot - top) / (secArr.length - 1);
-      secArr.forEach((n, i) => {
-        pos[n.id()] = { x: secX, y: secArr.length === 1 ? (top + bot) / 2 : top + i * step };
-      });
-    }
-    runPresetLayout(pos, true, 56);
-
-    pulseNode(sourceNode);
-    _netHover = _netNodes.find(n => n.id === sourceId) || null;
-    updateNetworkSide(_netHover);
-  }
-
-  _netCyInstance.on('mouseover', 'node', evt => focusOutboundNetwork(evt.target.id()));
-  _netCyInstance.on('tap', 'node', evt => focusOutboundNetwork(evt.target.id()));
-  _netCyInstance.on('tap', evt => {
-    if (evt.target === _netCyInstance) restoreFullNetwork(true);
-  });
-  el.addEventListener('mouseleave', () => restoreFullNetwork(true));
-  updateNetworkSide(null);
+  sendThreatNetworkPriorities();
 }
 
 function resizeVizSurfaces() {
   Object.values(_chartRegistry).forEach(chart => {
     if (chart && chart.resize) chart.resize();
   });
-  if (_netCyInstance) {
-    _netCyInstance.resize();
-    const visible = _netCyInstance.elements(':visible');
-    if (visible && visible.length) _netCyInstance.fit(visible, 28);
-  }
-}
-
-function setText(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
 }
 
 function toggleCollapse(id) {
@@ -5225,14 +4981,6 @@ function toggleCollapse(id) {
       if (chart) chart.resize();
     }, 80);
   }
-}
-
-function toggleReadMore(bodyId, btnId) {
-  const body = document.getElementById(bodyId);
-  const btn  = document.getElementById(btnId);
-  if (!body || !btn) return;
-  const open = body.classList.toggle('open');
-  btn.textContent = open ? '▲ Read less' : '▼ Read more';
 }
 
 function exportClockJSON() {
@@ -5351,31 +5099,6 @@ function exportClockCSV() {
   setTimeout(() => URL.revokeObjectURL(a.href), 10000);
 }
 
-function buildShareLinks() {
-  const d = window._lastInterpretData;
-  const base = 'https://jerseroman.github.io/apocalypse-clock/';
-  let text = 'Apocalypse Clock simulation';
-  if (d && d.cascadeP90) {
-    text = `Apocalypse Clock: Dynamic cascade P90 critical horizon ${d.cascadeP90}   run your own simulation at ${base}`;
-  }
-  const enc = encodeURIComponent(text);
-  const urlEnc = encodeURIComponent(base);
-  const tw = document.getElementById('sh-twitter');
-  const tg = document.getElementById('sh-telegram');
-  const rd = document.getElementById('sh-reddit');
-  if (tw) tw.href = `https://twitter.com/intent/tweet?text=${enc}&url=${urlEnc}`;
-  if (tg) tg.href = `https://t.me/share/url?url=${urlEnc}&text=${enc}`;
-  if (rd) rd.href = `https://www.reddit.com/submit?url=${urlEnc}&title=${enc}`;
-}
-
-document.addEventListener('click', function(e) {
-  const wrap = document.getElementById('shareMenuWrap');
-  const dropdown = document.getElementById('shareDropdown');
-  if (wrap && dropdown && !wrap.contains(e.target)) {
-    dropdown.style.display = 'none';
-  }
-});
-
 function setDominantDriverKpi(name, note) {
   const driver = document.getElementById('kpiDriver');
   const driverNote = document.getElementById('kpiDriverNote');
@@ -5393,7 +5116,6 @@ function updateDominantDriverFromPriority(enriched) {
 
 function updateUI(mcRes, scKey, enriched, executionSnapshot) {
   const gsi = calcGSI(enriched);
-  drawClock(gsi);
   const hue = Math.round(120 - gsi * 1.2);
   document.getElementById('kpiGSI').textContent = gsi.toFixed(0);
   document.getElementById('kpiGSI').style.color = `hsl(${hue},65%,52%)`;
@@ -5457,13 +5179,6 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
     if (_csn) _csn.style.display = '';
     const _chn = document.getElementById('cascadeHeadlineNote');
     if (_chn) { _chn.textContent = `The two clocks show two points from the same set of simulated cascade timelines for the ${SC[scKey].label || scKey} scenario. P50 is the middle result; P90 is the later result reached in about nine out of ten model runs. Because risks are connected, one serious failure can spread and disrupt essential services without every domain failing first. These dates are warning horizons, not forecasts of complete global collapse. “>2100” only means the model cannot locate that point within its time window; it does not mean the system is safe until then. The result still depends on stated assumptions about growth, system importance, connections and essential services.`; _chn.style.display = ''; }
-    const whyEl = document.getElementById('whyChangedNote');
-    if (whyEl) whyEl.textContent = buildWhyChangedSummary(scKey, P.weightProfile || 'expert', enriched);
-    const rbEl = document.getElementById('robustnessNote');
-    if (rbEl) {
-      const rb = computeWeightProfileRobustness(scKey, enriched);
-      rbEl.innerHTML = `<span class="robustness-badge ${rb.className}">${escapeHtml(rb.level)}</span>${escapeHtml(rb.detail)}`;
-    }
     window._lastInterpretData = {
       scenario: scKey,
       modelVersion: runSnapshot?.codeIdentifier || MODEL_VERSION,
@@ -5506,6 +5221,7 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
         propagated: freezeDeepCopy(mcRes.functionalStats),
         domains: freezeDeepCopy(mcRes.domainStats),
         domainMeaning: mcRes.domainStatsMeaning,
+        cascadeRecovery: mcRes.cascadeRecovery ? freezeDeepCopy(mcRes.cascadeRecovery) : null,
         deterministic: explainCascadeCrossing(enriched, runSnapshot?.parameters || P),
       },
       averageExportWarning: AVERAGE_EXPORT_WARNING,
@@ -5526,18 +5242,9 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
     document.getElementById('csP2050').textContent  = pct(p2050);
     document.getElementById('csAlea').textContent   = mcRes.samplingSigma.toFixed(1) + 'y';
     document.getElementById('csStruct').textContent = mcRes.structuralSigma.toFixed(1) + 'y';
-    setText('uncAlea',   mcRes.samplingSigma.toFixed(1)  + ' years');
-    setText('uncEpis',   mcRes.medianCensored ? 'undefined (censored median)' : mcRes.parameterSigma.toFixed(1) + ' years');
-    setText('uncStruct', mcRes.structuralSigma.toFixed(1) + ' years');
-    setText('heroP10Mirror', fmtY(mcRes.p10));
-    setText('heroP90Mirror', fmtY(mcRes.p90));
-    setText('heroAleaMirror', mcRes.samplingSigma.toFixed(1) + 'y');
-    setText('heroEpisMirror', mcRes.medianCensored ? 'undefined' : mcRes.parameterSigma.toFixed(1) + 'y');
     const censorNote = `No crossing by ${YE}: ${pct(mcRes.censorFraction || 0)}. SD and bootstrap values describe horizon-coded times (${YE + 1} for no crossing), not actual post-horizon dates.`;
-    ['csAlea', 'uncAlea', 'uncEpis', 'heroAleaMirror', 'heroEpisMirror'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.title = censorNote;
-    });
+    const outcomeSd = document.getElementById('csAlea');
+    if (outcomeSd) outcomeSd.title = censorNote;
   } else {
     // Clear stale headline values until the next stochastic run finishes.
     const headline = document.getElementById('cascadeHeadlineYear');
@@ -5566,21 +5273,7 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
     const leadBox = document.getElementById('hyLeadBox');
     if (leadName && !leadName.textContent.trim()) leadName.textContent = 'Top threat P50';
     if (leadBox && !leadBox.title) leadBox.title = '';
-    const whyEl = document.getElementById('whyChangedNote');
-    if (whyEl) whyEl.textContent = buildWhyChangedSummary(scKey, P.weightProfile || 'expert', enriched);
-    const rbEl = document.getElementById('robustnessNote');
-    if (rbEl) {
-      const rb = computeWeightProfileRobustness(scKey, enriched);
-      rbEl.innerHTML = `<span class="robustness-badge ${rb.className}">${escapeHtml(rb.level)}</span>${escapeHtml(rb.detail)}`;
-    }
   }
-  const leg = document.getElementById('cdfLegend');
-  if (leg) leg.innerHTML = Object.keys(_cdfCurves).map(sc => {
-    const r = displayedCascadeCdfSummary(_cdfCurves[sc]);
-    return `<div class="leg-item"><div class="leg-sw" style="background:${SC[sc].color}"></div>
-      ${SC[sc].label} Dynamic Cascade P50: ${r ? fmtY(r.p50) : ' '}</div>`;
-  }).join('');
-
   document.getElementById('narrativeText').innerHTML = buildNarrative(scKey, enriched, mcRes);
   renderAggregateRow(enriched, mcRes);
   renderPriorityPanel(enriched, mcRes);
@@ -5589,12 +5282,10 @@ function updateUI(mcRes, scKey, enriched, executionSnapshot) {
   renderDomainComp(enriched);
   renderTable(enriched, mcRes);
   renderClimateBreakdownDetail(enriched, mcRes);
-  initClimateDetailControls();
   drawBarChart(enriched, mcRes);
-  drawCDF();
+  renderConditionalScenario(mcRes);
   drawSensChart();
   drawExploratorySensitivityChart();
-  drawHeroSpark(mcRes);
 
   document.getElementById('hdrMeta').innerHTML =
     mcRes
@@ -5649,6 +5340,8 @@ function startLoadingIndicator() {
   const note     = document.getElementById('cascadeHeadlineNote');
   const stabilityNote = document.getElementById('cascadeStabilityNote');
   const clm      = document.getElementById('cascadeLoadingMsg');
+  const conditional = document.getElementById('conditionalScenario');
+  if (conditional) conditional.hidden = true;
   if (pair) pair.style.display = 'none';
   if (medianWrap) medianWrap.style.display = 'none';
   if (yearWrap) yearWrap.style.display = 'none';
@@ -5658,11 +5351,19 @@ function startLoadingIndicator() {
     updateLoadingProgress(0);
     clm.style.display = 'block';
   }
+  const stepLine = document.getElementById('cascadeLoadingStep');
+  if (stepLine) stepLine.textContent = '';
+  document.body.classList.add('is-model-loading');
+}
+
+function announceRunStatus(message) {
+  if (typeof window.announceStatus === 'function') window.announceStatus(message);
 }
 
 function stopLoadingIndicator() {
   const clm = document.getElementById('cascadeLoadingMsg');
   if (clm) clm.style.display = 'none';
+  document.body.classList.remove('is-model-loading');
 }
 
 function snapshotParams(scKey, nSim) {
@@ -5672,6 +5373,8 @@ function snapshotParams(scKey, nSim) {
     seed: P.seed || DEFAULT_MC_SEED,
     threshold: P.threshold,
     cascadeThreshold: P.cascadeThreshold ?? 0.50,
+    structuralUncertainty: P.structuralUncertainty !== false,
+    pressureTurns: P.pressureTurns !== false,
     depAlpha: P.depAlpha,
     uncMult: P.uncMult,
     tailDependence: P.tailDependence ?? 0.15,
@@ -5709,7 +5412,7 @@ function numericalCodeFingerprint() {
   // Capture loaded function bodies, never a later network copy of app.js.
   // This identifies the numerical implementation, not full-file bytes or a cryptographic digest.
   const functions = {
-    numericalCodeFingerprint, clamp, logistic, quantile, normalizeMonteCarloSeed,
+    numericalCodeFingerprint, clamp, quantile, normalizeMonteCarloSeed,
     hashSeedToUint32, makeSeededRandom, createRngContext, random01, randn, normalSample,
     erf, normCdf, normInv, muOf, loOf, hiOf, fieldKind, fieldBounds, sourceKey,
     lowZeroBit, getSobolDirections, generateSobolPoints, getThreatThreshold, computeHorizon,
@@ -5728,8 +5431,11 @@ function numericalCodeFingerprint() {
     computeAggregateYears, dependencyExposure,
     cascadeVulnerability, cascadePressureRatio, functionalCascadeNodes, configuredFunctionalCascadeNodes,
     simulateFunctionalCascade, computeDomainFunctionalCrossing,
+    structuralComponentsOf, growthClassFactors, createStructuralContext, applyStructuralUncertainty,
+    reversibilityTypeForThreat, createPressureTurnContext, applyPressureTurns, turnedHorizon, summarizeCascadeRecovery,
     functionalCoreSimulate: FunctionalCascade.simulate, functionalCorePrepare: FunctionalCascade.prepare,
     functionalCorePressure: FunctionalCascade.pressureRatio, functionalCoreExposure: FunctionalCascade.exposure,
+    functionalCoreDrive: FunctionalCascade.drive,
     functionalCoreMetrics: FunctionalCascade.metrics,
     functionalCoreDomainCrossing: FunctionalCascade.firstCrossingFromActivationYears,
     functionalCoreClamp: FunctionalCascade.clamp01,
@@ -5756,6 +5462,7 @@ function numericalCodeFingerprint() {
     SC, PARAM_FIELDS, ORD_RANGE, GROWTH_RANGE, THRESH_RANGE, THREAT_SPECS,
     EFFECTIVE_GROWTH_CAP, GROWTH_KIND_CONVERSION, WEIGHT_PROFILES,
     GLOBAL_STRESS_CAPACITY, OUT_DEGREES, MAX_OUT_DEGREE, MEAN_OUT_DEGREE, DEP_GRAPH,
+    STRUCTURAL_UNCERTAINTY, STRUCTURAL_COMPONENTS, PRESSURE_TURNS, THREAT_REVERSIBILITY_OVERRIDES,
   };
   const functionNames = Object.keys(functions).sort();
   const source = functionNames.map(name => [name, Function.prototype.toString.call(functions[name])]);
@@ -5788,9 +5495,11 @@ function createExecutionSnapshot(params) {
       thresholdMin: THRESHOLD_MIN,
       thresholdMax: THRESHOLD_MAX,
       cascadeWavesPerYear: 'synchronous least fixed point; at most number of threats',
-      cascadeRule: 'max(global fixed-weight loss, essential-service fixed-weight loss) >= cascadeThreshold',
-      cascadeWeightMeaning: 'Fixed criticality judgments, not probability or sampled MCDA priority.',
-      cascadeTimeMeaning: 'Absorbing first functional-threshold crossing; no recovery or physical permanence claim.',
+      cascadeRule: 'max(global criticality-weighted loss, essential-service criticality-weighted loss) >= cascadeThreshold; in the Monte Carlo the threshold, criticality level values, dependency weights and lags are sampled per run (structuralUncertainty)',
+      cascadeWeightMeaning: 'Criticality judgments, not probability or sampled MCDA priority. The declared tiers 1/2/3 are the central values; the Monte Carlo samples each level value within ±0.5.',
+      structuralUncertainty: params.structuralUncertainty === false ? null : STRUCTURAL_UNCERTAINTY,
+      pressureTurns: params.pressureTurns === false ? null : PRESSURE_TURNS,
+      cascadeTimeMeaning: 'First functional-threshold crossing. In the Monte Carlo a threat’s pressure can turn and decline, and failed threats can then recover, so a run can fall back below the threshold later; no physical permanence claim.',
       regimeHorizonRule: 'Sampled latent-pressure first passage; regime abruptness does not add an uncalibrated geometric waiting-time draw.',
       domainHorizonRule: 'Within-domain functional-loss first crossing reconstructed from full-system propagated activation histories using the headline criticality, overlap, service and threshold rules.',
     },
@@ -5878,7 +5587,6 @@ async function runAll() {
     setCalcStepStatus('horizon', 'queued', 'Process-specific horizon heuristics will be remapped once adjusted priorities are available.');
     setCalcStepStatus('gsi', 'queued', 'Global systemic stress will update after deterministic threat priorities are rebuilt.');
     setCalcStepStatus('priorityrank', 'queued', 'Lead threat will be ranked from scenario-conditioned priority scores.');
-    setCalcStepStatus('domainlayers', 'queued', 'Domain reporting baskets will be prepared before propagated Monte Carlo histories are available.');
     await yieldForCalcConsole();
     const enriched = buildEnriched(scKey, params);
     setCalcStepStatus('base', 'done', `${THREATS.length} weighted MCDA base scores computed under the active scenario.`);
@@ -5888,7 +5596,6 @@ async function runAll() {
     setCalcStepStatus('domainweights', 'done', `Domain weights normalized to civilization ${(normW.civilization * 100).toFixed(0)}%, biosphere ${(normW.biosphere * 100).toFixed(0)}%, technology ${(normW.technology * 100).toFixed(0)}%.`);
     setCalcStepStatus('horizon', 'done', 'Process-specific horizon heuristics recomputed from adjusted priorities.');
     const gsi = calcGSI(enriched);
-    drawClock(gsi);
     initNetwork(enriched);
     setCalcStepStatus('gsi', 'done', `Global Stress Index recomputed at ${gsi.toFixed(0)} / 100.`, 'Deterministic model layers are ready. Monte Carlo sampling will start next.');
     const deterministicLead = [...enriched].sort((a, b) => b.priority - a.priority)[0];
@@ -5899,58 +5606,64 @@ async function runAll() {
     renderDomainComp(enriched);
     renderTable(enriched, null);
     renderClimateBreakdownDetail(enriched, null);
-    initClimateDetailControls();
     drawBarChart(enriched, null);
-    await drawSensChart();
-    await drawExploratorySensitivityChart();
-    setTimeout(resizeScientificPanelCharts, 80);
-    drawHeroSpark(null);
     if (deterministicLead) setDominantDriverKpi(deterministicLead.name, 'Current priority summary');
     setCalcStepStatus('priorityrank', 'done', deterministicLead ? `Lead threat ranked as ${deterministicLead.name} with priority ${deterministicLead.priority.toFixed(2)}.` : 'No lead threat could be ranked.');
-    setCalcStepStatus('domainlayers', 'done', 'Civilizational, biospheric, and technological reporting baskets prepared; final values await propagated Monte Carlo histories.');
     let lastMcUpdate = -1;
-    setCalcStepStatus('sampling', 'running', 'Sampling bounded MCDA dimensions from Beta fits and positive parameters from log-normal fits.');
-    setCalcStepStatus('montecarlo', 'running', `Simulating ${nSim.toLocaleString()} stochastic futures for threshold crossing.`);
+    const structureOn = P.structuralUncertainty !== false;
+    const turnsOn = P.pressureTurns !== false;
+    setCalcStepStatus('structuresample', 'running', structureOn ? 'Sampling the cascade threshold (0.40 to 0.60), criticality levels, dependency weights and lags, and growth class in every run.' : 'Switched off: every run uses the declared structure.');
+    setCalcStepStatus('turns', 'running', turnsOn ? 'Sampling for each threat a 50% chance that its pressure peaks between 2027 and 2100, with recovery by reversibility class.' : 'Switched off: pressure keeps rising in every run.');
+    setCalcStepStatus('montecarlo', 'running', `Sampling Beta / log-normal parameters and simulating ${nSim.toLocaleString()} stochastic futures for threshold crossing.`);
     setCalcStepStatus('compensatory', 'running', 'Compensatory aggregation will be evaluated year by year inside the Monte Carlo pass.');
     setCalcStepStatus('maxrule', 'running', 'Max-rule aggregation will track the earliest single-threat crossing inside the Monte Carlo pass.');
     setCalcStepStatus('graph', 'running', 'Graph-weighted dependency heuristic index will be evaluated inside the Monte Carlo pass; it is not a probability from a validated correlation matrix.');
     setCalcStepStatus('cascade', 'running', 'Dynamic cascade propagation will run a rule-based dependency cascade year by year.');
-    setCalcStepStatus('domainmc', 'queued', 'Within-domain functional-loss crossings will be reconstructed from full-system propagated activation histories.');
+    setCalcStepStatus('domainmc', 'queued', 'Civilization, biosphere and technology baskets will be reconstructed from full-system propagated activation histories.');
+    setCalcStepStatus('recovery', 'queued', 'Runs still below the threshold in 2100 will be counted after the simulation.');
+    setCalcStepStatus('triggers', 'queued', 'The runs will be replayed after the simulation to attribute what sets the clocks off.');
     setCalcStepStatus('structural', 'queued', 'Cross-aggregator structural spread will be computed after all ensemble rules resolve.');
     setCalcStepStatus('bootstrap', 'queued', 'Bootstrap uncertainty summaries will be computed after the crossing distributions are collected.');
     setCalcStepStatus('weibull', 'queued', 'Weibull-shaped hazard diagnostics will run after Monte Carlo threat statistics are available.');
     setCalcStepStatus('eigen', 'queued', 'Network eigenvector centrality will rank dependency hubs after main stochastic outputs are ready.');
     setCalcStepStatus('poissonbinomial', 'queued', 'Poisson-binomial convergence tails will run after threat probabilities are available.');
     setCalcStepStatus('entropy', 'queued', 'Shannon entropy will measure risk concentration after final priority shares are available.');
+    // Loading bar: the steps done so far plus the share of the seven steps that finish with the simulation.
+    const doneBeforeMc = BLOCKING_CALC_STEPS.filter(step => ensureCalcConsoleState().steps[step.id].status === 'done').length;
     const mcRes = await runMC(scKey, nSim, frac => {
       prog.style.width = (frac * 100) + '%';
-      if (window._particleLoader) window._particleLoader.setProgress((8 + frac * 6) / CORE_CALC_STEPS.length);
+      if (window._particleLoader) window._particleLoader.setProgress((doneBeforeMc + frac * 7) / BLOCKING_CALC_STEPS.length);
       badge.innerHTML = `<span class="live-dot"></span>${Math.round(frac * nSim)} / ${nSim}`;
       const roundedPct = Math.round(frac * 100);
       if (roundedPct >= lastMcUpdate + 8 || frac >= 0.999) {
         lastMcUpdate = roundedPct;
         const countLabel = `${Math.round(frac * nSim).toLocaleString()} / ${nSim.toLocaleString()}`;
-        setCalcStepStatus('sampling', 'running', `${countLabel} parameter draws completed across Beta and log-normal samplers.`);
-        setCalcStepStatus('montecarlo', 'running', `${countLabel} stochastic futures evaluated.`);
+        setCalcStepStatus('montecarlo', 'running', `${countLabel} stochastic futures sampled and evaluated.`);
       }
     }, params);
     mcRes.executionSnapshot = executionSnapshot;
+    // Inputs for the trigger-attribution replay (traceCascadeTriggers), which must match this run.
+    mcRes.triggerReplayInputs = { scKey, nSim, params };
 
     if (runVersion !== _resultVersion) return;
 
     _cdfCurves[scKey] = mcRes;
     prog.style.width = '100%';
     badge.innerHTML = `<span class="live-dot"></span>${nSim} / ${nSim} ✓`;
-    setCalcStepStatus('sampling', 'done', `${nSim.toLocaleString()} Beta / log-normal parameter draws completed for the active scenario.`);
-    setCalcStepStatus('montecarlo', 'done', `${nSim.toLocaleString()} stochastic futures completed for threshold crossing.`);
+    setCalcStepStatus('structuresample', 'done', structureOn ? `Structure sampled in all ${nSim.toLocaleString()} runs: threshold 0.40 to 0.60, criticality levels, dependency weights and lags, growth class.` : 'Switched off: every run used the declared structure.');
+    setCalcStepStatus('turns', 'done', turnsOn ? `Pressure turns and recovery sampled in all ${nSim.toLocaleString()} runs (50% chance per threat, recovery by reversibility class).` : 'Switched off: pressure kept rising in every run.');
+    setCalcStepStatus('montecarlo', 'done', `${nSim.toLocaleString()} Beta / log-normal parameter draws and stochastic futures completed for threshold crossing.`);
     setCalcStepStatus('compensatory', 'done', `Compensatory aggregation resolved with P50 ${fmtY(mcRes.ensemble.compensatory.p50)}.`);
     setCalcStepStatus('maxrule', 'done', `Non-compensatory max-rule resolved with P50 ${fmtY(mcRes.ensemble.maxRule.p50)}.`);
     setCalcStepStatus('graph', 'done', `Graph-weighted heuristic index resolved with P50 ${fmtY(mcRes.ensemble.graphWeighted.p50)}; diagnostic only.`);
     setCalcStepStatus('cascade', 'done', `Rule-based dynamic cascade resolved with P50 ${fmtY(mcRes.ensemble.dynamicCascade.p50)} and P90 ${fmtY(mcRes.ensemble.dynamicCascade.p90)}.`);
-    setCalcStepStatus('domainmc', 'done', `Propagated domain functional crossings resolved: civilization P50 ${fmtY(mcRes.domainStats.civilization.p50)}, biosphere P50 ${fmtY(mcRes.domainStats.biosphere.p50)}, technology P50 ${fmtY(mcRes.domainStats.technology.p50)}.`);
-    setCalcStepStatus('structural', 'done', `Cross-aggregator P50 range (not σ) computed at ${mcRes.structuralSigma.toFixed(1)} years across compensatory, max-rule, graph-weighted heuristic, and dynamic cascade models.`);
+    setCalcStepStatus('domainmc', 'done', `Domain baskets prepared and propagated functional crossings resolved: civilization P50 ${fmtY(mcRes.domainStats.civilization.p50)}, biosphere P50 ${fmtY(mcRes.domainStats.biosphere.p50)}, technology P50 ${fmtY(mcRes.domainStats.technology.p50)}.`);
+    setCalcStepStatus('structural', 'done', `Aggregation-rule P50 range (not σ) computed at ${mcRes.structuralSigma.toFixed(1)} years across compensatory, max-rule, graph-weighted heuristic, and dynamic cascade models.`);
     setCalcStepStatus('bootstrap', 'done', `Bootstrap horizon-coded precision summary completed; central 80% interval is P10 ${fmtY(mcRes.p10)} to P90 ${fmtY(mcRes.p90)}, with P50 ${fmtY(mcRes.p50)}. Censored: ${pct(mcRes.censorFraction)}.${mcRes.medianCensored ? ' Actual median and its MC SE are not identifiable within the horizon.' : ''}`, 'Bootstrap precision concerns the horizon-coded median, not input uncertainty or unidentified post-horizon dates.');
 
+    const recovery = mcRes.cascadeRecovery;
+    setCalcStepStatus('recovery', 'done', recovery ? `${(nSim - recovery.crossedRuns).toLocaleString()} of ${nSim.toLocaleString()} runs are still below the threshold in 2100; ${recovery.backBelowAtEnd.toLocaleString()} of the ${recovery.crossedRuns.toLocaleString()} crossing runs are back below it by then.` : 'No recovery summary is available for this run.');
+    setCalcStepStatus('triggers', 'running', `Replaying the ${nSim.toLocaleString()} runs in the background to attribute which essential-service basket sets the clocks off.`);
     setCalcStepStatus('weibull', 'running', 'Computing Weibull-shaped hazard diagnostics calibrated to model horizons.');
     setCalcStepStatus('eigen', 'running', 'Running power-iteration centrality over the dependency network.');
     setCalcStepStatus('poissonbinomial', 'running', 'Convolving unequal model probabilities for an exact internal tail calculation.');
@@ -5978,29 +5691,31 @@ async function runAll() {
     try { entropyStats = shannonEntropyRisk(enriched); } catch(e) { console.warn('Shannon entropy failed', e); }
     setCalcStepStatus('entropy', 'done', `Shannon entropy completed: H=${entropyStats.h.toFixed(2)} bits, effective N=${entropyStats.effectiveN.toFixed(1)} threats.`);
 
-    try { updateUI(mcRes, scKey, enriched, executionSnapshot); } catch(uiErr) { console.error('updateUI error (non-fatal):', uiErr); }
-
-    // Scientific diagnostics are triggered manually via the panel button — not run here.
+    // Optional diagnostics belong to the previous run; they are rerun only from the Model Diagnostics button.
     _sensData = null;
     _exploratoryData = null;
-    await drawSensChart();
-    await drawExploratorySensitivityChart();
     _experimentalScientificData = null;
     resetExperimentalScientificPanel();
-    setCalcStepStatus('oat', 'pending', 'Idle. Use “Run Additional Scientific Calculations” to run OAT sensitivity.');
-    setCalcStepStatus('sobol', 'pending', 'Idle. Use “Run Additional Scientific Calculations” to run Sobol/Jansen sensitivity.');
-    setCalcStepStatus('smaa', 'pending', 'Idle. Use “Run Additional Scientific Calculations” to run SMAA robustness.');
-    setCalcStepStatus('veto', 'pending', 'Idle. Use “Run Additional Scientific Calculations” to run veto-rule stress testing.');
-    setCalcStepStatus('tailshock', 'pending', 'Idle. Use “Run Additional Scientific Calculations” to run tail-dependence stress testing.');
-    setCalcStepStatus('audit', 'pending', 'Idle. Use “Run Additional Scientific Calculations” to build the audit summary.');
+    try { updateUI(mcRes, scKey, enriched, executionSnapshot); } catch(uiErr) { console.error('updateUI error (non-fatal):', uiErr); }
+    announceRunStatus(`Model run complete. Dynamic cascade P50 ${fmtY(mcRes.ensemble.dynamicCascade.p50)}, P90 ${fmtY(mcRes.ensemble.dynamicCascade.p90)}.`);
+    setCalcStepStatus('oat', 'pending', 'Idle. Use “Run diagnostics” to run OAT sensitivity.');
+    setCalcStepStatus('sobol', 'pending', 'Idle. Use “Run diagnostics” to run Sobol/Jansen sensitivity.');
+    setCalcStepStatus('smaa', 'pending', 'Idle. Use “Run diagnostics” to run SMAA robustness.');
+    setCalcStepStatus('veto', 'pending', 'Idle. Use “Run diagnostics” to run veto-rule stress testing.');
+    setCalcStepStatus('tailshock', 'pending', 'Idle. Use “Run diagnostics” to run tail-dependence stress testing.');
+    setCalcStepStatus('audit', 'pending', 'Idle. Use “Run diagnostics” to build the audit summary.');
     finalizeCalcConsoleSummary();
   } catch (err) {
     console.error('Simulation run failed', err);
     const badge = document.getElementById('simBadge');
     if (badge) badge.innerHTML = '<span class="live-dot"></span>Run failed';
     const state = ensureCalcConsoleState();
-    const runningStep = CORE_CALC_STEPS.find(step => state.steps[step.id].status === 'running');
-    if (runningStep) setCalcStepStatus(runningStep.id, 'error', 'This stage was interrupted by a run failure.', 'Current run failed before all calculation stages could finish.');
+    CORE_CALC_STEPS.filter(step => state.steps[step.id].status === 'running').forEach(step => {
+      setCalcStepStatus(step.id, 'error', 'This stage was interrupted by a run failure.', 'Current run failed before all calculation stages could finish.');
+    });
+    finalizeCalcConsoleSummary();
+    if (window._particleLoader) window._particleLoader.stop();
+    announceRunStatus('Model run failed.');
   } finally {
     stopLoadingIndicator();
     _running = false;
@@ -6313,42 +6028,6 @@ function yearAxisLabel(value) {
   return value > YE ? '>2100' : String(Math.round(value));
 }
 
-function buildAdaptiveYearScale(rows, keys = ['p50', 'p90']) {
-  const vals = [];
-  (rows || []).forEach(row => {
-    const summary = Array.isArray(row) ? row[1] : row;
-    keys.forEach(key => {
-      const raw = summary && Number.isFinite(summary[key]) ? summary[key] : null;
-      if (raw !== null) vals.push(yearChartValue(raw));
-    });
-  });
-
-  if (!vals.length) return { min: YS, max: Math.min(YE + 3, YS + 10) };
-
-  let min = Math.max(YS, Math.floor(Math.min(...vals)) - 2);
-  let max = Math.min(YE + 3, Math.ceil(Math.max(...vals)) + 2);
-  // Use a local axis when stress-test horizons cluster tightly.
-  if (max - min < 8) {
-    const mid = (min + max) / 2;
-    min = Math.max(YS, Math.floor(mid - 4));
-    max = Math.min(YE + 3, Math.ceil(mid + 4));
-  }
-
-  return { min, max };
-}
-
-function shiftedYearDatum(summary, key, scale) {
-  const raw = summary && Number.isFinite(summary[key]) ? summary[key] : YE + 1;
-  const clipped = yearChartValue(raw);
-  return {
-    value: Math.max(0, clipped - scale.min),
-    raw,
-  };
-}
-
-function shiftedYearAxisFormatter(scale) {
-  return value => yearAxisLabel(scale.min + value);
-}
 let _scientificPlotlyPromise = null;
 const SCIENTIFIC_PLOTLY_IDS = [
   'sensCanvas',
@@ -6510,24 +6189,6 @@ function scientificDomainColor(id, alpha = 1) {
   return alpha === 1 ? color : rgba(color, alpha);
 }
 
-function clippedYearSeries(values) {
-  return (values || []).filter(Number.isFinite).map(year => yearChartValue(year));
-}
-
-function prettyYearForHover(year) {
-  return year > YE ? '>2100' : String(Math.round(year));
-}
-
-function quantileFromSorted(values, q) {
-  const arr = (values || []).filter(Number.isFinite).slice().sort((a, b) => a - b);
-  if (!arr.length) return NaN;
-  const pos = (arr.length - 1) * q;
-  const lo = Math.floor(pos);
-  const hi = Math.ceil(pos);
-  const w = pos - lo;
-  return arr[lo] * (1 - w) + arr[hi] * w;
-}
-
 function scientificYearRangeFromValues(values, pad = 2, minSpan = 8) {
   const finite = (values || []).filter(Number.isFinite).map(yearChartValue);
   if (!finite.length) return [YS, Math.min(YE + 3, YS + 12)];
@@ -6570,7 +6231,7 @@ async function drawSensChart(isCurrent = () => true) {
   if (!isCurrent()) return;
   const data = _sensData;
   if (!data || !data.length) {
-    setScientificPlotlyMessage('sensCanvas', 'Run Additional Scientific Calculations to render OAT sensitivity.');
+    setScientificPlotlyMessage('sensCanvas', 'Run diagnostics to render OAT sensitivity.');
     return;
   }
   const Plotly = await ensureScientificPlotly();
@@ -6623,7 +6284,7 @@ async function drawExploratorySensitivityChart(isCurrent = () => true) {
   }
   const rows = payload ? payload.rows : null;
   if (!rows || !rows.length) {
-    setScientificPlotlyMessage('sobolCanvas', 'Run Additional Scientific Calculations to render Sobol/Jansen S1/ST indices.');
+    setScientificPlotlyMessage('sobolCanvas', 'Run diagnostics to render Sobol/Jansen S1/ST indices.');
     return;
   }
   const Plotly = await ensureScientificPlotly();
@@ -6670,18 +6331,6 @@ async function drawExploratorySensitivityChart(isCurrent = () => true) {
   await Plotly.react(prepareScientificPlotlyPanel('sobolCanvas'), traces, layout, scientificPlotlyConfig());
 }
 
-function plotlyYearScaleFromSummaries(rows, keys = ['p50', 'p90']) {
-  const vals = [];
-  rows.forEach(row => {
-    const summary = Array.isArray(row) ? row[1] : row;
-    keys.forEach(key => {
-      if (summary && Number.isFinite(summary[key])) vals.push(yearChartValue(summary[key]));
-    });
-  });
-  const range = scientificYearRangeFromValues(vals, 2, 8);
-  return { min: range[0], max: range[1] };
-}
-
 function plotlySummaryYear(summary, key) {
   const raw = summary && Number.isFinite(summary[key]) ? summary[key] : YE + 1;
   return { raw, clipped: yearChartValue(raw) };
@@ -6724,7 +6373,7 @@ async function drawIntervalLollipopChart(targetId, rows, titleColor, isCurrent =
       type: 'scatter', mode: 'markers', name: 'P50',
       x: p50.map(d => d.clipped), y: yVals,
       marker: { color: p.blue, size: 9, symbol: 'circle', line: { color: rgba(p.text, .42), width: 1 } },
-      customdata: p50.map(d => prettyYearForHover(d.raw)),
+      customdata: p50.map(d => yearAxisLabel(d.raw)),
       hovertemplate: '%{text}<br>P50: %{customdata}<extra></extra>',
       text: labels,
     },
@@ -6732,7 +6381,7 @@ async function drawIntervalLollipopChart(targetId, rows, titleColor, isCurrent =
       type: 'scatter', mode: 'markers', name: 'P90',
       x: p90.map(d => d.clipped), y: yVals,
       marker: { color: p.amber, size: 10, symbol: 'diamond', line: { color: rgba(p.text, .45), width: 1 } },
-      customdata: p90.map(d => prettyYearForHover(d.raw)),
+      customdata: p90.map(d => yearAxisLabel(d.raw)),
       hovertemplate: '%{text}<br>P90: %{customdata}<extra></extra>',
       text: labels,
     },
@@ -6740,7 +6389,7 @@ async function drawIntervalLollipopChart(targetId, rows, titleColor, isCurrent =
       type: 'scatter', mode: 'markers', name: 'P10',
       x: p10.map(d => d.clipped), y: yVals,
       marker: { color: rgba(p.text, 0.26), size: 6, symbol: 'line-ns-open', line: { color: rgba(p.text, 0.34), width: 1 } },
-      customdata: p10.map(d => prettyYearForHover(d.raw)),
+      customdata: p10.map(d => yearAxisLabel(d.raw)),
       hovertemplate: '%{text}<br>P10: %{customdata}<extra></extra>',
       text: labels,
       visible: 'legendonly',
@@ -6763,7 +6412,7 @@ async function drawVetoDiagnosticChart(data, isCurrent = () => true) {
   if (!isCurrent()) return;
   const stress = data && data.stress;
   if (!stress) {
-    setScientificPlotlyMessage('vetoDiagnosticChart', 'Run Additional Scientific Calculations to render the veto stress test.');
+    setScientificPlotlyMessage('vetoDiagnosticChart', 'Run diagnostics to render the veto stress test.');
     return;
   }
   const p = scientificPlotlyPalette();
@@ -6780,7 +6429,7 @@ async function drawTailShockChart(data, isCurrent = () => true) {
   if (!isCurrent()) return;
   const stress = data && data.stress;
   if (!stress) {
-    setScientificPlotlyMessage('tailShockChart', 'Run Additional Scientific Calculations to render the tail-dependence stress test.');
+    setScientificPlotlyMessage('tailShockChart', 'Run diagnostics to render the tail-dependence stress test.');
     return;
   }
   const p = scientificPlotlyPalette();
@@ -6796,7 +6445,7 @@ async function drawSMAADiagnosticChart(data, isCurrent = () => true) {
   if (!isCurrent()) return;
   const smaa = data && data.smaa;
   if (!smaa || !smaa.topRankAcceptability || !smaa.topRankAcceptability.length) {
-    setScientificPlotlyMessage('smaaDiagnosticChart', 'Run Additional Scientific Calculations to render SMAA robustness.');
+    setScientificPlotlyMessage('smaaDiagnosticChart', 'Run diagnostics to render SMAA robustness.');
     return;
   }
   const Plotly = await ensureScientificPlotly();
@@ -6833,26 +6482,27 @@ async function drawSMAADiagnosticChart(data, isCurrent = () => true) {
 async function drawDistributionDiagnosticsPlotly(res, isCurrent = () => true) {
   if (!isCurrent()) return;
   const result = res || _cdfCurves[currentScenario()] || null;
-  if (!result || !result.crossing || !result.crossing.length) {
+  const cascade = result && result.ensemble ? result.ensemble.dynamicCascade : null;
+  if (!cascade || !cascade.crossing || !cascade.crossing.length) {
     ['plotlyHistogramChart','plotlyBoxplotChart','plotlyHeatmapChart','plotlyCdfChart'].forEach(id => setScientificPlotlyMessage(id, 'Run the main simulation first; this distribution view needs a completed Monte Carlo result.'));
     return;
   }
   const Plotly = await ensureScientificPlotly();
   if (!Plotly || !isCurrent()) return;
   const p = scientificPlotlyPalette();
-  const scenarioLabel = (SC[currentScenario()] && SC[currentScenario()].name) || currentScenario();
+  const scenarioLabel = (SC[currentScenario()] && SC[currentScenario()].label) || currentScenario();
   const observedYears = values => (values || []).filter(year => Number.isFinite(year) && year <= YE);
   const censorCount = values => (values || []).filter(year => Number.isFinite(year) && year > YE).length;
-  const primaryCrossing = observedYears(result.crossing);
-  const censored = censorCount(result.crossing);
+  const primaryCrossing = observedYears(cascade.crossing);
+  const censored = censorCount(cascade.crossing);
   const yearRange = scientificYearRangeFromValues(primaryCrossing, 2, 10);
-  const p10 = yearChartValue(result.p10);
-  const p50 = yearChartValue(result.p50);
-  const p90 = yearChartValue(result.p90);
+  const p10 = yearChartValue(cascade.p10);
+  const p50 = yearChartValue(cascade.p50);
+  const p90 = yearChartValue(cascade.p90);
   const vline = (x, color, dash='dot') => ({ type: 'line', x0: x, x1: x, y0: 0, y1: 1, xref: 'x', yref: 'paper', line: { color, width: 1, dash } });
   const identifiedMarkers = [[p10, 'P10'], [p50, 'P50'], [p90, 'P90']].filter(([year]) => Number.isFinite(year) && year <= YE);
 
-  if (!primaryCrossing.length) setScientificPlotlyMessage('plotlyHistogramChart', `No observed crossings by ${YE}; ${censored}/${result.crossing.length} runs are right-censored.`);
+  if (!primaryCrossing.length) setScientificPlotlyMessage('plotlyHistogramChart', `No observed Dynamic cascade crossings by ${YE}; ${censored}/${cascade.crossing.length} runs are right-censored.`);
   else await Plotly.react(prepareScientificPlotlyPanel('plotlyHistogramChart'), [{
     type: 'histogram',
     x: primaryCrossing,
@@ -6863,7 +6513,7 @@ async function drawDistributionDiagnosticsPlotly(res, isCurrent = () => true) {
     margin: { l: 46, r: 18, t: 4, b: 40 },
     showlegend: false,
     bargap: 0.12,
-    xaxis: { range: yearRange, title: `Observed crossing year  ${scenarioLabel}; censored ${censored}/${result.crossing.length}`, tickformat: 'd' },
+    xaxis: { range: yearRange, title: `Dynamic cascade crossing year  ${scenarioLabel}; censored ${censored}/${cascade.crossing.length}`, tickformat: 'd' },
     yaxis: { title: 'Samples', showgrid: true, gridcolor: p.gridSoft },
     shapes: identifiedMarkers.map(([year, label]) => vline(year, rgba(p.text, label === 'P50' ? .52 : .20), label === 'P50' ? 'dash' : 'dot')),
     annotations: identifiedMarkers.map(([year, label]) => labelAnnotation(year, 1.02, label, label === 'P50' ? p.text : rgba(p.text, .56))),
@@ -6906,7 +6556,7 @@ async function drawDistributionDiagnosticsPlotly(res, isCurrent = () => true) {
   const zRaw = domains.map(domain => percentiles.map(k => yearChartValue(result.domainStats?.[domain]?.[k] ?? YE + 1)));
   const zVals = zRaw.flat();
   const zRange = scientificYearRangeFromValues(zVals, 0, 6);
-  const text = domains.map(domain => percentiles.map(k => prettyYearForHover(result.domainStats?.[domain]?.[k] ?? YE + 1)));
+  const text = domains.map(domain => percentiles.map(k => yearAxisLabel(result.domainStats?.[domain]?.[k] ?? YE + 1)));
   await Plotly.react(prepareScientificPlotlyPanel('plotlyHeatmapChart'), [{
     type: 'heatmap',
     z: zRaw,
@@ -6965,12 +6615,12 @@ async function renderAllExperimentalDiagnostics(data, isCurrent = () => true) {
 }
 
 function resetExperimentalScientificPanel() {
-  setExperimentalScientificStatus('Idle  use the Scientific Panel button');
+  setExperimentalScientificStatus('Idle  use the Model Diagnostics button');
   const summary = document.getElementById('experimentalSummaryBox');
-  if (summary) summary.innerHTML = '<div class="advanced-copy">Run the main simulation first, then use the <strong>Run Additional Scientific Calculations</strong> button above to populate this experimental layer.</div>';
+  if (summary) summary.innerHTML = '<div class="advanced-copy">Run the main simulation first, then use the <strong>Run diagnostics</strong> button above to populate this experimental layer.</div>';
   const audit = document.getElementById('experimentalAuditBox');
   if (audit) audit.innerHTML = '<div class="advanced-copy">No experimental audit yet.</div>';
-  ['vetoDiagnosticChart','tailShockChart','smaaDiagnosticChart'].forEach(id => setScientificPlotlyMessage(id, 'Run Additional Scientific Calculations to populate this diagnostic.'));
+  ['vetoDiagnosticChart','tailShockChart','smaaDiagnosticChart'].forEach(id => setScientificPlotlyMessage(id, 'Run diagnostics to populate this diagnostic.'));
   ['plotlyHistogramChart','plotlyBoxplotChart','plotlyHeatmapChart','plotlyCdfChart'].forEach(id => setScientificPlotlyMessage(id, 'Run the main simulation and then run additional calculations to populate this distribution view.'));
 }
 
@@ -6983,12 +6633,6 @@ function resizeScientificPanelCharts() {
       }
     });
   }
-  ['domainChart','priorityChart','networkChart','timelineChart','advancedWeibullChart','advancedCentralityChart','advancedTailChart','advancedEntropyChart'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el || !window.echarts) return;
-    const inst = echarts.getInstanceByDom(el);
-    if (inst) inst.resize();
-  });
 }
 
 async function runAdditionalScientificCalculations() {
@@ -7004,7 +6648,7 @@ async function runAdditionalScientificCalculations() {
   if (!baselineResult) {
     setExperimentalScientificStatus('Run the main simulation first. Additional scientific calculations require a completed baseline result.');
     ['oat','sobol','smaa','veto','tailshock','audit'].forEach(id => setCalcStepStatus(id, 'pending'));
-    if (btn) btn.textContent = 'Run Additional Scientific Calculations';
+    if (btn) btn.textContent = 'Run diagnostics';
     return;
   }
 
@@ -7030,7 +6674,7 @@ async function runAdditionalScientificCalculations() {
   if (panelArrow) panelArrow.textContent = '▼ Hide';
 
   _advancedDiagnosticsRunning = true;
-  if (btn) { btn.disabled = true; btn.textContent = 'Scientific calculations…'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Running diagnostics…'; }
   if (badge) badge.innerHTML = '<span class="live-dot"></span>Additional diagnostics';
   if (prog) prog.style.width = '0%';
   setExperimentalScientificStatus('Running OAT sensitivity…');
@@ -7127,85 +6771,9 @@ async function runAdditionalScientificCalculations() {
     if (badge) badge.innerHTML = '<span class="live-dot"></span>Diagnostics failed';
   } finally {
     _advancedDiagnosticsRunning = false;
-    if (btn) { btn.disabled = false; btn.textContent = 'Run Additional Scientific Calculations'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Run diagnostics'; }
   }
 }
-
-const currentScenario = () => 'baseline';
-
-document.getElementById('calcConsoleToggle').addEventListener('click', () => {
-  _calcConsoleExpanded = !_calcConsoleExpanded;
-  renderCalcConsole();
-});
-
-document.getElementById('viewSourcesBtn').addEventListener('click', () => {
-  const viewer = document.getElementById('sourceViewer');
-  if (!viewer) return;
-  viewer.open = true;
-  viewer.scrollIntoView({ behavior:'smooth', block:'nearest' });
-});
-
-document.getElementById('resetSourcesBtn').addEventListener('click', () => {
-  const fileInput = document.getElementById('sourceFileInput');
-  if (fileInput) fileInput.value = '';
-  applySourceMap(BUNDLED_SOURCE_DATA, {
-    mode: 'bundled',
-    fileName: 'data_v1_9_0.json',
-      message: 'Bundled data_v1_9_0.json parameter map restored. Active parameters now match the embedded data_v1_9_0.json file.',
-    uploaded: false,
-    clearEvidence: true,
-  });
-});
-
-document.getElementById('sourceFileInput').addEventListener('change', async e => {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  try {
-    const raw = parseJsonText(await file.text());
-    const uploadMode = detectUploadedJsonMode(raw);
-    if (uploadMode === 'evidence') {
-      const sanitized = sanitizeEvidenceMap(raw);
-      const stats = summarizeSourceMap(sanitized);
-      applyEvidenceOverlay(sanitized, {
-        fileName: file.name,
-        datasetVersion: datasetVersionFromSourceMap(raw),
-        message: `Loaded evidence overlay ${file.name}. ${stats.entryCount} parameters across ${stats.threatCount} threats now update the current source ranges through precision-weighted pooling.`,
-      });
-    } else {
-      const sanitized = sanitizeSourceMap(raw);
-      const stats = summarizeSourceMap(sanitized);
-      applySourceMap(sanitized, {
-        mode: 'custom',
-        fileName: file.name,
-        datasetVersion: datasetVersionFromSourceMap(raw) || 'custom source map',
-        message: `Loaded ${file.name} and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} threats with the bundled defaults.`,
-        uploaded: true,
-      });
-    }
-    const viewer = document.getElementById('sourceViewer');
-    if (viewer) viewer.open = true;
-  } catch (err) {
-    const msg = document.getElementById('sourceMessage');
-    if (msg) msg.textContent = `Upload failed: ${err.message}`;
-  }
-});
-
-const diagBtn = document.getElementById('diagBtn');
-if (diagBtn) diagBtn.addEventListener('click', runAdditionalScientificCalculations);
-
-window.addEventListener('resize', () => {
-  const scKey = currentScenario();
-  const enriched = buildEnriched(scKey);
-  const res = _cdfCurves[scKey] || null;
-  drawClock(calcGSI(enriched));
-  drawCDF();
-  drawBarChart(enriched, res);
-  drawSensChart();
-  drawExploratorySensitivityChart();
-  drawHeroSpark(res);
-  initNetwork(enriched);
-  resizeVizSurfaces();
-});
 
 function defaultBaselineParams() {
   return {
@@ -7589,24 +7157,96 @@ function initScientificPanelToggle() {
     body.hidden = !nextOpen;
     shell.classList.toggle('is-open', nextOpen);
     const main = btn.querySelector('.scientific-toggle-main');
-    if (main) main.textContent = nextOpen ? 'Hide Scientific Panel' : 'Open Scientific Panel';
+    if (main) main.textContent = nextOpen ? 'Hide Model Diagnostics' : 'Open Model Diagnostics';
   });
 }
 
-function orderMissionActions() {
-  const wrap = document.getElementById('missionActions');
-  if (!wrap || wrap.dataset.ordered === '1') return;
-  const children = Array.from(wrap.children);
-  [0, 1, 10, 8, 2, 5, 6, 7, 4, 3, 9].forEach((index, position) => {
-    if (children[index]) wrap.appendChild(children[index]);
-    if (position === 4 || position === 9) {
-      const rowBreak = document.createElement('span');
-      rowBreak.className = 'mission-action-row-break';
-      rowBreak.setAttribute('aria-hidden', 'true');
-      wrap.appendChild(rowBreak);
+/** Wires the controls that app.js owns; action-delegation.js wires the data-action buttons. */
+function initEventHandlers() {
+  const calcToggle = document.getElementById('calcConsoleToggle');
+  if (calcToggle) calcToggle.addEventListener('click', () => {
+    _calcConsoleExpanded = !_calcConsoleExpanded;
+    renderCalcConsole();
+  });
+
+  const viewSources = document.getElementById('viewSourcesBtn');
+  if (viewSources) viewSources.addEventListener('click', () => {
+    const viewer = document.getElementById('sourceViewer');
+    if (!viewer) return;
+    viewer.open = true;
+    viewer.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  });
+
+  const resetSources = document.getElementById('resetSourcesBtn');
+  if (resetSources) resetSources.addEventListener('click', () => {
+    const fileInput = document.getElementById('sourceFileInput');
+    if (fileInput) fileInput.value = '';
+    applySourceMap(BUNDLED_SOURCE_DATA, {
+      mode: 'bundled',
+      fileName: 'data_v1_9_0.json',
+      message: 'Bundled data_v1_9_0.json parameter map restored. Active parameters now match the embedded data_v1_9_0.json file.',
+      uploaded: false,
+      clearEvidence: true,
+    });
+  });
+
+  const sourceFileInput = document.getElementById('sourceFileInput');
+  if (sourceFileInput) sourceFileInput.addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      const raw = parseJsonText(await file.text());
+      const uploadMode = detectUploadedJsonMode(raw);
+      if (uploadMode === 'evidence') {
+        const sanitized = sanitizeEvidenceMap(raw);
+        const stats = summarizeSourceMap(sanitized);
+        applyEvidenceOverlay(sanitized, {
+          fileName: file.name,
+          datasetVersion: datasetVersionFromSourceMap(raw),
+          message: `Loaded evidence overlay ${file.name}. ${stats.entryCount} parameters across ${stats.threatCount} threats now update the current source ranges through precision-weighted pooling.`,
+        });
+      } else {
+        const sanitized = sanitizeSourceMap(raw);
+        const stats = summarizeSourceMap(sanitized);
+        applySourceMap(sanitized, {
+          mode: 'custom',
+          fileName: file.name,
+          datasetVersion: datasetVersionFromSourceMap(raw) || 'custom source map',
+          message: `Loaded ${file.name} and merged ${stats.entryCount} valid parameter entries across ${stats.threatCount} threats with the bundled defaults.`,
+          uploaded: true,
+        });
+      }
+      const viewer = document.getElementById('sourceViewer');
+      if (viewer) viewer.open = true;
+    } catch (err) {
+      const msg = document.getElementById('sourceMessage');
+      if (msg) msg.textContent = `Upload failed: ${err.message}`;
     }
   });
-  wrap.dataset.ordered = '1';
+
+  const diagBtn = document.getElementById('diagBtn');
+  if (diagBtn) diagBtn.addEventListener('click', runAdditionalScientificCalculations);
+
+  // Chart layouts depend on the width only; mobile browsers also fire resize when the address bar moves.
+  let resizeTimer = null;
+  let lastWidth = window.innerWidth;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(redrawAfterResize, 150);
+  });
+}
+
+function redrawAfterResize() {
+  const scKey = currentScenario();
+  const enriched = buildEnriched(scKey);
+  const res = _cdfCurves[scKey] || null;
+  drawBarChart(enriched, res);
+  drawSensChart();
+  drawExploratorySensitivityChart();
+  initNetwork(enriched);
+  resizeVizSurfaces();
 }
 
 async function initApp() {
@@ -7617,7 +7257,8 @@ async function initApp() {
     uploaded: false,
   }, false);
   renderSourceRegistry();
-  orderMissionActions();
+  initEventHandlers();
+  bindPriorityModeToggle();
   initAiPresetSelector();
   initScientificPanelToggle();
   initFloatTip();
@@ -7626,12 +7267,6 @@ async function initApp() {
     await runAll();
     runSelfTests();
   });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp, { once:true });
-} else {
-  initApp();
 }
 
 function setSafeTooltipHTML(target, rawHtml) {
@@ -7731,4 +7366,10 @@ function initFloatTip() {
   });
   window.addEventListener('scroll', hideTip, { passive:true });
   window.addEventListener('resize', hideTip);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp, { once:true });
+} else {
+  initApp();
 }

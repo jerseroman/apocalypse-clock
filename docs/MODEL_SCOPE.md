@@ -1,10 +1,10 @@
 # Model Scope
 
-Apocalypse Clock 1.3.0 with dataset 1.9.0 is an experimental browser-based model for comparing conditional systemic-risk scenarios. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
+Apocalypse Clock 1.5.0 with dataset 1.9.0 is an experimental browser-based model for comparing conditional systemic-risk scenarios. It supports inspection and criticism of explicit assumptions; it is not peer reviewed, an official risk assessment or an empirically validated collapse forecast.
 
 ## Represented functions
 
-The model retains 23 threats and eight metric entries per threat. Additional metadata defines functional boundaries, directed dependencies, fixed criticality weights and five essential-service baskets:
+The model retains 23 threats and eight metric entries per threat. Additional metadata defines functional boundaries, directed dependencies, criticality tiers and five essential-service baskets:
 
 - ecological and climatic regulation;
 - food and usable-water provision;
@@ -24,15 +24,15 @@ Nuclear conflict, engineered biological events, pandemics and autonomous-weapons
 
 AI includes correlated deployment/control failures rather than only a hypothetical advanced-agent takeover. Space includes loss of navigation, timing, communication or observation rather than only destroyed satellites. These broader functions remain eligible for generic induction.
 
-First activation is an absorbing first-passage marker. The model does not simulate subsequent duration, repair, restoration, adaptation or repeated failure/recovery cycles.
+First activation is a first-passage marker. From model 1.5.0 the Monte Carlo lets a node recover after a sampled pressure turn and be induced again. The model does not simulate repair duration, partial restoration, adaptation or recurring shocks of the same threat.
 
 ## Meaning of the headline
 
-Dynamic Cascade P90 is the upper model quantile of the first year that a fixed-criticality functional index reaches its selected threshold globally or within an essential-service basket. The default threshold is 0.50.
+Dynamic Cascade P90 is the upper model quantile of the first year that a criticality-weighted functional index reaches its threshold globally or within an essential-service basket. The declared threshold is 0.50; the Monte Carlo samples it from 0.40 to 0.60, together with the criticality tier values, dependency weights, lags and growth-class assignment.
 
 The rule takes the maximum of those indices. It does not require all three administrative domains, a particular number of active edges or a minimum induced contribution. It may cross without a multi-node cascade. Oceans and biodiversity are counted once through their shared overlap group within each basket, but remain separate network nodes.
 
-The headline is conditional on dataset, scoring, prior distributions, scenario, threshold policy, graph, weights, lags and random seed. It is not a physical fraction of lost civilization, an empirical 90-percent probability of collapse, a guaranteed date or a deadline before which serious harm cannot occur. >2100 means that the relevant quantile is unresolved beyond the model horizon, not absence of risk.
+The headline is conditional on dataset, scoring, prior distributions, scenario, threshold policy, graph, weights, lags, the structural sampling ranges and random seed. It is not a physical fraction of lost civilization, an empirical 90-percent probability of collapse, a guaranteed date or a deadline before which serious harm cannot occur. >2100 means that the relevant quantile is unresolved beyond the model horizon, not absence of risk.
 
 Four aggregation rules remain available. Their differing outputs are structural alternatives, not four independently validated forecasts. Weibull and network diagnostics do not validate the standalone calendar mappings or the cascade mechanism.
 
@@ -40,11 +40,11 @@ The three domain cards are conditional functional horizons, not standalone prior
 
 ## Evidence and scenario boundary
 
-Growth values are directly selected common-class priors for annual latent functional pressure. They are not transformed CAGRs of emissions, withdrawals, stocks, production, reported cases or technical benchmarks. Positive-only growth and fixed annual rates describe a continued-pressure scenario rather than all possible futures.
+Growth values are directly selected common-class priors for annual latent functional pressure. They are not transformed CAGRs of emissions, withdrawals, stocks, production, reported cases or technical benchmarks. Positive growth and fixed annual rates describe continued pressure until a sampled turn, not all possible futures; the turn probability and timing are stated assumptions without historical grounding.
 
-Sources can support mechanisms and present conditions while leaving normalized scores, fixed tiers 1/2/3, equal incoming weights and one-year propagation lags unidentified. The standard lag has zero- and five-year sensitivity alternatives. Such comparisons test assumptions; they do not estimate real causal delays.
+Sources can support mechanisms and present conditions while leaving normalized scores, tiers 1/2/3, equal incoming weights and one-year propagation lags unidentified. Model 1.5.0 therefore samples the tier values, incoming weights, lags from 0 to 5 years, the cascade threshold and the growth-class assignment. Sampling expresses that these choices are unidentified; it does not identify them or estimate real causal delays.
 
-Model 1.2.8 introduced the functional estimand and propagation rules. Model 1.2.9 applies sampled growth to regime first passage and makes domain horizons use the propagated functional estimand instead of a separate 40-percent priority-mass rule. Dataset values remain 1.9.0 and unchanged. Older importers may ignore the functional metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
+Model 1.2.8 introduced the functional estimand and propagation rules. Model 1.2.9 applies sampled growth to regime first passage and makes domain horizons use the propagated functional estimand instead of a separate 40-percent priority-mass rule. Model 1.5.0 samples the cascade structure in the Monte Carlo; switched off, it reproduces model 1.3.0 exactly. Model 1.5.0 adds sampled pressure turns and recovery; switched off, it reproduces the structural-sampling-only result exactly. Dataset values remain 1.9.0 and unchanged. Older importers may ignore the functional metadata, and older headline goldens are not a scientific calibration target. The implementation and its limitations are documented in [METHODOLOGY.md](METHODOLOGY.md) and [LIMITATIONS.md](LIMITATIONS.md).
 
 ## Use boundary
 

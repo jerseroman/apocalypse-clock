@@ -44,6 +44,8 @@ const fallbackData = embeddedSourceMap('404.html');
 
 assert(stableJson(data) === stableJson(indexData), 'index.html embedded JSON differs from standalone dataset');
 assert(stableJson(data) === stableJson(fallbackData), '404.html embedded JSON differs from standalone dataset');
+// GitHub Pages serves 404.html for unknown paths, so it must be the same application shell.
+assert(readText('404.html') === readText('index.html'), '404.html must be a byte copy of index.html');
 
 const keys = Object.keys(data).filter(key => key !== '_meta');
 const threats = [...new Set(keys.map(key => key.split('.')[0]))].sort();

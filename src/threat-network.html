@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Causal dependency network</title>
+<!--
+  Apocalypse Clock causal dependency network (no external libraries). Opened directly it is a standalone
+  page; with ?embed=1 the dashboard shows it in its network panel and sends the current priorities.
+  Links: research register of 25 Sep 2026 (atlas of links), 101 directed links, plus one link added at
+  the owner's request (ADDED_LINKS). Each link runs from the threat that exerts the influence to the
+  threat it worsens. The link type is a label (supported mechanism, conditional, scenario / modelled),
+  not a probability or a weight.
+  Node size: deterministic adjusted priority, model 1.5.0 / dataset 1.9.0, Baseline scenario, Expert weights.
+-->
+<style>
+  :root {
+    --bg: #070b16;
+    --card: rgba(10, 16, 31, 0.84);
+    --line: rgba(130, 160, 220, 0.18);
+    --text: #e6ecf5;
+    --text-2: #a3afc3;
+    --text-3: #6f7c93;
+    --civ: #bb2e45;
+    --bio: #1cab71;
+    --tech: #4a8dff;
+    --font: "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  /* Embedded in the dashboard: no page header, and the dashboard panel provides the background. */
+  html.embed, html.embed body { background: transparent; }
+  html.embed .net-shell { max-width: none; padding: 0; }
+  html.embed .net-kicker, html.embed .net-title, html.embed .net-lead { display: none; }
+  /* The dashboard's own colours, so the network sits in the page instead of on a separate blue ground. */
+  html.embed { --bg: #10141b; --card: rgba(24, 29, 39, 0.9); --line: rgba(255, 255, 255, 0.09); }
+  html.embed .net-stage { background: radial-gradient(ellipse at 50% 50%, #1b2230 0%, #151a23 45%, #10141b 80%); }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 var(--font); }
+  .net-shell { max-width: 1480px; margin: 0 auto; padding: 24px 16px 40px; }
+  .net-kicker { font: 600 11px/1.4 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--text-3); }
+  .net-title { margin: 6px 0 4px; font-size: 22px; font-weight: 650; letter-spacing: .01em; }
+  .net-lead { margin: 0 0 16px; max-width: 92ch; color: var(--text-2); font-size: 13px; }
+  .net-stage {
+    position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 50%, #0f1a36 0%, #0a1124 40%, var(--bg) 78%);
+  }
+  .net-canvas { position: relative; }
+  canvas { display: block; width: 100%; touch-action: manipulation; }
+  .card { position: absolute; background: var(--card); border: 1px solid var(--line); border-radius: 12px; backdrop-filter: blur(6px); }
+  .overline { font: 600 10px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); margin: 0 0 8px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  .domain-tag { position: absolute; max-width: 250px; pointer-events: none; }
+  .domain-tag .name { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 650; letter-spacing: .01em; }
+  .domain-tag .icon { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1px solid currentColor; box-shadow: 0 0 14px -2px currentColor; flex: 0 0 auto; }
+  .domain-tag .icon svg { width: 16px; height: 16px; }
+  .domain-tag .blurb { margin: 4px 0 0 40px; color: var(--text-2); font-size: 12px; line-height: 1.45; }
+  .tag-civ { top: 18px; left: 20px; color: #e8566c; }
+  .tag-bio { top: 150px; right: 20px; color: #3fcf8e; text-align: left; }
+  .tag-tech { bottom: 18px; right: 20px; color: #6ea6ff; }
+
+  .stats-card { left: 16px; bottom: 16px; padding: 14px 16px; width: 226px; }
+  .stat { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .stat b { font-size: 24px; font-weight: 650; min-width: 38px; font-variant-numeric: tabular-nums; }
+  .stat span { font: 600 10px/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-2); }
+  .type-legend { margin: 10px 0 0; padding: 10px 0 0; border-top: 1px solid var(--line); list-style: none; font-size: 12px; color: var(--text-2); }
+  .type-legend li { display: flex; align-items: center; gap: 7px; margin: 3px 0; white-space: nowrap; }
+  .type-legend label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .type-legend input { margin: 0; }
+  .type-legend .glyph { width: 20px; }
+  .loop-swatch { width: 16px; height: 2px; border-radius: 1px; background: #ffd480; box-shadow: 0 0 6px rgba(255, 200, 100, 0.9); }
+  .detail.single { grid-template-columns: 1fr; }
+  .detail[hidden] { display: none; }
+  .type-legend b { margin-left: auto; color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .glyph { width: 26px; height: 8px; flex: 0 0 auto; color: var(--text-2); overflow: visible; }
+
+  .legend-card { top: 16px; right: 16px; padding: 10px 14px; width: 232px; font-size: 12px; color: var(--text-2); }
+  .legend-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; box-shadow: 0 0 8px currentColor; }
+  .size-demo { display: flex; align-items: center; gap: 6px; }
+  .size-demo i { display: inline-block; border-radius: 50%; background: #8fa3c8; opacity: .8; }
+  .step-line { width: 26px; height: 2px; border-radius: 1px; background: #d3def2; box-shadow: 0 0 6px rgba(160, 190, 245, 0.9); flex: 0 0 auto; }
+  .step-line.step-2 { height: 1px; opacity: 0.4; box-shadow: none; }
+  .step-node { width: 16px; height: 16px; border-radius: 50%; display: inline-grid; place-items: center; flex: 0 0 auto; font: 700 10px/1 var(--font); color: #fff; text-shadow: 0 0 2px #050a16, 0 0 2px #050a16; letter-spacing: 0; }
+  .step-node.s1 { background: radial-gradient(circle at 35% 30%, #b9c7e0, #7488b0 55%, #4a5b80); }
+  .step-node.s2 { background: rgba(8, 14, 30, 0.92); border: 1.5px solid #9fb2d6; }
+  .overline .step-node { width: 14px; height: 14px; font-size: 9px; margin-right: 6px; vertical-align: -3px; }
+  .added { margin-left: 4px; padding: 0 5px; border: 1px solid rgba(130, 160, 220, 0.35); border-radius: 4px; color: var(--text-2); font-size: 10px; font-weight: 400; }
+  .toolbar-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-right: 8px; color: var(--text); }
+  .controls { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+  .controls label { display: flex; align-items: center; gap: 7px; cursor: pointer; color: var(--text); }
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 12px; font-size: 12px; color: var(--text-2); }
+  .toolbar label { display: flex; align-items: center; gap: 8px; color: var(--text); }
+  .toolbar select { min-width: 240px; background: #0c1428; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font: inherit; }
+
+  .detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.5fr); gap: 12px; margin-top: 12px; }
+  .detail .box { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-height: 120px; }
+  .detail h2 { margin: 0 0 4px; font-size: 17px; font-weight: 650; }
+  .detail .meta { color: var(--text-2); font-size: 12px; margin: 0; }
+  .detail .note { margin-top: 12px; color: var(--text-3); font-size: 11px; }
+  .detail ul { margin: 0; padding: 0; list-style: none; font-size: 13px; }
+  .detail li { display: flex; align-items: center; gap: 8px; padding: 3px 0; border-bottom: 1px solid rgba(130, 160, 220, 0.08); }
+  .detail li .dot { width: 8px; height: 8px; box-shadow: none; }
+  .detail .empty { color: var(--text-3); font-size: 13px; }
+  .type-tag { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; color: var(--text-3); font-size: 11px; white-space: nowrap; }
+  .via { margin-top: 10px; }
+  .via-head { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 12px; color: var(--text-2); }
+  .via-head .dot { width: 8px; height: 8px; box-shadow: none; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px 2px 6px; border: 1px solid rgba(130, 160, 220, 0.16); border-radius: 999px; font-size: 12px; color: var(--text-2); }
+  .chip .glyph { width: 18px; }
+  .chip.new { color: var(--text); font-weight: 600; border-color: rgba(130, 160, 220, 0.4); }
+  .chip.loop { border-style: dashed; }
+
+  details.table-view { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 16px; }
+  details.table-view summary { cursor: pointer; color: var(--text-2); font: 600 11px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .table-wrap { overflow-x: auto; margin-top: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid rgba(130, 160, 220, 0.1); vertical-align: top; }
+  th { color: var(--text-3); font: 600 10px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  .type-cell { display: inline-flex; align-items: center; gap: 8px; }
+  .foot { margin-top: 10px; color: var(--text-3); font-size: 11px; }
+
+  /* Below 1180px the network needs the corners, so the two cards move under it. */
+  @media (max-width: 1179px) {
+    .net-stage { display: flex; flex-wrap: wrap; align-items: flex-start; padding-bottom: 12px; }
+    .net-canvas { flex: 0 0 100%; }
+    .net-stage > .card { position: static; margin: 12px 0 0 12px; }
+  }
+  @media (max-width: 760px) {
+    .net-stage > .card { flex: 1 1 100%; width: auto; margin: 10px 12px 0; }
+    .domain-tag { display: none; }
+    .detail { grid-template-columns: 1fr; }
+    .toolbar select { min-width: 0; width: 100%; }
+    .toolbar label { width: 100%; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="net-shell">
+  <div class="net-kicker">Causal influence network</div>
+  <h1 class="net-title">Interconnected planetary threats</h1>
+  <p class="net-lead">Each line is a link from the research register: the threat where the line starts worsens the threat where the arrow ends. The line style shows the link type: solid for a supported mechanism, dashed for a conditional link, dotted for a scenario or modelled link. Select a threat to see what it worsens directly (step 1: bright links, threats marked 1) and what those threats worsen in turn (step 2: dimmed links, hollow threats marked 2).</p>
+
+  <div class="net-stage" id="stage">
+    <div class="net-canvas" id="canvasWrap">
+      <canvas id="net" role="img" aria-label="Network of 23 global threats in three domains, with 102 influence links (101 from the research register, 1 added). The same information is available in the table view below."></canvas>
+
+      <div class="domain-tag tag-civ">
+        <div class="name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Civilizational</div>
+        <div class="blurb">Human systems, politics, economy, society</div>
+      </div>
+      <div class="domain-tag tag-bio">
+        <div class="name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Biosphere</div>
+        <div class="blurb">Earth systems, climate, ecosystems, resources</div>
+      </div>
+      <div class="domain-tag tag-tech">
+        <div class="name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg></span>Technological</div>
+        <div class="blurb">AI, cyber, autonomous systems, space, critical minerals</div>
+      </div>
+    </div>
+
+    <aside class="card stats-card" aria-label="Network summary">
+      <div class="stat"><b id="statThreats">23</b><span>Global threats</span></div>
+      <div class="stat"><b id="statLinks">102</b><span>Influence links</span></div>
+      <div class="stat"><b>3</b><span>Domains</span></div>
+      <ul class="type-legend" id="typeLegend" aria-label="Link types"></ul>
+    </aside>
+
+    <aside class="card legend-card" aria-label="Legend and display options">
+      <div class="legend-row size-demo"><i style="width:7px;height:7px"></i><i style="width:13px;height:13px"></i><i style="width:19px;height:19px"></i><span>Node size = model priority</span></div>
+      <div class="legend-row"><span class="step-line"></span><span class="step-node s1">1</span>Direct · step 1</div>
+      <div class="legend-row"><span class="step-line step-2"></span><span class="step-node s2">2</span>Indirect · step 2</div>
+      <div class="controls">
+        <label><input type="checkbox" id="toggleLabels" checked> Labels</label>
+        <label><input type="checkbox" id="toggleFlow" checked> Flow</label>
+        <label><input type="checkbox" id="toggleLoops"><span class="loop-swatch"></span>Loops</label>
+      </div>
+    </aside>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-legend" aria-label="Domain colours">
+      <span class="legend-row"><span class="dot" style="background:var(--civ);color:var(--civ)"></span>Civilizational</span>
+      <span class="legend-row"><span class="dot" style="background:var(--bio);color:var(--bio)"></span>Biosphere</span>
+      <span class="legend-row"><span class="dot" style="background:var(--tech);color:var(--tech)"></span>Technological</span>
+    </div>
+    <label>Focus a threat
+      <select id="focusSelect"><option value="">None</option></select>
+    </label>
+    <span>Click a threat to pin it: bright lines show what it worsens directly (step 1), dimmed lines what those threats worsen in turn (step 2). Esc clears.</span>
+  </div>
+
+  <section class="detail" aria-live="polite">
+    <div class="box" id="detailMain"></div>
+    <div class="box" id="detailStep1"></div>
+    <div class="box" id="detailStep2"></div>
+  </section>
+  <section class="detail single" id="loopsSection" aria-live="polite" hidden>
+    <div class="box" id="detailLoops"></div>
+  </section>
+
+  <details class="table-view" open>
+    <summary>Table view: influence register</summary>
+    <div class="table-wrap"><table id="netTable"></table></div>
+  </details>
+  <p class="foot">Links: Apocalypse Clock research register of 25 Sep 2026, 101 directed links, plus one link added on 25 Sep 2026 at the owner’s request and marked “added”: Soil &amp; Food System → Antimicrobial Resistance, supported mechanism. Antimicrobial use in livestock and aquaculture selects resistant bacteria that reach people through food, contact and the environment, and restricting that use reduces resistance (WHO guidelines on antimicrobials in food-producing animals, 2017; Tang et al., Lancet Planetary Health 2017). Link types are labels, not probabilities, weights or independent scientific validation. Step-2 links are not new direct influences of the selected threat, separate paths are not added together, and only worsening pathways are shown, not mitigating responses. Moving dots show only the direction of influence; their speed has no meaning. The checkboxes in the summary card hide link types everywhere except the table; feedback loops are directed cycles of two or three shown links. Node size: the model’s adjusted priority; in the dashboard it follows the selected scenario and weights, and this file opened alone uses model 1.5.0, dataset 1.9.0, Baseline scenario, Expert weights. The model’s clocks still use the dataset’s own 71 declared dependencies.</p>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const EMBEDDED = new URLSearchParams(location.search).has('embed');
+  if (EMBEDDED) document.documentElement.classList.add('embed');
+
+  // Threats with deterministic Baseline priority (model 1.5.0, dataset 1.9.0, Expert weights).
+  const THREATS = [
+    { id: 'climate', name: 'Climate Breakdown', domain: 'biosphere', priority: 6.321 },
+    { id: 'biodiversity', name: 'Biodiversity Loss', domain: 'biosphere', priority: 6.001 },
+    { id: 'soils', name: 'Soil & Food System', domain: 'biosphere', priority: 5.137 },
+    { id: 'water', name: 'Freshwater Stress', domain: 'biosphere', priority: 5.504 },
+    { id: 'oceans', name: 'Ocean Degradation', domain: 'biosphere', priority: 5.345 },
+    { id: 'pollution', name: 'Toxic Pollution & PFAS', domain: 'biosphere', priority: 4.872 },
+    { id: 'pandemics', name: 'Pandemic & Biosecurity', domain: 'civilization', priority: 5.191 },
+    { id: 'amr', name: 'Antimicrobial Resistance', domain: 'civilization', priority: 5.129 },
+    { id: 'bioengineered', name: 'Engineered Biological Event', domain: 'civilization', priority: 5.328 },
+    { id: 'nuclear', name: 'Nuclear Conflict', domain: 'civilization', priority: 5.602 },
+    { id: 'supply', name: 'Energy & Supply Chains', domain: 'civilization', priority: 5.616 },
+    { id: 'geopolitics', name: 'Geopolitical Escalation', domain: 'civilization', priority: 5.672 },
+    { id: 'fragmentation_gov', name: 'Global Governance Fragmentation', domain: 'civilization', priority: 5.137 },
+    { id: 'economic', name: 'Economic Fracture', domain: 'civilization', priority: 4.965 },
+    { id: 'debt', name: 'Debt / Financial Contagion', domain: 'civilization', priority: 4.942 },
+    { id: 'displacement', name: 'Mass Displacement', domain: 'civilization', priority: 4.939 },
+    { id: 'authoritarian', name: 'Authoritarian Drift', domain: 'civilization', priority: 5.197 },
+    { id: 'epistemic', name: 'Epistemic Breakdown', domain: 'civilization', priority: 4.588 },
+    { id: 'ai', name: 'Advanced AI Destabilizer', domain: 'technology', priority: 5.706 },
+    { id: 'cyber', name: 'Systemic Cyberattacks', domain: 'technology', priority: 5.161 },
+    { id: 'autonomousw', name: 'Autonomous Weapons Escalation', domain: 'technology', priority: 5.04 },
+    { id: 'minerals', name: 'Critical Minerals Bottleneck', domain: 'technology', priority: 5.015 },
+    { id: 'space', name: 'Space Infrastructure Disruption', domain: 'technology', priority: 4.796 },
+  ];
+
+  // Research register of 25 Sep 2026: for every threat, the threats it worsens directly, in register
+  // order, with the register's link type (D supported mechanism, P conditional, S scenario / modelled).
+  const INFLUENCES = {
+    climate: { biodiversity: 'D', water: 'D', oceans: 'D', soils: 'D', supply: 'D', displacement: 'D', economic: 'D', geopolitics: 'P', debt: 'P' },
+    biodiversity: { soils: 'D', water: 'D', climate: 'P', pandemics: 'P' },
+    ai: { cyber: 'P', epistemic: 'P', bioengineered: 'S', autonomousw: 'S', economic: 'P' },
+    geopolitics: { nuclear: 'P', supply: 'D', soils: 'D', displacement: 'D', fragmentation_gov: 'P', cyber: 'P', minerals: 'P', space: 'P' },
+    supply: { economic: 'D', soils: 'D', water: 'D', pandemics: 'P' },
+    nuclear: { soils: 'S', supply: 'D', water: 'D', displacement: 'D', economic: 'P' },
+    water: { soils: 'D', supply: 'D', biodiversity: 'D', pandemics: 'P', geopolitics: 'P', displacement: 'P' },
+    oceans: { biodiversity: 'D', soils: 'D', economic: 'D' },
+    bioengineered: { pandemics: 'S', economic: 'P' },
+    authoritarian: { epistemic: 'D', displacement: 'P' },
+    pandemics: { economic: 'D', debt: 'D', supply: 'P', amr: 'P' },
+    cyber: { supply: 'D', water: 'P', economic: 'D', debt: 'P', space: 'D' },
+    fragmentation_gov: { climate: 'P', pandemics: 'P', nuclear: 'P', minerals: 'P', bioengineered: 'P', geopolitics: 'P' },
+    soils: { biodiversity: 'D', water: 'D', climate: 'P', economic: 'D', displacement: 'P' },
+    amr: { pandemics: 'P', economic: 'D', soils: 'P' },
+    autonomousw: { geopolitics: 'S', displacement: 'P' },
+    minerals: { supply: 'D', economic: 'D', geopolitics: 'P', pollution: 'P' },
+    economic: { debt: 'D', soils: 'D', pandemics: 'P', fragmentation_gov: 'P' },
+    debt: { economic: 'D', supply: 'P', authoritarian: 'P', climate: 'P' },
+    displacement: { soils: 'P', water: 'P', pandemics: 'P' },
+    pollution: { biodiversity: 'D', water: 'D', soils: 'D', oceans: 'D', amr: 'P' },
+    space: { supply: 'P', economic: 'P', nuclear: 'S' },
+    epistemic: { authoritarian: 'P', climate: 'P', pandemics: 'P', fragmentation_gov: 'P', geopolitics: 'S' },
+  };
+
+  // Links added at the owner's request after the register was drawn up; they are marked "added" in the
+  // lists and the table, and the note says why they exist.
+  const ADDED_LINKS = [
+    {
+      from: 'soils', to: 'amr', type: 'D',
+      note: 'Added 25 Sep 2026: antimicrobial use in livestock and aquaculture selects resistant bacteria that reach people through food, contact and the environment; restricting that use reduces resistance (WHO 2017 guidelines; Tang et al., Lancet Planetary Health 2017).',
+    },
+  ];
+
+  // Link types of the register: labels of how well a link is supported, not probabilities or weights.
+  // Canvas dashes are in pixels at a line width of 1 and grow with the line width.
+  const LINK_TYPES = {
+    D: { label: 'Supported mechanism', short: 'Supported', note: 'a concrete, well-supported mechanism', dash: [], svgDash: '' },
+    P: { label: 'Conditional', short: 'Conditional', note: 'holds only under certain conditions', dash: [6, 4], svgDash: '5 3' },
+    S: { label: 'Scenario / modelled', short: 'Scenario', note: 'a scenario or modelled pathway, not an established mechanism', dash: [0.01, 4], svgDash: '0.01 4' },
+  };
+  // Step-2 (indirect) links and threats are drawn at 40 % of the intensity of step-1 (direct) ones.
+  const STEP2 = 0.4;
+
+  // Domain colors pass the categorical palette checks on #070b16 (lightness band, chroma,
+  // colour-vision separation, contrast). Sectors are angles in degrees, clockwise from the right.
+  const DOMAINS = {
+    civilization: { label: 'Civilizational', rgb: [187, 46, 69], center: 224, span: 128 },
+    biosphere: { label: 'Biosphere', rgb: [28, 171, 113], center: 0, span: 92 },
+    technology: { label: 'Technological', rgb: [74, 141, 255], center: 106, span: 74 },
+  };
+  const FONT = getComputedStyle(document.documentElement).getPropertyValue('--font') || 'sans-serif';
+
+  const byId = new Map(THREATS.map(t => [t.id, t]));
+  const EDGES = [];
+  function addEdge(from, to, type, extra) {
+    if (!byId.has(from) || !byId.has(to) || !LINK_TYPES[type]) throw new Error(`Unknown link ${from} -> ${to} (${type})`);
+    if (EDGES.some(e => e.from === from && e.to === to)) throw new Error(`Duplicate link ${from} -> ${to}`);
+    EDGES.push({ from, to, type, ...extra });
+  }
+  for (const [from, targets] of Object.entries(INFLUENCES)) {
+    for (const [to, type] of Object.entries(targets)) addEdge(from, to, type);
+  }
+  ADDED_LINKS.forEach(link => addEdge(link.from, link.to, link.type, { added: true, note: link.note }));
+  const edgeKeys = new Set(EDGES.map(e => e.from + '>' + e.to));
+  EDGES.forEach(e => { e.mutual = edgeKeys.has(e.to + '>' + e.from); });
+  THREATS.forEach(t => {
+    t.out = EDGES.filter(e => e.from === t.id);
+    t.in = EDGES.filter(e => e.to === t.id);
+  });
+  let pMin = 0, pMax = 1, rankOf = new Map(), drawOrder = [];
+  // Priority range, ranks and drawing order (small nodes first); recomputed when priorities change.
+  function rankThreats() {
+    pMin = Math.min(...THREATS.map(t => t.priority));
+    pMax = Math.max(...THREATS.map(t => t.priority));
+    if (pMax === pMin) pMax = pMin + 1;
+    rankOf = new Map([...THREATS].sort((a, b) => b.priority - a.priority).map((t, i) => [t.id, i + 1]));
+    drawOrder = [...THREATS].sort((a, b) => a.priority - b.priority);
+  }
+  rankThreats();
+
+  const canvas = document.getElementById('net');
+  const ctx = canvas.getContext('2d');
+  const canvasWrap = document.getElementById('canvasWrap');
+  let W = 0, H = 0, DPR = 1, cx = 0, cy = 0, Rx = 0, Ry = 0, S = 1;
+  let hovered = null, selected = null;
+  let showLabels = true;
+  let showFlow = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let background = null;
+  let rafId = 0;
+
+  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const mix = (c, d, f) => `rgb(${Math.round(c[0] + (d[0] - c[0]) * f)},${Math.round(c[1] + (d[1] - c[1]) * f)},${Math.round(c[2] + (d[2] - c[2]) * f)})`;
+  const overlap = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  function hash01(text, salt) {
+    let h = (2166136261 ^ salt) >>> 0;
+    for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995) >>> 0; h ^= h >>> 15;
+    return (h >>> 0) / 4294967296;
+  }
+
+  // Link types switched on in the summary card; links of other types are left out everywhere except
+  // the table, so every count and step shows what holds with the chosen evidence only.
+  const enabled = new Set(Object.keys(LINK_TYPES));
+  let showLoops = false;
+  const on = e => enabled.has(e.type);
+  const outOf = t => t.out.filter(on);
+  const inOf = t => t.in.filter(on);
+
+  // Step 1: the selected threat's own links. Step 2: the links of its direct targets. Threats reached
+  // in step 2 that are neither the selected threat nor a direct target are reached only indirectly.
+  const focusCache = new Map();
+  function focusOf(active) {
+    if (!active) return null;
+    if (!focusCache.has(active.id)) {
+      const out = outOf(active);
+      const direct = new Set(out.map(e => e.to));
+      const step2 = EDGES.filter(e => on(e) && direct.has(e.from));
+      const indirect = new Set(step2.map(e => e.to).filter(id => id !== active.id && !direct.has(id)));
+      focusCache.set(active.id, { active, out, direct, step2, indirect });
+    }
+    return focusCache.get(active.id);
+  }
+
+  // Feedback loops: directed cycles of two or three shown links, each threat worsening the next and
+  // the last worsening the first again. A loop is only as well supported as its weakest link.
+  const TYPE_RANK = { D: 3, P: 2, S: 1 };
+  let LOOPS = [];
+  function findLoops() {
+    const shown = EDGES.filter(on);
+    const byKey = new Map(shown.map(e => [e.from + '>' + e.to, e]));
+    LOOPS = [];
+    for (const e1 of shown) {
+      const a = e1.from, b = e1.to;
+      const back = byKey.get(b + '>' + a);
+      if (back && a < b) LOOPS.push([e1, back]);
+      for (const e2 of shown) {
+        if (e2.from !== b || e2.to === a) continue;
+        const e3 = byKey.get(e2.to + '>' + a);
+        if (e3 && a < b && a < e2.to) LOOPS.push([e1, e2, e3]);
+      }
+    }
+    LOOPS.forEach(loop => { loop.weakest = loop.map(e => e.type).reduce((x, y) => (TYPE_RANK[y] < TYPE_RANK[x] ? y : x)); });
+  }
+  // Loops shown: all of them, or only those through the selected threat.
+  function loopView(f) {
+    const list = f ? LOOPS.filter(loop => loop.some(e => e.from === f.active.id)) : LOOPS;
+    return { list, edges: new Set(list.flat()), nodes: new Set(list.flat().map(e => e.from)) };
+  }
+
+  // 0 selected, 1 direct target (in the loop view: on a shown loop), 2 reached only in step 2,
+  // 3 not involved; null when nothing is selected and loops are off.
+  function nodeLevel(t, v) {
+    if (v.loops) return v.f && t === v.f.active ? 0 : v.loops.nodes.has(t.id) ? 1 : 3;
+    return !v.f ? null : t === v.f.active ? 0 : v.f.direct.has(t.id) ? 1 : v.f.indirect.has(t.id) ? 2 : 3;
+  }
+  const nodeAlpha = (t, v) => { const level = nodeLevel(t, v); return level === 2 ? STEP2 : level === 3 ? 0.16 : 1; };
+
+  // Nodes of a domain spread over its sector; the most important threats take the most central
+  // slots, and neighbouring slots alternate between rings so that labels have room.
+  function layoutNodes() {
+    for (const [key, dom] of Object.entries(DOMAINS)) {
+      const nodes = THREATS.filter(t => t.domain === key).sort((a, b) => b.priority - a.priority);
+      const k = nodes.length;
+      const start = dom.center - dom.span / 2;
+      const slots = Array.from({ length: k }, (_, j) => ({ j, angle: start + dom.span * (j + 0.5) / k }));
+      const central = [...slots].sort((a, b) => Math.abs(a.angle - dom.center) - Math.abs(b.angle - dom.center));
+      const rings = k >= 9 ? [0.6, 0.93, 0.77] : [0.64, 0.9];
+      nodes.forEach((t, i) => {
+        const slot = central[i];
+        const angle = (slot.angle + (hash01(t.id, 1) - 0.5) * 3) * Math.PI / 180;
+        const radius = rings[slot.j % rings.length] * (1 + (hash01(t.id, 2) - 0.5) * 0.05);
+        t.angle = angle;
+        t.x = cx + Math.cos(angle) * Rx * radius;
+        t.y = cy + Math.sin(angle) * Ry * radius;
+        t.r = (6.5 + 10.5 * (t.priority - pMin) / (pMax - pMin)) * S;
+      });
+    }
+  }
+
+  function labelLines(name) {
+    if (name.length <= 17) return [name];
+    const words = name.split(' ');
+    const lines = [''];
+    for (const word of words) {
+      const current = lines[lines.length - 1];
+      if (!current) lines[lines.length - 1] = word;
+      else if ((current + ' ' + word).length <= 17 || lines.length === 2) lines[lines.length - 1] = current + ' ' + word;
+      else lines.push(word);
+    }
+    return lines;
+  }
+
+  const labelFont = weight => `${weight || 500} ${Math.max(10, Math.round(12 * S))}px ${FONT}`;
+
+  // Greedy label placement: outward first, then below/above, then inward; avoids labels and nodes.
+  function placeLabels() {
+    ctx.font = labelFont();
+    const placed = [];
+    const nodeBoxes = THREATS.map(t => ({ id: t.id, x: t.x - t.r - 2, y: t.y - t.r - 2, w: 2 * t.r + 4, h: 2 * t.r + 4 }));
+    const lineHeight = Math.round(14 * S);
+    for (const t of [...THREATS].sort((a, b) => b.priority - a.priority)) {
+      const lines = labelLines(t.name);
+      const w = Math.max(...lines.map(line => ctx.measureText(line).width));
+      const h = lines.length * lineHeight;
+      const right = Math.cos(t.angle) >= 0;
+      const down = Math.sin(t.angle) >= 0;
+      const gap = t.r + 7 * S;
+      const candidates = [
+        { x: right ? t.x + gap : t.x - gap - w, y: t.y - h / 2, align: right ? 'left' : 'right' },
+        { x: t.x - w / 2, y: down ? t.y + gap - 3 : t.y - gap - h + 3, align: 'center' },
+        { x: t.x - w / 2, y: down ? t.y - gap - h + 3 : t.y + gap - 3, align: 'center' },
+        { x: right ? t.x - gap - w : t.x + gap, y: t.y - h / 2, align: right ? 'right' : 'left' },
+      ];
+      const fits = c => {
+        const box = { x: c.x - 3, y: c.y - 2, w: w + 6, h: h + 4 };
+        return box.x > 6 && box.x + box.w < W - 6 && box.y > 6 && box.y + box.h < H - 6
+          && !placed.some(b => overlap(b, box))
+          && !nodeBoxes.some(b => b.id !== t.id && overlap(b, box));
+      };
+      // A label with no free place stays hidden and appears only while its threat is selected.
+      const first = candidates[0];
+      t.labelFallback = { lines, w, lineHeight, align: first.align, x: Math.min(Math.max(first.x, 6), W - 6 - w), y: Math.min(Math.max(first.y, 6), H - 6 - h) };
+      const choice = candidates.find(fits);
+      if (!choice) { t.label = null; continue; }
+      t.label = { lines, x: choice.x, y: choice.y, w, lineHeight, align: choice.align };
+      placed.push({ x: choice.x - 3, y: choice.y - 2, w: w + 6, h: h + 4 });
+    }
+  }
+
+  // Each domain tag takes the nearest free position near its corner (up or down, at most 40 % of
+  // the network height away); with no free position it is hidden, and the legend under the network
+  // still names the domain colours.
+  function placeTags() {
+    const areaRect = canvasWrap.getBoundingClientRect();
+    const relative = r => ({ x: r.left - areaRect.left, y: r.top - areaRect.top, w: r.width, h: r.height });
+    const occupied = [
+      ...THREATS.map(t => ({ x: t.x - t.r - 6, y: t.y - t.r - 6, w: 2 * t.r + 12, h: 2 * t.r + 12 })),
+      ...THREATS.filter(t => t.label).map(t => ({ x: t.label.x - 4, y: t.label.y - 4, w: t.label.w + 8, h: t.label.lines.length * t.label.lineHeight + 8 })),
+      relative(document.querySelector('.legend-card').getBoundingClientRect()),
+      relative(document.querySelector('.stats-card').getBoundingClientRect()),
+    ];
+    for (const tag of document.querySelectorAll('.domain-tag')) {
+      tag.style.top = '';
+      tag.style.bottom = '';
+      tag.style.visibility = '';
+      if (getComputedStyle(tag).display === 'none') continue;
+      const base = relative(tag.getBoundingClientRect());
+      let free = null;
+      for (let d = 0; d <= H * 0.4 && !free; d += 6) {
+        for (const y of d === 0 ? [base.y] : [base.y + d, base.y - d]) {
+          const box = { ...base, y };
+          if (y >= 8 && y + base.h <= H - 8 && !occupied.some(b => overlap(b, box))) { free = box; break; }
+        }
+      }
+      if (!free) { tag.style.visibility = 'hidden'; continue; }
+      tag.style.top = `${free.y}px`;
+      tag.style.bottom = 'auto';
+      occupied.push(free);
+    }
+  }
+
+  function buildBackground() {
+    background = document.createElement('canvas');
+    background.width = canvas.width;
+    background.height = canvas.height;
+    const g = background.getContext('2d');
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const glow = g.createRadialGradient(cx, cy, 0, cx, cy, Math.max(Rx, Ry) * 1.05);
+    // Embedded in the dashboard, the centre glow is softer and less blue, matching the page.
+    const embedded = document.documentElement.classList.contains('embed');
+    glow.addColorStop(0, embedded ? 'rgba(90,120,180,0.10)' : 'rgba(60,110,230,0.18)');
+    glow.addColorStop(0.45, embedded ? 'rgba(70,95,150,0.035)' : 'rgba(40,80,180,0.06)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = glow;
+    g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 190; i++) {
+      const x = hash01('star' + i, 3) * W, y = hash01('star' + i, 4) * H;
+      g.fillStyle = `rgba(170,195,255,${0.06 + hash01('star' + i, 6) * 0.32})`;
+      g.beginPath();
+      g.arc(x, y, 0.35 + hash01('star' + i, 5) * 0.9, 0, Math.PI * 2);
+      g.fill();
+    }
+    g.strokeStyle = 'rgba(120,150,220,0.06)';
+    g.lineWidth = 1;
+    for (const f of [0.42, 0.66, 0.93]) {
+      g.beginPath();
+      g.ellipse(cx, cy, Rx * f, Ry * f, 0, 0, Math.PI * 2);
+      g.stroke();
+    }
+  }
+
+  // Links curve through the inner space; two links between the same pair bow to opposite sides.
+  function geometry(e) {
+    const a = byId.get(e.from), b = byId.get(e.to);
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const pull = a.domain === b.domain ? 0.2 : 0.46;
+    let qx = mx + (cx - mx) * pull, qy = my + (cy - my) * pull;
+    if (e.mutual) {
+      const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+      qx += (-(b.y - a.y) / len) * 12 * S;
+      qy += ((b.x - a.x) / len) * 12 * S;
+    }
+    return { a, b, qx, qy };
+  }
+  const pointAt = (geo, t) => {
+    const u = 1 - t;
+    return [u * u * geo.a.x + 2 * u * t * geo.qx + t * t * geo.b.x, u * u * geo.a.y + 2 * u * t * geo.qy + t * t * geo.b.y];
+  };
+
+  function strokeCurve(g, geo) {
+    g.beginPath();
+    g.moveTo(geo.a.x, geo.a.y);
+    g.quadraticCurveTo(geo.qx, geo.qy, geo.b.x, geo.b.y);
+    g.stroke();
+  }
+
+  // Line style of a link type: solid, dashed or dotted, with dashes that grow with the line width.
+  function linkStyle(g, type, width) {
+    const k = Math.max(1, width * 0.8);
+    g.lineWidth = width;
+    g.lineCap = type === 'S' ? 'round' : 'butt';
+    g.setLineDash(LINK_TYPES[type].dash.map(v => v * k));
+  }
+
+  function arrowHead(g, geo, color, size) {
+    let t = 1;
+    let p = pointAt(geo, t);
+    while (t > 0.5 && Math.hypot(p[0] - geo.b.x, p[1] - geo.b.y) < geo.b.r + 5 * S) { t -= 0.01; p = pointAt(geo, t); }
+    const q = pointAt(geo, Math.max(0, t - 0.04));
+    const angle = Math.atan2(p[1] - q[1], p[0] - q[0]);
+    g.fillStyle = color;
+    g.beginPath();
+    g.moveTo(p[0], p[1]);
+    g.lineTo(p[0] - size * Math.cos(angle - 0.42), p[1] - size * Math.sin(angle - 0.42));
+    g.lineTo(p[0] - size * Math.cos(angle + 0.42), p[1] - size * Math.sin(angle + 0.42));
+    g.closePath();
+    g.fill();
+  }
+
+  // Layer under the moving light: background and links.
+  function renderUnder(g, v) {
+    const f = v.f;
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.clearRect(0, 0, W, H);
+    if (background) g.drawImage(background, 0, 0, W, H);
+
+    // Links, coloured from the influencing to the influenced domain; faint when not in focus.
+    const gradientStroke = (geo, alpha) => {
+      const gradient = g.createLinearGradient(geo.a.x, geo.a.y, geo.b.x, geo.b.y);
+      gradient.addColorStop(0, rgba(DOMAINS[geo.a.domain].rgb, alpha));
+      gradient.addColorStop(1, rgba(DOMAINS[geo.b.domain].rgb, alpha));
+      return gradient;
+    };
+    for (const e of EDGES) {
+      if (!on(e)) continue;
+      if (v.loops ? v.loops.edges.has(e) : f && (e.from === f.active.id || f.direct.has(e.from))) continue;
+      g.strokeStyle = gradientStroke(e.geo, v.loops || f ? 0.03 : 0.2);
+      linkStyle(g, e.type, Math.max(0.8, S));
+      strokeCurve(g, e.geo);
+    }
+    if (v.loops) {
+      // Loop view: links on the shown feedback loops, in gold.
+      g.save();
+      g.shadowColor = 'rgba(255,200,100,0.8)';
+      g.shadowBlur = 8 * S;
+      for (const e of v.loops.edges) {
+        g.strokeStyle = 'rgba(255,212,128,0.9)';
+        linkStyle(g, e.type, 1.8 * S);
+        strokeCurve(g, e.geo);
+        g.setLineDash([]);
+        arrowHead(g, e.geo, 'rgba(255,220,145,1)', 6.5 * S);
+      }
+      g.restore();
+    } else if (f) {
+      // Step 2: links of the direct targets, dimmed and without glow.
+      const alpha = 0.95 * STEP2;
+      for (const e of f.step2) {
+        g.strokeStyle = gradientStroke(e.geo, alpha);
+        linkStyle(g, e.type, 1.3 * S);
+        strokeCurve(g, e.geo);
+        g.setLineDash([]);
+        arrowHead(g, e.geo, rgba(DOMAINS[e.geo.b.domain].rgb, alpha), 5.5 * S);
+      }
+      // Step 1: the selected threat's own links, bright and glowing.
+      const color = DOMAINS[f.active.domain].rgb;
+      g.save();
+      g.shadowColor = rgba(color, 0.9);
+      g.shadowBlur = 10 * S;
+      for (const e of f.out) {
+        g.strokeStyle = rgba(color, 0.95);
+        linkStyle(g, e.type, 2.2 * S);
+        strokeCurve(g, e.geo);
+        g.setLineDash([]);
+        arrowHead(g, e.geo, rgba(color, 1), 7.5 * S);
+      }
+      g.restore();
+    }
+    g.setLineDash([]);
+    g.lineCap = 'butt';
+  }
+
+  // Additive node glow, kept in its own layer so that it adds onto the moving light.
+  function renderGlow(g, v) {
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.clearRect(0, 0, W, H);
+    g.globalCompositeOperation = 'lighter';
+    for (const t of drawOrder) {
+      const color = DOMAINS[t.domain].rgb;
+      g.globalAlpha = nodeAlpha(t, v);
+      const glowR = t.r * (nodeLevel(t, v) === 0 ? 4.4 : 3.3);
+      const glow = g.createRadialGradient(t.x, t.y, t.r * 0.4, t.x, t.y, glowR);
+      glow.addColorStop(0, rgba(color, 0.55));
+      glow.addColorStop(1, rgba(color, 0));
+      g.fillStyle = glow;
+      g.beginPath(); g.arc(t.x, t.y, glowR, 0, Math.PI * 2); g.fill();
+    }
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
+  }
+
+  // Step number inside a node: 1 for a direct target, 2 for a threat reached only in step 2.
+  function stepDigit(g, t, step) {
+    g.font = `700 ${Math.max(8, Math.min(13, Math.round(t.r * 1.1)))}px ${FONT}`;
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.lineJoin = 'round';
+    g.lineWidth = 2.5;
+    g.strokeStyle = 'rgba(5,10,22,0.85)';
+    g.strokeText(String(step), t.x, t.y + 0.5);
+    g.fillStyle = '#ffffff';
+    g.fillText(String(step), t.x, t.y + 0.5);
+  }
+
+  // Layer over the moving light: node cores, a ring on the selected threat, step numbers, labels.
+  // Direct targets keep the full node; threats reached only in step 2 become hollow rings.
+  function renderOver(g, v) {
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.clearRect(0, 0, W, H);
+    for (const t of drawOrder) {
+      const level = nodeLevel(t, v);
+      const color = DOMAINS[t.domain].rgb;
+      g.beginPath(); g.arc(t.x, t.y, t.r, 0, Math.PI * 2);
+      if (level === 2) {
+        g.fillStyle = 'rgba(8,14,30,0.92)';
+        g.fill();
+        g.fillStyle = rgba(color, 0.22);
+        g.fill();
+        g.lineWidth = Math.max(1.5, 2 * S);
+        g.strokeStyle = rgba(color, 0.95);
+        g.stroke();
+      } else {
+        g.globalAlpha = nodeAlpha(t, v);
+        const core = g.createRadialGradient(t.x - t.r * 0.3, t.y - t.r * 0.35, t.r * 0.1, t.x, t.y, t.r);
+        core.addColorStop(0, mix(color, [255, 255, 255], 0.6));
+        core.addColorStop(0.55, rgba(color, 1));
+        core.addColorStop(1, mix(color, [0, 0, 0], 0.25));
+        g.fillStyle = core;
+        g.fill();
+        g.lineWidth = 1;
+        g.strokeStyle = 'rgba(255,255,255,0.35)';
+        g.stroke();
+        g.globalAlpha = 1;
+      }
+      if (level === 0) {
+        g.lineWidth = 2;
+        g.strokeStyle = 'rgba(255,255,255,0.92)';
+        g.beginPath(); g.arc(t.x, t.y, t.r + 4 * S, 0, Math.PI * 2); g.stroke();
+      }
+      if (!v.loops && (level === 1 || level === 2)) stepDigit(g, t, level);
+    }
+
+    if (!showLabels) return;
+    g.save();
+    g.textAlign = 'left';
+    g.textBaseline = 'top';
+    g.shadowColor = 'rgba(0,0,0,0.9)';
+    g.shadowBlur = 4;
+    for (const t of THREATS) {
+      const level = nodeLevel(t, v);
+      const label = t.label || (level === 0 ? t.labelFallback : null);
+      if (!label) continue;
+      g.font = labelFont(level === 0 ? 650 : 500);
+      g.fillStyle = level === 0 ? '#ffffff' : level === 2 ? 'rgba(224,231,243,0.72)' : level === 3 ? 'rgba(160,172,195,0.22)' : 'rgba(224,231,243,0.92)';
+      const { lines, x, y, w, lineHeight, align } = label;
+      lines.forEach((line, i) => {
+        const lw = g.measureText(line).width;
+        const lx = align === 'right' ? x + w - lw : align === 'center' ? x + (w - lw) / 2 : x;
+        g.fillText(line, lx, y + i * lineHeight);
+      });
+    }
+    g.restore();
+  }
+
+  // The static layers are drawn once per selection, so that each animation frame only adds the light.
+  const layers = { key: null, under: null, glow: null, over: null };
+  function makeLayer() {
+    const layer = document.createElement('canvas');
+    layer.width = canvas.width;
+    layer.height = canvas.height;
+    return layer;
+  }
+  function ensureLayers(v) {
+    const key = `${v.f ? v.f.active.id : ''}|${showLabels}|${[...enabled].join('')}|${showLoops}`;
+    if (layers.key === key) return;
+    if (!layers.under || layers.under.width !== canvas.width || layers.under.height !== canvas.height) {
+      layers.under = makeLayer();
+      layers.glow = makeLayer();
+      layers.over = makeLayer();
+    }
+    renderUnder(layers.under.getContext('2d'), v);
+    renderGlow(layers.glow.getContext('2d'), v);
+    renderOver(layers.over.getContext('2d'), v);
+    layers.key = key;
+  }
+
+  // Moving light shows the direction of influence along each link.
+  function drawFlow(time, v) {
+    const f = v.f;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (const e of EDGES) {
+      if (!on(e)) continue;
+      const level = v.loops ? (v.loops.edges.has(e) ? 1 : -1) : !f ? 0 : e.from === f.active.id ? 1 : f.direct.has(e.from) ? 2 : -1;
+      if (level < 0) continue;
+      const speed = 0.09 + hash01(e.from + e.to, 7) * 0.08;
+      const t = ((time / 1000) * speed + hash01(e.from + e.to, 8)) % 1;
+      const [x, y] = pointAt(e.geo, t);
+      const color = DOMAINS[e.geo.a.domain].rgb;
+      const strength = level === 1 ? 0.95 : level === 2 ? 0.95 * STEP2 : 0.55;
+      const radius = (level === 1 ? 9 : 6) * S;
+      const glow = ctx.createRadialGradient(x, y, 0, x, y, radius);
+      glow.addColorStop(0, rgba(color, strength));
+      glow.addColorStop(1, rgba(color, 0));
+      ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function draw(time) {
+    if (!W) return;
+    const f = focusOf(selected || hovered);
+    const v = { f, loops: showLoops ? loopView(f) : null };
+    ensureLayers(v);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(layers.under, 0, 0, W, H);
+    if (showFlow) drawFlow(time, v);
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.drawImage(layers.glow, 0, 0, W, H);
+    ctx.restore();
+    ctx.drawImage(layers.over, 0, 0, W, H);
+  }
+
+  function frame(time) {
+    rafId = 0;
+    draw(time);
+    if (showFlow && !document.hidden) rafId = requestAnimationFrame(frame);
+  }
+  function requestDraw() { if (!rafId) rafId = requestAnimationFrame(frame); }
+
+  function resize() {
+    const width = canvasWrap.clientWidth;
+    // A hidden page (for example a closed dashboard section) has no width yet; the resize observer
+    // lays the network out as soon as it is shown.
+    if (!width) return;
+    const narrow = width < 760;
+    W = width;
+    H = narrow ? Math.round(width * 1.5) : Math.round(Math.min(Math.max(width * 0.56, 580), 860));
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.height = H + 'px';
+    cx = W / 2;
+    cy = H / 2;
+    Ry = H * (narrow ? 0.42 : 0.41);
+    Rx = Math.min(W * (narrow ? 0.44 : 0.39), Ry * (narrow ? 1.02 : 1.6));
+    S = Math.max(narrow ? 0.6 : 0.72, Math.min(1.25, Math.min(Rx, Ry) / 320));
+    layoutNodes();
+    EDGES.forEach(e => { e.geo = geometry(e); });
+    placeLabels();
+    placeTags();
+    buildBackground();
+    layers.key = null;
+    requestDraw();
+  }
+
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+  const domainDot = t => `<span class="dot" style="background:${rgba(DOMAINS[t.domain].rgb, 1)}"></span>`;
+  const typeGlyph = type => `<svg class="glyph" viewBox="0 0 26 8" aria-hidden="true"><line x1="2" y1="4" x2="24" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="${type === 'S' ? 'round' : 'butt'}"${LINK_TYPES[type].svgDash ? ` stroke-dasharray="${LINK_TYPES[type].svgDash}"` : ''}/></svg>`;
+  const typeTag = type => `<span class="type-tag" title="${LINK_TYPES[type].label}: ${LINK_TYPES[type].note}">${typeGlyph(type)}${LINK_TYPES[type].short}</span>`;
+  const typeCounts = edges => Object.keys(LINK_TYPES)
+    .map(key => [key, edges.filter(e => e.type === key).length])
+    .filter(([, n]) => n)
+    .map(([key, n]) => `${n} ${LINK_TYPES[key].short.toLowerCase()}`)
+    .join(', ');
+  const addedMark = e => (e.added ? `<span class="added" title="${escapeHtml(e.note)}">added</span>` : '');
+  const STEP_BADGE = { 1: '<span class="step-node s1">1</span>', 2: '<span class="step-node s2">2</span>' };
+
+  function linkList(edges, end) {
+    if (!edges.length) return '<p class="empty">None among the shown link types.</p>';
+    return `<ul>${edges.map(e => {
+      const t = byId.get(e[end]);
+      return `<li>${domainDot(t)}<span>${escapeHtml(t.name)}${addedMark(e)}</span>${typeTag(e.type)}</li>`;
+    }).join('')}</ul>`;
+  }
+
+  function step2Html(f) {
+    const only = [...f.indirect].map(id => byId.get(id)).sort((a, b) => b.priority - a.priority);
+    const summary = only.length
+      ? `Reached only through step 2 (${only.length}): ${only.map(t => `<b>${escapeHtml(t.name)}</b>`).join(', ')}.`
+      : 'Every threat reached in step 2 is already a direct target or the selected threat itself.';
+    const groups = f.out.map(first => {
+      const via = byId.get(first.to);
+      const chips = outOf(via).map(e => {
+        const t = byId.get(e.to);
+        const back = t === f.active;
+        const kind = back ? ' loop' : f.indirect.has(t.id) ? ' new' : '';
+        const note = back ? ', leads back to the selected threat' : '';
+        return `<span class="chip${kind}" title="${LINK_TYPES[e.type].label}${note}">${typeGlyph(e.type)}${escapeHtml(t.name)}${back ? ' ↺' : ''}${addedMark(e)}<span class="sr-only"> (${LINK_TYPES[e.type].label}${note})</span></span>`;
+      }).join('');
+      return `<div class="via"><div class="via-head">via ${domainDot(via)}${escapeHtml(via.name)}</div><div class="chips">${chips}</div></div>`;
+    }).join('');
+    return `<div class="overline">${STEP_BADGE[2]}Indirect influences · step 2 (${plural(f.step2.length, 'link')})</div>
+      <p class="meta">${summary}</p>${groups}
+      <p class="note">Bold: reached only through step 2 (hollow nodes marked 2 in the network). ↺ leads back to the selected threat. Step-2 links are not new direct influences of the selected threat, and separate paths are not added together.</p>`;
+  }
+
+  function updateDetail() {
+    const active = selected || hovered;
+    const main = document.getElementById('detailMain');
+    const step1 = document.getElementById('detailStep1');
+    const step2 = document.getElementById('detailStep2');
+    if (!active) {
+      main.innerHTML = '<div class="overline">Selected threat</div><p class="empty">Hover or tap a threat in the network.</p>';
+      step1.innerHTML = `<div class="overline">${STEP_BADGE[1]}Direct influences · step 1</div><p class="empty">Threats that the selected threat worsens directly, with the link type.</p>`;
+      step2.innerHTML = `<div class="overline">${STEP_BADGE[2]}Indirect influences · step 2</div><p class="empty">Threats that its direct targets worsen in turn.</p>`;
+      updateLoops();
+      return;
+    }
+    const f = focusOf(active);
+    const dom = DOMAINS[active.domain];
+    const reach = f.direct.size + f.indirect.size;
+    const filterNote = enabled.size < 3
+      ? `<p class="meta note">Showing only: ${Object.keys(LINK_TYPES).filter(k => enabled.has(k)).map(k => LINK_TYPES[k].label).join(', ') || 'no link types'}.</p>`
+      : '';
+    main.innerHTML = `<div class="overline">Selected threat${selected ? ' (pinned)' : ''}</div><h2>${escapeHtml(active.name)}</h2>
+      <div class="meta"><span class="dot" style="display:inline-block;vertical-align:middle;margin-right:6px;background:${rgba(dom.rgb, 1)}"></span>${dom.label} domain · model priority ${active.priority.toFixed(2)} (rank ${rankOf.get(active.id)} of ${THREATS.length})</div>
+      <p class="meta" style="margin-top:8px">Directly worsens ${plural(f.out.length, 'threat')}${f.out.length ? ` (${typeCounts(f.out)})` : ''}. Through them it reaches ${f.indirect.size} more in step 2: ${reach} of the other ${THREATS.length - 1} threats within two steps.</p>${filterNote}
+      <div class="overline" style="margin-top:12px">Directly worsened by (${inOf(active).length})</div>${linkList(inOf(active), 'from')}`;
+    step1.innerHTML = `<div class="overline">${STEP_BADGE[1]}Direct influences · step 1 (${f.out.length})</div>${linkList(f.out, 'to')}`;
+    step2.innerHTML = step2Html(f);
+    updateLoops();
+  }
+
+  // Loop panel: the shown loops grouped by their weakest link, each written from the selected threat.
+  function updateLoops() {
+    const section = document.getElementById('loopsSection');
+    section.hidden = !showLoops;
+    if (!showLoops) return;
+    const f = focusOf(selected || hovered);
+    const { list } = loopView(f);
+    const chain = loop => {
+      const start = f ? loop.findIndex(e => e.from === f.active.id) : 0;
+      const ordered = [...loop.slice(start), ...loop.slice(0, start)];
+      return [...ordered.map(e => byId.get(e.from).name), byId.get(ordered[0].from).name].map(escapeHtml).join(' → ');
+    };
+    const groups = Object.keys(LINK_TYPES).map(key => {
+      const items = list.filter(loop => loop.weakest === key);
+      if (!items.length) return '';
+      return `<div class="via"><div class="via-head">${typeGlyph(key)}Weakest link: ${LINK_TYPES[key].label} (${items.length})</div><div class="chips">${items.map(loop => `<span class="chip">${chain(loop)}</span>`).join('')}</div></div>`;
+    }).join('');
+    const two = list.filter(loop => loop.length === 2).length;
+    section.firstElementChild.innerHTML = `<div class="overline">Feedback loops${f ? ` through ${escapeHtml(f.active.name)}` : ''} (${list.length})</div>
+      <p class="meta">${two} two-link and ${list.length - two} three-link loops, drawn as gold lines in the network. In a loop each threat worsens the next and the last worsens the first again, so the pressure can reinforce itself. A loop is only as well supported as its weakest link.</p>
+      ${groups || '<p class="empty">No loops among the shown link types.</p>'}`;
+  }
+
+  // A change of the link-type filter changes steps, loops and every count.
+  function refreshView() {
+    focusCache.clear();
+    findLoops();
+    updateDetail();
+    requestDraw();
+  }
+
+  function buildTable() {
+    const rows = [...EDGES]
+      .sort((a, b) => byId.get(a.from).name.localeCompare(byId.get(b.from).name))
+      .map(e => `<tr><td>${escapeHtml(byId.get(e.from).name)}</td><td>${escapeHtml(byId.get(e.to).name)}</td><td><span class="type-cell">${typeGlyph(e.type)}${LINK_TYPES[e.type].label}${addedMark(e)}</span></td></tr>`)
+      .join('');
+    document.getElementById('netTable').innerHTML = `<thead><tr><th>Threat</th><th>Directly worsens</th><th>Link type</th></tr></thead><tbody>${rows}</tbody>`;
+  }
+
+  function localPoint(event) {
+    const rect = canvas.getBoundingClientRect();
+    return [event.clientX - rect.left, event.clientY - rect.top];
+  }
+  function hitTest(x, y) {
+    let best = null, bestDistance = Infinity;
+    for (const t of THREATS) {
+      const d = Math.hypot(t.x - x, t.y - y);
+      if (d <= t.r + 9 * S && d < bestDistance) { best = t; bestDistance = d; }
+    }
+    return best;
+  }
+
+  canvas.addEventListener('pointermove', event => {
+    if (event.pointerType === 'touch') return;
+    const hit = hitTest(...localPoint(event));
+    if (hit !== hovered) {
+      hovered = hit;
+      canvas.style.cursor = hit ? 'pointer' : 'default';
+      updateDetail();
+      requestDraw();
+    }
+  });
+  canvas.addEventListener('pointerleave', () => {
+    if (!hovered) return;
+    hovered = null;
+    updateDetail();
+    requestDraw();
+  });
+  canvas.addEventListener('click', event => {
+    const hit = hitTest(...localPoint(event));
+    selected = hit && hit !== selected ? hit : null;
+    focusSelect.value = selected ? selected.id : '';
+    updateDetail();
+    requestDraw();
+  });
+
+  const focusSelect = document.getElementById('focusSelect');
+  [...THREATS].sort((a, b) => a.name.localeCompare(b.name)).forEach(t => {
+    const option = document.createElement('option');
+    option.value = t.id;
+    option.textContent = t.name;
+    focusSelect.appendChild(option);
+  });
+  focusSelect.addEventListener('change', () => {
+    selected = focusSelect.value ? byId.get(focusSelect.value) : null;
+    updateDetail();
+    requestDraw();
+  });
+  document.getElementById('toggleLabels').addEventListener('change', e => { showLabels = e.target.checked; requestDraw(); });
+  const flowToggle = document.getElementById('toggleFlow');
+  flowToggle.checked = showFlow;
+  flowToggle.addEventListener('change', e => { showFlow = e.target.checked; requestDraw(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && selected) { selected = null; focusSelect.value = ''; updateDetail(); requestDraw(); }
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) requestDraw(); });
+
+  document.getElementById('statThreats').textContent = THREATS.length;
+  document.getElementById('statLinks').textContent = EDGES.length;
+  const typeLegend = document.getElementById('typeLegend');
+  typeLegend.innerHTML = Object.entries(LINK_TYPES).map(([key, type]) =>
+    `<li title="${type.label}: ${type.note}"><label><input type="checkbox" data-type="${key}" checked>${typeGlyph(key)}<span>${type.label}</span></label><b>${EDGES.filter(e => e.type === key).length}</b></li>`).join('');
+  typeLegend.addEventListener('change', e => {
+    const key = e.target.dataset.type;
+    if (!key) return;
+    if (e.target.checked) enabled.add(key); else enabled.delete(key);
+    refreshView();
+  });
+  document.getElementById('toggleLoops').addEventListener('change', e => { showLoops = e.target.checked; updateDetail(); requestDraw(); });
+  findLoops();
+  buildTable();
+  updateDetail();
+  let resizeFrame = 0;
+  new ResizeObserver(() => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(resize);
+  }).observe(canvasWrap);
+  resize();
+
+  if (EMBEDDED) {
+    // The dashboard sends the adjusted priorities of the selected scenario; they set the node sizes.
+    window.addEventListener('message', event => {
+      if (event.source !== window.parent || !event.data || event.data.type !== 'threat-network:priorities') return;
+      let changed = false;
+      THREATS.forEach(t => {
+        const value = event.data.priorities[t.id];
+        if (Number.isFinite(value) && value !== t.priority) { t.priority = value; changed = true; }
+      });
+      if (!changed) return;
+      rankThreats();
+      resize();
+      updateDetail();
+    });
+    // The dashboard sizes the frame to the page height, so the page never scrolls inside it.
+    let lastHeight = 0;
+    const reportHeight = () => {
+      const height = Math.ceil(document.documentElement.scrollHeight);
+      if (height === lastHeight) return;
+      lastHeight = height;
+      window.parent.postMessage({ type: 'threat-network:height', height }, '*');
+    };
+    new ResizeObserver(reportHeight).observe(document.body);
+    window.parent.postMessage({ type: 'threat-network:ready' }, '*');
+    reportHeight();
+  }
+})();
+</script>
+</body>
+</html>

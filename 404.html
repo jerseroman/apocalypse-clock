@@ -27,7 +27,8 @@
 <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()">
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Outfit:wght@800&family=Prompt:wght@900&family=Raleway:wght@900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Outfit:wght@800&family=Prompt:wght@900&family=Raleway:wght@900&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="./assets/apocalypse-clock-logo.png">
 <link rel="stylesheet" href="./src/styles.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -43,13 +44,12 @@
 </div>
 <header class="site-header">
   <div class="header-left">
-    <div class="header-overline">Global Systemic Risk Monitor</div>
-    <div class="header-last-update">Revision: 24 September 2026 · Model 1.3.0 · Data 1.9.0</div>
     <div class="brand-row">
       <img class="header-logo" src="./assets/apocalypse-clock-logo.png" alt="Apocalypse Clock logo" width="70" height="70" decoding="async" loading="lazy">
       <h1 class="header-title">Apocalypse Clock</h1>
     </div>
-    <p class="header-sub">Apocalypse Clock is a transparent, scenario-based systemic-risk model for mapping 23 interacting global threats across civilizational, biospheric, and technological domains. It estimates a probabilistic critical horizon through Dynamic cascade modeling, dependency amplification, and Monte Carlo uncertainty sampling. Each displayed year is a model-derived threshold horizon under explicit assumptions, not a deterministic prediction.</p>
+    <div class="header-overline">Global Systemic Risk Monitor</div>
+    <div class="header-last-update">Revision: 27 September 2026 · Model 1.5.0 · Data 1.9.0</div>
   </div>
   <div class="header-right" style="display:none">
     <div class="live-badge"><div class="live-dot"></div>Interactive scenario model</div>
@@ -61,11 +61,11 @@
 <div id="mcProgress" style="display:none"></div>
 <div class="hero-band">
   <div class="card hero-main-card" id="heroMainCard">
-
+    
 <div class="card-title">Mission statement</div>
     <div class="hero-copy" style="font-size:12px;color:var(--text-2);line-height:1.85">
       <p style="margin-bottom:10px">
-        The purpose of Apocalypse Clock is to make interacting global risks comparable within a single analytical framework. It is designed to examine 23 global threats across civilizational, biospheric, and technological domains, not as isolated dangers, but as coupled components of an interconnected global system.
+        Apocalypse Clock is a transparent, scenario-based systemic-risk model. Its purpose is to make interacting global risks comparable within a single analytical framework: it examines 23 global threats across civilizational, biospheric, and technological domains, not as isolated dangers, but as coupled components of an interconnected global system.
       </p>
       <p style="margin-bottom:10px">
         Its parameter data are drawn primarily from official governmental reports, intergovernmental and international-organization assessments, scientific literature, and evidence-based institutional datasets. Each parameter is documented through source references, uncertainty ranges, evidence strength, growth calibration, and explanatory notes.
@@ -74,13 +74,13 @@
         The model estimates a probabilistic critical horizon through a multi-stage analytical pipeline: evidence-graded parameter scoring, Weighted MCDA, dependency amplification, domain-weight normalization, process-specific horizon functions, Monte Carlo uncertainty sampling, bootstrap uncertainty estimation, structural ensemble aggregation, and Dynamic cascade propagation.
       </p>
       <p style="margin-bottom:10px">
-        The ensemble compares compensatory aggregation, non-compensatory max-rule aggregation, graph-weighted aggregation, and Dynamic cascade logic. The paired highlighted years represent the P50 median and P90 later edge of the model’s Dynamic cascade horizon: stress-oriented critical thresholds, not deterministic forecasts, prophecies, or empirically measured probabilities of collapse.
+        The ensemble compares compensatory aggregation, non-compensatory max-rule aggregation, graph-weighted aggregation, and Dynamic cascade logic. The paired highlighted years represent the P50 median and P90 later edge of the model’s Dynamic cascade horizon. Each displayed year is a model-derived threshold horizon under explicit assumptions: a stress-oriented critical threshold, not a deterministic forecast, a prophecy, or an empirically measured probability of collapse.
       </p>
       <p style="margin-bottom:10px">
-        The optional Scientific Panel adds deeper diagnostic tools, including Weibull survival analysis, network eigenvector centrality, Poisson-binomial convergence-tail analysis, Shannon entropy, Fast OAT sensitivity analysis, Sobol/Jansen sensitivity indices, SMAA weight robustness, non-compensatory veto diagnostics, tail-dependence stress testing, and a scientific audit summary. These diagnostics explain and stress-test the baseline result; they do not overwrite the paired headline horizons.
+        The optional Model Diagnostics adds deeper diagnostic tools, including Weibull survival analysis, network eigenvector centrality, Poisson-binomial convergence-tail analysis, Shannon entropy, Fast OAT sensitivity analysis, Sobol/Jansen sensitivity indices, SMAA weight robustness, non-compensatory veto diagnostics, tail-dependence stress testing, and a scientific audit summary. These diagnostics explain and stress-test the baseline result; they do not overwrite the paired headline horizons.
       </p>
 
-      <div id="missionMore" style="display:none;margin-top:8px">
+      <div id="missionMore" style="margin-top:8px">
         <p style="margin-bottom:12px">
           The expanded view below breaks that horizon into the model steps behind it: threat scoring, dependency links, process-specific horizons, uncertainty sampling, aggregation rules, and cascade diagnostics.
         </p>
@@ -100,7 +100,7 @@
           </div>
           <div style="border:1px solid var(--border);background:rgba(255,255,255,0.018);border-radius:var(--r6);padding:12px">
             <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:7px">4. Cascade &amp; diagnostics</div>
-            <div><strong>Dynamic cascade testing</strong> and structural ensemble aggregation determine the paired headline horizons. The Scientific Panel then adds sensitivity, robustness, stress-test, and distribution diagnostics as an interpretive audit layer, without changing those horizons.</div>
+            <div><strong>Dynamic cascade testing</strong> and structural ensemble aggregation determine the paired headline horizons. The Model Diagnostics then adds sensitivity, robustness, stress-test, and distribution diagnostics as an interpretive audit layer, without changing those horizons.</div>
           </div>
         </div>
 
@@ -109,29 +109,28 @@
         </p>
       </div>
 
-      <button type="button" id="missionToggle" class="mission-action" data-action="toggle-mission-more" aria-expanded="false">Read more</button>
+      <button type="button" id="missionToggle" class="mission-action" data-action="toggle-mission-more" aria-expanded="true">Read less</button>
       <div id="missionActions" class="mission-actions">
         <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/docs/METHODOLOGY.md" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">&#x2197;</span> Read Methodology</a>
         <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/docs/MODEL_SCOPE.md" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">&#x2197;</span> Review Model Scope</a>
+        <a class="mission-action" aria-label="Open Perplexity interpretation prompt" href="https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2Fdata_v1_9_0.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon" aria-hidden="true"><img src="./assets/perplexity-icon.png" alt="" width="13" height="13" style="display:block;width:13px;height:13px"></span> Ask Perplexity</a>
+        <a class="mission-action" href="https://www.facebook.com/profile.php?id=61571359601171" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">f</span> Follow on Facebook</a>
         <a class="mission-action" href="mailto:info@apocalypseclock.com"><span class="mission-action-icon">&#x26A0;</span> Report Problem</a>
-        <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">⚖</span> License</a>
-        <div id="shareMenuWrap" class="mission-action-menu">
-          <a class="mission-action" aria-label="Open sharing menu" role="button" data-action="toggle-share-menu" href="#"><span class="mission-action-icon">&#x2B06;</span> Share</a>
-          <div id="shareDropdown" class="mission-share-dropdown">
-            <a id="sh-twitter" aria-label="Share on X" href="#" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">X / Twitter</a>
-            <a id="sh-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Facebook</a>
-            <a id="sh-telegram" aria-label="Share on Telegram" href="#" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Telegram</a>
-            <a id="sh-reddit" aria-label="Share on Reddit" href="#" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Reddit</a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">LinkedIn</a>
-            <button type="button" data-action="copy-share-link">⧉ Copy link</button>
-          </div>
-        </div>
         <a class="mission-action" aria-label="Export Apocalypse Clock JSON" role="button" data-action="export-json" href="#"><span class="mission-action-icon">↓</span> Export JSON</a>
         <a class="mission-action" aria-label="Export Apocalypse Clock CSV" role="button" data-action="export-csv" href="#"><span class="mission-action-icon">↓</span> Export CSV</a>
         <a class="mission-action" aria-label="Print Apocalypse Clock page" role="button" data-action="print-page" href="#"><span class="mission-action-icon">⎙</span> Print / PDF</a>
-        <a class="mission-action" href="https://www.facebook.com/profile.php?id=61571359601171" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">f</span> Follow on Facebook</a>
-        <a class="mission-action" href="https://www.arewealoneintheuniverse.com/" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">✦</span> Are we alone in the universe?</a>
-        <a class="mission-action" aria-label="Open Perplexity interpretation prompt" href="https://www.perplexity.ai/?q=Visit%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F%20and%20the%20underlying%20data%20JSON%20at%20https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2Fdata_v1_9_0.json%20and%20explain%20the%20Apocalypse%20Clock%20dashboard%20for%20a%20general%20reader.%20What%20does%20it%20measure%2C%20how%20is%20it%20different%20from%20the%20Doomsday%20Clock%2C%20what%20do%20the%20current-stress%20gauge%20and%20projected%20horizon%20mean%2C%20and%20what%20are%20the%20main%20strengths%20and%20limitations%20of%20this%20systemic-risk%20monitor%3F" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon" aria-hidden="true"><img src="./assets/perplexity-icon.png" alt="" width="13" height="13" style="display:block;width:13px;height:13px"></span> Ask Perplexity</a>
+        <div id="shareMenuWrap" class="mission-action-menu">
+          <a class="mission-action" aria-label="Open sharing menu" role="button" data-action="toggle-share-menu" href="#"><span class="mission-action-icon">&#x2B06;</span> Share</a>
+          <div id="shareDropdown" class="mission-share-dropdown">
+            <a id="sh-twitter" aria-label="Share on X" href="https://twitter.com/intent/tweet?text=Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system.&amp;url=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F" target="_blank" rel="noopener noreferrer" data-action="close-share-menu">X / Twitter</a>
+            <a id="sh-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F&amp;quote=Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system." target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Facebook</a>
+            <a id="sh-telegram" aria-label="Share on Telegram" href="https://t.me/share/url?url=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F&amp;text=Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system." target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Telegram</a>
+            <a id="sh-reddit" aria-label="Share on Reddit" href="https://www.reddit.com/submit?url=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F&amp;title=Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system." target="_blank" rel="noopener noreferrer" data-action="close-share-menu">Reddit</a>
+            <a id="sh-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fjerseroman.github.io%2Fapocalypse-clock%2F&amp;title=Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system.&amp;summary=Explore%20the%20Apocalypse%20Clock%3A%20an%20independent%20systemic-risk%20monitor%20showing%20which%20civilizational%20threats%20are%20currently%20placing%20the%20greatest%20pressure%20on%20the%20global%20system." target="_blank" rel="noopener noreferrer" data-action="close-share-menu">LinkedIn</a>
+            <button type="button" data-action="copy-share-link">⧉ Copy link</button>
+          </div>
+        </div>
+        <a class="mission-action" href="https://github.com/jerseroman/apocalypse-clock/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><span class="mission-action-icon">⚖</span> License</a>
       </div>
     </div>
     <div class="calc-console" id="calcConsole">
@@ -155,30 +154,8 @@
   </div>
 
   <div class="panel" id="heroAbsoluteClock" style="padding:16px">
-    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:14px">
-      <div class="clock-panel hero-gauge-card" style="flex:0 0 170px;padding:0">
-        <div class="hero-section-kicker">Current systemic stress</div>
-        <div class="card-title">Global Stress Index gauge</div>
-        <div class="gauge-tooltip-wrap">
-          <div id="clockCanvas" role="img" style="width:200px;height:200px;max-width:100%;margin-top:-12px" aria-label="Global systemic stress gauge"></div>
-          <div class="gauge-tooltip">
-            <strong>Global Stress Index</strong>
-            A composite 0–100 score aggregating all 23 threats after MCDA scoring, dependency amplification and scenario weighting. It measures current systemic load   not a probability of collapse.<br><br>
-            <span style="color:var(--text-3)">0–35</span> Low systemic load &nbsp;·&nbsp; <span style="color:var(--amber)">35–70</span> Elevated &nbsp;·&nbsp; <span style="color:var(--red)">70–100</span> Critical mass
-          </div>
-        </div>
-        <div class="clock-gsi" id="clockGSI" style="color:var(--red)"> </div>
-        <div class="clock-lbl">Current Global Stress Index / 100</div>
-        <div class="hero-separation-note">Current stress and projected horizons are separate outputs: the gauge summarizes present systemic load, while the paired P50/P90 clocks show two quantiles of the same Dynamic cascade distribution.</div>
-        <div class="clock-meta" id="clockMeta" style="display:none"></div>
-        <div class="clock-stats">
-          <div class="cs"><div class="cs-l">Compensatory P10</div><div class="cs-v" id="heroP10Mirror"> </div></div>
-          <div class="cs"><div class="cs-l">Compensatory P90</div><div class="cs-v" id="heroP90Mirror"> </div></div>
-          <div class="cs"><div class="cs-l">Simulation outcome SD</div><div class="cs-v" id="heroAleaMirror"> </div></div>
-          <div class="cs"><div class="cs-l">Bootstrap median MC SE</div><div class="cs-v" id="heroEpisMirror"> </div></div>
-        </div>
-      </div>
-<div style="flex:1;min-width:0;text-align:center">
+    <div class="hero-projected-layout">
+      <div class="hero-projected-content">
         <div class="hero-section-kicker">Projected horizon</div>
         <div class="cascade-headline-label">Dynamic cascade · paired P50/P90 horizon clocks · projected pathway</div>
         <div id="cascadeLoadingMsg" class="cascade-loading" style="display:none" role="status" aria-live="polite">
@@ -188,6 +165,7 @@
             <div class="cascade-loading-fill" id="cascadeLoadingFill"></div>
           </div>
           <p class="cascade-loading-description">LOADING AND CALCULATING DATA FROM JSON</p>
+          <p class="cascade-loading-step" id="cascadeLoadingStep" aria-hidden="true"></p>
         </div>
         <div class="cascade-horizon-pair" id="cascadeHorizonPair" role="group" aria-label="Dynamic cascade P50 and P90 projected horizons" style="display:none">
           <div class="cascade-horizon-clock cascade-horizon-p50" id="cascadeMedianYearWrap" style="display:none">
@@ -222,14 +200,14 @@
         <div class="hero-year-box" data-tip="<strong>Max-rule P50</strong>Median crossing year under the max-rule aggregation: the threshold is crossed as soon as the single most advanced threat reaches it. This is the most conservative (earliest) aggregation method."><span class="hero-year-val" id="hyMax"> </span><span class="hero-year-lbl">Max-rule P50</span></div>
         <div class="hero-year-box" data-tip="<strong>Graph-linked heuristic P50</strong>Crossing year from a dependency-weighted heuristic index. It is not a probability derived from a validated correlation matrix."><span class="hero-year-val" id="hyGraph"> </span><span class="hero-year-lbl">Graph heuristic P50</span></div>
         <div class="hero-year-box" data-tip="<strong>Dynamic cascade P50 horizon</strong>Median crossing year under the dynamic cascade model, which simulates how one threat failing can trigger others via dependency links. This accounts for non-linear amplification effects."><span class="hero-year-val" id="hyCascadeP50"> </span><span class="hero-year-lbl">Dynamic cascade P50 horizon</span></div>
-        <div class="hero-year-box" data-tip="<strong>Dynamic cascade P90 horizon</strong>The 90th percentile of functional-disruption crossing times after directed propagation. A single initial failure can spread. The trigger uses fixed criticality weights globally or within an essential-service basket. This is not a physical tipping point, worst-case bound or calibrated collapse forecast. A narrow interval alone does not validate the model."><span class="hero-year-val" id="hyCascadeP90"> </span><span class="hero-year-lbl">Dynamic cascade P90 horizon</span></div>
+        <div class="hero-year-box" data-tip="<strong>Dynamic cascade P90 horizon</strong>The 90th percentile of functional-disruption crossing times after directed propagation. A single initial failure can spread. The trigger uses criticality weights globally or within an essential-service basket; the threshold, criticality levels, dependency weights, lags and growth classes are sampled in every run, and each threat’s pressure can peak and then decline, after which failed threats can recover. This is not a physical tipping point, worst-case bound or calibrated collapse forecast. A narrow interval alone does not validate the model."><span class="hero-year-val" id="hyCascadeP90"> </span><span class="hero-year-lbl">Dynamic cascade P90 horizon</span></div>
         <div class="hero-year-box lead-threat-box" id="hyLeadBox" data-tip="<strong>Top threat P50</strong>The single threat with the earliest individual median crossing year under the current scenario. This is the &quot;leading edge&quot;   the risk domain most likely to breach the threshold first."><span class="hero-year-val" id="hyLead"> </span><span class="hero-year-lbl" id="hyLeadName">Top threat P50</span></div>
       </div>
       <div class="countdown-unc-label">Scenario-conditioned probability of threshold crossing under the compensatory aggregation rule</div>
       <div class="countdown-units">
         <div class="cu" data-tip="<strong>P ≤ 2035</strong>Probability that the global risk threshold is crossed by the year 2035 under this scenario. Calculated from the share of Monte Carlo runs that breach the threshold on or before 2035."><span class="cu-val" id="csP2035"> </span><span class="cu-lbl">P ≤ 2035</span></div>
         <div class="cu" data-tip="<strong>P ≤ 2050</strong>Probability that the threshold is crossed by 2050. A higher value means more runs converge within mid-century   a key planning horizon for most long-term risk frameworks."><span class="cu-val" id="csP2050"> </span><span class="cu-lbl">P ≤ 2050</span></div>
-        <div class="cu" data-tip="<strong>Simulation outcome SD</strong>Standard deviation of the mixed simulated crossing-year distribution. It combines modeled parameter variation and stochastic process variation, so it is not exclusively process uncertainty."><span class="cu-val" id="csAlea"> </span><span class="cu-lbl">Simulation outcome SD</span></div>
+        <div class="cu" data-tip="<strong>Horizon-coded outcome SD</strong>Standard deviation of mixed simulated times, with no crossing by 2100 coded as 2101. This combines parameter and process variation. It does not determine the spread of actual crossing times beyond 2100."><span class="cu-val" id="csAlea"> </span><span class="cu-lbl">Horizon-coded outcome SD</span></div>
         <div class="cu" data-tip="<strong>Cross-aggregator P50 range</strong>Difference between the largest and smallest P50 across the aggregation rules. This structural range is not a standard deviation."><span class="cu-val" id="csStruct"> </span><span class="cu-lbl">P50 rule range</span></div>
       </div>
       <div class="countdown-meta">Structured heuristic under deep uncertainty<br>Not a validated forecast of collapse, extinction or catastrophe</div>
@@ -237,12 +215,35 @@
   </div>
 </div>
 
-<div class="toolbar-card source-card" style="margin-top:8px">
-  <div class="collapse-hdr" data-collapse-target="sourceRegistryCard" role="button" tabindex="0">
-    <div class="section-label" style="margin-bottom:0">Source registry</div>
-    <span class="collapse-arrow" id="sourceRegistryCard-arrow">▼</span>
+<section class="panel conditional-scenario" id="conditionalScenario" aria-labelledby="conditionalScenarioTitle" hidden>
+  <div class="conditional-kicker">Conditional scenario</div>
+  <h2 class="conditional-title" id="conditionalScenarioTitle">P(threshold reached by year X | model assumptions)</h2>
+  <p class="conditional-lead">Share of simulated runs in which the functional-disruption threshold has been reached by each year. It describes the model under its stated assumptions about growth, thresholds, weights and connections. It is not a measured probability and not a forecast.</p>
+  <div class="conditional-grid">
+    <div class="conditional-col">
+      <div id="conditionalCdfChart" class="conditional-chart" role="img" aria-label="Cumulative share of runs that have reached the Dynamic cascade threshold by each year, with the other three aggregation rules as thin gray lines"></div>
+      <div class="conditional-legend" id="conditionalLegend"></div>
+      <p class="conditional-note" id="conditionalCensored"></p>
+      <p class="conditional-note" id="conditionalRecovery"></p>
+      <p class="conditional-note" id="conditionalStructure"></p>
+      <p class="conditional-note" id="conditionalTurns"></p>
+      <div class="conditional-subtitle">Range across the four aggregation rules</div>
+      <div class="conditional-table-wrap"><table class="conditional-rules" id="conditionalRules"></table></div>
+      <p class="conditional-note" id="conditionalRulesNote"></p>
+    </div>
+    <div class="conditional-col">
+      <div class="conditional-subtitle conditional-subtitle-first">What triggers the clocks</div>
+      <div class="conditional-triggers" id="conditionalTriggers" aria-live="polite"></div>
+    </div>
   </div>
-  <div class="collapse-body" id="sourceRegistryCard-body">
+</section>
+
+<div class="toolbar-card source-card" style="margin-top:8px">
+  <div class="collapse-hdr" data-collapse-target="sourceRegistryCard" role="button" tabindex="0" aria-controls="sourceRegistryCard-body" aria-expanded="true">
+    <div class="section-label" style="margin-bottom:0">Source registry</div>
+    <span class="collapse-arrow open" id="sourceRegistryCard-arrow">▼</span>
+  </div>
+  <div class="collapse-body open" id="sourceRegistryCard-body">
     <div class="source-panel" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
       <div class="source-head">
         <div>
@@ -316,32 +317,32 @@
         <div class="source-stat"><div class="source-stat-lbl">Mode</div><div class="source-stat-val" id="sourceMode">Bundled</div></div>
       </div>
       <div class="source-message" id="sourceMessage">Bundled data_v1_9_0.json parameter map is embedded directly in this widget and remains the default primary source unless a custom source map, evidence overlay, or AI preset is deliberately selected.</div>
-      <details class="source-viewer" id="sourceViewer">
+      <details class="source-viewer" id="sourceViewer" open>
         <summary>Inspect active parameter map</summary>
         <pre class="source-json" id="sourceJsonView">Loading source map…</pre>
       </details>
     </div>
   </div>
 </div>
-<section class="scientific-panel card" id="scientificPanelShell">
-  <button class="scientific-panel-toggle" id="scientificPanelToggle" type="button" aria-expanded="false" aria-controls="scientificPanelBody">
-    <span class="scientific-toggle-main">Open Scientific Panel</span>
+<section class="scientific-panel card is-open" id="scientificPanelShell">
+  <button class="scientific-panel-toggle" id="scientificPanelToggle" type="button" aria-expanded="true" aria-controls="scientificPanelBody">
+    <span class="scientific-toggle-main">Hide Model Diagnostics</span>
     <span class="scientific-toggle-icon" aria-hidden="true">▼</span>
   </button>
-  <div class="scientific-panel-body" id="scientificPanelBody" hidden>
+  <div class="scientific-panel-body" id="scientificPanelBody">
     <div class="scientific-additional-zone" id="scientificAdditionalZone" style="margin-bottom:22px">
       <div class="panel" id="scientificAdditionalRunPanel" style="margin-bottom:10px;border-left:3px solid var(--purple)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 22px">
           <div style="min-width:260px;flex:1">
-            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:5px">Scientific Panel  On-demand diagnostic layer</div>
-            <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">Run Additional Scientific Calculations</div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:5px">On-demand diagnostics</div>
+            <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">Diagnostic calculations</div>
             <div style="font-size:11px;color:var(--text-3);line-height:1.7;max-width:900px">
-              These calculations are intentionally excluded from the first Run Simulation pass. They run only when requested and then render the OAT, Sobol/Jansen, SMAA, veto, tail-dependence and audit graphs below.
+              Optional checks of the finished main run: sensitivity, weight robustness, stress tests and an audit. They run only on request and do not change the clocks.
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;min-width:260px">
-            <button class="reset-btn" id="diagBtn" type="button" title="Runs optional scientific diagnostics only after the main clock result exists.">Run Additional Scientific Calculations</button>
-            <div id="additionalCalcConsoleCopy" style="font-family:var(--mono);font-size:9px;color:var(--text-3);line-height:1.6;text-align:right">Idle. Additional calculations 22–27 run only from this Scientific Panel button.</div>
+            <button class="reset-btn" id="diagBtn" type="button" title="Runs optional scientific diagnostics only after the main clock result exists.">Run diagnostics</button>
+            <div id="additionalCalcConsoleCopy" style="font-family:var(--mono);font-size:9px;color:var(--text-3);line-height:1.6;text-align:right">Not run yet.</div>
           </div>
         </div>
         <div style="padding:0 22px 18px">
@@ -353,9 +354,9 @@
 <div class="panel" id="exploratorySensPanel">
   <div class="card-title" data-toggle-block="exploratorySensBody" data-toggle-arrow="exploratorySensArrow" role="button" tabindex="0" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
     <span>Additional Sensitivity Graphs  OAT + Sobol</span>
-    <span id="exploratorySensArrow" style="font-size:9px;color:var(--text-3);font-family:var(--mono)">▶ Show</span>
+    <span id="exploratorySensArrow" style="font-size:9px;color:var(--text-3);font-family:var(--mono)">▼ Hide</span>
   </div>
-  <div id="exploratorySensBody" style="display:none">
+  <div id="exploratorySensBody" style="display:block">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);border-left:3px solid var(--amber)">
     <div>
       <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:5px">Sensitivity Analysis  OAT + Sobol/Jansen</div>
@@ -411,9 +412,9 @@
 <div class="panel" id="experimentalScientificPanel" style="margin-top:8px">
   <div class="card-title" data-toggle-block="experimentalScientificBody" data-toggle-arrow="experimentalScientificArrow" role="button" tabindex="0" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
     <span>Experimental Diagnostic Graphs  SMAA  Veto  Tail Shock  Distribution  Audit</span>
-    <span id="experimentalScientificArrow" style="font-size:9px;color:var(--text-3);font-family:var(--mono)">▶ Show</span>
+    <span id="experimentalScientificArrow" style="font-size:9px;color:var(--text-3);font-family:var(--mono)">▼ Hide</span>
   </div>
-  <div id="experimentalScientificBody" style="display:none">
+  <div id="experimentalScientificBody" style="display:block">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);border-left:3px solid var(--purple)">
       <div>
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:5px">On-demand experimental layer  robustness  stress tests  distributions  audit</div>
@@ -425,12 +426,12 @@
       </div>
       <div style="flex-shrink:0;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r4);padding:10px 14px;min-width:190px">
         <div style="font-family:var(--mono);font-size:8px;color:var(--text-3);margin-bottom:3px">RUN MODE</div>
-        <div id="experimentalScientificStatus" style="font-size:10px;color:var(--text-2);line-height:1.5">Idle  use the Scientific Panel button</div>
+        <div id="experimentalScientificStatus" style="font-size:10px;color:var(--text-2);line-height:1.5">Idle  use the Model Diagnostics button</div>
       </div>
     </div>
 
     <div id="experimentalSummaryBox" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);padding:18px 22px;margin-bottom:14px">
-      <div class="advanced-copy">Run the main simulation first, then use the <strong>Run Additional Scientific Calculations</strong> button above to populate this experimental layer.</div>
+      <div class="advanced-copy">Run the main simulation first, then use the <strong>Run diagnostics</strong> button above to populate this experimental layer.</div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px">
@@ -482,13 +483,13 @@
         <div class="scientific-chart-card" style="background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--amber);border-radius:var(--r8);padding:20px 24px;min-width:0">
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:5px">Distribution  Histogram</div>
           <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.25">Crossing-Year Histogram</div>
-          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">This chart shows where the model's sampled crossing years are concentrated. Taller bars mean more sampled outcomes fall near that year. P10, P50, and P90 show early, median, and later crossing estimates. The chart shows uncertainty around the modeled horizon, not one exact prediction.</div>
+          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">This chart counts crossings observed by 2100. Runs with no crossing are reported separately as censored, not assigned an event year. Reference lines show full-run P10, P50, and P90 only when identifiable within the horizon.</div>
           <div id="plotlyHistogramChart" role="img" class="scientific-chart-surface" style="width:100%;height:240px;display:block" aria-label="Monte Carlo crossing-year histogram"></div>
         </div>
         <div class="scientific-chart-card" style="background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--blue);border-radius:var(--r8);padding:20px 24px;min-width:0">
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:5px">Structural Boxplot</div>
           <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.25">Aggregator Uncertainty</div>
-          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">This chart compares different ways of combining threat pressures. Some aggregation rules allow risks to average out. Others emphasize maximum stress, network effects, or dynamic cascades. If the boxes differ strongly, the result depends meaningfully on the model's structural assumptions.</div>
+          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">This chart compares aggregation rules using crossing times conditional on crossing by 2100. Each rule's censored share is reported separately; boxes do not describe unidentified post-horizon times or unconditional quantiles when censoring is present.</div>
           <div id="plotlyBoxplotChart" role="img" class="scientific-chart-surface" style="width:100%;height:240px;display:block" aria-label="Structural ensemble boxplot"></div>
         </div>
       </div>
@@ -497,7 +498,7 @@
         <div class="scientific-chart-card" style="background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--purple);border-radius:var(--r8);padding:20px 24px;min-width:0">
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:5px">Domain Heatmap</div>
           <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.25">Domain Percentile Map</div>
-          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">This chart shows P10, P50, and P90 first crossings of the within-domain functional-loss trigger after propagation through the full threat network. Each domain uses the headline model’s fixed criticality, overlap, essential-service and threshold rules with a domain-specific denominator. The domains are not additive, and the years are model percentiles rather than completed-collapse dates or deterministic forecasts.</div>
+          <div style="font-size:11px;color:var(--text-3);line-height:1.65;margin-bottom:12px">This chart shows P10, P50, and P90 first crossings of the within-domain functional-loss trigger after propagation through the full threat network. Each domain uses the headline model’s criticality, overlap, essential-service and threshold rules, including each run’s sampled structure, with a domain-specific denominator. The domains are not additive, and the years are model percentiles rather than completed-collapse dates or deterministic forecasts.</div>
           <div id="plotlyHeatmapChart" role="img" class="scientific-chart-surface" style="width:100%;height:220px;display:block" aria-label="Domain crossing percentile heatmap"></div>
         </div>
         <div class="scientific-chart-card" style="background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--green);border-radius:var(--r8);padding:20px 24px;min-width:0">
@@ -516,19 +517,19 @@
     </div>
     <div class="scientific-panel-head">
       <div>
-        <div class="card-title">Scientific Panel  How the model works</div>
+        <div class="card-title">Model Diagnostics  How the model works</div>
         <h2 class="scientific-title">How the Apocalypse Clock model works</h2>
         <p class="scientific-intro">
           This panel separates the model into two computational layers. The core run produces the displayed horizon from evidence-informed scoring,
           dependency amplification, process-specific horizon functions, Monte Carlo uncertainty sampling, structural ensemble aggregation, and dynamic cascade testing.
-          The Scientific Panel adds an optional diagnostic layer after the baseline result exists. It visualizes sensitivity, weight robustness,
+          The Model Diagnostics adds an optional diagnostic layer after the baseline result exists. It visualizes sensitivity, weight robustness,
           non-compensatory stress rules, correlated tail shocks, and the distributional structure of the current Monte Carlo result. These diagnostics are for auditability
           and interpretation under deep uncertainty; they do not overwrite the headline clock date.
         </p>
       </div>
       <div class="scientific-warning">
         <strong>Interpretation rule</strong>
-        <span>All years are model-derived critical horizons under explicit assumptions. The Scientific Panel audits and stress-tests the baseline result; it does not change the paired headline horizons.</span>
+        <span>All years are model-derived critical horizons under explicit assumptions. The Model Diagnostics audits and stress-tests the baseline result; it does not change the paired headline horizons.</span>
       </div>
     </div>
     <div class="scientific-flow" role="group" aria-label="Scientific methodology pipeline">
@@ -570,7 +571,7 @@
       <div class="sci-step">
         <div class="sci-step-num">08</div>
         <div class="sci-step-title">Diagnostic trigger</div>
-        <div class="sci-step-copy">After the core result is complete, the Scientific Panel can run sensitivity, robustness, veto, tail-shock and distribution diagnostics on demand.</div>
+        <div class="sci-step-copy">After the core result is complete, the Model Diagnostics can run sensitivity, robustness, veto, tail-shock and distribution diagnostics on demand.</div>
       </div>
       <div class="sci-step">
         <div class="sci-step-num">09</div>
@@ -618,7 +619,7 @@
       <article class="scientific-card">
         <div class="scientific-card-k">Cascade layer</div>
         <h3>Dynamic cascade test</h3>
-        <p>A single initial functional failure can spread through directed dependencies. The trigger uses fixed criticality weights globally or within an essential-service basket; neither extinction of all organisms nor initial failure in every domain is required.</p>
+        <p>A single initial functional failure can spread through directed dependencies. The trigger uses criticality weights globally or within an essential-service basket, and each run samples the threshold and the other structural choices; neither extinction of all organisms nor initial failure in every domain is required.</p>
         <div class="scientific-formula">target: qᵢ(t) + κᵢΣⱼaᵢⱼAⱼ(t−lagᵢⱼ) ≥ 1; trigger: max(global share, essential-service shares) ≥ cascadeThreshold</div>
       </article>
       <article class="scientific-card">
@@ -657,7 +658,7 @@
   </div>
 </section>
 
-<section class="priority-threat-grid" id="climateBreakdownEnhancedCard" aria-label="Top threat cards">
+<section class="priority-threat-grid" id="climateBreakdownEnhancedCard" aria-label="Threats by rank">
   <div class="climate-feature-card" data-color="priority"><div style="padding:14px 16px;color:var(--text3);font-family:var(--mono);font-size:10px">Top threat cards will update after the model run.</div></div>
 </section>
 <div class="priority-panel" id="priorityRow" style="display:none">
@@ -743,69 +744,26 @@
   </div>
 
   <div class="content-col">
-    <div class="panel cdf-card">
-      <div class="card-title">Dynamic Cascade first-crossing distribution</div>
-      <p class="cdf-sub">
-        This curve shows the share of model runs in which the Dynamic Cascade functional-disruption threshold has been reached by each year. It uses
-        the same simulated first-crossing distribution as the P50 and P90 clocks above. The shaded band shows resampling uncertainty in this simulated
-        curve, not uncertainty about the real world; these are scenario results, not measured probabilities of collapse or extinction.
-      </p>
-      <div id="cdfTip"></div>
-      <div id="cdfCanvas" role="img" style="height:280px" aria-label="Dynamic Cascade cumulative first-crossing distribution chart"></div>
-      <div class="cdf-legend" id="cdfLegend"></div>
-    </div>
-
     <div class="panel">
       <div class="card-title">Causal dependency network</div>
       <div class="panel-copy" style="margin-bottom:10px">
-        Directed influence map of the declared dependency graph. Hover a threat to isolate only its outbound influence path; unrelated nodes drop out so the active cascade remains readable.
+        How the 23 threats worsen each other, from the research register of 25 September 2026 (101 links, plus one added link). Click a threat to see what it worsens directly (step 1) and in turn (step 2). Node size is the adjusted priority of the selected scenario. The clocks are still calculated with the dataset's own declared dependencies.
       </div>
-      <div class="network-shell">
-        <div class="network-stage">
-          <div id="netCanvas" role="img" style="width:100%;height:520px;display:block;cursor:crosshair" aria-label="Causal dependency network"></div>
-        </div>
-        <div class="network-side">
-          <div class="network-side-sec">
-            <div class="network-side-k">View mode</div>
-            <div class="network-side-v" id="netTitle">Full system view</div>
-            <div class="network-side-copy" id="netSummary">All 23 threats are shown together. Hover a node to isolate only the threats it directly influences through declared dependencies.</div>
-          </div>
-          <div class="network-side-sec">
-            <div class="network-side-k">Selected threat</div>
-            <div class="network-side-copy" id="netPriority">Hover state will show adjusted score, domain, and outbound dependency count.</div>
-          </div>
-          <div class="network-side-sec">
-            <div class="network-side-k">Outbound influence</div>
-            <div class="network-impact-list" id="netImpactList">
-              <div class="network-impact-item">
-                <div class="network-impact-name">Hover a node to list the threats it can amplify in the current dependency graph.</div>
-                <div class="network-impact-meta">0 links</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="net-legend">
-        <span><span style="width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block;flex-shrink:0"></span>Civilizational</span>
-        <span><span style="width:9px;height:9px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0"></span>Biospheric</span>
-        <span><span style="width:9px;height:9px;border-radius:50%;background:var(--blue);display:inline-block;flex-shrink:0"></span>Technological</span>
-        <span><span style="width:9px;height:9px;border-radius:50%;background:transparent;border:1.5px solid rgba(226,226,235,.55);display:inline-block;flex-shrink:0;box-sizing:border-box"></span>Node size = adjusted priority</span>
-        <span><span style="width:14px;height:1px;background:rgba(255,255,255,.28);display:inline-block;flex-shrink:0"></span>Arrow = outbound dependency</span>
-      </div>
+      <iframe id="threatNetworkFrame" class="threat-network-frame" src="./src/threat-network.html?embed=1" title="Causal dependency network" scrolling="no"></iframe>
     </div>
 
   </div>
 </div>
 
 <div class="panel contribution-panel" id="contributionRankingCard">
-  <div class="card-title collapse-hdr" data-collapse-target="contributionRankingCard" role="button" tabindex="0" aria-controls="contributionRankingCard-body" aria-expanded="false">
+  <div class="card-title collapse-hdr" data-collapse-target="contributionRankingCard" role="button" tabindex="0" aria-controls="contributionRankingCard-body" aria-expanded="true">
     Threat contribution ranking
-    <span class="collapse-arrow" id="contributionRankingCard-arrow">▼</span>
+    <span class="collapse-arrow open" id="contributionRankingCard-arrow">▼</span>
   </div>
-  <div class="panel-copy" id="contributionRankingHint" style="margin:2px 0 10px">
+  <div class="panel-copy" id="contributionRankingHint" style="margin:2px 0 10px;display:none">
     Open to see which threats contribute most to the current horizon.
   </div>
-  <div class="collapse-body" id="contributionRankingCard-body">
+  <div class="collapse-body open" id="contributionRankingCard-body">
     <div id="barCanvas" role="img" style="width:100%;height:520px;display:block" aria-label="Threat contribution overview"></div>
   </div>
 </div>
@@ -8801,8 +8759,11 @@
 }
 </script>
 
+<!-- The section menu and page search arrange the page before the heavy scripts load. -->
+<script src="./src/section-nav.js"></script>
+<script src="./src/page-search.js"></script>
+<script src="./src/diagnostics-view.js"></script>
 <script src="./vendor/echarts.bundle.js"></script>
-<script src="./vendor/cytoscape.bundle.js"></script>
 <script src="./src/cascade-model.js"></script>
 <script src="./src/app.js"></script>
 <div id="floatTip"></div>

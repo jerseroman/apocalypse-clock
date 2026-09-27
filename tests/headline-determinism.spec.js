@@ -10,11 +10,16 @@ const { test, expect } = require('@playwright/test');
  *   - Seed: AC-1.2.6-2026 (DEFAULT_MC_SEED)
  *   - Monte Carlo iterations: 3000
  *
- * Golden values refreshed after the explicitly authorized functional-cascade
- * model 1.2.9 / dataset 1.9.0 revision on 2026-09-13,
+ * Golden values refreshed after the explicitly authorized pressure-turn and recovery
+ * model 1.5.0 / dataset 1.9.0 revision on 2026-09-24,
  * Chromium-via-Playwright. If you intentionally change model code, update
  * EXPECTED in a single edit and record the change in
  * ai-governance/review-log.md per change-policy.md §MODEL.
+ *
+ * EXPECTED_WITHOUT_TURNS pins the structural-sampling-only golden (developed as 1.4.0), which the Monte Carlo
+ * must still reproduce exactly when pressure turns are switched off, and
+ * EXPECTED_WITHOUT_STRUCTURE pins the model 1.3.0 golden, reproduced when
+ * structural sampling is switched off as well.
  *
  * Browser assumption: Chromium (Playwright default). Migrating to WebKit or
  * Firefox may produce ULP-level float drift; record as a test-infrastructure
@@ -25,13 +30,39 @@ const GOLDEN_SEED = 'AC-1.2.6-2026';
 const GOLDEN_NSIM = '3000';
 
 const EXPECTED = Object.freeze({
-  pinnedAt: '2026-09-13',
-  modelVersion: 'Apocalypse Clock v1.3.0',
+  pinnedAt: '2026-09-24',
+  modelVersion: 'Apocalypse Clock v1.5.0',
   datasetVersion: '1.9.0',
   scenario: 'baseline',
   weightProfile: 'expert',
   seed: GOLDEN_SEED,
   nSim: 3000,
+  cascadeP10: 2034,
+  cascadeP50: 2038,
+  cascadeP90: 2046,
+  headlineYearText: '2046',
+  domains: {
+    civilization: { p10: 2038, p50: 2047, p90: 2074 },
+    biosphere: { p10: 2034, p50: 2038, p90: 2046 },
+    technology: { p10: 2030, p50: 2041, p90: 2060 },
+  },
+});
+
+const EXPECTED_WITHOUT_TURNS = Object.freeze({
+  pinnedAt: '2026-09-24',
+  cascadeP10: 2034,
+  cascadeP50: 2038,
+  cascadeP90: 2044,
+  headlineYearText: '2044',
+  domains: {
+    civilization: { p10: 2037, p50: 2046, p90: 2064 },
+    biosphere: { p10: 2034, p50: 2038, p90: 2044 },
+    technology: { p10: 2030, p50: 2041, p90: 2055 },
+  },
+});
+
+const EXPECTED_WITHOUT_STRUCTURE = Object.freeze({
+  pinnedAt: '2026-09-13',
   cascadeP10: 2033,
   cascadeP50: 2036,
   cascadeP90: 2042,
@@ -137,6 +168,69 @@ test.describe('headline determinism under default baseline configuration', () =>
       _cdfCurves.baseline.ensemble.dynamicCascade.p90,
     )))).toBe(true);
     expect(browserWarnings).toEqual([]);
+  });
+
+  // Pressure turns and structural sampling (both model 1.5.0) draw from their own
+  // seeded streams, so switching them off must reproduce the earlier goldens bit for bit.
+  const captureWithSwitches = async (page, switches) => {
+    await page.goto('/index.html');
+    await page.waitForFunction(
+      () =>
+        typeof _running !== 'undefined' && _running === false &&
+        typeof _cdfCurves !== 'undefined' &&
+        _cdfCurves?.baseline?.ensemble?.dynamicCascade &&
+        Number.isFinite(_cdfCurves.baseline.ensemble.dynamicCascade.p90),
+      { timeout: 55000 }
+    );
+
+    await page.evaluate(({ seed, switches }) => {
+      P.scenario = 'baseline';
+      applyWeightProfile('expert', false);
+      P.seed = seed;
+      P.nSim = 3000;
+      Object.assign(P, switches);
+    }, { seed: GOLDEN_SEED, switches });
+    await page.evaluate(async () => { await runAll(); });
+
+    return page.evaluate(() => {
+      const ens = _cdfCurves.baseline.ensemble.dynamicCascade;
+      const parameters = window._lastInterpretData.executionSnapshot.parameters;
+      return {
+        switches: { structuralUncertainty: parameters.structuralUncertainty, pressureTurns: parameters.pressureTurns },
+        values: {
+          cascadeP10: ens.p10,
+          cascadeP50: ens.p50,
+          cascadeP90: ens.p90,
+          headlineYearText: document.getElementById('cascadeHeadlineYear').textContent,
+          domains: Object.fromEntries(Object.entries(_cdfCurves.baseline.domainStats).map(([domain, stats]) => [domain, {
+            p10: stats.p10,
+            p50: stats.p50,
+            p90: stats.p90,
+          }])),
+        },
+      };
+    });
+  };
+  const pinned = golden => ({
+    cascadeP10: golden.cascadeP10,
+    cascadeP50: golden.cascadeP50,
+    cascadeP90: golden.cascadeP90,
+    headlineYearText: golden.headlineYearText,
+    domains: golden.domains,
+  });
+
+  test('pressure turns off reproduce the structural-sampling-only golden', async ({ page }) => {
+    test.setTimeout(90000);
+    const captured = await captureWithSwitches(page, { pressureTurns: false });
+    expect(captured.switches).toEqual({ structuralUncertainty: true, pressureTurns: false });
+    expect(captured.values).toEqual(pinned(EXPECTED_WITHOUT_TURNS));
+  });
+
+  test('pressure turns and structural sampling off reproduce the model 1.3.0 golden', async ({ page }) => {
+    test.setTimeout(90000);
+    const captured = await captureWithSwitches(page, { structuralUncertainty: false, pressureTurns: false });
+    expect(captured.switches).toEqual({ structuralUncertainty: false, pressureTurns: false });
+    expect(captured.values).toEqual(pinned(EXPECTED_WITHOUT_STRUCTURE));
   });
 
   // Test B — repeatability.

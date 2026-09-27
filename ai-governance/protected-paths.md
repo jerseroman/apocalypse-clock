@@ -18,7 +18,6 @@ Must not be edited without owner approval and a matching changelog or version bu
 - `LICENSE`
 - `CHANGELOG.md`
 - `vendor/echarts.bundle.js`
-- `vendor/cytoscape.bundle.js`
 - `.github/workflows/validate.yml`
 
 ## Byte-equal embeds

@@ -33,7 +33,6 @@
   }
   function toggleShareMenu(event){
     if (event) event.preventDefault();
-    if (typeof buildShareLinks === 'function') buildShareLinks();
     updateShareLinks();
     const d=document.getElementById('shareDropdown');
     const btn=document.querySelector('[data-action="toggle-share-menu"]');
@@ -60,7 +59,7 @@
     const open=b.style.display !== 'none';
     b.style.display = open ? 'none' : 'block';
     if(a) a.textContent = open ? '▶ Show' : '▼ Hide';
-    if(!open && typeof resizeScientificCharts === 'function') setTimeout(resizeScientificCharts,80);
+    if(!open && typeof resizeScientificPanelCharts === 'function') setTimeout(resizeScientificPanelCharts,80);
   }
   async function copyShareLink(btn){
     try { await navigator.clipboard.writeText(SHARE_URL); }

@@ -1,18 +1,18 @@
 # Limitations
 
-Apocalypse Clock 1.3.0 and dataset 1.9.0 are experimental and not peer reviewed. A reproducible numerical implementation is distinct from a valid description of reality.
+Apocalypse Clock 1.5.0 and dataset 1.9.0 are experimental and not peer reviewed. A reproducible numerical implementation is distinct from a valid description of reality.
 
 ## Evidence does not calibrate the model
 
 The inputs were assembled with AI assistance and source review. An opened primary source can verify a reported observation or a mechanism without supporting the selected ordinal value, normalized threshold, annual latent-pressure prior or causal weight. Further independent source checking and domain review remain necessary.
 
-The 184 flat entries are not exact measurements or the complete set of model assumptions. Functional definitions, service membership, criticality tiers, overlap groups, topology, lags and inducibility also affect results. Their uncertainty is incompletely represented by the per-entry lo/mu/hi values. Sources can become outdated or be superseded.
+The 184 flat entries are not exact measurements or the complete set of model assumptions. Functional definitions, service membership, criticality tiers, overlap groups, topology, lags and inducibility also affect results. Their uncertainty is incompletely represented by the per-entry lo/mu/hi values. Model 1.5.0 samples the cascade threshold, criticality tier values, dependency weights and lags, and growth-class assignment, but the sampled ranges are themselves judgments, and service membership, overlap groups, topology and inducibility stay fixed. Sources can become outdated or be superseded.
 
 ## Growth and calendar assumptions
 
-The four shared growth classes are analyst priors, not empirical fits. Historical threat caps are execution safeguards, not scientific ceilings. The legacy effective_growth_calibrated flag prevents reconversion; it does not mean that a rate has been calibrated against observed functional failures.
+The four shared growth classes are analyst priors, not empirical fits. The Monte Carlo moves each threat one class down or up with probability 25% each; this represents uncertainty about individual class assignments, not a systematic error shared by all classes. Historical threat caps are execution safeguards, not scientific ceilings. Because the shifted growth still passes through these caps, an upward class move can be cut short: at its central growth, Climate Breakdown reaches 0.035 instead of 0.045 and AI reaches 0.04. The legacy effective_growth_calibrated flag prevents reconversion; it does not mean that a rate has been calibrated against observed functional failures.
 
-Positive-only growth omits endogenous recovery, pressure reduction and successful adaptation. The continued-pressure assumption should not be confused with evidence that every threat is worsening. Maintaining the same g through 2100 is a scenario extrapolation, not a verified trend.
+Before a sampled turn, growth is positive and represents continued pressure; this should not be confused with evidence that every threat is worsening. Maintaining the same g until a turn, or through 2100 without one, is a scenario extrapolation, not a verified trend. The 50% turn probability, the uniform turn year and the recovery drops are assumptions without empirical or historical grounding. They were adopted because the dataset carries no information on turns, and other equally defensible choices would move the clocks. Turns are independent between threats and do not respond to the pressure itself, so coordinated or feedback-driven responses are not represented. Recovery is a threshold rule, not a model of repair duration, partial function or adaptation.
 
 Standalone continuous, event and regime horizon equations remain heuristic. Event intensity uses the growth parameter and score/threshold ratio. Regime arrival now uses the same latent-pressure first-passage equation as the continuous family, so sampled growth affects its timing and no extra geometric draw is introduced. That choice removes an internally inconsistent growth-blind clock; it is still not fitted to observed regime-transition frequencies, durations or recovery.
 
@@ -24,29 +24,29 @@ Standalone priorities retain the historical background depFactor. The new suscep
 
 Interdependence now measures target incoming vulnerability. Its transformation together with governance failure into kappa is heuristic. Related evidence may inform both scores; their combination must not be presented as independent statistical evidence.
 
-All current incoming pathways receive equal fixed shares for each target. Mechanism evidence does not establish equal strength, completeness or sign in every context. Some topology is retained rather than newly verified. A sole declared upstream pathway receives weight one, while adding a pathway and renormalizing changes every existing share. Coefficient comparisons are monotone only when existing weights and other inputs are held fixed.
+All current incoming pathways have equal declared shares for each target, and the Monte Carlo samples the shares from a Dirichlet distribution around them (concentration 2 per edge). That expresses ignorance of relative strength, not evidence for any particular split. Mechanism evidence does not establish equal strength, completeness or sign in every context. Some topology is retained rather than newly verified. A sole declared upstream pathway receives weight one, while adding a pathway and renormalizing changes every existing share. Coefficient comparisons are monotone only when existing weights and other inputs are held fixed.
 
-The standard one-year lag is a resolution assumption. Zero- and five-year alternatives are structural sensitivity cases, not empirical lower and upper delay bounds. Synchronous fixed-point closure handles zero-lag chains without ordering bias, but does not resolve subannual dynamics. Binary activation also suppresses gradual, regional and partial functional losses.
+The declared one-year lag is a resolution assumption. The Monte Carlo samples whole-year lags uniformly from 0 to 5; that range is a judgment, not empirical lower and upper delay bounds. Synchronous fixed-point closure handles zero-lag chains without ordering bias, but does not resolve subannual dynamics. Binary activation also suppresses gradual, regional and partial functional losses.
 
 Nuclear, bioengineered, pandemics and autonomousw cannot be induced by generic capacity loss. This prevents unrelated service failures from being called a war, release, outbreak or targeting escalation. It also leaves additional hazard-specific causal initiation pathways unmodeled. The four threats remain eligible for spontaneous activation, aggregation and onward transmission.
 
 ## Aggregation is not physical loss
 
-Fixed tiers 1/2/3 are judgments about conditional functional criticality. They are not probabilities, economic shares, population exposure or validated marginal impacts. Basket assignment and threshold choice are consequential structural assumptions.
+Tiers 1/2/3 and their sampled values (±0.5) are judgments about conditional functional criticality. They are not probabilities, economic shares, population exposure or validated marginal impacts. Basket assignment and threshold choice are consequential structural assumptions.
 
-The maximum of global weighted activation and the largest essential-service activation share is a non-compensatory model trigger, not a measured fraction of worldwide services lost. In particular, ecological_life_support contains two equal-weight overlap groups: climate and ecosystem_integrity. At the default 0.50 threshold, activation of either group alone reaches the service trigger. A Dynamic Cascade crossing therefore need not contain induced propagation or multiple activated groups.
+The maximum of global weighted activation and the largest essential-service activation share is a non-compensatory model trigger, not a measured fraction of worldwide services lost. In particular, ecological_life_support contains two equal-weight overlap groups: climate and ecosystem_integrity. At the declared 0.50 threshold, activation of either group alone reaches the service trigger. With the sampled threshold (0.40 to 0.60) one group is enough in about half of the runs, and this basket still sets off the clocks in most runs (86% at the default settings). A Dynamic Cascade crossing therefore need not contain induced propagation or multiple activated groups.
 
 Oceans and biodiversity are deduplicated through the maximum weight within ecosystem_integrity, separately in each basket. This addresses one explicit overlap, not all shared ecological mechanisms. Other threats share causes, affected people and services. The model does not turn those overlaps into independent observations or additive mortality estimates. Separate ocean/biodiversity nodes may still influence the network through distinct paths.
 
 There is no all-three-domain requirement, co-active-edge threshold, induced-share threshold or three-wave limit. Removing these administrative gates makes the functional rule consistent with its declared meaning; it does not establish that the resulting trigger forecasts real global collapse.
 
-Domain functional horizons inherit the full-system propagation path but recompute the functional trigger with a domain-specific node basket and denominator. They should not be summed, averaged as physical shares, or interpreted as independent probabilities. Because service membership and fixed tiers are analyst assignments, domain timing can be especially sensitive to one critical group and to cross-domain links.
+Domain functional horizons inherit the full-system propagation path but recompute the functional trigger with a domain-specific node basket and denominator. They should not be summed, averaged as physical shares, or interpreted as independent probabilities. Because service membership and tiers are analyst assignments, domain timing can be especially sensitive to one critical group and to cross-domain links.
 
 ## First passage, uncertainty and censoring
 
 An activated node stays active because the output concerns first passage. It does not remain active because the model has demonstrated permanent destruction. No explicit repair rate, event duration, replacement, restoration or repeated cycle is modeled. A chronicle of first failures can accumulate even where real systems later recover.
 
-Parameter ranges encode analyst plausibility. Beta and mean-adjusted log-normal sampling use approximate width conventions; lo/hi are not exact fitted 5th/95th percentiles or hard sampled bounds. Clipping can create endpoint concentrations. Parameter uncertainty is distinct from stochastic event draws, and neither spans all structural uncertainty.
+Parameter ranges encode analyst plausibility. Beta and mean-adjusted log-normal sampling use approximate width conventions; lo/hi are not exact fitted 5th/95th percentiles or hard sampled bounds. Clipping can create endpoint concentrations. Parameter uncertainty, stochastic event draws and the sampled structural choices are distinct sources of variation. Together they still do not span all structural uncertainty: equation forms, service membership, topology and the absence of recovery are fixed.
 
 No-crossing runs remain right-censored at 2100 and are encoded as sentinel 2101. The displayed >2100 is not a forecast for 2101, an estimate of the unresolved tail, a statement of safety or evidence that severe impacts occur only after 2100. Linear quantile interpolation involving censored samples requires this qualification.
 
