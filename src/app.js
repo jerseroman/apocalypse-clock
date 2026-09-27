@@ -6886,9 +6886,13 @@ function loadBundledBaselineSnapshot() {
   const cascade = result && result.ensemble && result.ensemble.dynamicCascade;
   const currentDataHash = fnv1aHex(JSON.stringify(ACTIVE_SOURCE_DATA || {}));
   const currentCodeHash = numericalCodeFingerprint().codeHashFNV1a32;
+  const wixRuntimeSourceHashMatches = typeof WIX_RUNTIME_SOURCE_HASH_SHA256 !== 'undefined'
+    && bundle.runtimeSourceHashSHA256 === WIX_RUNTIME_SOURCE_HASH_SHA256;
+  const runtimeModelIdentityMatches = bundle.modelHashFNV1a32 === currentCodeHash
+    || wixRuntimeSourceHashMatches;
   const valid = bundle.schema === 'apocalypse-clock-baseline-snapshot-v1'
     && bundle.modelVersion === MODEL_VERSION
-    && bundle.modelHashFNV1a32 === currentCodeHash
+    && runtimeModelIdentityMatches
     && bundle.datasetVersion === currentDatasetVersion()
     && bundle.datasetHashFNV1a32 === currentDataHash
     && bundle.scenario === 'baseline'

@@ -924,6 +924,7 @@ body.has-section-nav[data-nav-current="horizon"] .horizon-window{display:grid;gr
 body.has-section-nav[data-nav-current="horizon"] .horizon-window > .panel{margin:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 body.has-section-nav[data-nav-current="horizon"] .horizon-window > #conditionalScenario{border-left:1px solid var(--border)}
 @media(max-width:1080px){body.has-section-nav[data-nav-current="horizon"] .horizon-window > #conditionalScenario{border-left:0;border-top:1px solid var(--border)}}
+@media(max-width:760px){body.has-section-nav[data-nav-current="horizon"] .horizon-window{row-gap:4px}}
 .conditional-scenario > .conditional-chart{height:260px}
 .conditional-scenario > .conditional-legend{margin-bottom:14px}
 body.has-section-nav .page{padding-top:12px}
