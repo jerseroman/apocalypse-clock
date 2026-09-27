@@ -4977,7 +4977,7 @@ function toggleCollapse(id) {
   if (open && id === 'contributionRankingCard') {
     setTimeout(() => {
       const el = document.getElementById('barCanvas');
-      const chart = el && window.echarts ? echarts.getInstanceByDom(el) : null;
+      const chart = el && window.echarts ? window.echarts.getInstanceByDom(el) : null;
       if (chart) chart.resize();
     }, 80);
   }
@@ -7291,6 +7291,24 @@ function initEventHandlers() {
     lastWidth = window.innerWidth;
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(redrawAfterResize, 150);
+  });
+
+  // Wix loads optional rendering libraries in the background so the verified
+  // baseline, navigation and text remain usable on slow mobile connections.
+  // Re-render only the surfaces that benefit when a dependency becomes ready.
+  window.addEventListener('apocalypse-clock:optional-library-ready', event => {
+    const dependency = event && event.detail ? event.detail.dependency : '';
+    const scKey = currentScenario();
+    const enriched = buildEnriched(scKey);
+    const res = _cdfCurves[scKey] || null;
+    if (dependency === 'echarts') {
+      drawBarChart(enriched, res);
+      if (res) renderConditionalScenario(res);
+      resizeVizSurfaces();
+    }
+    if (dependency === 'katex' && res) {
+      try { renderAdvancedMethod(enriched, res); } catch (error) { console.error('renderAdvancedMethod error:', error); }
+    }
   });
 }
 
