@@ -30,7 +30,7 @@ body{
     radial-gradient(circle at 85% 4%,rgba(91,180,214,.15),transparent 30%),
     linear-gradient(180deg,#05070b 0%,#0a0f16 44%,#05070b 100%);
   color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.6;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;position:relative}
+  -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;min-height:100vh;position:relative}
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;opacity:.55;
   background-image:
@@ -410,11 +410,11 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .src-i{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1px solid var(--border2);border-radius:50%;font-size:8px;color:var(--text-3);cursor:help;line-height:1;background:rgba(255,255,255,.02);padding:0}
 .src-tip{position:absolute;left:50%;top:16px;transform:translateX(-50%);min-width:220px;max-width:320px;padding:8px 9px;border-radius:var(--r4);background:var(--surface2);border:1px solid var(--border2);font-size:10px;line-height:1.45;color:var(--text-2);text-transform:none;letter-spacing:0;z-index:15;display:none;white-space:normal;box-shadow:0 10px 24px rgba(0,0,0,.22)}
 .src-pop:hover .src-tip,.src-pop:focus-within .src-tip{display:block}
-.footer{padding:16px 0 0;border-top:1px solid var(--border);margin-top:20px;font-size:11px;line-height:1.55;color:var(--text-3);text-align:center}
-.footer-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 18px;margin-bottom:12px}
+.footer{display:block;width:100%;padding:16px 0 0;border-top:1px solid var(--border);margin-top:20px;font-size:11px;line-height:1.55;color:var(--text-3);text-align:center}
+.footer-links{display:flex;width:100%;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 18px;margin-bottom:12px;text-align:center}
 .footer-links a{color:var(--text-2);text-decoration:none}
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);text-decoration:underline;text-underline-offset:3px}
-.footer-disclaimer{display:grid;gap:2px}
+.footer-disclaimer{display:grid;width:100%;justify-items:center;gap:2px;text-align:center}
 .footer-disclaimer p{margin:0}
 .source-card,#scientificPanelShell{border-left:3px solid rgba(149,176,210,.28)}
 .ai-preset-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0 4px;border-top:1px solid var(--border);margin-top:10px}
@@ -1084,4 +1084,91 @@ body.has-section-nav #scientificPanelBody{display:block;padding:0}
   .diag-view #scientificAdditionalRunPanel > div > div{min-width:0!important;align-items:stretch!important}
   .diag-view #additionalCalcConsoleCopy{text-align:left!important}
   .diag-tab{padding:11px 12px}
+}
+
+/* Compact phone layout. Wix keeps a wide outer design canvas on mobile, so Android Chrome can
+   otherwise enlarge text inside the full-width custom element. Keep the scale deterministic and
+   reduce vertical density without compromising 44px touch targets where they matter. */
+@media(max-width:760px){
+  .ac-body,body{
+    font-size:11px;
+    line-height:1.45;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
+  body.has-section-nav .page,
+  .page{
+    width:calc(100vw - 16px);
+    padding:8px 0 40px;
+  }
+  .section-nav{
+    top:0;
+    height:calc(48px + env(safe-area-inset-top,0px));
+    min-height:48px;
+    padding:env(safe-area-inset-top,0px) 8px 0 10px;
+    gap:8px;
+  }
+  .section-nav-brand{gap:8px}
+  .section-nav-brand img{width:34px}
+  .section-nav-title{font-size:11.5px;letter-spacing:.105em}
+  .section-nav-toggle{
+    width:36px;
+    height:36px;
+    border-radius:7px;
+  }
+  .section-nav-toggle svg{width:18px;height:18px}
+  .section-nav-drawer{
+    top:calc(48px + env(safe-area-inset-top,0px));
+    gap:8px;
+    padding:8px 10px calc(14px + env(safe-area-inset-bottom,0px));
+    scroll-padding-top:8px;
+  }
+  .section-nav-drawer .section-nav-list{gap:1px}
+  .section-nav-drawer .section-nav-link{
+    min-height:38px;
+    padding:8px 10px;
+    gap:9px;
+    font-size:10px;
+    line-height:1.25;
+    letter-spacing:.035em;
+  }
+  .section-nav-drawer .section-nav-icon{width:13px;height:13px}
+  .section-nav-drawer .section-nav-social{gap:6px;padding-top:8px}
+  .section-nav-drawer .section-nav-social-link{min-height:38px;padding:8px 10px;font-size:10px}
+  .section-nav-drawer .header-last-update{font-size:8px;line-height:1.35;padding-top:1px}
+  .section-title-row{gap:8px;margin:2px 0 10px}
+  .section-page-title{
+    font-size:clamp(18px,5.4vw,21px);
+    line-height:1.08;
+    letter-spacing:.065em;
+  }
+  .validation-notice{
+    margin-bottom:10px;
+    padding:6px 8px;
+    gap:0 .25em;
+    font-size:9.5px;
+    line-height:1.45;
+  }
+  .validation-notice-close{padding-right:5px;font-size:14px}
+  .page-search-box{padding:5px 8px}
+  .page-search-icon{width:14px;height:14px}
+  .page-search-box input{font-size:16px;line-height:18px;height:18px}
+  .panel{padding:12px}
+  .panel-copy{font-size:10px;line-height:1.55}
+  .card-title,.section-label{margin-bottom:8px}
+  .conditional-scenario{margin-bottom:10px}
+  .conditional-lead{font-size:10px;line-height:1.5;margin-bottom:10px}
+  .conditional-scenario > .conditional-chart{height:210px}
+  .conditional-note{font-size:9px;line-height:1.5}
+  .main-grid,.content-col{gap:10px}
+  .threat-network-frame{border-radius:8px}
+  .footer{margin-top:12px;padding-top:12px;font-size:9px;line-height:1.45}
+  .footer-links{gap:5px 12px;margin-bottom:8px}
+}
+
+@media(max-width:390px){
+  .section-nav-title{font-size:11px;letter-spacing:.09em}
+  .section-nav-drawer .section-nav-link{font-size:9.5px}
+  .section-page-title{font-size:18px}
+  .panel{padding:10px}
 }

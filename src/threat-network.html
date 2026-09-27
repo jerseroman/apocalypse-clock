@@ -129,11 +129,43 @@
     .net-stage > .card { position: static; margin: 12px 0 0 12px; }
   }
   @media (max-width: 760px) {
-    .net-stage > .card { flex: 1 1 100%; width: auto; margin: 10px 12px 0; }
+    html, body { font-size: 11px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    .net-stage { border-radius: 8px; padding-bottom: 8px; }
+    .net-stage > .card { flex: 1 1 100%; width: auto; margin: 8px 8px 0; }
     .domain-tag { display: none; }
     .detail { grid-template-columns: 1fr; }
     .toolbar select { min-width: 0; width: 100%; }
     .toolbar label { width: 100%; flex-wrap: wrap; }
+    .stats-card {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 6px;
+      padding: 9px 8px;
+    }
+    .stat { display: grid; justify-items: center; gap: 1px; margin: 0; text-align: center; }
+    .stat b { min-width: 0; font-size: 20px; line-height: 1; }
+    .stat span { font-size: 7px; line-height: 1.25; letter-spacing: .08em; }
+    .type-legend {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 4px 8px;
+      margin-top: 4px;
+      padding-top: 7px;
+      font-size: 9px;
+    }
+    .type-legend li { min-width: 0; gap: 4px; margin: 0; }
+    .type-legend label { min-width: 0; gap: 4px; }
+    .type-legend .glyph { width: 14px; }
+    .legend-card { padding: 8px 10px; font-size: 9px; }
+    .legend-row { gap: 6px; margin: 2px 0; }
+    .controls { gap: 5px 10px; margin-top: 6px; padding-top: 6px; }
+    .detail { gap: 8px; margin-top: 8px; }
+    .detail .box { min-height: 0; padding: 10px 11px; }
+    .detail h2 { font-size: 15px; }
+    .detail .meta,.detail .empty,.detail ul { font-size: 10px; }
+    .toolbar { gap: 6px 10px; margin-top: 8px; font-size: 10px; }
+    details.table-view { margin-top: 8px; padding: 8px 10px; }
   }
 </style>
 </head>
@@ -437,14 +469,14 @@
     return lines;
   }
 
-  const labelFont = weight => `${weight || 500} ${Math.max(10, Math.round(12 * S))}px ${FONT}`;
+  const labelFont = weight => `${weight || 500} ${Math.max(W < 520 ? 8 : 10, Math.round(12 * S))}px ${FONT}`;
 
   // Greedy label placement: outward first, then below/above, then inward; avoids labels and nodes.
   function placeLabels() {
     ctx.font = labelFont();
     const placed = [];
     const nodeBoxes = THREATS.map(t => ({ id: t.id, x: t.x - t.r - 2, y: t.y - t.r - 2, w: 2 * t.r + 4, h: 2 * t.r + 4 }));
-    const lineHeight = Math.round(14 * S);
+    const lineHeight = Math.max(W < 520 ? 9 : 10, Math.round(14 * S));
     for (const t of [...THREATS].sort((a, b) => b.priority - a.priority)) {
       const lines = labelLines(t.name);
       const w = Math.max(...lines.map(line => ctx.measureText(line).width));
@@ -814,16 +846,16 @@
     if (!width) return;
     const narrow = width < 760;
     W = width;
-    H = narrow ? Math.round(width * 1.5) : Math.round(Math.min(Math.max(width * 0.56, 580), 860));
+    H = narrow ? Math.round(width * 1.08) : Math.round(Math.min(Math.max(width * 0.56, 580), 860));
     DPR = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(W * DPR);
     canvas.height = Math.round(H * DPR);
     canvas.style.height = H + 'px';
     cx = W / 2;
     cy = H / 2;
-    Ry = H * (narrow ? 0.42 : 0.41);
-    Rx = Math.min(W * (narrow ? 0.44 : 0.39), Ry * (narrow ? 1.02 : 1.6));
-    S = Math.max(narrow ? 0.6 : 0.72, Math.min(1.25, Math.min(Rx, Ry) / 320));
+    Ry = H * (narrow ? 0.40 : 0.41);
+    Rx = Math.min(W * (narrow ? 0.45 : 0.39), Ry * (narrow ? 1.08 : 1.6));
+    S = Math.max(narrow ? 0.5 : 0.72, Math.min(1.25, Math.min(Rx, Ry) / 320));
     layoutNodes();
     EDGES.forEach(e => { e.geo = geometry(e); });
     placeLabels();
