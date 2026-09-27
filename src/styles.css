@@ -410,7 +410,12 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .src-i{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1px solid var(--border2);border-radius:50%;font-size:8px;color:var(--text-3);cursor:help;line-height:1;background:rgba(255,255,255,.02);padding:0}
 .src-tip{position:absolute;left:50%;top:16px;transform:translateX(-50%);min-width:220px;max-width:320px;padding:8px 9px;border-radius:var(--r4);background:var(--surface2);border:1px solid var(--border2);font-size:10px;line-height:1.45;color:var(--text-2);text-transform:none;letter-spacing:0;z-index:15;display:none;white-space:normal;box-shadow:0 10px 24px rgba(0,0,0,.22)}
 .src-pop:hover .src-tip,.src-pop:focus-within .src-tip{display:block}
-.footer{padding:16px 0 0;border-top:1px solid var(--border);margin-top:20px;font-size:11px;color:var(--text-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer{padding:16px 0 0;border-top:1px solid var(--border);margin-top:20px;font-size:11px;line-height:1.55;color:var(--text-3);text-align:center}
+.footer-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 18px;margin-bottom:12px}
+.footer-links a{color:var(--text-2);text-decoration:none}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--text);text-decoration:underline;text-underline-offset:3px}
+.footer-disclaimer{display:grid;gap:2px}
+.footer-disclaimer p{margin:0}
 .source-card,#scientificPanelShell{border-left:3px solid rgba(149,176,210,.28)}
 .ai-preset-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0 4px;border-top:1px solid var(--border);margin-top:10px}
 .ai-preset-label{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);white-space:nowrap}
