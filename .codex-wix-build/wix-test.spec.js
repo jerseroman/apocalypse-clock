@@ -187,10 +187,10 @@ test('mobile custom element uses the complete phone width without horizontal ove
   expect(Math.abs(layout.bodyWidth - 390)).toBeLessThanOrEqual(1);
   expect(Math.abs(layout.bodyLeft)).toBeLessThanOrEqual(1);
   expect(layout.bodyRight).toBeLessThanOrEqual(391);
-  expect(layout.pageLeft).toBeGreaterThanOrEqual(7);
-  expect(layout.pageLeft).toBeLessThanOrEqual(9);
-  expect(layout.pageRight).toBeLessThanOrEqual(383);
-  expect(layout.pageWidth).toBeLessThanOrEqual(layout.viewport - 15);
+  expect(layout.pageLeft).toBeGreaterThanOrEqual(5);
+  expect(layout.pageLeft).toBeLessThanOrEqual(7);
+  expect(layout.pageRight).toBeLessThanOrEqual(385);
+  expect(layout.pageWidth).toBeLessThanOrEqual(layout.viewport - 11);
   expect(layout.shadowScrollWidth).toBeLessThanOrEqual(390);
   expect(layout.documentScrollWidth).toBeLessThanOrEqual(layout.viewport);
   expect(layout.outerHtmlOverflowX).toBe('hidden');
@@ -448,4 +448,184 @@ test('internal footer contains the requested disclaimer and plain-text links', a
       backgroundColor: 'rgba(0, 0, 0, 0)',
     },
   ]);
+});
+
+test('all phone sections use compact responsive structures without clipped controls', async ({ page }) => {
+  test.setTimeout(150000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(url);
+  const host = await waitForModel(page);
+
+  const openSection = async id => {
+    await host.evaluate((element, sectionId) => {
+      element.shadowRoot.querySelector(`[data-nav-target="${sectionId}"]`).click();
+    }, id);
+    await expect(host.locator('.ac-body')).toHaveAttribute('data-nav-current', id);
+    await page.waitForTimeout(id === 'network' ? 150 : 40);
+  };
+
+  const sectionIds = [
+    'horizon', 'risk-horizons', 'top-threats', 'network', 'scientific', 'sources',
+    'console', 'contribution', 'scenario-overview', 'register', 'mission',
+  ];
+  for (const id of sectionIds) {
+    await openSection(id);
+    const width = await host.evaluate(element => {
+      const root = element.shadowRoot;
+      const body = root.querySelector('.ac-body');
+      const app = root.querySelector('.page');
+      return {
+        bodyScrollWidth: body.scrollWidth,
+        appLeft: app.getBoundingClientRect().left,
+        appRight: app.getBoundingClientRect().right,
+      };
+    });
+    expect(width.bodyScrollWidth, `${id} shadow width`).toBeLessThanOrEqual(390);
+    expect(width.appLeft, `${id} page left`).toBeGreaterThanOrEqual(5);
+    expect(width.appRight, `${id} page right`).toBeLessThanOrEqual(385);
+  }
+
+  await openSection('risk-horizons');
+  const risk = await host.evaluate(element => {
+    const root = element.shadowRoot;
+    const card = root.querySelector('.advanced-method-card');
+    const grid = root.querySelector('.advanced-method-card-grid');
+    const formula = root.querySelector('.advanced-method-formula');
+    const mini = root.querySelector('.mini-row');
+    return {
+      cardWidth: card.getBoundingClientRect().width,
+      gridWidth: grid.getBoundingClientRect().width,
+      gridColumns: getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length,
+      formulaWidth: formula.getBoundingClientRect().width,
+      miniColumns: getComputedStyle(mini).gridTemplateColumns.trim().split(/\s+/).length,
+    };
+  });
+  expect(risk.gridColumns).toBe(1);
+  expect(risk.gridWidth).toBeLessThanOrEqual(risk.cardWidth);
+  expect(risk.formulaWidth).toBeLessThanOrEqual(risk.gridWidth);
+  expect(risk.miniColumns).toBe(3);
+
+  await openSection('top-threats');
+  const threats = await host.evaluate(element => {
+    const root = element.shadowRoot;
+    const card = root.querySelector('.climate-feature-card.is-collapsed');
+    const header = card.querySelector('.t-header');
+    return {
+      firstCardHeight: card.getBoundingClientRect().height,
+      headerColumns: getComputedStyle(header).gridTemplateColumns.trim().split(/\s+/).length,
+      titleFontSize: parseFloat(getComputedStyle(card.querySelector('.t-name')).fontSize),
+    };
+  });
+  expect(threats.firstCardHeight).toBeLessThan(220);
+  expect(threats.headerColumns).toBe(2);
+  expect(threats.titleFontSize).toBeLessThanOrEqual(15);
+
+  await openSection('scientific');
+  const diagnostics = await host.evaluate(element => {
+    const root = element.shadowRoot;
+    const row = root.querySelector('#scientificAdditionalRunPanel > div:first-child');
+    const rowStyle = getComputedStyle(row);
+    const children = [...row.children].map(child => child.getBoundingClientRect().width);
+    const button = root.querySelector('#diagBtn').getBoundingClientRect();
+    return {
+      direction: rowStyle.flexDirection,
+      rowWidth: row.getBoundingClientRect().width,
+      contentWidth: row.clientWidth - parseFloat(rowStyle.paddingLeft) - parseFloat(rowStyle.paddingRight),
+      children,
+      buttonWidth: button.width,
+    };
+  });
+  expect(diagnostics.direction).toBe('column');
+  expect(diagnostics.children.every(width => width >= diagnostics.contentWidth - 2)).toBe(true);
+  expect(diagnostics.buttonWidth).toBeGreaterThan(300);
+
+  await openSection('sources');
+  const sources = await host.evaluate(element => {
+    const root = element.shadowRoot;
+    const row = root.querySelector('.ai-preset-row');
+    const list = root.querySelector('.ai-preset-btns');
+    const run = root.querySelector('.ai-run-btn');
+    const rowRect = row.getBoundingClientRect();
+    const runRect = run.getBoundingClientRect();
+    return {
+      rowDisplay: getComputedStyle(row).display,
+      presetColumns: getComputedStyle(list).gridTemplateColumns.trim().split(/\s+/).length,
+      runInside: runRect.left >= rowRect.left - 1 && runRect.right <= rowRect.right + 1,
+      runWidth: runRect.width,
+    };
+  });
+  expect(sources.rowDisplay).toBe('grid');
+  expect(sources.presetColumns).toBe(2);
+  expect(sources.runInside).toBe(true);
+  expect(sources.runWidth).toBeGreaterThan(300);
+
+  await openSection('scenario-overview');
+  const summaryColumns = await host.locator('.summary-strip').evaluate(element => (
+    getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).length
+  ));
+  expect(summaryColumns).toBe(2);
+
+  await openSection('register');
+  const register = await host.evaluate(element => {
+    const root = element.shadowRoot;
+    const wrap = root.querySelector('.tbl-wrap');
+    const table = wrap.querySelector('table');
+    const mobile = wrap.querySelector('#mobileThreatRegister');
+    const first = mobile.querySelector('.mobile-register-card');
+    return {
+      tableDisplay: getComputedStyle(table).display,
+      mobileDisplay: getComputedStyle(mobile).display,
+      insideSectionTarget: wrap.contains(mobile),
+      firstCardHeight: first.getBoundingClientRect().height,
+    };
+  });
+  expect(register.tableDisplay).toBe('none');
+  expect(register.mobileDisplay).not.toBe('none');
+  expect(register.insideSectionTarget).toBe(true);
+  expect(register.firstCardHeight).toBeLessThan(90);
+
+  await openSection('mission');
+  const missionFontSize = await host.locator('.hero-copy').evaluate(element => parseFloat(getComputedStyle(element).fontSize));
+  expect(missionFontSize).toBeLessThanOrEqual(10.5);
+});
+
+test('phone dependency network idles efficiently and keeps every control reachable', async ({ page }) => {
+  test.setTimeout(150000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(url);
+  const host = await waitForModel(page);
+  await host.evaluate(element => element.shadowRoot.querySelector('[data-nav-target="network"]').click());
+
+  await expect.poll(() => host.evaluate(element => {
+    const frame = element.shadowRoot.querySelector('#threatNetworkFrame');
+    return Boolean(frame.contentDocument?.querySelector('#net'));
+  })).toBe(true);
+  await expect.poll(() => host.evaluate(element => {
+    const frame = element.shadowRoot.querySelector('#threatNetworkFrame');
+    const bodyHeight = frame.contentDocument ? Math.ceil(frame.contentDocument.body.scrollHeight) : 0;
+    return Math.abs(frame.getBoundingClientRect().height - bodyHeight);
+  })).toBeLessThanOrEqual(4);
+
+  const network = await host.evaluate(element => {
+    const frame = element.shadowRoot.querySelector('#threatNetworkFrame');
+    const frameDoc = frame.contentDocument;
+    const canvas = frameDoc.querySelector('#net');
+    const canvasRect = canvas.getBoundingClientRect();
+    const typeLegend = frameDoc.querySelector('.type-legend');
+    const register = frameDoc.querySelector('.table-view');
+    return {
+      flow: frameDoc.querySelector('#toggleFlow').checked,
+      pixelRatio: canvas.width / canvasRect.width,
+      typeLegendFits: typeLegend.scrollWidth <= typeLegend.clientWidth + 1,
+      registerOpen: register.open,
+      frameHeight: frame.getBoundingClientRect().height,
+      innerHeight: Math.ceil(frameDoc.body.scrollHeight),
+    };
+  });
+  expect(network.flow).toBe(false);
+  expect(network.pixelRatio).toBeLessThanOrEqual(1.51);
+  expect(network.typeLegendFits).toBe(true);
+  expect(network.registerOpen).toBe(false);
+  expect(network.frameHeight).toBeGreaterThan(900);
+  expect(Math.abs(network.frameHeight - network.innerHeight)).toBeLessThanOrEqual(4);
 });

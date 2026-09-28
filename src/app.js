@@ -3645,16 +3645,16 @@ function renderAdvancedMethod(enriched, mcRes) {
   const graph = dependencyEdgeStats(enriched);
   const CMP = _wAdvCmpYear;
   const card = (accentColor, num, title, formula, leftBody, refStr, rightBody) => `
-    <div style="background:var(--surface);border:1px solid var(--border);border-top:3px solid ${accentColor};border-radius:var(--r8);padding:22px 26px;margin-bottom:14px">
-      <div style="display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start">
+    <div class="advanced-method-card" style="background:var(--surface);border:1px solid var(--border);border-top:3px solid ${accentColor};border-radius:var(--r8);padding:22px 26px;margin-bottom:14px">
+      <div class="advanced-method-card-grid" style="display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start">
         <div>
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:${accentColor};margin-bottom:6px">Algorithm ${num}</div>
-          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.25">${title}</div>
-          <div style="font-size:10px;color:var(--text-2);background:var(--bg3);border:1px solid ${accentColor}33;border-left:3px solid ${accentColor};border-radius:var(--r4);padding:10px 13px;margin-bottom:10px;line-height:1.9;overflow-x:auto">${formula}</div>
-          <div style="font-size:11px;color:var(--text-3);line-height:1.75;margin-bottom:10px">${leftBody}</div>
-          <div style="font-size:9.5px;color:var(--text-3);line-height:1.7;border-top:1px solid var(--border);padding-top:8px"><em>${refStr}</em></div>
+          <div class="advanced-method-title" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.25">${title}</div>
+          <div class="advanced-method-formula" style="font-size:10px;color:var(--text-2);background:var(--bg3);border:1px solid ${accentColor}33;border-left:3px solid ${accentColor};border-radius:var(--r4);padding:10px 13px;margin-bottom:10px;line-height:1.9;overflow-x:auto">${formula}</div>
+          <div class="advanced-method-copy" style="font-size:11px;color:var(--text-3);line-height:1.75;margin-bottom:10px">${leftBody}</div>
+          <div class="advanced-method-ref" style="font-size:9.5px;color:var(--text-3);line-height:1.7;border-top:1px solid var(--border);padding-top:8px"><em>${refStr}</em></div>
         </div>
-        <div style="min-width:0;overflow:hidden">${rightBody}</div>
+        <div class="advanced-method-right" style="min-width:0;overflow:hidden">${rightBody}</div>
       </div>
     </div>`;
   const allW = [...enriched].sort((a, b) => b.priority - a.priority).map(t => {
@@ -3680,7 +3680,7 @@ function renderAdvancedMethod(enriched, mcRes) {
         background:${yr===CMP?'var(--blue)':'var(--bg3)'};color:${yr===CMP?'#fff':'var(--text-3)'};border-color:${yr===CMP?'var(--blue)':'var(--border2)'}">${yr}</button>`).join('')}
       <span style="font-family:var(--mono);font-size:8.5px;color:var(--text-3);margin-left:4px">· ${allW.length} threats  by priority</span>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div class="advanced-method-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       ${[
         {l:'Mean β',v:betaMean.toFixed(2),note:'β > 1 means accelerating hazard',tip:'<b>Mean β shows the average speed of risk acceleration across all threats.</b> A value above 1 means that, on average, hazards are not just present, but are increasing dynamically. Higher values mean the model sees faster escalation pressure.'},
         {l:`Mean P by ${CMP}`,v:wMeanLabel,note:`All ${allW.length} threats; ${meanRef.censoredCount} censored, ${meanRef.invalidCount} invalid`,tip:`<b>This mean retains every threat.</b> Right-censored medians imply probability bounds [0, 0.5] within the horizon. Invalid inputs leave the full-population mean undefined.`},
@@ -3749,7 +3749,7 @@ function renderAdvancedMethod(enriched, mcRes) {
   const ec = networkEigenvectorCentrality(enriched).sort((a, b) => b.centrality - a.centrality).slice(0, 8);
   const maxCent = Math.max(...ec.map(e => e.centrality), 0.001);
   const ecRight = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+    <div class="advanced-method-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
       ${[
         {l:'Top hub share',v:ec[0]?Math.round(ec[0].centrality*100)+'%':' ',note:ec[0]?escapeHtml(ec[0].name):' ',c:'var(--red)',tip:'<b>This shows how dominant the most connected threat is in the risk network.</b> A high value means one threat acts like a central hub that can influence many others. A lower value means risk is more evenly spread.'},
         {l:'Dependency links',v:graph.edges,note:'Undirected dependency pairs',c:'var(--text)',tip:'<b>This counts how many threat-to-threat connections the model currently detects.</b> More links mean risks are more entangled: one problem can more easily intensify or trigger another.'},
@@ -3861,7 +3861,7 @@ function renderAdvancedMethod(enriched, mcRes) {
   const shCol = shC > 0.35 ? '#c94040' : shC > 0.20 ? '#d4a017' : '#2a9d6e';
   const topShare = sh.shares.slice(0, 6);
   const shRight = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+    <div class="advanced-method-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
       ${[
         {label:'Entropy H',val:sh.h.toFixed(2),unit:'bits',col:'var(--blue)',desc:'How widely priority is spread across threats. Higher means broader risk.',tip:'<b>Entropy shows how widely risk priority is spread across the 23 threats.</b> Higher entropy means many threats matter at the same time. Lower entropy means only a few threats dominate the model.'},
         {label:'H_max = log₂(N)',val:sh.hMax.toFixed(2),unit:'bits',col:'var(--text-2)',desc:'Maximum possible spread if all threats were equally weighted.',tip:'<b>Hmax is the theoretical maximum entropy for this model.</b> It is the value entropy would reach if all 23 threats were weighted equally. It is used as a reference point, not as a separate warning signal.'},
@@ -3904,16 +3904,16 @@ function renderAdvancedMethod(enriched, mcRes) {
   };
 
   box.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);border-left:3px solid var(--blue)">
+    <div class="advanced-method-intro" style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);border-left:3px solid var(--blue)">
       <div>
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:5px">Advanced Methodology  Quantitative Science Layer</div>
-        <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">4 Internal Quantitative Diagnostics</div>
-        <div style="font-size:11px;color:var(--text-3);line-height:1.7;max-width:820px">
+        <div class="advanced-method-intro-title" style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em">4 Internal Quantitative Diagnostics</div>
+        <div class="advanced-method-intro-copy" style="font-size:11px;color:var(--text-3);line-height:1.7;max-width:820px">
           These methods compare different internal summaries of the same model inputs and assumptions. Agreement is an internal diagnostic comparison; it does not independently validate the primary MCDA model. Read as an <strong style="color:var(--text-2)">optional diagnostic layer</strong>.
           <span style="color:var(--text-3)">  Active threats: ${enriched.length}  Evidence: ${evidence.strong}× strong / ${evidence.moderate}× moderate / ${evidence.weak}× weak</span>
         </div>
       </div>
-      <div style="flex-shrink:0;text-align:right" data-tip="<strong>ρ_eff (scenario coupling)</strong>A graph-derived scenario assumption used only for the displayed spread formula. It is not an estimated Bernoulli correlation and does not determine joint failures or correlated tails. A value of 0 recovers the independent-reference variance; larger values increase the assumed spread without defining a joint distribution.">
+      <div class="advanced-method-coupling" style="flex-shrink:0;text-align:right" data-tip="<strong>ρ_eff (scenario coupling)</strong>A graph-derived scenario assumption used only for the displayed spread formula. It is not an estimated Bernoulli correlation and does not determine joint failures or correlated tails. A value of 0 recovers the independent-reference variance; larger values increase the assumed spread without defining a joint distribution.">
         <div style="font-family:var(--mono);font-size:9px;color:var(--text-3)">ρ_eff (domain coupling)</div>
         <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--blue);line-height:1">${Math.round(rhoE*100)}%</div>
         <div style="font-family:var(--mono);font-size:8px;color:var(--text-3)">scenario spread assumption</div>
@@ -4044,6 +4044,69 @@ function renderTable(enriched, mcRes) {
       <td>${parameterCalibrationCellHtml(t)}</td>
       <td style="color:var(--text3);max-width:120px;min-width:80px;line-height:1.35;font-size:9px;overflow:hidden;text-overflow:ellipsis">${t.mechanism||' '}</td>
     </tr>`;
+  }).join('');
+
+  // A seventeen-column table is useful on a desktop but cannot be made legible on a phone by
+  // shrinking it. Render the same values as collapsed cards for the mobile breakpoint. The desktop
+  // table remains the canonical tabular view; this is only a responsive presentation of its data.
+  let mobileRegister = document.getElementById('mobileThreatRegister');
+  if (!mobileRegister) {
+    mobileRegister = document.createElement('div');
+    mobileRegister.id = 'mobileThreatRegister';
+    mobileRegister.className = 'mobile-threat-register';
+    mobileRegister.setAttribute('aria-label', 'Full threat register, mobile view');
+    const tableWrap = tbody.closest('.tbl-wrap');
+    // Keep the cards inside the table wrapper because that wrapper is the section-navigation target.
+    // If they were inserted as a sibling after startup, SectionNav would not know to hide them.
+    if (tableWrap) tableWrap.append(mobileRegister);
+  }
+  const mobileMetric = (label, value, extraClass = '') => `<div class="mobile-register-metric ${extraClass}">
+    <span class="mobile-register-label">${label}</span><span class="mobile-register-value">${value}</span>
+  </div>`;
+  mobileRegister.innerHTML = sorted.map((t, i) => {
+    const stats = mcRes && mcRes.threatStats ? mcRes.threatStats[t.id] : null;
+    const horizonMid = stats ? stats.p50 : t.horizon;
+    const intervalCell = stats ? `${fmtY(stats.p10)}–${fmtY(stats.p90)}` : '<span class="no-cross">Run MC</span>';
+    const horizonCell = horizonMid > YE
+      ? '<span class="no-cross">No crossing ≤ 2100</span>'
+      : `<span class="td-mono">${fmtY(horizonMid)}</span>`;
+    const effectiveGrowth = (Number.isFinite(t.growth_rate_effective)
+      ? t.growth_rate_effective
+      : effectiveRiskGrowthForThreat(t, muOf(t.growth_rate))) * 100;
+    const domainColor = domCol(t.domain);
+    const domainLabel = t.domain.charAt(0).toUpperCase() + t.domain.slice(1);
+    return `<details class="mobile-register-card">
+      <summary class="mobile-register-summary">
+        <span class="mobile-register-rank">${i + 1}</span>
+        <span class="mobile-register-heading">
+          <span class="mobile-register-name">${escapeHtml(t.name)}</span>
+          <span class="mobile-register-domain" style="color:${domainColor}">${escapeHtml(domainLabel)}</span>
+        </span>
+        <span class="mobile-register-score"><strong>${t.priority.toFixed(2)}</strong><small>adjusted</small></span>
+        <span class="mobile-register-arrow" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="mobile-register-body">
+        ${threatTableMetaHtml(t)}
+        <div class="mobile-register-grid">
+          ${mobileMetric('Scale', sourceBadge(muOf(t.scale), t.scale))}
+          ${mobileMetric('Urgency', sourceBadge(muOf(t.urgency), t.urgency))}
+          ${mobileMetric('Acceleration', sourceBadge(muOf(t.acceleration), t.acceleration))}
+          ${mobileMetric('Interdependence', sourceBadge(muOf(t.interdependence), t.interdependence))}
+          ${mobileMetric('Irreversibility', sourceBadge(muOf(t.irreversibility), t.irreversibility))}
+          ${mobileMetric('Governance', sourceBadge(muOf(t.gov_failure), t.gov_failure))}
+          ${mobileMetric('Base score', t.bs.toFixed(2))}
+          ${mobileMetric('Adjusted score', t.priority.toFixed(2))}
+          ${mobileMetric('Model Tᵢ', horizonCell)}
+          ${mobileMetric('Model P10–P90', intervalCell)}
+          ${mobileMetric('Growth', sourceBadge(effectiveGrowth, t.growth_rate, 2, '%/yr'))}
+          ${mobileMetric('Threshold', sourceBadge(getThreatThreshold(t), t.threshold, 2))}
+          ${mobileMetric('Scientific evidence', scientificEvidenceCellHtml(t), 'mobile-register-wide')}
+          ${mobileMetric('Input calibration', parameterCalibrationCellHtml(t), 'mobile-register-wide')}
+        </div>
+        <div class="mobile-register-mechanism"><span class="mobile-register-label">Mechanism</span><p>${escapeHtml(t.mechanism || 'Not supplied')}</p></div>
+        <div class="mobile-register-actions">${threatReadMoreLink(t)}</div>
+      </div>
+    </details>`;
   }).join('');
 }
 
@@ -4841,7 +4904,8 @@ function drawBarChart(enriched, mcRes) {
   const palette = readVizPalette();
   const sorted = [...enriched].sort((a, b) => b.priority - a.priority);
   const el = document.getElementById('barCanvas');
-  if (el) el.style.height = `${Math.max(520, 86 + sorted.length * 23)}px`;
+  const compact = Boolean(el && el.clientWidth > 0 && el.clientWidth < 520);
+  if (el) el.style.height = `${Math.max(compact ? 420 : 520, (compact ? 68 : 86) + sorted.length * (compact ? 18 : 23))}px`;
   if (!sorted.length) {
     chart.setOption(emptyChartOption('No threat data available', palette), true);
     return;
@@ -4850,22 +4914,24 @@ function drawBarChart(enriched, mcRes) {
   const maxPri = Math.max(...sorted.map(threat => threat.priority)) * 1.12;
   const rows = sorted.map(threat => ({
     fullName: threat.name,
-    shortName: shortThreatLabel(threat.name, 28),
+    shortName: shortThreatLabel(threat.name, compact ? 15 : 28),
     score: +threat.priority.toFixed(2),
     horizon: threatHorizonLabel(threat, mcRes),
   }));
 
   chart.setOption({
-    animationDuration: 280,
-    animationDurationUpdate: 260,
+    animationDuration: compact ? 0 : 280,
+    animationDurationUpdate: compact ? 0 : 260,
     backgroundColor: 'transparent',
-    grid: { left: 180, right: 118, top: 10, bottom: 16 },
+    grid: compact
+      ? { left: 90, right: 42, top: 6, bottom: 14 }
+      : { left: 180, right: 118, top: 10, bottom: 16 },
     tooltip: {
       trigger: 'item',
       confine: true,
       backgroundColor: palette.surface2,
       borderColor: palette.border2,
-      textStyle: { color: palette.text, fontFamily: palette.font, fontSize: 11 },
+      textStyle: { color: palette.text, fontFamily: palette.font, fontSize: compact ? 10 : 11 },
       formatter: params => {
         const row = rows[params.dataIndex];
         return `${row.fullName}<br/>Adjusted score: ${row.score.toFixed(2)}<br/>Central horizon: ${row.horizon}`;
@@ -4881,6 +4947,7 @@ function drawBarChart(enriched, mcRes) {
       axisLabel: {
         color: palette.text3,
         fontFamily: palette.font,
+        fontSize: compact ? 8 : 10,
         formatter: value => value.toFixed(1),
       },
     },
@@ -4893,8 +4960,8 @@ function drawBarChart(enriched, mcRes) {
       axisLabel: {
         color: palette.text2,
         fontFamily: palette.font,
-        fontSize: 10,
-        width: 160,
+        fontSize: compact ? 8 : 10,
+        width: compact ? 82 : 160,
         overflow: 'truncate',
       },
     },
@@ -4908,18 +4975,18 @@ function drawBarChart(enriched, mcRes) {
           borderRadius: [0, 3, 3, 0],
         },
       })),
-      barWidth: 9,
+      barWidth: compact ? 7 : 9,
       showBackground: true,
       backgroundStyle: { color: rgba(palette.text, 0.06), borderRadius: [0, 3, 3, 0] },
       label: {
         show: true,
         position: 'right',
         color: palette.text2,
-        fontSize: 9,
+        fontSize: compact ? 8 : 9,
         fontFamily: palette.font,
         formatter: params => {
           const row = rows[params.dataIndex];
-          return `${row.score.toFixed(2)}    ${row.horizon}`;
+          return compact ? row.score.toFixed(2) : `${row.score.toFixed(2)}    ${row.horizon}`;
         },
       },
       emphasis: { itemStyle: { color: rgba(palette.text, 0.92) } },

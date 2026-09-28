@@ -1177,3 +1177,186 @@ body.has-section-nav #scientificPanelBody{display:block;padding:0}
   .section-page-title{font-size:15px}
   .panel{padding:10px}
 }
+
+/* The full desktop register remains a table. Phones receive the same values as disclosure cards,
+   rendered by renderTable(), because seventeen columns cannot be made legible by shrinking type. */
+.mobile-threat-register{display:none}
+
+/* Complete phone layout. Structural changes happen at 760px; 520px remains available above for
+   the unusually tight clock face. Touch controls stay large while information typography becomes
+   denser and long analytical material uses disclosure or local horizontal scrolling. */
+@media(max-width:760px){
+  .ac-body,body{font-size:10px;line-height:1.42}
+  body.has-section-nav .page,.page{width:calc(100vw - 12px);padding:7px 0 34px}
+  .section-title-row{margin-bottom:8px}
+  .section-page-title{font-size:15px;letter-spacing:.05em}
+  .page-search-box{padding:3px 6px}
+  .page-search-box input{height:15px;font-size:11px;line-height:15px}
+  .panel{padding:10px}
+  .panel-copy,.source-copy{font-size:9.5px;line-height:1.5}
+
+  /* Advanced-method cards: replace the desktop 340px + results split with one readable column. */
+  .advanced-method-intro{
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    gap:8px!important;
+    margin-bottom:8px!important;
+    padding:10px!important;
+  }
+  .advanced-method-intro-title{font-size:13px!important;line-height:1.25!important}
+  .advanced-method-intro-copy{font-size:9px!important;line-height:1.5!important}
+  .advanced-method-coupling{text-align:left!important}
+  .advanced-method-coupling > div:nth-child(2){font-size:20px!important}
+  .advanced-method-card{padding:10px!important;margin-bottom:8px!important}
+  .advanced-method-card-grid{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}
+  .advanced-method-title{font-size:13px!important;margin-bottom:7px!important}
+  .advanced-method-copy{font-size:9px!important;line-height:1.55!important;margin-bottom:7px!important}
+  .advanced-method-ref{font-size:8px!important;line-height:1.5!important;padding-top:6px!important}
+  .advanced-method-formula{
+    max-width:100%;
+    padding:7px 8px!important;
+    font-size:8px!important;
+    line-height:1.55!important;
+    overscroll-behavior-inline:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .advanced-method-formula .katex{font-size:.88em}
+  .advanced-method-right{max-width:100%;overflow:visible!important}
+  .advanced-method-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin-bottom:9px!important}
+  .advanced-method-kpis > *{padding:8px 6px!important}
+  .advanced-method-kpis > .advanced-kpi-tooltip-card > div:first-child{font-size:18px!important}
+  .advanced-method-right table{font-size:8px!important}
+  .advanced-method-right th,.advanced-method-right td{padding:4px!important}
+
+  /* The run card previously kept a desktop row and squeezed its copy into a 60px sliver. */
+  #scientificAdditionalRunPanel > div:first-child{
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:9px!important;
+    padding:10px!important;
+  }
+  #scientificAdditionalRunPanel > div:first-child > div{
+    width:100%!important;
+    min-width:0!important;
+    flex:none!important;
+    align-items:stretch!important;
+  }
+  #scientificAdditionalRunPanel > div:first-child > div > div[style*="font-size:17px"]{font-size:13px!important}
+  #scientificAdditionalRunPanel > div:first-child > div > div[style*="font-size:11px"]{font-size:9px!important;line-height:1.5!important}
+  #scientificAdditionalRunPanel > div:nth-child(2){padding:0 10px 10px!important}
+  .diag-view #scientificAdditionalRunPanel .reset-btn{width:100%;min-width:0;min-height:36px}
+  .diag-tabs{margin-bottom:12px}
+  .diag-tab{padding:9px 10px;font-size:10px}
+  .diag-panel.is-empty .diag-empty{padding:34px 14px}
+
+  /* Source Registry controls use the full phone width instead of three competing flex columns. */
+  .ai-preset-row{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;padding-top:8px}
+  .ai-preset-label{white-space:normal}
+  .ai-preset-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;width:100%}
+  .ai-preset-btn{justify-content:flex-start;min-height:32px;padding:4px 7px;white-space:normal;font-size:8.5px;line-height:1.25}
+  .ai-run-btn{width:100%;min-height:36px;justify-content:center}
+  .source-card{padding-left:10px;padding-right:10px}
+  .source-head{gap:8px}
+  .source-actions{gap:6px}
+  .source-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .source-stat{padding:8px 9px}
+
+  /* Collapsed rank cards are summaries. Full prose, timeline and dependency text return on Expand. */
+  .priority-threat-grid{gap:7px;margin-bottom:9px}
+  .climate-feature-card{margin-bottom:0}
+  .climate-feature-card.is-collapsed .t-header{
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:7px;
+    padding:7px 10px;
+  }
+  .climate-feature-card.is-collapsed .t-name{font-size:12.5px;line-height:1.15;margin-bottom:0}
+  .climate-feature-card.is-collapsed .climate-feature-note,
+  .climate-feature-card.is-collapsed .t-pills{display:none!important}
+  .climate-feature-card.is-collapsed .t-mech,
+  .climate-feature-card.is-collapsed .t-bar-section,
+  .climate-feature-card.is-collapsed .t-interactions{display:none!important}
+  .climate-feature-card.is-collapsed .t-score{min-width:64px;text-align:right}
+  .climate-feature-card.is-collapsed .t-score-val{font-size:16px;white-space:nowrap}
+  .climate-feature-card.is-collapsed .t-score-denom{font-size:9px;margin-left:2px}
+  .climate-feature-card.is-collapsed .t-score > div:not(.t-score-val){display:none}
+  .climate-feature-card.is-collapsed .t-actions{justify-content:flex-end;padding:4px 10px}
+  .climate-feature-card.is-collapsed .a-chip{min-height:28px;padding:2px 7px;font-size:8px}
+  .climate-feature-card:not(.is-collapsed) .t-header{padding:10px}
+  .climate-feature-card:not(.is-collapsed) .t-name{font-size:15px}
+  .climate-feature-card:not(.is-collapsed) .t-score-val{font-size:20px}
+
+  /* Keep the 23-row timeline horizontal: stacking its three cells created 1,700px of dead height. */
+  .mini-panel{padding:10px;margin-bottom:9px}
+  .mini-row{grid-template-columns:minmax(86px,1.15fr) minmax(0,2fr) 32px;gap:6px;padding:3px 0}
+  .mini-name{font-size:8.5px;line-height:1.2;gap:4px}
+  .mini-score{font-size:8px;text-align:right}
+  .mini-bar{margin-top:0;height:4px}
+  .mini-axis{height:13px}
+  .mini-ax-tick{font-size:6.5px}
+
+  /* Five overview cards fit as a 2 + 2 + 1 grid on a 360px phone. */
+  .summary-strip{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px;margin-bottom:9px}
+  .summary-strip .stat-card{padding:9px 10px}
+  .summary-strip .stat-card:last-child:nth-child(odd){grid-column:1 / -1}
+  .stat-label{font-size:7.5px;margin-bottom:4px}
+  .stat-value{font-size:20px}
+  .stat-note{font-size:8px}
+
+  /* Mission: remove inline desktop density and use two equal, flexible action columns. */
+  #heroMainCard.hero-main-card{padding:10px!important}
+  #heroMainCard .hero-copy{font-size:9.5px!important;line-height:1.58!important}
+  #heroMainCard .hero-copy p{margin-bottom:8px!important}
+  #missionMore > div[style*="grid-template-columns"]{grid-template-columns:minmax(0,1fr)!important;gap:7px!important;margin:8px 0!important}
+  #missionActions{gap:6px!important;margin-top:9px}
+  #missionActions > a,
+  #missionActions > :nth-child(-n+5),
+  #missionActions > :nth-child(n+7):nth-child(-n+11),
+  #missionActions > div{
+    flex:1 1 calc(50% - 3px)!important;
+    width:auto!important;
+    min-width:0!important;
+  }
+  #missionActions > a,
+  #missionActions > div > a{height:32px!important;min-height:32px!important;font-size:8.5px!important;padding:0 5px!important}
+  .mission-summary-note{margin:6px 0 8px}
+
+  /* Preserve the complete register without forcing a 1,377px desktop table through the viewport. */
+  .page > .tbl-wrap{overflow:visible;border:0;background:transparent}
+  .page > .tbl-wrap > table{display:none}
+  .mobile-threat-register{display:grid;gap:6px}
+  .mobile-register-card{overflow:hidden;border:1px solid var(--border);border-radius:var(--r8);background:var(--surface)}
+  .mobile-register-summary{display:grid;grid-template-columns:22px minmax(0,1fr) auto 12px;align-items:center;gap:7px;padding:9px 10px;cursor:pointer;list-style:none}
+  .mobile-register-summary::-webkit-details-marker{display:none}
+  .mobile-register-rank{font:700 8px var(--mono);color:var(--text-3);text-align:center}
+  .mobile-register-heading{display:grid;gap:2px;min-width:0}
+  .mobile-register-name{font-size:11px;font-weight:700;line-height:1.2;color:var(--text)}
+  .mobile-register-domain{font:700 7px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+  .mobile-register-score{display:grid;justify-items:end;line-height:1}
+  .mobile-register-score strong{font:700 13px var(--mono);color:var(--text)}
+  .mobile-register-score small{margin-top:2px;font:6.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+  .mobile-register-arrow{font-size:12px;color:var(--text-3);transition:transform .18s}
+  .mobile-register-card[open] .mobile-register-arrow{transform:rotate(180deg)}
+  .mobile-register-body{padding:0 10px 10px;border-top:1px solid var(--border)}
+  .mobile-register-body .threat-table-meta{width:auto;max-width:100%;margin:8px 0;flex-wrap:wrap}
+  .mobile-register-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 10px}
+  .mobile-register-metric{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px;padding:6px 0;border-bottom:1px solid var(--border)}
+  .mobile-register-wide{grid-column:1 / -1}
+  .mobile-register-label{font:7px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+  .mobile-register-value{font-size:8.5px;color:var(--text-2);text-align:right;min-width:0}
+  .mobile-register-value .chip{font-size:7px;padding:1px 4px}
+  .mobile-register-mechanism{padding:8px 0 6px}
+  .mobile-register-mechanism p{margin-top:4px;font-size:8.5px;line-height:1.45;color:var(--text-2)}
+  .mobile-register-actions{display:flex;justify-content:flex-end;padding-top:2px}
+  .mobile-register-actions .threat-read-more{min-height:30px;padding:0 9px}
+
+  /* The ECharts mobile grid is selected in drawBarChart(); this only removes excess card chrome. */
+  .contribution-panel{padding:10px;margin-bottom:9px}
+  #barCanvas{max-height:490px}
+  .nav-console-card{padding:4px 10px 12px}
+}
+
+@media(max-width:340px){
+  .advanced-method-kpis{grid-template-columns:minmax(0,1fr)!important}
+  .mobile-register-grid{grid-template-columns:minmax(0,1fr)}
+  .mobile-register-wide{grid-column:auto}
+}

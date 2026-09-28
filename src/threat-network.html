@@ -129,9 +129,10 @@
     .net-stage > .card { position: static; margin: 12px 0 0 12px; }
   }
   @media (max-width: 760px) {
-    html, body { font-size: 11px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    html, body { font-size: 10px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     .net-stage { border-radius: 8px; padding-bottom: 8px; }
     .net-stage > .card { flex: 1 1 100%; width: auto; margin: 8px 8px 0; }
+    .card { backdrop-filter: none; }
     .domain-tag { display: none; }
     .detail { grid-template-columns: 1fr; }
     .toolbar select { min-width: 0; width: 100%; }
@@ -148,13 +149,13 @@
     .type-legend {
       grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: repeat(3,minmax(0,1fr));
+      grid-template-columns: repeat(2,minmax(0,1fr));
       gap: 4px 8px;
       margin-top: 4px;
       padding-top: 7px;
       font-size: 9px;
     }
-    .type-legend li { min-width: 0; gap: 4px; margin: 0; }
+    .type-legend li { min-width: 0; gap: 4px; margin: 0; white-space: normal; }
     .type-legend label { min-width: 0; gap: 4px; }
     .type-legend .glyph { width: 14px; }
     .legend-card { padding: 8px 10px; font-size: 9px; }
@@ -166,6 +167,9 @@
     .detail .meta,.detail .empty,.detail ul { font-size: 10px; }
     .toolbar { gap: 6px 10px; margin-top: 8px; font-size: 10px; }
     details.table-view { margin-top: 8px; padding: 8px 10px; }
+  }
+  @media (max-width: 320px) {
+    .type-legend { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -243,8 +247,16 @@
 <script>
 (() => {
   'use strict';
-  const EMBEDDED = new URLSearchParams(location.search).has('embed');
+  // The standalone dashboard uses ?embed=1, while the self-contained Wix bundle injects this page
+  // through srcdoc and marks <html class="embed"> before the script runs. Support both transports so
+  // the height handshake and compact register work identically in production and in the repository.
+  const EMBEDDED = document.documentElement.classList.contains('embed')
+    || new URLSearchParams(location.search).has('embed');
   if (EMBEDDED) document.documentElement.classList.add('embed');
+  const COMPACT_DEVICE = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+  // The 102-row register remains available from its summary, but must not make an embedded or phone
+  // network thousands of pixels tall before the reader asks to open it.
+  if (EMBEDDED || COMPACT_DEVICE) document.querySelector('.table-view').open = false;
 
   // Threats with deterministic Baseline priority (model 1.5.0, dataset 1.9.0, Expert weights).
   const THREATS = [
@@ -363,9 +375,12 @@
   let W = 0, H = 0, DPR = 1, cx = 0, cy = 0, Rx = 0, Ry = 0, S = 1;
   let hovered = null, selected = null;
   let showLabels = true;
-  let showFlow = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Moving dots are a direction cue only. Keep the static arrows and labels on phones, and let readers
+  // opt into the costly continuous animation with the Flow checkbox when their device can afford it.
+  let showFlow = !COMPACT_DEVICE && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let background = null;
   let rafId = 0;
+  let lastFlowFrame = 0;
 
   const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
   const mix = (c, d, f) => `rgb(${Math.round(c[0] + (d[0] - c[0]) * f)},${Math.round(c[1] + (d[1] - c[1]) * f)},${Math.round(c[2] + (d[2] - c[2]) * f)})`;
@@ -834,8 +849,14 @@
 
   function frame(time) {
     rafId = 0;
-    draw(time);
-    if (showFlow && !document.hidden) rafId = requestAnimationFrame(frame);
+    if (document.hidden || canvasWrap.clientWidth <= 0) return;
+    const animate = showFlow;
+    const minInterval = COMPACT_DEVICE ? 50 : 0; // at most 20 painted frames/s on a phone
+    if (!animate || !lastFlowFrame || time - lastFlowFrame >= minInterval) {
+      draw(time);
+      if (animate) lastFlowFrame = time;
+    }
+    if (animate) rafId = requestAnimationFrame(frame);
   }
   function requestDraw() { if (!rafId) rafId = requestAnimationFrame(frame); }
 
@@ -843,11 +864,15 @@
     const width = canvasWrap.clientWidth;
     // A hidden page (for example a closed dashboard section) has no width yet; the resize observer
     // lays the network out as soon as it is shown.
-    if (!width) return;
+    if (!width) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+      return;
+    }
     const narrow = width < 760;
     W = width;
     H = narrow ? Math.round(width * 1.08) : Math.round(Math.min(Math.max(width * 0.56, 580), 860));
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    DPR = Math.min(window.devicePixelRatio || 1, narrow ? 1.5 : 2);
     canvas.width = Math.round(W * DPR);
     canvas.height = Math.round(H * DPR);
     canvas.style.height = H + 'px';
@@ -1025,11 +1050,16 @@
   document.getElementById('toggleLabels').addEventListener('change', e => { showLabels = e.target.checked; requestDraw(); });
   const flowToggle = document.getElementById('toggleFlow');
   flowToggle.checked = showFlow;
-  flowToggle.addEventListener('change', e => { showFlow = e.target.checked; requestDraw(); });
+  flowToggle.addEventListener('change', e => { showFlow = e.target.checked; lastFlowFrame = 0; requestDraw(); });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && selected) { selected = null; focusSelect.value = ''; updateDetail(); requestDraw(); }
   });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) requestDraw(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    } else requestDraw();
+  });
 
   document.getElementById('statThreats').textContent = THREATS.length;
   document.getElementById('statLinks').textContent = EDGES.length;
@@ -1054,6 +1084,18 @@
   resize();
 
   if (EMBEDDED) {
+    // The parent can bind after this srcdoc has already loaded. Every priorities message therefore also
+    // acts as a height handshake, even when none of the numerical priorities changed.
+    let lastHeight = 0;
+    const reportHeight = force => {
+      // BODY measures the content itself; documentElement.scrollHeight cannot shrink after the parent
+      // has enlarged the iframe because it is then at least as tall as the iframe viewport.
+      const height = Math.ceil(document.body.scrollHeight);
+      if (!force && height === lastHeight) return;
+      lastHeight = height;
+      window.parent.postMessage({ type: 'threat-network:height', height }, '*');
+    };
+    new ResizeObserver(() => reportHeight(false)).observe(document.body);
     // The dashboard sends the adjusted priorities of the selected scenario; they set the node sizes.
     window.addEventListener('message', event => {
       if (event.source !== window.parent || !event.data || event.data.type !== 'threat-network:priorities') return;
@@ -1062,22 +1104,16 @@
         const value = event.data.priorities[t.id];
         if (Number.isFinite(value) && value !== t.priority) { t.priority = value; changed = true; }
       });
-      if (!changed) return;
-      rankThreats();
-      resize();
-      updateDetail();
+      if (changed) {
+        rankThreats();
+        resize();
+        updateDetail();
+      }
+      requestAnimationFrame(() => reportHeight(true));
     });
     // The dashboard sizes the frame to the page height, so the page never scrolls inside it.
-    let lastHeight = 0;
-    const reportHeight = () => {
-      const height = Math.ceil(document.documentElement.scrollHeight);
-      if (height === lastHeight) return;
-      lastHeight = height;
-      window.parent.postMessage({ type: 'threat-network:height', height }, '*');
-    };
-    new ResizeObserver(reportHeight).observe(document.body);
     window.parent.postMessage({ type: 'threat-network:ready' }, '*');
-    reportHeight();
+    reportHeight(true);
   }
 })();
 </script>
