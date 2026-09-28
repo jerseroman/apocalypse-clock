@@ -232,7 +232,15 @@
     updateEmptyNote();
     moveIndicator(changed);
     if (changed) {
-      window.scrollTo(0, 0);
+      // Most browsers scroll the document element, but Wix's phone renderer
+      // makes BODY its independent vertical scroller. Reset every applicable
+      // container so a newly selected, shorter section never opens below its
+      // content as an apparently blank page.
+      try { window.scrollTo(0, 0); } catch (error) { /* embedded host may block it */ }
+      const nativeDocument = window.document;
+      [nativeDocument.scrollingElement, nativeDocument.documentElement, nativeDocument.body]
+        .filter(Boolean)
+        .forEach(element => { element.scrollTop = 0; });
       animateIn(section);
       // Charts drawn while their section was hidden have no size; redraw them now that it is shown.
       requestAnimationFrame(() => {
