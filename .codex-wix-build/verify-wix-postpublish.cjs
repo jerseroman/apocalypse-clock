@@ -18,6 +18,18 @@ async function snapshot(page, label) {
     const appBody = root?.querySelector('.ac-body');
     const nav = root?.querySelector('.section-nav');
     const footer = root?.querySelector('.footer');
+    const syncMethod = host?.syncViewportBleed;
+    const syncSource = typeof syncMethod === 'function'
+      ? Function.prototype.toString.call(syncMethod).replace(/\s+/g, '')
+      : '';
+    const scrollCandidateStart = syncSource.indexOf('window.scrollY');
+    const scrollCandidateEnd = syncSource.indexOf('overflow-y');
+    const scrollCandidateSource = scrollCandidateStart >= 0
+      ? syncSource.slice(
+        scrollCandidateStart,
+        scrollCandidateEnd > scrollCandidateStart ? scrollCandidateEnd : undefined,
+      )
+      : '';
     const rect = element => {
       if (!element) return null;
       const value = element.getBoundingClientRect();
@@ -34,8 +46,14 @@ async function snapshot(page, label) {
       label,
       href: location.href,
       state: host?.getAttribute('data-state') || null,
-      markerOuterScrollTop: typeof host?.syncViewportBleed === 'function'
-        && Function.prototype.toString.call(host.syncViewportBleed).includes('outerScrollTop'),
+      markerRootScrollSemantics: scrollCandidateSource.includes('window.scrollY')
+        && scrollCandidateSource.includes('window.pageYOffset')
+        && /scrollingElement.*scrollTop/.test(scrollCandidateSource)
+        && /documentElement.*scrollTop/.test(scrollCandidateSource)
+        && /body.*scrollTop/.test(scrollCandidateSource)
+        && syncSource.includes('Math.max')
+        && syncSource.includes('overflow-y')
+        && syncSource.includes('visible'),
       viewport: { width: innerWidth, height: innerHeight },
       scroll: {
         windowY: window.scrollY,
@@ -95,8 +113,12 @@ async function snapshot(page, label) {
     await page.waitForTimeout(1_000);
 
     const initial = await snapshot(page, 'initial');
-    assert(initial.markerOuterScrollTop,
-      'FAIL: public custom-element bundle does not contain the outerScrollTop marker.', initial);
+    assert(initial.markerRootScrollSemantics,
+      'FAIL: public custom element does not inspect every root-scroll candidate after Wix transpilation.', initial);
+    assert(initial.values.p50 === '2038',
+      'FAIL: published P50 result is not the validated precomputed value 2038.', initial);
+    assert(initial.values.p90 === '2046',
+      'FAIL: published P90 result is not the validated precomputed value 2046.', initial);
     assert(initial.document.rootHeight > initial.viewport.height,
       'FAIL: document is not vertically scrollable.', initial);
     assert(initial.document.bodyOverflowY === 'visible',
@@ -110,7 +132,9 @@ async function snapshot(page, label) {
     });
     await page.waitForTimeout(250);
     const scrolled = await snapshot(page, 'scrolled-600');
-    assert(scrolled.scroll.windowY >= 590,
+    assert(scrolled.scroll.windowY >= 590
+        && scrolled.scroll.scrollingElementTop >= 590
+        && scrolled.scroll.rootTop >= 590,
       'FAIL: window/root is not the effective vertical scroller.', scrolled);
     assert(scrolled.scroll.bodyTop === 0,
       'FAIL: BODY scrollTop is non-zero; BODY is still acting as the mobile scroller.', scrolled);
@@ -124,7 +148,9 @@ async function snapshot(page, label) {
     await page.setViewportSize({ width: 360, height: 700 });
     await page.waitForTimeout(350);
     const resized = await snapshot(page, 'viewport-height-700');
-    assert(resized.scroll.windowY >= 590,
+    assert(resized.scroll.windowY >= 590
+        && resized.scroll.scrollingElementTop >= 590
+        && resized.scroll.rootTop >= 590,
       'FAIL: viewport resize reset or displaced the root scroll position.', resized);
     assert(resized.scroll.bodyTop === 0,
       'FAIL: BODY became the scroller after viewport resize.', resized);
@@ -152,15 +178,21 @@ async function snapshot(page, label) {
     assert(switched.appBody.currentSection === 'mission',
       'FAIL: mission section did not become active.', switched);
     assert(switched.scroll.windowY === 0
+        && switched.scroll.pageYOffset === 0
+        && switched.scroll.scrollingElementTop === 0
         && switched.scroll.rootTop === 0
         && switched.scroll.bodyTop === 0,
       'FAIL: section switch did not reset every possible outer scroll container.', switched);
+    assert(pageErrors.length === 0,
+      'FAIL: uncaught page errors occurred during public mobile verification.', pageErrors);
 
     const report = {
       pass: true,
       url: targetUrl,
       checks: {
-        markerOuterScrollTop: true,
+        markerRootScrollSemantics: true,
+        p50: initial.values.p50,
+        p90: initial.values.p90,
         windowOwnsVerticalScroll: true,
         bodyScrollTopZero: true,
         stableMarginAfterScrollResize: true,
