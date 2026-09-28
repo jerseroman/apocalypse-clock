@@ -1,0 +1,2427 @@
+3,2033,2033,2033,2033,2033,2033,2033,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2034,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2035,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2036,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2037,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2038,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2039,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2040,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2041,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2042,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2043,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2044,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2045,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2046,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2047,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2049,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2050,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2051,2052,2052,2052,2052,2052,2052,2052,2052,2052,2052,2052,2052,2052,2052,2052,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2053,2054,2054,2054,2054,2054,2054,2054,2054,2054,2055,2055,2055,2055,2055,2055,2055,2055,2055,2055,2055,2055,2055,2055,2056,2056,2056,2056,2056,2056,2056,2057,2057,2057,2057,2058,2058,2058,2058,2058,2058,2058,2059,2059,2060,2060,2060,2060,2061,2061,2061,2062,2062,2062,2062,2063,2063,2063,2063,2064,2064,2065,2065,2066,2066,2067,2067,2068,2068,2068,2068,2069,2070,2070,2070,2072,2073,2073,2073,2078,2078,2084,2084,2086,2093,2094,2099,2101,2101,2101,2101,2101,2101],"cdf":[{"year":2025,"prob":0},{"year":2026,"prob":0},{"year":2027,"prob":0},{"year":2028,"prob":0},{"year":2029,"prob":0.0006666666666666666},{"year":2030,"prob":0.0036666666666666666},{"year":2031,"prob":0.009666666666666667},{"year":2032,"prob":0.03766666666666667},{"year":2033,"prob":0.09133333333333334},{"year":2034,"prob":0.177},{"year":2035,"prob":0.2753333333333333},{"year":2036,"prob":0.3873333333333333},{"year":2037,"prob":0.477},{"year":2038,"prob":0.5693333333333334},{"year":2039,"prob":0.641},{"year":2040,"prob":0.7083333333333334},{"year":2041,"prob":0.758},{"year":2042,"prob":0.803},{"year":2043,"prob":0.8386666666666667},{"year":2044,"prob":0.8646666666666667},{"year":2045,"prob":0.8866666666666667},{"year":2046,"prob":0.9053333333333333},{"year":2047,"prob":0.9183333333333333},{"year":2048,"prob":0.9316666666666666},{"year":2049,"prob":0.9413333333333334},{"year":2050,"prob":0.9496666666666667},{"year":2051,"prob":0.9586666666666667},{"year":2052,"prob":0.9636666666666667},{"year":2053,"prob":0.9693333333333334},{"year":2054,"prob":0.9723333333333334},{"year":2055,"prob":0.977},{"year":2056,"prob":0.9793333333333333},{"year":2057,"prob":0.9806666666666667},{"year":2058,"prob":0.983},{"year":2059,"prob":0.9836666666666667},{"year":2060,"prob":0.985},{"year":2061,"prob":0.986},{"year":2062,"prob":0.9873333333333333},{"year":2063,"prob":0.9886666666666667},{"year":2064,"prob":0.9893333333333333},{"year":2065,"prob":0.99},{"year":2066,"prob":0.9906666666666667},{"year":2067,"prob":0.9913333333333333},{"year":2068,"prob":0.9926666666666667},{"year":2069,"prob":0.993},{"year":2070,"prob":0.994},{"year":2071,"prob":0.994},{"year":2072,"prob":0.9943333333333333},{"year":2073,"prob":0.9953333333333333},{"year":2074,"prob":0.9953333333333333},{"year":2075,"prob":0.9953333333333333},{"year":2076,"prob":0.9953333333333333},{"year":2077,"prob":0.9953333333333333},{"year":2078,"prob":0.996},{"year":2079,"prob":0.996},{"year":2080,"prob":0.996},{"year":2081,"prob":0.996},{"year":2082,"prob":0.996},{"year":2083,"prob":0.996},{"year":2084,"prob":0.9966666666666667},{"year":2085,"prob":0.9966666666666667},{"year":2086,"prob":0.997},{"year":2087,"prob":0.997},{"year":2088,"prob":0.997},{"year":2089,"prob":0.997},{"year":2090,"prob":0.997},{"year":2091,"prob":0.997},{"year":2092,"prob":0.997},{"year":2093,"prob":0.9973333333333333},{"year":2094,"prob":0.9976666666666667},{"year":2095,"prob":0.9976666666666667},{"year":2096,"prob":0.9976666666666667},{"year":2097,"prob":0.9976666666666667},{"year":2098,"prob":0.9976666666666667},{"year":2099,"prob":0.998},{"year":2100,"prob":0.998}],"bLo":[0,0,0,0,0,0.0023333333333333335,0.007633333333333333,0.033666666666666664,0.08466666666666667,0.16766666666666666,0.26666666666666666,0.37766666666666665,0.46563333333333334,0.5576333333333333,0.6303333333333333,0.6986666666666667,0.7493333333333333,0.7943333333333333,0.8299666666666666,0.8573333333333333,0.879,0.8976333333333333,0.911,0.9253,0.9353,0.9446,0.9536666666666667,0.9586666666666667,0.9653,0.9686666666666667,0.9733333333333334,0.976,0.9776333333333334,0.98,0.9806666666666667,0.982,0.983,0.9846666666666667,0.986,0.9866666666666667,0.9876666666666667,0.9883333333333333,0.989,0.9906666666666667,0.991,0.992,0.992,0.9923333333333333,0.993,0.993,0.993,0.993,0.993,0.9946333333333334,0.9946333333333334,0.9946333333333334,0.9946333333333334,0.9946333333333334,0.9946333333333334,0.9953333333333333,0.9953333333333333,0.9956666666666667,0.9956666666666667,0.9956666666666667,0.9956666666666667,0.9956666666666667,0.9956666666666667,0.9956666666666667,0.996,0.9966333333333334,0.9966333333333334,0.9966333333333334,0.9966333333333334,0.9966333333333334,0.9969666666666667,0.9969666666666667],"bHi":[0,0,0,0,0.0013333333333333333,0.005,0.011699999999999999,0.04203333333333333,0.09866666666666667,0.18566666666666667,0.28376666666666667,0.39803333333333335,0.48873333333333335,0.5793333333333334,0.6506666666666666,0.716,0.7666666666666667,0.811,0.8463333333333334,0.871,0.893,0.9107,0.9237333333333333,0.936,0.9453666666666667,0.954,0.962,0.9673333333333334,0.973,0.9756666666666667,0.9796666666666667,0.982,0.9836666666666667,0.9856666666666667,0.9863333333333333,0.9876666666666667,0.9883333333333333,0.9893333333333333,0.991,0.9913333333333333,0.992,0.9923333333333333,0.9930333333333333,0.9943333333333333,0.9946666666666667,0.9953333333333333,0.9953333333333333,0.996,0.9966666666666667,0.9966666666666667,0.9966666666666667,0.9966666666666667,0.9966666666666667,0.9976666666666667,0.9976666666666667,0.9976666666666667,0.9976666666666667,0.9976666666666667,0.9976666666666667,0.998,0.998,0.9983333333333333,0.9983333333333333,0.9983333333333333,0.9983333333333333,0.9983333333333333,0.9983333333333333,0.9983333333333333,0.9986666666666667,0.999,0.999,0.999,0.999,0.999,0.999,0.999],"p10":2034,"p50":2038,"p90":2046,"samplingSigma":6.7978015972485935,"parameterSigma":0,"censorFraction":0.002,"medianCensored":false,"censorCodeYear":2101,"estimand":"horizon-coded crossing times; no crossing by YE is coded as YE + 1; dispersion and bootstrap precision describe these coded times, not unidentified actual crossing times"}},"thresholdRobustness":{"label":"Threshold robustness check — diagnostic only, does not overwrite the main clock date.","policy":"per_threat_anchored","globalThreshold":8.5,"perThreatHeadline":2046,"globalHeadline":2048,"deltaYears":2,"mcStandardErrorYears":0.49619780748301057,"mcErrorMethod":"paired bootstrap standard deviation of the P90 contrast; 160 resamples","pairedRandomInputs":true,"estimand":"global minus current-policy P90 of horizon-coded times; not an identified actual-time contrast when either P90 is censored","currentP90Censored":false,"globalP90Censored":false,"currentCensorFraction":0.002,"globalCensorFraction":0.0023333333333333335},"executionSnapshot":{"executedAt":"2026-09-27T16:09:41.680Z","codeIdentifier":"Apocalypse Clock v1.5.0","codeHashFNV1a32":"cfdb57df","codeHashAlgorithm":"FNV-1a 32-bit over UTF-16 code units; non-cryptographic","codeHashScope":"Loaded numerical function bodies listed in codeHashFunctions and their model constants/derived graph state at execution snapshot time; excludes UI, full-file bytes, browser runtime and libraries.","dataIdentifier":"1.9.0","dataHashFNV1a32":"6136218a","primaryDataset":"data_v1_9_0.json","activeDataset":"data_v1_9_0.json","seed":"AC-1.2.6-2026","rngVersion":"mulberry32-v1","parameters":{"scenario":"baseline","nSim":3000,"seed":"AC-1.2.6-2026","threshold":0.4,"cascadeThreshold":0.5,"structuralUncertainty":true,"pressureTurns":true,"depAlpha":0.22,"uncMult":1,"tailDependence":0.15,"vetoThreshold":0.65,"domW":{"civilization":1,"biosphere":1,"technology":1},"weights":{"scale":0.2,"urgency":0.18,"acceleration":0.14,"interdependence":0.18,"irreversibility":0.16,"gov_failure":0.14},"weightProfile":"expert","thresholdPolicy":"per_threat_anchored"},"timeBaseline":{"nowYear":2026,"horizonStartYear":2025,"horizonEndYear":2100},"quantileRules":{"method":"Type 7 linear interpolation","p10":0.1,"p50":0.5,"p90":0.9,"centralIntervalWidth":"P90 - P10 (central 80%)"},"censoringRules":{"noCrossingMarker":2101,"display":">2100","weibullUndefinedMedian":"Finite median beyond horizon: right_censored; non-finite supplied median: invalid. Both retain null point quantiles/probabilities, without fallback; censored medians imply only probability bounds."},"uncertaintyLabels":{"samplingSigma":"SD of mixed horizon-coded times; no crossing by YE is coded YE + 1, not an actual post-horizon crossing time","parameterSigma":"legacy key: sample SD of 160 bootstrap horizon-coded medians; actual median and its MC SE remain unidentified when censored","structuralSigma":"legacy key: cross-aggregator P50 range, not sigma"}},"triggerTrace":{"consistent":true,"nSim":3000,"crossedRuns":2994,"multiBasketRuns":246,"threshold":{"lo":0.4,"hi":0.6},"baskets":[{"key":"ecological_life_support","runs":2490,"share":0.8316633266533067,"groupCount":2,"groupsNeeded":{"1":0.5133333333333333,"2":0.4866666666666667},"groups":[{"id":"climate","members":["climate"],"runs":2193,"share":0.880722891566265},{"id":"ecosystem_integrity","members":["biodiversity","oceans"],"runs":1669,"share":0.6702811244979919}]},{"key":"critical_infrastructure","runs":420,"share":0.1402805611222445,"groupCount":10,"groupsNeeded":{"4":0.32266666666666666,"5":0.5446666666666666,"6":0.13266666666666665},"groups":[{"id":"cyber","members":["cyber"],"runs":378,"share":0.9},{"id":"geopolitics","members":["geopolitics"],"runs":359,"share":0.8547619047619047},{"id":"supply","members":["supply"],"runs":335,"share":0.7976190476190477},{"id":"ai","members":["ai"],"runs":329,"share":0.7833333333333333},{"id":"economic","members":["economic"],"runs":253,"share":0.6023809523809524},{"id":"debt","members":["debt"],"runs":128,"share":0.3047619047619048},{"id":"space","members":["space"],"runs":128,"share":0.3047619047619048},{"id":"nuclear","members":["nuclear"],"runs":125,"share":0.2976190476190476},{"id":"minerals","members":["minerals"],"runs":117,"share":0.2785714285714286},{"id":"autonomousw","members":["autonomousw"],"runs":76,"share":0.18095238095238095}]},{"key":"health_care","runs":164,"share":0.05477621910487642,"groupCount":10,"groupsNeeded":{"4":0.22766666666666666,"5":0.558,"6":0.21433333333333332},"groups":[{"id":"cyber","members":["cyber"],"runs":138,"share":0.8414634146341463},{"id":"supply","members":["supply"],"runs":136,"share":0.8292682926829268},{"id":"amr","members":["amr"],"runs":120,"share":0.7317073170731707},{"id":"economic","members":["economic"],"runs":106,"share":0.6463414634146342},{"id":"bioengineered","members":["bioengineered"],"runs":100,"share":0.6097560975609756},{"id":"pandemics","members":["pandemics"],"runs":81,"share":0.49390243902439024},{"id":"nuclear","members":["nuclear"],"runs":65,"share":0.39634146341463417},{"id":"pollution","members":["pollution"],"runs":58,"share":0.35365853658536583},{"id":"debt","members":["debt"],"runs":55,"share":0.3353658536585366},{"id":"displacement","members":["displacement"],"runs":9,"share":0.054878048780487805}]},{"key":"coordination_exchange","runs":127,"share":0.04241816967267869,"groupCount":15,"groupsNeeded":{"5":0.025,"6":0.3616666666666667,"7":0.38533333333333336,"8":0.213,"9":0.015},"groups":[{"id":"ai","members":["ai"],"runs":115,"share":0.905511811023622},{"id":"geopolitics","members":["geopolitics"],"runs":109,"share":0.8582677165354331},{"id":"cyber","members":["cyber"],"runs":105,"share":0.8267716535433071},{"id":"fragmentation_gov","members":["fragmentation_gov"],"runs":92,"share":0.7244094488188977},{"id":"bioengineered","members":["bioengineered"],"runs":83,"share":0.6535433070866141},{"id":"supply","members":["supply"],"runs":78,"share":0.6141732283464567},{"id":"economic","members":["economic"],"runs":66,"share":0.5196850393700787},{"id":"epistemic","members":["epistemic"],"runs":59,"share":0.4645669291338583},{"id":"space","members":["space"],"runs":52,"share":0.4094488188976378},{"id":"authoritarian","members":["authoritarian"],"runs":44,"share":0.3464566929133858},{"id":"debt","members":["debt"],"runs":40,"share":0.31496062992125984},{"id":"nuclear","members":["nuclear"],"runs":40,"share":0.31496062992125984},{"id":"pandemics","members":["pandemics"],"runs":38,"share":0.2992125984251969},{"id":"autonomousw","members":["autonomousw"],"runs":34,"share":0.2677165354330709},{"id":"displacement","members":["displacement"],"runs":6,"share":0.047244094488188976}]},{"key":"food_water","runs":125,"share":0.041750167000668005,"groupCount":10,"groupsNeeded":{"4":0.060333333333333336,"5":0.536,"6":0.4036666666666667},"groups":[{"id":"geopolitics","members":["geopolitics"],"runs":115,"share":0.92},{"id":"amr","members":["amr"],"runs":99,"share":0.792},{"id":"supply","members":["supply"],"runs":87,"share":0.696},{"id":"bioengineered","members":["bioengineered"],"runs":79,"share":0.632},{"id":"water","members":["water"],"runs":77,"share":0.616},{"id":"pandemics","members":["pandemics"],"runs":72,"share":0.576},{"id":"nuclear","members":["nuclear"],"runs":57,"share":0.456},{"id":"economic","members":["economic"],"runs":56,"share":0.448},{"id":"soils","members":["soils"],"runs":31,"share":0.248},{"id":"displacement","members":["displacement"],"runs":11,"share":0.088}]},{"key":"system_wide","runs":38,"share":0.012692050768203072,"groupCount":22,"groupsNeeded":{"8":0.11466666666666667,"9":0.27366666666666667,"10":0.24833333333333332,"11":0.24433333333333335,"12":0.10766666666666666,"13":0.011333333333333334},"groups":[{"id":"geopolitics","members":["geopolitics"],"runs":35,"share":0.9210526315789473},{"id":"ai","members":["ai"],"runs":33,"share":0.868421052631579},{"id":"ecosystem_integrity","members":["biodiversity","oceans"],"runs":33,"share":0.868421052631579},{"id":"water","members":["water"],"runs":33,"share":0.868421052631579},{"id":"cyber","members":["cyber"],"runs":32,"share":0.8421052631578947},{"id":"fragmentation_gov","members":["fragmentation_gov"],"runs":30,"share":0.7894736842105263},{"id":"amr","members":["amr"],"runs":27,"share":0.7105263157894737},{"id":"pollution","members":["pollution"],"runs":27,"share":0.7105263157894737},{"id":"epistemic","members":["epistemic"],"runs":21,"share":0.5526315789473685},{"id":"autonomousw","members":["autonomousw"],"runs":19,"share":0.5},{"id":"bioengineered","members":["bioengineered"],"runs":19,"share":0.5},{"id":"climate","members":["climate"],"runs":18,"share":0.47368421052631576},{"id":"supply","members":["supply"],"runs":16,"share":0.42105263157894735},{"id":"space","members":["space"],"runs":15,"share":0.39473684210526316},{"id":"economic","members":["economic"],"runs":14,"share":0.3684210526315789},{"id":"minerals","members":["minerals"],"runs":13,"share":0.34210526315789475},{"id":"soils","members":["soils"],"runs":13,"share":0.34210526315789475},{"id":"authoritarian","members":["authoritarian"],"runs":11,"share":0.2894736842105263},{"id":"nuclear","members":["nuclear"],"runs":11,"share":0.2894736842105263},{"id":"debt","members":["debt"],"runs":10,"share":0.2631578947368421},{"id":"pandemics","members":["pandemics"],"runs":10,"share":0.2631578947368421},{"id":"displacement","members":["displacement"],"runs":8,"share":0.21052631578947367}]}]}}};
+
+
+/*!
+ * Apocalypse Clock — https://jerseroman.github.io/apocalypse-clock/
+ * (c) 2026 Apocalypse Clock project authors. See LICENSE.
+ */
+const NOW = 2026, YS = 2025, YE = 2100, YR = YE - YS + 1;
+const MODEL_VERSION = 'Apocalypse Clock v1.5.0';
+const PRIMARY_DATASET_NAME = 'data_v1_9_0.json';
+const AVERAGE_EXPORT_WARNING = 'Average export is numeric-only.';
+const AVERAGE_SOURCE_LIMITATION = 'Average dataset/export preserves averaged numeric mu, lo, and hi values only unless a separate source-list payload is supplied; the current All-AI Average preset does not preserve per-parameter source lists.';
+
+const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+const pct = v => `${Math.round(v * 100)}%`;
+const fmtY = y => (y > YE ? '>2100' : y < YS ? '<'+YS : String(Math.round(y)));
+
+function probabilityByDisplayedYear(summary, rawYear) {
+  if (!summary || !Number.isFinite(rawYear)) return NaN;
+  const displayYear = rawYear > YE ? YE : Math.round(rawYear);
+  if (Array.isArray(summary.cdf) && summary.cdf.length) {
+    const exact = summary.cdf.find(e => e.year === displayYear);
+    if (exact && Number.isFinite(exact.prob)) return clamp(exact.prob, 0, 1);
+    let last = null;
+    for (const e of summary.cdf) {
+      if (e.year <= displayYear) last = e;
+      else break;
+    }
+    if (last && Number.isFinite(last.prob)) return clamp(last.prob, 0, 1);
+  }
+  if (Array.isArray(summary.crossing) && summary.crossing.length) {
+    const n = summary.crossing.length;
+    const k = summary.crossing.reduce((a, y) => a + (Number.isFinite(y) && y <= displayYear ? 1 : 0), 0);
+    return clamp(k / n, 0, 1);
+  }
+  console.warn('Missing CDF/crossing data for displayed-year probability.');
+  return NaN;
+}
+const AXIS_START = 2000, AXIS_END = 2100;
+const AXIS_YEARS = [2000,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100];
+const yearPos = y => clamp(((Math.min(y, AXIS_END) - AXIS_START) / (AXIS_END - AXIS_START)) * 100, 0, 100);
+const nowStamp = () => new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+const fmtYearsLeft = y => {
+  if (!Number.isFinite(y)) return ' ';
+  if (y > YE) return 'No cross';
+  const raw = y - NOW;
+  const val = Math.abs(raw) < 0.05 ? 0 : raw;
+  return `${val.toFixed(Math.abs(val) >= 10 ? 0 : 1)} yr`;
+};
+const daysLeft = y => y > YE ? ' ' : `${Math.max(0, Math.round((y - NOW) * 365.25))} d`;
+const describeHorizonBand = y => {
+  if (!Number.isFinite(y) || y > YE) return 'no crossing ≤ 2100';
+  const decade = Math.floor(y / 10) * 10;
+  const pos = y - decade;
+  const band = pos <= 2 ? 'early' : pos <= 6 ? 'mid' : 'late';
+  return `${band}-${decade}s`;
+};
+
+function quantile(sorted, q) {
+  if (!sorted.length) return 0;
+  const pos = (sorted.length - 1) * q;
+  const lo = Math.floor(pos), hi = Math.ceil(pos);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+
+const DEFAULT_MC_SEED = 'AC-1.2.6-2026';
+const DEFAULT_MC_SEED_HASH = 0x27db295a;
+const RNG_VERSION = 'mulberry32-v1';
+let _mcSeedString = DEFAULT_MC_SEED;
+let _mcRng = null;
+
+function normalizeMonteCarloSeed(seed) {
+  const value = String(seed ?? '').trim();
+  return value || DEFAULT_MC_SEED;
+}
+
+function hashSeedToUint32(seed) {
+  let h = 2166136261 >>> 0;
+  const s = normalizeMonteCarloSeed(seed);
+  if (s === DEFAULT_MC_SEED) return DEFAULT_MC_SEED_HASH;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h || 0x9e3779b9;
+}
+
+function makeSeededRandom(seed) {
+  let a = hashSeedToUint32(seed);
+  return function seededRandom01() {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function createRngContext(seed) {
+  const normalizedSeed = normalizeMonteCarloSeed(seed);
+  const next = makeSeededRandom(normalizedSeed);
+  const random = () => next();
+  const gaussian = () => {
+    let u = 0, v = 0;
+    while (!u) u = random();
+    while (!v) v = random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+  return Object.freeze({
+    seed: normalizedSeed,
+    version: RNG_VERSION,
+    random01: random,
+    randn: gaussian,
+    normalSample: (mean, sd) => mean + gaussian() * sd,
+  });
+}
+
+function resetMonteCarloSeed(seed) {
+  _mcSeedString = normalizeMonteCarloSeed(seed);
+  _mcRng = makeSeededRandom(_mcSeedString);
+  return _mcSeedString;
+}
+
+function random01() {
+  if (!_mcRng) resetMonteCarloSeed(P && P.seed ? P.seed : DEFAULT_MC_SEED);
+  return _mcRng();
+}
+
+function randn() {
+  let u = 0, v = 0;
+  while (!u) u = random01();
+  while (!v) v = random01();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+const normalSample = (mean, sd) => mean + randn() * sd;
+
+function erf(x) {
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x);
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+  const p = 0.3275911;
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+  return sign * y;
+}
+
+const normCdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
+
+function normInv(p) {
+  const pp = clamp(p, 1e-9, 1 - 1e-9);
+  const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924];
+  const b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857];
+  const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373, 4.37466414146497, 2.93816398269878];
+  const d = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
+  const pl = 0.02425, ph = 1 - pl;
+  if (pp < pl) {
+    const q = Math.sqrt(-2 * Math.log(pp));
+    return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+           ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+  }
+  if (pp > ph) {
+    const q = Math.sqrt(-2 * Math.log(1 - pp));
+    return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+            ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+  }
+  const q = pp - 0.5;
+  const r = q * q;
+  return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
+         (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+}
+
+const muOf = x => (x && typeof x === 'object' && 'mu' in x ? x.mu : x);
+const loOf = x => (x && typeof x === 'object' && 'lo' in x ? x.lo : x);
+const hiOf = x => (x && typeof x === 'object' && 'hi' in x ? x.hi : x);
+const sourceOf = x => (x && typeof x === 'object' && 'source' in x ? x.source : '');
+
+const SOURCE_TRACEABILITY_LIMITATION = 'Some expert-judgment threshold or growth-rate entries intentionally keep an empty raw URL because no single primary source defines the normalized destabilization threshold. These are retained as anchored judgments and are not filled with invented citations.';
+function normalizeRawUrlForExport(url) {
+  const raw = String(url || '').trim();
+  if (!raw) return '';
+  const md = raw.match(/^\[[^\]]+\]\((https?:\/\/[^\s)]+)\)$/i);
+  return md ? md[1] : raw;
+}
+function normalizeHttpUrl(url) {
+  const raw = normalizeRawUrlForExport(url);
+  if (!/^https?:\/\//i.test(raw)) return '';
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : '';
+  } catch {
+    return '';
+  }
+}
+function getSourceTraceabilityLimitations(sourceMap = ACTIVE_SOURCE_DATA || {}) {
+  return Object.entries(sourceMap || {})
+    .filter(([, value]) => value && !normalizeHttpUrl(value.url))
+    .map(([key, value]) => ({
+      key,
+      source: value.source || '',
+      strength: value.strength || '',
+      limitation: 'No raw URL is supplied for this parameter; do not infer or fabricate a citation.'
+    }));
+}
+
+const escapeHtml = s => String(s ?? '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
+const THREAT_MECHANISM_CLASSIFICATION = Object.freeze({
+  ai: "amplifier_risk",
+  amr: "amplifier_risk",
+  authoritarian: "amplifier_risk",
+  autonomousw: "amplifier_risk",
+  biodiversity: "catastrophic_pathway",
+  bioengineered: "catastrophic_pathway",
+  climate: "catastrophic_pathway",
+  cyber: "amplifier_risk",
+  debt: "amplifier_risk",
+  displacement: "amplifier_risk",
+  economic: "amplifier_risk",
+  epistemic: "amplifier_risk",
+  fragmentation_gov: "amplifier_risk",
+  geopolitics: "catastrophic_pathway",
+  minerals: "amplifier_risk",
+  nuclear: "catastrophic_pathway",
+  oceans: "catastrophic_pathway",
+  pandemics: "catastrophic_pathway",
+  pollution: "amplifier_risk",
+  soils: "amplifier_risk",
+  space: "amplifier_risk",
+  supply: "amplifier_risk",
+  water: "amplifier_risk"
+});
+
+const THREAT_MECHANISM_COPY = Object.freeze({
+  catastrophic_pathway: {
+    title: "Catastrophic pathway",
+    short: "Potential direct systemic failure pathway.",
+    note: "Catastrophic pathway threat - Potential direct systemic failure pathway.",
+    tooltip: "This threat can plausibly act as a direct systemic failure pathway. The displayed year is still a modelled risk horizon, not a deterministic event date.",
+    aria: "Catastrophic pathway threat - Potential direct systemic failure pathway.",
+    css: "catastrophic"
+  },
+  amplifier_risk: {
+    title: "Amplifier risk",
+    short: "Cascading systemic pressure, not a direct collapse pathway.",
+    note: "Amplifier risk threat - Cascading systemic pressure, not a direct collapse pathway. A bar near the end means this risk is highly saturated in the model and may strongly amplify other threats.",
+    tooltip: "This threat mainly amplifies systemic instability through cascading interactions. The displayed year is a modelled stress horizon, not a standalone civilization-collapse prediction.",
+    aria: "Amplifier risk threat - Cascading systemic pressure, not a direct collapse pathway. A bar near the end means this risk is highly saturated in the model and may strongly amplify other threats.",
+    css: "amplifier"
+  }
+});
+
+const AMPLIFIER_CONTINUATION_A11Y = "No direct crossing through 2100; systemic pressure may persist and amplify other threats.";
+const AMPLIFIER_NO_CROSSING_LABEL = "No direct crossing ≤ 2100; systemic pressure may persist and amplify other threats.";
+
+const THREAT_REVERSIBILITY_OVERRIDES = Object.freeze({
+  authoritarian: "reversible",
+  fragmentation_gov: "reversible",
+  geopolitics: "reversible",
+  minerals: "irreversible"
+});
+
+const THREAT_REVERSIBILITY_COPY = Object.freeze({
+  reversible: {
+    label: "Reversible",
+    css: "reversible",
+    tooltip: "Relatively reversible in this dashboard classification: damage is serious, but recovery or institutional correction remains plausible.",
+    aria: "Reversible threat classification"
+  },
+  partial: {
+    label: "Partly reversible",
+    css: "partial",
+    tooltip: "Partly reversible in this dashboard classification: some damage can be repaired, but recovery may be slow, incomplete, or path-dependent.",
+    aria: "Partly reversible threat classification"
+  },
+  irreversible: {
+    label: "Irreversible",
+    css: "irreversible",
+    tooltip: "Irreversible in this dashboard classification: key damage cannot be fully repaired within a human lifetime. Depending on the threat type, impacts may persist for decades, centuries, or longer, with no plausible recovery, institutional correction, or technical mitigation on a typical human or generational timescale.",
+    aria: "Irreversible threat classification"
+  }
+});
+
+function normalizeMechanismType(value) {
+  const normalized = String(value || '').trim().toLowerCase().replace(/[\s-]+/g, '_');
+  return normalized === 'catastrophic_pathway' || normalized === 'amplifier_risk'
+    ? normalized
+    : 'amplifier_risk';
+}
+
+function mechanismTypeForThreat(entry) {
+  const threatKey = entry && entry.id ? String(entry.id) : '';
+  const mechanismType =
+    entry?.mechanism_classification ||
+    entry?.risk_mechanism_classification ||
+    THREAT_MECHANISM_CLASSIFICATION[threatKey] ||
+    "amplifier_risk";
+  return normalizeMechanismType(mechanismType);
+}
+
+function mechanismCopyForThreat(entry) {
+  const mechanismType = mechanismTypeForThreat(entry);
+  return THREAT_MECHANISM_COPY[mechanismType] || THREAT_MECHANISM_COPY.amplifier_risk;
+}
+
+function threatMechanismNoteHtml(entry) {
+  const copy = mechanismCopyForThreat(entry);
+  return `<div class="threat-mechanism-note ${escapeHtml(copy.css)}" title="${escapeHtml(copy.tooltip)}" aria-label="${escapeHtml(copy.aria)}">${copy.css === 'catastrophic' ? '<span style="margin-right:5px">⚠</span>' : ''}${escapeHtml(copy.note || (copy.title + ' threat - ' + copy.short))}</div>`;
+}
+
+function threatMechanismBadgeHtml(entry, extraClass = '') {
+  const copy = mechanismCopyForThreat(entry);
+  return `<span class="threat-mechanism-pill threat-mechanism-table ${escapeHtml(copy.css)} ${escapeHtml(extraClass)}" title="${escapeHtml(copy.tooltip)}" aria-label="${escapeHtml(copy.aria)}">${escapeHtml(copy.title)}</span>`;
+}
+
+function reversibilityTypeForThreat(entry) {
+  const threatKey = entry && entry.id ? String(entry.id) : '';
+  if (THREAT_REVERSIBILITY_OVERRIDES[threatKey]) return THREAT_REVERSIBILITY_OVERRIDES[threatKey];
+  const score = Number(muOf(entry?.irreversibility));
+  if (!Number.isFinite(score)) return 'partial';
+  if (score <= 3.0) return 'reversible';
+  if (score >= 4.2) return 'irreversible';
+  return 'partial';
+}
+
+function threatReversibilityPillHtml(entry, extraClass = '') {
+  const type = reversibilityTypeForThreat(entry);
+  const copy = THREAT_REVERSIBILITY_COPY[type] || THREAT_REVERSIBILITY_COPY.partial;
+  const score = Number(muOf(entry?.irreversibility));
+  const scoreText = Number.isFinite(score) ? ` Irreversibility score: ${score.toFixed(1)}/5.` : '';
+  return `<span class="t-pill reversibility ${escapeHtml(copy.css)} ${escapeHtml(extraClass)}" title="${escapeHtml(copy.tooltip + scoreText)}" aria-label="${escapeHtml(copy.aria)}">${escapeHtml(copy.label)}</span>`;
+}
+
+const SOBOL_JOE_KUO_46 = [{"s":1,"a":0,"m":[1]},{"s":2,"a":1,"m":[1,3]},{"s":3,"a":1,"m":[1,3,1]},{"s":3,"a":2,"m":[1,1,1]},{"s":4,"a":1,"m":[1,1,3,3]},{"s":4,"a":4,"m":[1,3,5,13]},{"s":5,"a":2,"m":[1,1,5,5,17]},{"s":5,"a":4,"m":[1,1,5,5,5]},{"s":5,"a":7,"m":[1,1,7,11,19]},{"s":5,"a":11,"m":[1,1,5,1,1]},{"s":5,"a":13,"m":[1,1,1,3,11]},{"s":5,"a":14,"m":[1,3,5,5,31]},{"s":6,"a":1,"m":[1,3,3,9,7,49]},{"s":6,"a":13,"m":[1,1,1,15,21,21]},{"s":6,"a":16,"m":[1,3,1,13,27,49]},{"s":6,"a":19,"m":[1,1,1,15,7,5]},{"s":6,"a":22,"m":[1,3,1,15,13,25]},{"s":6,"a":25,"m":[1,1,5,5,19,61]},{"s":7,"a":1,"m":[1,3,7,11,23,15,103]},{"s":7,"a":4,"m":[1,3,7,13,13,15,69]},{"s":7,"a":7,"m":[1,1,3,13,7,35,63]},{"s":7,"a":8,"m":[1,3,5,9,1,25,53]},{"s":7,"a":14,"m":[1,3,1,13,9,35,107]},{"s":7,"a":19,"m":[1,3,1,5,27,61,31]},{"s":7,"a":21,"m":[1,1,5,11,19,41,61]},{"s":7,"a":28,"m":[1,3,5,3,3,13,69]},{"s":7,"a":31,"m":[1,1,7,13,1,19,1]},{"s":7,"a":32,"m":[1,3,7,5,13,19,59]},{"s":7,"a":37,"m":[1,1,3,9,25,29,41]},{"s":7,"a":41,"m":[1,3,5,13,23,1,55]},{"s":7,"a":42,"m":[1,3,7,3,13,59,17]},{"s":7,"a":50,"m":[1,3,1,3,5,53,69]},{"s":7,"a":55,"m":[1,1,5,5,23,33,13]},{"s":7,"a":56,"m":[1,1,7,7,1,61,123]},{"s":7,"a":59,"m":[1,1,7,9,13,61,49]},{"s":7,"a":62,"m":[1,3,3,5,3,55,33]},{"s":8,"a":14,"m":[1,3,1,15,31,13,49,245]},{"s":8,"a":21,"m":[1,3,5,15,31,59,63,97]},{"s":8,"a":22,"m":[1,3,1,11,11,11,77,249]},{"s":8,"a":38,"m":[1,3,1,11,27,43,71,9]},{"s":8,"a":47,"m":[1,1,7,15,21,11,81,45]},{"s":8,"a":49,"m":[1,3,7,3,25,31,65,79]},{"s":8,"a":50,"m":[1,3,1,1,19,11,3,205]},{"s":8,"a":52,"m":[1,1,5,9,19,21,29,157]},{"s":8,"a":56,"m":[1,3,7,11,1,33,89,185]}];
+const SOBOL_BITS = 30;
+const SOBOL_RECIP = 1 / (2 ** SOBOL_BITS);
+const _sobolDirectionCache = new Map();
+
+function lowZeroBit(n) {
+  let bit = 1;
+  let x = n >>> 0;
+  while (x & 1) {
+    bit += 1;
+    x >>>= 1;
+  }
+  return bit;
+}
+
+function getSobolDirections(dimCount) {
+  if (_sobolDirectionCache.has(dimCount)) return _sobolDirectionCache.get(dimCount);
+  if (dimCount < 1 || dimCount > 1 + SOBOL_JOE_KUO_46.length) {
+    throw new Error(`Sobol direction table supports 1..${1 + SOBOL_JOE_KUO_46.length} dimensions, received ${dimCount}.`);
+  }
+  const dirs = Array.from({ length: dimCount }, () => new Uint32Array(SOBOL_BITS));
+  for (let bit = 0; bit < SOBOL_BITS; bit++) {
+    dirs[0][bit] = (1 << (SOBOL_BITS - bit - 1)) >>> 0;
+  }
+  for (let dim = 1; dim < dimCount; dim++) {
+    const meta = SOBOL_JOE_KUO_46[dim - 1];
+    const row = dirs[dim];
+    for (let bit = 0; bit < Math.min(meta.s, SOBOL_BITS); bit++) {
+      row[bit] = (meta.m[bit] << (SOBOL_BITS - bit - 1)) >>> 0;
+    }
+    for (let bit = meta.s; bit < SOBOL_BITS; bit++) {
+      let value = (row[bit - meta.s] ^ (row[bit - meta.s] >>> meta.s)) >>> 0;
+      for (let k = 1; k < meta.s; k++) {
+        if ((meta.a >> (meta.s - 1 - k)) & 1) value = (value ^ row[bit - k]) >>> 0;
+      }
+      row[bit] = value >>> 0;
+    }
+  }
+  _sobolDirectionCache.set(dimCount, dirs);
+  return dirs;
+}
+
+function generateSobolPoints(dimCount, count, skip = 1) {
+  const dirs = getSobolDirections(dimCount);
+  const state = new Uint32Array(dimCount);
+  const points = [];
+  let index = 0;
+  function nextPoint() {
+    const point = Array.from(state, value => value * SOBOL_RECIP);
+    const c = lowZeroBit(index);
+    const col = Math.min(SOBOL_BITS, c) - 1;
+    for (let dim = 0; dim < dimCount; dim++) state[dim] = (state[dim] ^ dirs[dim][col]) >>> 0;
+    index += 1;
+    return point;
+  }
+  for (let i = 0; i < skip; i++) nextPoint();
+  for (let i = 0; i < count; i++) points.push(nextPoint());
+  return points;
+}
+
+const domCol = d => d === 'biosphere' ? '#2a9d6e' : d === 'technology' ? '#3a78c9' : '#c94040';
+
+/* Threshold horizon: T = NOW + log(threshold / priority) / log(1 + growth_rate). */
+const GLOBAL_THRESHOLD = 8.5; // destabilization level on the raw priority scale
+const THRESHOLD_POLICY = 'per_threat_anchored';
+const THRESHOLD_MIN = 7.8;
+const THRESHOLD_MAX = 9.2;
+
+function getThreatThreshold(threat, policy = THRESHOLD_POLICY) {
+  if (policy === 'global') return GLOBAL_THRESHOLD;
+
+  const raw = Number(threat && threat.threshold != null
+    ? muOf(threat.threshold)
+    : GLOBAL_THRESHOLD);
+
+  if (!Number.isFinite(raw)) return GLOBAL_THRESHOLD;
+
+  return clamp(raw, THRESHOLD_MIN, THRESHOLD_MAX);
+}
+
+function computeHorizon(priority, growthRate, threshold) {
+  threshold = Number(threshold);
+  if (!Number.isFinite(threshold)) threshold = GLOBAL_THRESHOLD;
+  threshold = clamp(threshold, THRESHOLD_MIN, THRESHOLD_MAX);
+  if (priority <= 0 || isNaN(priority)) return YE + 1;
+  if (priority >= threshold) return NOW;        // already critical
+  if (growthRate <= 0) return YE + 1;           // static no crossing
+  const t = NOW + Math.log(threshold / priority) / Math.log(1 + growthRate);
+  return isFinite(t) ? Math.min(YE + 1, Math.ceil(t)) : YE + 1;
+}
+
+const SC = {
+  baseline: {
+    label: 'Baseline', color: '#c94040',
+    s: { sc:0, ur:0, ac:0, id:0, ir:0, gf:0 },
+    domMult: { civilization:1, biosphere:1, technology:1 },
+    grMult:  { civilization:1, biosphere:1, technology:1 },
+    threatMult: {},
+    uncWidthMult: 1.0,
+  },
+  coordination: {
+    label: 'High Cooperation', color: '#2a9d6e',
+    s: { sc:-.4, ur:-.3, ac:-.25, id:-.2, ir:.1, gf:-.35 },
+    domMult: { civilization:.85, biosphere:.80, technology:.90 },
+    grMult:  { civilization:.70, biosphere:.65, technology:.80 },
+    threatMult: { geopolitics:.7, nuclear:.6, fragmentation_gov:.7 },
+    uncWidthMult: 0.8,
+  },
+  cascade: {
+    label: 'Polycrisis Cascade', color: '#8b2222',
+    s: { sc:.4, ur:.4, ac:.35, id:.35, ir:.2, gf:.3 },
+    domMult: { civilization:1.25, biosphere:1.20, technology:1.10 },
+    grMult:  { civilization:1.50, biosphere:1.40, technology:1.20 },
+    threatMult: { pandemics:1.4, nuclear:1.3, geopolitics:1.35, displacement:1.4, economic:1.3 },
+    uncWidthMult: 1.5,
+  },
+  techaccel: {
+    label: 'Tech Acceleration', color: '#7c5cbf',
+    s: { sc:.1, ur:.2, ac:.3, id:.15, ir:.05, gf:.15 },
+    domMult: { civilization:1.0, biosphere:1.0, technology:1.45 },
+    grMult:  { civilization:1.0, biosphere:1.0, technology:1.60 },
+    threatMult: { ai:1.5, cyber:1.4, autonomousw:1.35, space:1.3, epistemic:1.3 },
+    uncWidthMult: 1.3,
+  },
+  fragmentation: {
+    label: 'Fragmentation', color: '#a03030',
+    s: { sc:.25, ur:.3, ac:.2, id:.28, ir:.1, gf:.25 },
+    domMult: { civilization:1.20, biosphere:1.0, technology:.95 },
+    grMult:  { civilization:1.35, biosphere:1.10, technology:1.0 },
+    threatMult: { geopolitics:1.3, fragmentation_gov:1.4, nuclear:1.2, displacement:1.35, authoritarian:1.3 },
+    uncWidthMult: 1.25,
+  },
+};
+
+
+/* MCDA inputs use 1-5 ordinal ranges; growth_rate and threshold remain judgment-based model fields. */
+const PARAM_FIELDS = ['scale','urgency','acceleration','interdependence','irreversibility','gov_failure','growth_rate','threshold'];
+const ORD_RANGE = { strong:0.40, moderate:0.65, weak:0.95 };
+const GROWTH_RANGE = { strong:0.22, moderate:0.38, weak:0.60 };
+const THRESH_RANGE = { strong:0.28, moderate:0.42, weak:0.60 };
+const BUNDLED_SOURCE_DATA = JSON.parse(document.getElementById('bundledSources').textContent || '{}');
+function datasetVersionFromSourceMap(sourceMap) {
+  const meta = sourceMap && typeof sourceMap === 'object' ? sourceMap._meta : null;
+  const raw = meta && (meta.schema_version || meta.dataset_version || meta.version);
+  return String(raw || '').trim();
+}
+function currentDatasetVersion() {
+  const base = (ACTIVE_SOURCE_META && ACTIVE_SOURCE_META.datasetVersion)
+    || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA)
+    || 'unknown';
+  if (ACTIVE_EVIDENCE_META && ACTIVE_EVIDENCE_META.active) {
+    const overlayVersion = ACTIVE_EVIDENCE_META.datasetVersion || 'evidence overlay';
+    return `${base} + ${overlayVersion}`;
+  }
+  return base;
+}
+let ACTIVE_SOURCE_DATA = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA));
+let CUSTOM_SOURCE_DATA = null;
+let ACTIVE_EVIDENCE_DATA = null;
+let ACTIVE_SOURCE_DOCUMENT_META = JSON.parse(JSON.stringify(BUNDLED_SOURCE_DATA._meta || {}));
+let ACTIVE_SOURCE_META = { mode:'bundled', fileName:'data_v1_9_0.json', datasetVersion: datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown', message:'Bundled data_v1_9_0.json parameter map embedded in widget as the default primary source.', uploaded:false };
+let ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
+const cleanSourceText = s => String(s ?? '')
+  .replace(/\s*\[(?:cite|web)\s*:[^\]]+\]/gi, '')
+  .replace(/\[([^\]\n]{1,160})\]\((https?:\/\/[^\s)]+(?:\([^\)]*\)[^\s)]*)?)\)/gi, '$1')
+  .replace(/\s{2,}/g, ' ')
+  .trim();
+function classifySourceType(source, url, strength) {
+  const s = `${source || ''} ${url || ''}`.toLowerCase();
+  if ((strength || '').toLowerCase().includes('expert') || s.includes('expert judgment')) return 'expert judgment';
+  if (s.includes('model assumption') || s.includes('model convention')) return 'model assumption';
+  if (s.includes('science.org') || s.includes('nature.com') || s.includes('journal') || s.includes('doi.org')) return 'peer-reviewed';
+  if (s.includes('ipcc') || s.includes('wmo') || s.includes('who') || s.includes('un ') || s.includes('unep') || s.includes('unesco') || s.includes('iea') || s.includes('world bank') || s.includes('fao') || s.includes('sipri') || s.includes('unhcr') || s.includes('v-dem')) return 'official report';
+  if (s.includes('dataset') || s.includes('our world in data') || s.includes('speciesradar') || s.includes('data')) return 'institutional dataset';
+  if (s.includes('industry') || s.includes('market') || s.includes('forecast')) return 'industry report';
+  return 'institutional dataset';
+}
+function confidenceGradeFromStrength(strength) {
+  const key = String(strength || '').toLowerCase();
+  if (key === 'strong') return 'A';
+  if (key === 'moderate' || key === 'uploaded') return 'B';
+  if (key === 'weak' || key === 'anchored_judgment') return 'C';
+  if (key === 'expert_judgment' || key.includes('expert')) return 'D';
+  return 'C';
+}
+
+const EVIDENCE_GRADES = Object.freeze(['A', 'B', 'C', 'D', 'U']);
+
+function normalizeEvidenceGrade(value, fallback = 'U') {
+  if (value == null || String(value).trim() === '') return fallback;
+  const grade = String(value).trim().toUpperCase();
+  return EVIDENCE_GRADES.includes(grade) ? grade : fallback;
+}
+
+function cloneJsonValue(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function normalizeParameterEvidence(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  return {
+    calibration_grade: normalizeEvidenceGrade(value.calibration_grade ?? value.parameter_calibration_grade ?? value.evidence_grade),
+    mapping_type: cleanSourceText(value.mapping_type || ''),
+    directness: cleanSourceText(value.directness || ''),
+    assessment_status: cleanSourceText(value.assessment_status || ''),
+    rationale: cleanSourceText(value.rationale || ''),
+    assessed_at: typeof value.assessed_at === 'string' ? value.assessed_at.trim() : '',
+  };
+}
+function rangeMetaOf(x) {
+  const meta = x && typeof x === 'object' ? x : {};
+  return {
+    url: meta.url ? meta.url : '',
+    accessed: meta.accessed ? meta.accessed : '',
+    strength: meta.strength ? meta.strength : '',
+    note: meta.note ? meta.note : '',
+    type: meta.type ? meta.type : '',
+    confidence: meta.confidence ? meta.confidence : '',
+    fallback: !!meta.fallback,
+    overlay: !!meta.overlay,
+    overlaySource: meta.overlaySource ? meta.overlaySource : '',
+    overlayWeight: Number.isFinite(meta.overlayWeight) ? meta.overlayWeight : null,
+
+    growth_kind: typeof meta.growth_kind === 'string' ? meta.growth_kind : '',
+    risk_conversion: Number.isFinite(meta.risk_conversion) ? meta.risk_conversion : null,
+    raw_indicator_growth: Number.isFinite(meta.raw_indicator_growth) ? meta.raw_indicator_growth : null,
+    effective_growth_calibrated: meta.effective_growth_calibrated === true,
+    threat_specific_cap: Number.isFinite(meta.threat_specific_cap) ? Math.max(0, meta.threat_specific_cap) : null,
+    calibration_note: typeof meta.calibration_note === 'string' ? meta.calibration_note : '',
+    parameter_evidence: meta.parameter_evidence ? cloneJsonValue(meta.parameter_evidence) : null,
+  };
+}
+
+function rangedValue(mu, lo, hi, source, extras) {
+  return { mu, lo, hi, source, ...(extras || {}) };
+}
+
+function autoRange(mu, quality, source, kind, bounds) {
+  const [loB, hiB] = bounds;
+  const spreadMap = kind === 'growth_rate' ? GROWTH_RANGE : kind === 'threshold' ? THRESH_RANGE : ORD_RANGE;
+  const frac = spreadMap[quality] || spreadMap.moderate;
+  const extras = {
+    strength: quality,
+    type: quality === 'uploaded' ? 'institutional dataset' : (String(source).toLowerCase().includes('expert judgment') ? 'expert judgment' : 'model assumption'),
+    confidence: confidenceGradeFromStrength(String(source).toLowerCase().includes('expert judgment') ? 'expert_judgment' : quality),
+    note: `Derived range used when no explicit source-map entry exists for ${kind === 'growth_rate' ? 'scenario risk-growth proxy' : kind}; value derived from the evidence-strength band.`,
+    fallback: true,
+  };
+  if (kind === 'growth_rate') {
+    return rangedValue(mu, Math.max(loB, mu * (1 - frac)), Math.min(hiB, mu * (1 + frac)), source, extras);
+  }
+  if (kind === 'threshold') {
+    return rangedValue(mu, Math.max(loB, mu * (1 - frac * 0.5)), Math.min(hiB, mu * (1 + frac * 0.5)), source, extras);
+  }
+  return rangedValue(mu, clamp(mu - frac, loB, hiB), clamp(mu + frac, loB, hiB), source, extras);
+}
+
+const fieldKind = field => field === 'growth_rate' ? 'growth_rate' : field === 'threshold' ? 'threshold' : 'ordinal';
+const fieldBounds = field => field === 'growth_rate' ? [0.0005, 0.25] : field === 'threshold' ? [4.5, 12] : [1, 5];
+const sourceKey = (id, field) => `${id}.${field}`;
+
+function normalizeSourceEntry(entry, fallbackSource, fallbackStrength) {
+  if (!entry || typeof entry !== 'object') return null;
+  if (![entry.mu, entry.lo, entry.hi].every(Number.isFinite)) return null;
+  if (!(entry.lo <= entry.mu && entry.mu <= entry.hi)) return null;
+
+  const strength = typeof entry.strength === 'string' ? entry.strength : fallbackStrength;
+
+  const normalized = {
+    mu: entry.mu,
+    lo: entry.lo,
+    hi: entry.hi,
+    source: cleanSourceText(typeof entry.source === 'string' && entry.source.trim() ? entry.source : fallbackSource),
+    url: normalizeHttpUrl(entry.url),
+    accessed: typeof entry.accessed === 'string' ? entry.accessed : '',
+    strength,
+    note: cleanSourceText(typeof entry.note === 'string' ? entry.note : ''),
+    type: classifySourceType(entry.source, entry.url, strength),
+    confidence: confidenceGradeFromStrength(strength),
+    fallback: false,
+  };
+
+  const explicitParameterEvidence = entry.parameter_evidence || (
+    entry.parameter_calibration_grade != null || entry.evidence_grade != null
+      ? {
+          calibration_grade: entry.parameter_calibration_grade ?? entry.evidence_grade,
+          mapping_type: entry.mapping_type,
+          directness: entry.directness,
+          assessment_status: entry.assessment_status,
+          rationale: entry.rationale,
+          assessed_at: entry.assessed_at,
+        }
+      : null
+  );
+  if (explicitParameterEvidence) normalized.parameter_evidence = normalizeParameterEvidence(explicitParameterEvidence);
+
+  if (typeof entry.growth_kind === 'string' && entry.growth_kind.trim()) {
+    normalized.growth_kind = entry.growth_kind.trim();
+  }
+
+  if (Number.isFinite(entry.risk_conversion)) {
+    normalized.risk_conversion = clamp(entry.risk_conversion, 0, 1);
+  }
+
+  if (Number.isFinite(entry.raw_indicator_growth)) {
+    normalized.raw_indicator_growth = Math.max(0, entry.raw_indicator_growth);
+  }
+
+  if (entry.effective_growth_calibrated === true) {
+    normalized.effective_growth_calibrated = true;
+  }
+
+  if (Number.isFinite(entry.threat_specific_cap)) {
+    normalized.threat_specific_cap = Math.max(0, entry.threat_specific_cap);
+  }
+
+  if (typeof entry.calibration_note === 'string' && entry.calibration_note.trim()) {
+    normalized.calibration_note = cleanSourceText(entry.calibration_note);
+  }
+
+  if (entry.functional_weight != null) {
+    if (!Number.isFinite(entry.functional_weight) || entry.functional_weight < 0) throw new Error('Invalid functional weight.');
+    normalized.functional_weight = entry.functional_weight;
+  }
+  if (entry.critical_services != null) {
+    if (!Array.isArray(entry.critical_services) || !entry.critical_services.every(x => typeof x === 'string' && /^[a-z_]+$/.test(x))) throw new Error('Invalid critical services.');
+    normalized.critical_services = [...new Set(entry.critical_services)];
+  }
+  if (entry.dependency_weights != null) {
+    const edges = entry.dependency_weights;
+    if (!edges || typeof edges !== 'object' || Array.isArray(edges) || !Object.entries(edges).every(([id, weight]) => /^[a-z0-9_]+$/.test(id) && Number.isFinite(weight) && weight >= 0) || Object.values(edges).reduce((s, v) => s + v, 0) > 1 + 1e-10) throw new Error('Invalid fixed dependency weights.');
+    normalized.dependency_weights = { ...edges };
+  }
+  if (typeof entry.functional_failure === 'string') normalized.functional_failure = cleanSourceText(entry.functional_failure);
+  if (typeof entry.functional_overlap_group === 'string' && /^[a-z0-9_]+$/.test(entry.functional_overlap_group)) normalized.functional_overlap_group = entry.functional_overlap_group;
+  if (typeof entry.functional_inducible === 'boolean') normalized.functional_inducible = entry.functional_inducible;
+  if (entry.dependency_lags != null) {
+    if (!entry.dependency_lags || typeof entry.dependency_lags !== 'object' || Array.isArray(entry.dependency_lags) || !Object.values(entry.dependency_lags).every(x => Number.isInteger(x) && x >= 0 && x <= 100)) throw new Error('Invalid dependency lag.');
+    normalized.dependency_lags = { ...entry.dependency_lags };
+  }
+
+  return normalized;
+}
+
+function sourceBackedRange(spec, field) {
+  const explicitSource = field === 'growth_rate'
+    ? (spec.growthSource || spec.source || 'internal calibration convention')
+    : field === 'threshold'
+      ? (spec.thresholdSource || spec.source || 'internal calibration convention')
+      : (spec.source || 'internal calibration convention');
+  const fromMap = normalizeSourceEntry(ACTIVE_SOURCE_DATA[sourceKey(spec.id, field)], explicitSource, spec.evStr);
+  if (fromMap) {
+    const [loB, hiB] = fieldBounds(field);
+    return {
+      ...fromMap,
+      lo: clamp(fromMap.lo, loB, hiB),
+      mu: clamp(fromMap.mu, loB, hiB),
+      hi: clamp(fromMap.hi, loB, hiB),
+    };
+  }
+  return autoRange(spec[field], spec.evStr, explicitSource, fieldKind(field), fieldBounds(field));
+}
+
+function makeThreat(spec) {
+  const threshold = sourceBackedRange(spec, 'threshold');
+  const fallback = BUNDLED_SOURCE_DATA._meta?.functional_model?.nodes?.[spec.id] || {};
+  const dependencyWeights = threshold.dependency_weights || fallback.dependency_weights;
+  return {
+    ...spec,
+    deps: dependencyWeights ? Object.keys(dependencyWeights) : [...(spec.deps || [])],
+    dependency_weights: dependencyWeights ? { ...dependencyWeights } : Object.fromEntries((spec.deps || []).map(id => [id, 1 / spec.deps.length])),
+    functional_weight: threshold.functional_weight ?? fallback.functional_weight ?? 1,
+    critical_services: [...(threshold.critical_services || fallback.critical_services || [])],
+    functional_failure: threshold.functional_failure || fallback.functional_failure || 'Standalone normalized functional-failure anchor; not a measured physical tipping point.',
+    functional_overlap_group: threshold.functional_overlap_group || fallback.functional_overlap_group || spec.id,
+    functional_inducible: threshold.functional_inducible ?? fallback.functional_inducible ?? true,
+    dependency_lags: { ...(threshold.dependency_lags || fallback.dependency_lags || {}) },
+    scale: sourceBackedRange(spec, 'scale'),
+    urgency: sourceBackedRange(spec, 'urgency'),
+    acceleration: sourceBackedRange(spec, 'acceleration'),
+    interdependence: sourceBackedRange(spec, 'interdependence'),
+    irreversibility: sourceBackedRange(spec, 'irreversibility'),
+    gov_failure: sourceBackedRange(spec, 'gov_failure'),
+    growth_rate: sourceBackedRange(spec, 'growth_rate'),
+    threshold,
+  };
+}
+
+const THREAT_SPECS = [
+  ({ id:'climate', name:'Climate Breakdown', domain:'biosphere', category:'Climate', evStr:'strong', process_type:'continuous',
+    source:'IPCC AR6 Synthesis Report, Summary for Policymakers (2023)',
+    scale:5, urgency:5, acceleration:4.8, interdependence:5, irreversibility:4.8, gov_failure:4.2,
+    growth_rate:0.010, threshold:8.8,
+    deps:['water','soils','geopolitics','oceans'],
+    mechanism:'Warming, tipping cascades, crop loss, sea-level rise, compound extremes' }),
+
+  ({ id:'biodiversity', name:'Biodiversity Loss', domain:'biosphere', category:'Biosphere', evStr:'strong', process_type:'continuous',
+    source:'IPBES Global Assessment Report on Biodiversity and Ecosystem Services (2019)',
+    scale:5, urgency:5, acceleration:4.7, interdependence:5, irreversibility:5, gov_failure:4.5,
+    growth_rate:0.012, threshold:9.0,
+    deps:['climate','soils','oceans'],
+    mechanism:'Mass extinction, ecosystem collapse, food-web breakdown' }),
+
+  ({ id:'soils', name:'Soil & Food System', domain:'biosphere', category:'Food', evStr:'strong', process_type:'continuous',
+    source:'FAO The State of the World’s Land and Water Resources for Food and Agriculture 2021',
+    scale:4, urgency:4, acceleration:4.2, interdependence:5, irreversibility:4.0, gov_failure:4.2,
+    growth_rate:0.009, threshold:8.0,
+    deps:['climate','water'],
+    mechanism:'Topsoil depletion, desertification, agricultural capacity loss' }),
+
+  ({ id:'water', name:'Freshwater Stress', domain:'biosphere', category:'Water', evStr:'strong', process_type:'continuous',
+    source:'WMO State of Global Water Resources 2023 (2024)',
+    scale:5, urgency:5, acceleration:4.6, interdependence:5, irreversibility:4.1, gov_failure:4.3,
+    growth_rate:0.011, threshold:8.8,
+    deps:['climate','soils','geopolitics'],
+    mechanism:'Aquifer depletion, glacial retreat, demand-supply gap' }),
+
+  ({ id:'oceans', name:'Ocean Degradation', domain:'biosphere', category:'Oceans', evStr:'strong', process_type:'continuous',
+    source:'UNESCO State of the Ocean Report 2024',
+    scale:5, urgency:4, acceleration:4.1, interdependence:5, irreversibility:4.4, gov_failure:4.5,
+    growth_rate:0.014, threshold:8.0,
+    deps:['climate','biodiversity'],
+    mechanism:'Acidification, deoxygenation, marine ecosystem collapse' }),
+
+  ({ id:'pollution', name:'Toxic Pollution & PFAS', domain:'biosphere', category:'Pollution', evStr:'moderate', process_type:'continuous',
+    source:'UNEP Global Chemicals Outlook II (2019)',
+    scale:4, urgency:3, acceleration:4.0, interdependence:4.2, irreversibility:4.2, gov_failure:2.8,
+    growth_rate:0.006, threshold:7.5,
+    deps:['oceans','biodiversity'],
+    mechanism:'PFAS persistence, microplastic bioaccumulation, endocrine disruption' }),
+  ({ id:'pandemics', name:'Pandemic & Biosecurity', domain:'civilization', category:'Health', evStr:'strong', process_type:'event',
+    source:'WHO Pathogens prioritization: a scientific framework for epidemic and pandemic research preparedness (2024)',
+    scale:5, urgency:5, acceleration:4.4, interdependence:5, irreversibility:2.9, gov_failure:4.2,
+    growth_rate:0.018, threshold:8.5,
+    deps:['amr','geopolitics','supply'],
+    mechanism:'Zoonotic spillover, engineered pathogens, global spread vectors' }),
+
+  ({ id:'amr', name:'Antimicrobial Resistance', domain:'civilization', category:'Health', evStr:'strong', process_type:'continuous',
+    source:'WHO outlines 40 research priorities on antimicrobial resistance (2023)',
+    scale:4, urgency:4, acceleration:4.2, interdependence:4.5, irreversibility:3.9, gov_failure:3.8,
+    growth_rate:0.012, threshold:8.0,
+    deps:['pandemics','geopolitics'],
+    mechanism:'Post-antibiotic era, surgical risk collapse, agricultural overuse' }),
+
+  ({ id:'bioengineered', name:'Engineered Biological Event', domain:'civilization', category:'Biosecurity', evStr:'moderate', process_type:'event',
+    source:'internal calibration convention',
+    scale:5, urgency:4, acceleration:3.2, interdependence:4.7, irreversibility:4.8, gov_failure:5,
+    growth_rate:0.025, threshold:9.0,
+    deps:['ai','geopolitics','pandemics'],
+    mechanism:'AI-accelerated biodesign, dual-use research, state/non-state actors' }),
+
+  ({ id:'nuclear', name:'Nuclear Conflict', domain:'civilization', category:'War', evStr:'moderate', process_type:'event',
+    source:'SIPRI Yearbook 2024',
+    scale:5, urgency:5, acceleration:2.7, interdependence:5, irreversibility:5, gov_failure:5,
+    growth_rate:0.022, threshold:9.2,
+    deps:['geopolitics','ai','autonomousw'],
+    mechanism:'Escalation ladder failure, accidental launch, arms-control collapse' }),
+
+  ({ id:'supply', name:'Energy & Supply Chains', domain:'civilization', category:'Energy', evStr:'strong', process_type:'event',
+    source:'World Economic Forum Global Risks Report 2025',
+    scale:4, urgency:5, acceleration:4.6, interdependence:5, irreversibility:3.2, gov_failure:4.0,
+    growth_rate:0.014, threshold:8.2,
+    deps:['geopolitics','climate','cyber','minerals'],
+    mechanism:'Critical infrastructure fragility, just-in-time breakdown, energy transition risk' }),
+
+  ({ id:'geopolitics', name:'Geopolitical Escalation', domain:'civilization', category:'Geopolitics', evStr:'strong', process_type:'event',
+    source:'World Economic Forum Global Risks Report 2025',
+    scale:5, urgency:5, acceleration:4.4, interdependence:5, irreversibility:3.5, gov_failure:4.1,
+    growth_rate:0.016, threshold:8.8,
+    deps:['nuclear','supply','ai','pandemics'],
+    mechanism:'Multi-polar rivalry, arms races, breakdown of international order' }),
+
+  ({ id:'fragmentation_gov', name:'Global Governance Fragmentation', domain:'civilization', category:'Governance', evStr:'moderate', process_type:'regime',
+    source:'World Economic Forum Global Risks Report 2025; internal calibration convention',
+    scale:4, urgency:4, acceleration:4.0, interdependence:5, irreversibility:3.8, gov_failure:5,
+    growth_rate:0.014, threshold:8.2,
+    deps:['geopolitics','authoritarian','epistemic'],
+    mechanism:'Institutional paralysis, UN dysfunction, coordination failure on global commons' }),
+
+  ({ id:'economic', name:'Economic Fracture', domain:'civilization', category:'Finance', evStr:'moderate', process_type:'regime',
+    source:'World Economic Forum Global Risks Report 2025',
+    scale:4, urgency:4, acceleration:3.8, interdependence:4.8, irreversibility:3.0, gov_failure:3.5,
+    growth_rate:0.013, threshold:8.0,
+    deps:['geopolitics','supply','cyber'],
+    mechanism:'Sovereign debt cascade, currency crises, financial system contagion' }),
+
+  ({ id:'debt', name:'Debt / Financial Contagion', domain:'civilization', category:'Finance', evStr:'moderate', process_type:'continuous',
+    source:'World Bank International Debt Report 2024',
+    scale:4, urgency:3, acceleration:3.5, interdependence:4.5, irreversibility:2.8, gov_failure:3.2,
+    growth_rate:0.010, threshold:7.8,
+    deps:['economic','geopolitics','supply'],
+    mechanism:'Overleveraged sovereign balance sheets, contagion via global bond markets' }),
+
+  ({ id:'displacement', name:'Mass Displacement', domain:'civilization', category:'Society', evStr:'moderate', process_type:'continuous',
+    source:'UNHCR Global Trends Report 2024, published June 2025',
+    scale:4, urgency:4, acceleration:4.0, interdependence:4.5, irreversibility:3.2, gov_failure:3.8,
+    growth_rate:0.013, threshold:8.0,
+    deps:['climate','geopolitics','soils','water'],
+    mechanism:'Climate and conflict migration, receiving-state capacity collapse' }),
+
+  ({ id:'authoritarian', name:'Authoritarian Drift', domain:'civilization', category:'Governance', evStr:'moderate', process_type:'continuous',
+    source:'V-Dem Democracy Report 2025',
+    scale:4, urgency:4, acceleration:3.9, interdependence:4.0, irreversibility:3.5, gov_failure:3.6,
+    growth_rate:0.010, threshold:7.8,
+    deps:['geopolitics','epistemic','economic'],
+    mechanism:'Democratic backsliding, surveillance-state lock-in, political violence' }),
+
+  ({ id:'epistemic', name:'Epistemic Breakdown', domain:'civilization', category:'Society', evStr:'moderate', process_type:'continuous',
+    source:'World Economic Forum Global Risks Report 2025',
+    scale:3, urgency:4, acceleration:4.0, interdependence:4.2, irreversibility:3.0, gov_failure:3.2,
+    growth_rate:0.011, threshold:7.5,
+    deps:['ai','authoritarian'],
+    mechanism:'Mass disinformation, AI-generated reality distortion, trust collapse' }),
+  ({ id:'ai', name:'Advanced AI Destabilizer', domain:'technology', category:'AI', evStr:'moderate', process_type:'regime',
+    source:'internal calibration convention',
+    scale:4, urgency:4, acceleration:3.8, interdependence:5, irreversibility:3.7, gov_failure:4.6,
+    growth_rate:0.020, threshold:8.5,
+    deps:['cyber','geopolitics','bioengineered','supply'],
+    mechanism:'Misaligned AGI, AI-enabled disinformation, autonomous decision loops' }),
+
+  ({ id:'cyber', name:'Systemic Cyberattacks', domain:'technology', category:'Cyber', evStr:'strong', process_type:'event',
+    source:'ENISA Threat Landscape 2024',
+    scale:4, urgency:5, acceleration:4.3, interdependence:5, irreversibility:2.5, gov_failure:3.9,
+    growth_rate:0.018, threshold:8.2,
+    deps:['ai','geopolitics','supply'],
+    mechanism:'Critical infrastructure breach, SCADA attacks, internet fragmentation' }),
+
+  ({ id:'autonomousw', name:'Autonomous Weapons Escalation', domain:'technology', category:'AI', evStr:'weak', process_type:'regime',
+    source:'internal calibration convention',
+    scale:4, urgency:3, acceleration:3.0, interdependence:4.2, irreversibility:4.0, gov_failure:4.5,
+    growth_rate:0.015, threshold:8.0,
+    deps:['ai','geopolitics','nuclear'],
+    mechanism:'Autonomous weapon proliferation, speed-of-machine escalation, attribution failure' }),
+
+  ({ id:'minerals', name:'Critical Minerals Bottleneck', domain:'technology', category:'Resources', evStr:'moderate', process_type:'continuous',
+    source:'IEA Global Critical Minerals Outlook 2024',
+    scale:3, urgency:3, acceleration:3.6, interdependence:3.8, irreversibility:3.1, gov_failure:2.6,
+    growth_rate:0.008, threshold:7.0,
+    deps:['geopolitics','supply'],
+    mechanism:'Rare-earth concentration, transition-metal demand surge, geopolitical weaponisation' }),
+
+  ({ id:'space', name:'Space Infrastructure Disruption', domain:'technology', category:'Space', evStr:'weak', process_type:'event',
+    source:'internal calibration convention',
+    scale:4, urgency:2, acceleration:2.8, interdependence:4.0, irreversibility:3.5, gov_failure:3.8,
+    growth_rate:0.012, threshold:7.8,
+    deps:['geopolitics','cyber','ai'],
+    mechanism:'Kessler syndrome, satellite denial, GPS/comms loss, Carrington-scale solar event' }),
+];
+
+let THREATS = [];
+let THREAT_ID_LIST = [];
+let THREAT_ID_SET = new Set();
+let GLOBAL_STRESS_CAPACITY = 0;
+let OUT_DEGREES = [];
+let MAX_OUT_DEGREE = 1;
+let MEAN_OUT_DEGREE = 1;
+let DEP_GRAPH = { idx:{}, matrix:[] };
+
+function buildDepGraph(threats) {
+  const idx = Object.fromEntries(threats.map((t, i) => [t.id, i]));
+  const matrix = threats.map(() => threats.map(() => 0));
+  threats.forEach((t, i) => { matrix[i][i] = 1; });
+  threats.forEach((t, i) => {
+    const direct = new Set(t.deps || []);
+    const twoHop = new Set();
+    direct.forEach(id => {
+      const other = threats[idx[id]];
+      (other?.deps || []).forEach(x => {
+        if (x !== t.id && !direct.has(x)) twoHop.add(x);
+      });
+    });
+    threats.forEach((u, j) => {
+      if (i === j) return;
+      const forward = direct.has(u.id) ? 0.5 : twoHop.has(u.id) ? 0.25 : 0;
+      const reverseDirect = new Set(u.deps || []);
+      const reverseTwoHop = new Set();
+      reverseDirect.forEach(id => {
+        const other = threats[idx[id]];
+        (other?.deps || []).forEach(x => {
+          if (x !== u.id && !reverseDirect.has(x)) reverseTwoHop.add(x);
+        });
+      });
+      const reverse = reverseDirect.has(t.id) ? 0.5 : reverseTwoHop.has(t.id) ? 0.25 : 0;
+      matrix[i][j] = Math.max(forward, reverse);
+    });
+  });
+  return { idx, matrix };
+}
+
+function rebuildThreatState() {
+  THREATS = THREAT_SPECS.map(spec => makeThreat(spec));
+  THREAT_ID_LIST = THREATS.map(t => t.id);
+  THREAT_ID_SET = new Set(THREAT_ID_LIST);
+  GLOBAL_STRESS_CAPACITY = THREATS.reduce((sum, t) => sum + getThreatThreshold(t), 0);
+  OUT_DEGREES = THREATS.map(t => (t.deps || []).length);
+  MAX_OUT_DEGREE = Math.max(...OUT_DEGREES, 1);
+  MEAN_OUT_DEGREE = OUT_DEGREES.reduce((s, v) => s + v, 0) / (OUT_DEGREES.length || 1);
+  DEP_GRAPH = buildDepGraph(THREATS);
+}
+
+/* Startup validation for threat ids, scenario refs, and parameter ranges. */
+function validateModelConfig() {
+  const dupes = THREAT_ID_LIST.filter((id, idx) => THREAT_ID_LIST.indexOf(id) !== idx);
+  const missingDeps = THREATS.flatMap(t =>
+    (t.deps || [])
+      .filter(id => !THREAT_ID_SET.has(id))
+      .map(id => `${t.id} -> ${id}`)
+  );
+  const missingScenarioRefs = Object.entries(SC).flatMap(([scKey, sc]) =>
+    Object.keys(sc.threatMult || {})
+      .filter(id => !THREAT_ID_SET.has(id))
+      .map(id => `${scKey} -> ${id}`)
+  );
+
+  const issues = [];
+  if (dupes.length) issues.push(`Duplicate threat ids: ${dupes.join(', ')}`);
+  if (missingDeps.length) issues.push(`Broken dependency ids: ${missingDeps.join('; ')}`);
+  if (missingScenarioRefs.length) issues.push(`Broken scenario multipliers: ${missingScenarioRefs.join('; ')}`);
+  THREATS.forEach(t => {
+    if (!['continuous','event','regime'].includes(t.process_type)) {
+      issues.push(`Invalid process_type on ${t.id}: ${t.process_type}`);
+    }
+    PARAM_FIELDS.forEach(field => {
+      const v = t[field];
+      if (!v || typeof v !== 'object' || !['mu','lo','hi','source'].every(k => k in v)) {
+        issues.push(`Missing structured range on ${t.id}.${field}`);
+        return;
+      }
+      if (![v.mu, v.lo, v.hi].every(Number.isFinite)) {
+        issues.push(`Non-finite range on ${t.id}.${field}`);
+      }
+      if (!(v.lo <= v.mu && v.mu <= v.hi)) {
+        issues.push(`Inverted range on ${t.id}.${field}`);
+      }
+    });
+  });
+
+  try {
+    normalizedDomainWeights(P.domW);
+  } catch (err) {
+    issues.push(err.message);
+  }
+
+  if (issues.length) {
+    throw new Error(`Invalid Apocalypse Clock configuration. ${issues.join(' | ')}`);
+  }
+}
+
+function summarizeSourceMap(sourceMap) {
+  const keys = Object.keys(sourceMap || {}).filter(key => key !== '_meta');
+  const threats = new Set(keys.map(k => String(k).split('.')[0]).filter(Boolean));
+  return { entryCount: keys.length, threatCount: threats.size };
+}
+
+function sanitizeSourceMap(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new Error('Source file must be a JSON object keyed by "threat.parameter".');
+  }
+  const sanitized = {};
+  if (raw._meta && typeof raw._meta === 'object' && !Array.isArray(raw._meta)) {
+    sanitized._meta = cloneJsonValue(raw._meta);
+  }
+  Object.entries(raw).forEach(([key, value]) => {
+    if (!/^[a-z0-9_]+\.[a-z_]+$/i.test(key)) return;
+    const entry = normalizeSourceEntry(value, 'expert judgment uploaded source map', 'uploaded');
+    if (entry) sanitized[key] = { ...entry };
+  });
+  if (!Object.keys(sanitized).length) {
+    throw new Error('Uploaded file contains no valid parameter entries.');
+  }
+  return sanitized;
+}
+
+function detectUploadedJsonMode(raw) {
+  let sourceLike = 0;
+  let evidenceLike = 0;
+  Object.values(raw || {}).forEach(value => {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return;
+    const hasRange = [value.mu, value.lo, value.hi].every(Number.isFinite);
+    const obsRaw = value.obs ?? value.value ?? value.observed ?? value.obsValue;
+    const hasObs = Number.isFinite(obsRaw);
+    if (hasRange) sourceLike += 1;
+    else if (hasObs) evidenceLike += 1;
+  });
+  if (sourceLike && !evidenceLike) return 'source';
+  if (evidenceLike && !sourceLike) return 'evidence';
+  if (sourceLike && evidenceLike) return sourceLike >= evidenceLike ? 'source' : 'evidence';
+  throw new Error('Upload file contains no recognized source-range entries or evidence-overlay observations.');
+}
+
+function normalizeEvidenceEntry(entry, key) {
+  if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return null;
+  const field = String(key).split('.')[1];
+  if (!PARAM_FIELDS.includes(field)) return null;
+  const [loB, hiB] = fieldBounds(field);
+  const obsRaw = entry.obs ?? entry.value ?? entry.observed ?? entry.obsValue;
+  const weightRaw = entry.weight ?? entry.obsWeight ?? entry.precision ?? 1;
+  if (!Number.isFinite(obsRaw)) return null;
+  const strength = typeof entry.strength === 'string' ? entry.strength : 'moderate';
+  return {
+    obs: clamp(Number(obsRaw), loB, hiB),
+    weight: clamp(Number.isFinite(weightRaw) ? Number(weightRaw) : 1, 0.25, 8),
+    source: cleanSourceText(typeof entry.source === 'string' && entry.source.trim() ? entry.source : 'uploaded evidence overlay'),
+    url: normalizeHttpUrl(entry.url),
+    accessed: typeof entry.accessed === 'string' ? entry.accessed : '',
+    strength,
+    note: cleanSourceText(typeof entry.note === 'string' ? entry.note : ''),
+    type: classifySourceType(entry.source, entry.url, strength),
+    confidence: confidenceGradeFromStrength(strength),
+  };
+}
+
+function sanitizeEvidenceMap(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new Error('Evidence overlay must be a JSON object keyed by "threat.parameter".');
+  }
+  const sanitized = {};
+  Object.entries(raw).forEach(([key, value]) => {
+    if (!/^[a-z0-9_]+\.[a-z_]+$/i.test(key)) return;
+    const entry = normalizeEvidenceEntry(value, key);
+    if (entry) sanitized[key] = entry;
+  });
+  if (!Object.keys(sanitized).length) {
+    throw new Error('Evidence overlay contains no valid observation entries. Use { obs, weight, source } per parameter.');
+  }
+  return sanitized;
+}
+
+function explicitSourceForSpecField(spec, field) {
+  return field === 'growth_rate'
+    ? (spec.growthSource || spec.source || 'internal calibration convention')
+    : field === 'threshold'
+      ? (spec.thresholdSource || spec.source || 'internal calibration convention')
+      : (spec.source || 'internal calibration convention');
+}
+
+/** Precision-weighted pooling on the native parameter scale. */
+function applyEvidencePosterior(baseEntry, evidenceEntry, field) {
+  const [loB, hiB] = fieldBounds(field);
+  const span = Math.max(1e-6, hiB - loB);
+  const priorSigma = Math.max((baseEntry.hi - baseEntry.lo) / 3.29, span * 0.02);
+  const obsSigma = clamp(span / (4 + evidenceEntry.weight * 2), span * 0.03, span * 0.50);
+  const priorPrecision = 1 / (priorSigma ** 2);
+  const obsPrecision = 1 / (obsSigma ** 2);
+  const postMu = clamp(
+    (priorPrecision * baseEntry.mu + obsPrecision * evidenceEntry.obs) / (priorPrecision + obsPrecision),
+    loB,
+    hiB
+  );
+  const postSigma = Math.sqrt(1 / (priorPrecision + obsPrecision));
+  const half90 = 1.645 * postSigma;
+  return {
+    ...baseEntry,
+    mu: postMu,
+    lo: clamp(postMu - half90, loB, hiB),
+    hi: clamp(postMu + half90, loB, hiB),
+    note: cleanSourceText(`${baseEntry.note ? `${baseEntry.note} ` : ''}Uploaded evidence overlay (${evidenceEntry.source}) adjusted this parameter with weight ${evidenceEntry.weight.toFixed(2)}.`),
+    accessed: evidenceEntry.accessed || baseEntry.accessed || '',
+    url: evidenceEntry.url || baseEntry.url || '',
+    strength: evidenceEntry.strength || baseEntry.strength || '',
+    type: evidenceEntry.type || baseEntry.type || '',
+    confidence: evidenceEntry.confidence || baseEntry.confidence || '',
+    overlay: true,
+    overlaySource: evidenceEntry.source || '',
+    overlayWeight: evidenceEntry.weight,
+  };
+}
+
+function rebuildActiveSourceDataFromState() {
+  const baseRaw = { ...BUNDLED_SOURCE_DATA, ...(CUSTOM_SOURCE_DATA || {}) };
+  const normalized = {};
+  Object.entries(baseRaw).forEach(([key, value]) => {
+    const normalizedEntry = normalizeSourceEntry(value, (value && value.source) || 'source map entry', (value && value.strength) || 'moderate');
+    if (normalizedEntry) normalized[key] = normalizedEntry;
+  });
+  if (ACTIVE_EVIDENCE_DATA) {
+    Object.entries(ACTIVE_EVIDENCE_DATA).forEach(([key, evidenceEntry]) => {
+      const [id, field] = key.split('.');
+      if (!PARAM_FIELDS.includes(field)) return;
+      const spec = THREAT_SPECS.find(t => t.id === id);
+      if (!spec) return;
+      const baseEntry = normalized[key] || autoRange(spec[field], spec.evStr, explicitSourceForSpecField(spec, field), fieldKind(field), fieldBounds(field));
+      normalized[key] = applyEvidencePosterior(baseEntry, evidenceEntry, field);
+    });
+  }
+  ACTIVE_SOURCE_DATA = normalized;
+}
+
+function serializeActiveSourceMap() {
+  return JSON.stringify(ACTIVE_SOURCE_DATA, null, 2);
+}
+
+function renderSourceRegistry() {
+  const summary = summarizeSourceMap(ACTIVE_SOURCE_DATA);
+  const badge = document.getElementById('sourceBadge');
+  const fileName = document.getElementById('sourceFileName');
+  const entryCount = document.getElementById('sourceEntryCount');
+  const threatCoverage = document.getElementById('sourceThreatCoverage');
+  const mode = document.getElementById('sourceMode');
+  const msg = document.getElementById('sourceMessage');
+  const jsonView = document.getElementById('sourceJsonView');
+  const overlayActive = !!(ACTIVE_EVIDENCE_META && ACTIVE_EVIDENCE_META.active);
+  if (badge) badge.textContent = overlayActive ? 'Evidence overlay active' : ACTIVE_SOURCE_META.uploaded ? 'Custom source map active' : 'Bundled source map active';
+  if (fileName) fileName.textContent = overlayActive
+    ? `${ACTIVE_SOURCE_META.fileName || 'data_v1_9_0.json'} + ${ACTIVE_EVIDENCE_META.fileName}`
+    : (ACTIVE_SOURCE_META.fileName || 'data_v1_9_0.json');
+  if (entryCount) entryCount.textContent = `${summary.entryCount}/${THREAT_SPECS.length * PARAM_FIELDS.length}`;
+  if (threatCoverage) threatCoverage.textContent = `${summary.threatCount}/${THREAT_SPECS.length} threats`;
+  if (mode) mode.textContent = overlayActive ? (ACTIVE_SOURCE_META.uploaded ? 'Custom + Evidence' : 'Bundled + Evidence') : (ACTIVE_SOURCE_META.uploaded ? 'Custom merge' : 'Bundled');
+  if (msg) msg.textContent = overlayActive ? ACTIVE_EVIDENCE_META.message : (ACTIVE_SOURCE_META.message || 'Bundled data_v1_9_0.json parameter map embedded in widget as the default primary source.');
+  if (jsonView) jsonView.textContent = serializeActiveSourceMap();
+}
+
+function applySourceMap(sourceMap, meta, rerender) {
+  CUSTOM_SOURCE_DATA = meta && meta.mode === 'bundled' ? null : JSON.parse(JSON.stringify(sourceMap || {}));
+  ACTIVE_SOURCE_DOCUMENT_META = {
+    ...cloneJsonValue(BUNDLED_SOURCE_DATA._meta || {}),
+    ...cloneJsonValue((sourceMap && sourceMap._meta) || {}),
+  };
+  if (meta && meta.clearEvidence) {
+    ACTIVE_EVIDENCE_DATA = null;
+    ACTIVE_EVIDENCE_META = { active:false, fileName:'', datasetVersion:'', message:'', entryCount:0, threatCount:0 };
+  }
+  rebuildActiveSourceDataFromState();
+  ACTIVE_SOURCE_META = {
+    mode: meta && meta.mode ? meta.mode : 'bundled',
+    fileName: meta && meta.fileName ? meta.fileName : 'data_v1_9_0.json',
+    datasetVersion: meta && meta.datasetVersion
+      ? meta.datasetVersion
+      : ((meta && meta.uploaded) ? 'custom source map' : (datasetVersionFromSourceMap(sourceMap) || datasetVersionFromSourceMap(BUNDLED_SOURCE_DATA) || 'unknown')),
+    message: meta && meta.message ? meta.message : 'Bundled data_v1_9_0.json parameter map embedded in widget as the default primary source.',
+    uploaded: !!(meta && meta.uploaded),
+  };
+  rebuildThreatState();
+  validateModelConfig();
+  if (rerender !== false) {
+    invalidateCachedResults();
+    refreshCurrentView(null);
+  }
+  renderSourceRegistry();
+}
+
+function applyEvidenceOverlay(evidenceMap, meta, rerender) {
+  ACTIVE_EVIDENCE_DATA = JSON.parse(JSON.stringify(evidenceMap || {}));
+  const stats = summarizeSourceMap(evidenceMap);
+  ACTIVE_EVIDENCE_META = {
+    active: true,
+    fileName: meta && meta.fileName ? meta.fileName : 'evidence overlay.json',
+    datasetVersion: meta && meta.datasetVersion ? meta.datasetVersion : '',
+    message: meta && meta.message ? meta.message : `Evidence overlay adjusted ${stats.entryCount} parameters across ${stats.threatCount} threats by precision-weighted pooling on the current source ranges.`,
+    entryCount: stats.entryCount,
+    threatCount: stats.threatCount,
+  };
+  rebuildActiveSourceDataFromState();
+  rebuildThreatState();
+  validateModelConfig();
+  if (rerender !== false) {
+    invalidateCachedResults();
+    refreshCurrentView(null);
+  }
+  renderSourceRegistry();
+}
+
+let P = {
+  scenario: 'baseline',
+  nSim: 3000,
+  seed: DEFAULT_MC_SEED,
+  threshold: 0.40,          // compensatory: fraction of weighted threat mass for aggregate event
+  cascadeThreshold: 0.50,   // cascade-only: stricter mass fraction before cascade can trigger
+  structuralUncertainty: true, // Monte Carlo samples the cascade structure (STRUCTURAL_UNCERTAINTY)
+  pressureTurns: true,      // Monte Carlo samples pressure turns and recovery (PRESSURE_TURNS)
+  depAlpha: 0.22,           // dependency amplification factor
+  uncMult: 1.0,             // uncertainty multiplier on fitted parameter ranges
+  tailDependence: 0.15,     // optional diagnostic: probability of correlated systemic tail-shock draw
+  vetoThreshold: 0.65,      // optional diagnostic: domain-level non-compensatory veto boundary
+  domW: { civilization:1, biosphere:1, technology:1 },
+  weightProfile: 'expert',
+  weights: { scale:0.20, urgency:0.18, acceleration:0.14, interdependence:0.18, irreversibility:0.16, gov_failure:0.14 },
+};
+
+// The dashboard runs the Baseline scenario; the other SC scenarios remain available to runMC and buildEnriched.
+function currentScenario() {
+  return 'baseline';
+}
+
+const WEIGHT_PROFILES = {
+  expert: {
+    label: 'Expert Baseline',
+    method: 'Transparent expert-prior MCDA baseline',
+    weights: { scale:0.20, urgency:0.18, acceleration:0.14, interdependence:0.18, irreversibility:0.16, gov_failure:0.14 },
+    domainWeights: { civilization:1.00, biosphere:1.00, technology:1.00 },
+    summary: 'Preserves the original clock behavior. Scale receives the largest weight because civilizational or biospheric magnitude should dominate a global-risk screen; urgency and interdependence follow because this is a time-sensitive cascade model. Acceleration and governance failure remain material but lower to avoid double-counting growth-rate and scenario effects.',
+    logic: 'This is a defensible baseline rather than an empirical law. It follows standard composite-indicator practice: make the theoretical framework explicit, keep weights transparent, and test sensitivity rather than pretending one vector is uniquely true.',
+    sources: [
+      ['OECD/JRC composite indicators', 'https://www.oecd.org/en/publications/handbook-on-constructing-composite-indicators-methodology-and-user-guide_9789264043466-en.html'],
+      ['UK MCDA guide', 'https://analysisfunction.civilservice.gov.uk/policy-store/an-introductory-guide-to-mcda/']
+    ]
+  },
+  cascade: {
+    label: 'Cascade-Calibrated',
+    method: 'Systems-cascade expert prior',
+    weights: { scale:0.14, urgency:0.12, acceleration:0.10, interdependence:0.28, irreversibility:0.20, gov_failure:0.16 },
+    domainWeights: { civilization:1.05, biosphere:1.05, technology:1.05 },
+    summary: 'Strongly increases interdependence and irreversibility so the profile is visibly sensitive to coupled systemic threats rather than isolated hazard size. Domain priors remain broadly balanced; the main change is the MCDA interpretation of cascade coupling.',
+    logic: 'This profile is informed by resilience theory, planetary-boundary coupling, and composite-index sensitivity practice. It is useful when the question is not only “which threat is large?” but “which threat can transmit instability through the system?”.',
+    sources: [
+      ['Holling resilience theory', 'https://www.annualreviews.org/content/journals/10.1146/annurev.es.04.110173.000245'],
+      ['Planetary boundaries update', 'https://www.science.org/doi/10.1126/sciadv.adh2458'],
+      ['OECD/JRC sensitivity logic', 'https://www.oecd.org/en/publications/handbook-on-constructing-composite-indicators-methodology-and-user-guide_9789264043466-en.html']
+    ]
+  },
+  governance: {
+    label: 'Governance-Stress',
+    method: 'Coordination-failure stress profile',
+    weights: { scale:0.14, urgency:0.10, acceleration:0.08, interdependence:0.22, irreversibility:0.16, gov_failure:0.30 },
+    domainWeights: { civilization:1.30, biosphere:0.85, technology:0.95 },
+    summary: 'Raises governance failure to the dominant weight and tilts the domain prior toward civilizational coordination stress. This profile asks what happens when mitigation capacity, institutional trust, collective action, arms control, public-health coordination, and international bargaining degrade before hazards are contained.',
+    logic: 'The profile is grounded in risk-governance reasoning: the same physical or technological hazard becomes more dangerous when decision systems cannot coordinate, finance, enforce, or adapt. It should be read as a stress-test profile, not as a replacement for the baseline.',
+    sources: [
+      ['IPCC AR6 risk management', 'https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-17/'],
+      ['Cooke structured expert judgment', 'https://www.cooke-aspinall.net/RO%20cooke%20%26%20nane%20SEJ%20A4.pdf'],
+      ['UK MCDA guide', 'https://analysisfunction.civilservice.gov.uk/policy-store/an-introductory-guide-to-mcda/']
+    ]
+  },
+  biosphere: {
+    label: 'Biosphere-Stability',
+    method: 'Ecological-resilience and Earth-system profile',
+    weights: { scale:0.20, urgency:0.08, acceleration:0.08, interdependence:0.22, irreversibility:0.30, gov_failure:0.12 },
+    domainWeights: { civilization:0.85, biosphere:1.35, technology:0.90 },
+    summary: 'Strongly emphasizes irreversibility, interdependence, and biospheric domain weight. It is designed for biospheric and Earth-system risks where damage can accumulate slowly, cross thresholds, and reduce the shock-absorbing capacity of ecosystems even when short-term political urgency looks lower.',
+    logic: 'This profile reflects the literature on ecological resilience and planetary boundaries: persistent loss of resilience can matter as much as immediate speed, because recovery may become impossible or very slow on human timescales.',
+    sources: [
+      ['Holling resilience theory', 'https://www.annualreviews.org/content/journals/10.1146/annurev.es.04.110173.000245'],
+      ['Planetary boundaries update', 'https://www.science.org/doi/10.1126/sciadv.adh2458'],
+      ['Stockholm Resilience Centre', 'https://www.stockholmresilience.org/research/planetary-boundaries.html']
+    ]
+  },
+  equal: {
+    label: 'Equal Weights',
+    method: 'Neutral benchmark profile',
+    weights: { scale:1/6, urgency:1/6, acceleration:1/6, interdependence:1/6, irreversibility:1/6, gov_failure:1/6 },
+    domainWeights: { civilization:1.00, biosphere:1.00, technology:1.00 },
+    summary: 'Gives every MCDA dimension the same weight. This is not necessarily more scientific; it is a neutrality benchmark for seeing how much rankings depend on the baseline judgment structure.',
+    logic: 'Equal weighting is useful when there is no defensible reason to privilege one criterion, or when the user wants a clean robustness comparison against more theory-driven profiles.',
+    sources: [
+      ['OECD/JRC composite indicators', 'https://www.oecd.org/en/publications/handbook-on-constructing-composite-indicators-methodology-and-user-guide_9789264043466-en.html'],
+      ['UK MCDA guide', 'https://analysisfunction.civilservice.gov.uk/policy-store/an-introductory-guide-to-mcda/']
+    ]
+  }
+};
+
+function normalizedWeightProfileWeights(profileKey) {
+  const profile = WEIGHT_PROFILES[profileKey] || WEIGHT_PROFILES.expert;
+  const keys = Object.keys(WEIGHT_PROFILES.expert.weights);
+  const raw = profile.weights || WEIGHT_PROFILES.expert.weights;
+  const sum = keys.reduce((s, k) => s + Number(raw[k] || 0), 0) || 1;
+  return Object.fromEntries(keys.map(k => [k, Number(raw[k] || 0) / sum]));
+}
+
+function applyWeightProfile(profileKey, refresh = true) {
+  const key = WEIGHT_PROFILES[profileKey] ? profileKey : 'expert';
+  P.weightProfile = key;
+  P.weights = normalizedWeightProfileWeights(key);
+  P.domW = { ...(WEIGHT_PROFILES[key].domainWeights || WEIGHT_PROFILES.expert.domainWeights) };
+  if (refresh) {
+    invalidateCachedResults();
+    refreshCurrentView(null);
+  }
+}
+
+function shiftRange(x, shift, mult, loBound, hiBound) {
+  return rangedValue(
+    clamp((muOf(x) + shift) * mult, loBound, hiBound),
+    clamp((loOf(x) + shift) * mult, loBound, hiBound),
+    clamp((hiOf(x) + shift) * mult, loBound, hiBound),
+    sourceOf(x),
+    rangeMetaOf(x)
+  );
+}
+
+function scalePositiveRange(x, mult, loBound, hiBound) {
+  return rangedValue(
+    clamp(muOf(x) * mult, loBound, hiBound),
+    clamp(loOf(x) * mult, loBound, hiBound),
+    clamp(hiOf(x) * mult, loBound, hiBound),
+    sourceOf(x),
+    rangeMetaOf(x)
+  );
+}
+
+function sampleGamma(shape, rng) {
+  const random = rng ? rng.random01 : random01;
+  const gaussian = rng ? rng.randn : randn;
+  if (shape < 1) {
+    const u = random();
+    return sampleGamma(shape + 1, rng) * Math.pow(u, 1 / shape);
+  }
+  const d = shape - 1 / 3;
+  const c = 1 / Math.sqrt(9 * d);
+  while (true) {
+    const x = gaussian();
+    let v = 1 + c * x;
+    if (v <= 0) continue;
+    v = v * v * v;
+    const u = random();
+    if (u < 1 - 0.0331 * x ** 4) return d * v;
+    if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
+  }
+}
+
+function sampleBeta(alpha, beta, rng) {
+  const g1 = sampleGamma(alpha, rng);
+  const g2 = sampleGamma(beta, rng);
+  return g1 / (g1 + g2);
+}
+
+/**
+ * Fit a Beta distribution on [min, max] from mean and 90% interval width.
+ * σ ≈ (hi − lo) / 3.29 converts a 90% range into a standard deviation estimate. (Method of moments; Johnson et al. 1995)
+ */
+function fitScaledBeta(rangeObj, min, max, spreadMult) {
+  const scale = max - min;
+  const mu = clamp((muOf(rangeObj) - min) / scale, 1e-4, 1 - 1e-4);
+  const sigma = Math.max(1e-4, ((hiOf(rangeObj) - loOf(rangeObj)) / 3.29) * spreadMult / scale);
+  const variance = sigma * sigma;
+  const common = mu * (1 - mu) / variance - 1;
+  if (!Number.isFinite(common) || common <= 0) return null;
+  const alpha = mu * common;
+  const beta = (1 - mu) * common;
+  if (!(alpha > 0 && beta > 0)) return null;
+  return { alpha, beta };
+}
+
+/**
+ * Sample ordinal MCDA dimensions from a fitted Beta on [1, 5].
+ * Beta is the formal bounded alternative to Gaussian + clamping for ordinal-like bounded scores. (Ferreri 2005 Beta scaling practice)
+ */
+function sampleOrdinalRange(rangeObj, spreadMult, rng) {
+  const fit = fitScaledBeta(rangeObj, 1, 5, spreadMult);
+  if (fit) return 1 + 4 * sampleBeta(fit.alpha, fit.beta, rng);
+  const sigma = ((hiOf(rangeObj) - loOf(rangeObj)) / 3.29) * spreadMult;
+  return clamp(rng ? rng.normalSample(muOf(rangeObj), sigma) : normalSample(muOf(rangeObj), sigma), 1, 5);
+}
+
+/**
+ * Sample positive parameters from a fitted log-normal distribution.
+ * σ_ln ≈ (ln hi − ln lo) / 3.29 maps a 90% interval to log-space spread. (Aitchison & Brown 1957 log-normal moments)
+ */
+function sampleLogNormalRange(rangeObj, spreadMult, loBound, hiBound, rng) {
+  const lo = Math.max(loBound, loOf(rangeObj));
+  const hi = Math.max(lo * 1.01, hiOf(rangeObj));
+  const sigmaLn = Math.max(1e-4, ((Math.log(hi) - Math.log(lo)) / 3.29) * spreadMult);
+  const muLn = Math.log(Math.max(loBound, muOf(rangeObj))) - 0.5 * sigmaLn * sigmaLn;
+  return clamp(Math.exp(rng ? rng.normalSample(muLn, sigmaLn) : normalSample(muLn, sigmaLn)), loBound, hiBound);
+}
+
+function sampleThreatNumerics(scThreat, spreadMult, rng) {
+  const sampledGrowthRate = sampleLogNormalRange(scThreat.growth_rate, spreadMult, 0.0005, 0.25, rng);
+
+  return {
+    ...scThreat,
+    scale: sampleOrdinalRange(scThreat.scale, spreadMult, rng),
+    urgency: sampleOrdinalRange(scThreat.urgency, spreadMult, rng),
+    acceleration: sampleOrdinalRange(scThreat.acceleration, spreadMult, rng),
+    interdependence: sampleOrdinalRange(scThreat.interdependence, spreadMult, rng),
+    irreversibility: sampleOrdinalRange(scThreat.irreversibility, spreadMult, rng),
+    gov_failure: sampleOrdinalRange(scThreat.gov_failure, spreadMult, rng),
+
+    // Keep sampled raw/proxy growth and preserve metadata separately.
+    // growth_rate remains the sampled numeric value for backward compatibility.
+    growth_rate: sampledGrowthRate,
+    growth_rate_raw: sampledGrowthRate,
+    growth_meta: rangeMetaOf(scThreat.growth_rate),
+
+    threshold: sampleLogNormalRange(scThreat.threshold, spreadMult, 4.5, 12, rng),
+  };
+}
+
+const EFFECTIVE_GROWTH_CAP = 0.08;
+
+/* Raw-indicator to systemic-risk growth calibration. */
+const GROWTH_KIND_CONVERSION = Object.freeze({
+  effective_risk_growth: 1.00,
+  direct_risk_proxy: 1.00,
+  event_frequency_growth: 0.70,
+  expert_mapping: 0.60,
+  indicator_growth: 0.35,
+  market_growth: 0.25,
+  capability_growth: 0.15,
+});
+
+function growthMetaOfThreat(t) {
+  if (!t || typeof t !== 'object') return {};
+  if (t.growth_meta && typeof t.growth_meta === 'object') return t.growth_meta;
+  if (t.growth_rate && typeof t.growth_rate === 'object') return t.growth_rate;
+  return {};
+}
+
+function growthKindOfThreat(t) {
+  const meta = growthMetaOfThreat(t);
+  if (typeof meta.growth_kind === 'string' && meta.growth_kind.trim()) {
+    return meta.growth_kind.trim();
+  }
+  // Treat missing growth_kind as calibrated effective growth.
+  return 'effective_risk_growth';
+}
+
+function riskConversionOfThreat(t) {
+  const meta = growthMetaOfThreat(t);
+
+  if (meta.effective_growth_calibrated === true) {
+    return 1.0;
+  }
+
+  if (Number.isFinite(meta.risk_conversion)) {
+    return clamp(meta.risk_conversion, 0, 1);
+  }
+
+  const kind = growthKindOfThreat(t);
+  return GROWTH_KIND_CONVERSION[kind] ?? 1.0;
+}
+
+function effectiveRiskGrowthForThreat(t, rawGrowthRate) {
+  const raw = Math.max(0, Number(rawGrowthRate) || 0);
+  const meta = growthMetaOfThreat(t);
+  const kind = growthKindOfThreat(t);
+  const specificCap = Number.isFinite(meta.threat_specific_cap) ? Math.max(0, meta.threat_specific_cap) : EFFECTIVE_GROWTH_CAP;
+  const cap = Math.min(EFFECTIVE_GROWTH_CAP, specificCap);
+  const calibrated = meta.effective_growth_calibrated === true || kind === 'effective_risk_growth' || kind === 'direct_risk_proxy';
+  const converted = calibrated ? raw : Math.log1p(raw) * riskConversionOfThreat(t);
+  return clamp(converted, Math.min(0.0005, cap), cap);
+}
+
+/**
+ * Sample the first-arrival year of an event process from a non-homogeneous Poisson hazard.
+ * λ(t) = λ0 × (1 + g)^(t − NOW) lets event risk pressure grow through time instead of freezing it at NOW;
+ * after an optional pressure turn (PRESSURE_TURNS) the hazard retraces its rise. (Ross 2014 non-homogeneous Poisson process)
+ * Annual hazard is clamped to [1e-5, 5] for numerical stability.
+ */
+function sampleEventHorizon(priority, growthRate, threshold, rng, turnYear) {
+  const u = clamp(rng ? rng.random01() : random01(), 1e-9, 1 - 1e-9);
+  const g = Math.max(0, Number(growthRate) || 0);
+  // The baseline hazard floor is distinct from the already capped growth rate.
+  const lambda0 = Math.max(1e-5, (priority / threshold) * g * 2);
+  const turned = Number.isFinite(turnYear);
+  let cumHazard = 0;
+  for (let yr = NOW; yr <= YE; yr++) {
+    // After a sampled pressure turn the hazard retraces its rise with the pressure.
+    const years = turned && yr > turnYear ? 2 * turnYear - yr - NOW : yr - NOW;
+    const lambdaYr = clamp(lambda0 * Math.pow(1 + g, years), 1e-5, 5);
+    cumHazard += lambdaYr;
+    if (1 - Math.exp(-cumHazard) >= u) return yr;
+  }
+  return YE + 1;
+}
+
+/**
+ * Regime transitions use the same sampled latent-pressure first-passage rule as
+ * continuous threats. The state change may be abrupt, but its arrival is not
+ * assigned an additional uncalibrated geometric clock. Monte Carlo variation
+ * comes from the sampled score, growth and threshold inputs.
+ */
+function sampleRegimeHorizon(priority, growthRate, threshold) {
+  return computeHorizon(priority, growthRate, threshold);
+}
+
+function deterministicEventHorizon(priority, growthRate, threshold) {
+  const g = Math.max(0, Number(growthRate) || 0);
+  // The baseline hazard floor is distinct from the already capped growth rate.
+  const lambda0 = Math.max(1e-5, (priority / threshold) * g * 2);
+  // Median first-arrival year solves H(t) = ln(2) for the cumulative hazard H(t) of the non-homogeneous Poisson process. (Ross 2014 NHPP cumulative hazard)
+  let cumHazard = 0;
+  for (let yr = NOW; yr <= YE; yr++) {
+    const lambdaYr = clamp(lambda0 * Math.pow(1 + g, yr - NOW), 1e-5, 5);
+    cumHazard += lambdaYr;
+    if (cumHazard >= Math.log(2)) return yr;
+  }
+  return YE + 1;
+}
+
+function deterministicRegimeHorizon(priority, growthRate, threshold) {
+  return computeHorizon(priority, growthRate, threshold);
+}
+
+/**
+ * First passage when the pressure peaks in turnYear and then declines (PRESSURE_TURNS): a
+ * crossing that has not happened by the turn year never happens.
+ */
+function turnedHorizon(horizon, turnYear) {
+  return Number.isFinite(turnYear) && horizon > turnYear ? YE + 1 : horizon;
+}
+
+// turnYear is optional and used only by the Monte Carlo; stochastic event horizons follow the mirrored hazard.
+function computeThreatHorizon(priority, growthRate, threshold, processType, stochastic, rng, turnYear) {
+  threshold = Number(threshold);
+  if (!Number.isFinite(threshold)) threshold = GLOBAL_THRESHOLD;
+  threshold = clamp(threshold, THRESHOLD_MIN, THRESHOLD_MAX);
+  if (priority <= 0 || !Number.isFinite(priority)) return YE + 1;
+  if (processType === 'event') return stochastic ? sampleEventHorizon(priority, growthRate, threshold, rng, turnYear) : deterministicEventHorizon(priority, growthRate, threshold);
+  if (processType === 'regime') return turnedHorizon(stochastic ? sampleRegimeHorizon(priority, growthRate, threshold, rng) : deterministicRegimeHorizon(priority, growthRate, threshold), turnYear);
+  return turnedHorizon(computeHorizon(priority, growthRate, threshold), turnYear);
+}
+
+
+function baseScore(t, w) {
+  w = w || P.weights;
+  return w.scale * muOf(t.scale)
+       + w.urgency * muOf(t.urgency)
+       + w.acceleration * muOf(t.acceleration)
+       + w.interdependence * muOf(t.interdependence)
+       + w.irreversibility * muOf(t.irreversibility)
+       + w.gov_failure * muOf(t.gov_failure);
+}
+
+/**
+ * Dependency amplification factor for threat i given all threats.
+ * Neighbour pressure is the mean direct-neighbour salience on [0, 1], and topology scaling uses the current graph's
+ * out-degree relative to the network mean so dense neighbourhoods amplify without introducing an unconstrained tuning constant.
+ * This is a degree-normalized exposure heuristic inspired by Bonacich-style network influence. (Bonacich 1987)
+ */
+function depFactor(t, all, params) {
+  params = params || P;
+  const direct = (t.deps || []).map(id => all.find(x => x.id === id)).filter(Boolean);
+  if (!direct.length) return 1;
+  const q = x => ((muOf(x.scale) + muOf(x.urgency) + muOf(x.interdependence)) / 3) / 5;
+  const meanQ = direct.reduce((s, x) => s + q(x), 0) / direct.length;
+  const topologyScale = 1 + direct.length / Math.max(1, MEAN_OUT_DEGREE);
+  const maxScale = 1 + MAX_OUT_DEGREE / Math.max(1, MEAN_OUT_DEGREE);
+  return clamp(1 + meanQ * params.depAlpha * topologyScale, 1, 1 + params.depAlpha * maxScale);
+}
+
+/* Scenario shifts are clamped to [1, 5]. */
+function applyScenario(t, scKey) {
+  const sc = SC[scKey] || SC.baseline;
+  const s = sc.s;
+  const dm = (sc.domMult[t.domain] || 1);
+  const grM = (sc.grMult[t.domain] || 1);
+  const tM = (sc.threatMult[t.id] || 1); // per-threat stress multiplier
+
+  return {
+    ...t,
+    scale: shiftRange(t.scale, s.sc, dm * tM, 1, 5),
+    urgency: shiftRange(t.urgency, s.ur, dm * tM, 1, 5),
+    acceleration: shiftRange(t.acceleration, s.ac, dm * tM, 1, 5),
+    interdependence: shiftRange(t.interdependence, s.id, dm * tM, 1, 5),
+    irreversibility: shiftRange(t.irreversibility, s.ir, dm, 1, 5),
+    gov_failure: shiftRange(t.gov_failure, s.gf, dm * tM, 1, 5),
+    growth_rate: scalePositiveRange(t.growth_rate, grM * tM, 0.0005, 0.25),
+  };
+}
+
+function buildEnriched(scKey, params) {
+  params = params || P;
+  const adj = THREATS.map(t => applyScenario(t, scKey));
+
+  return adj.map(t => {
+    const bs = baseScore(t, params.weights);
+    const priority = bs * depFactor(t, adj, params) * domainWeightMultiplier(t.domain, params);
+    const threshold = getThreatThreshold(t, params.thresholdPolicy || THRESHOLD_POLICY);
+
+    const rawGrowth = muOf(t.growth_rate);
+    const effectiveGrowth = effectiveRiskGrowthForThreat(t, rawGrowth);
+
+    const horizon = computeThreatHorizon(
+      priority,
+      effectiveGrowth,
+      threshold,
+      t.process_type,
+      false
+    );
+
+    return {
+      ...t,
+      bs,
+      priority,
+      threshold_value: threshold,
+      growth_rate_raw: rawGrowth,
+      growth_rate_effective: effectiveGrowth,
+      horizon,
+    };
+  });
+}
+
+function calcGSI(enriched) {
+  if (!enriched.length || !GLOBAL_STRESS_CAPACITY) return 0;
+  const weighted = enriched.reduce((s, t) => s + t.priority, 0);
+  return clamp((weighted / GLOBAL_STRESS_CAPACITY) * 100, 0, 100);
+}
+
+function normalizedDomainWeights(domW) {
+  const keys = ['civilization', 'biosphere', 'technology'];
+  const values = keys.map(key => domW && domW[key]);
+  if (!values.every(value => Number.isFinite(value) && value >= 0)) {
+    throw new Error('Domain weights must be finite, non-negative numbers.');
+  }
+  const total = values.reduce((s, v) => s + v, 0);
+  if (!(total > 0)) throw new Error('Domain weights cannot all be zero.');
+  return {
+    civilization: domW.civilization / total,
+    biosphere: domW.biosphere / total,
+    technology: domW.technology / total,
+  };
+}
+
+function domainWeightMultiplier(domain, params) {
+  const norm = normalizedDomainWeights((params || P).domW || {});
+  const domainCount = Object.keys(norm).length || 1;
+  const mult = norm[domain] * domainCount;
+  return Number.isFinite(mult) && mult >= 0 ? mult : 1;
+}
+
+function compensatoryShareByYear(enriched, yr) {
+  const totalPri = enriched.reduce((s, t) => s + t.priority, 0) || 1;
+  const crossedPri = enriched.reduce((s, t) => s + (t.horizon <= yr ? t.priority : 0), 0);
+  return crossedPri / totalPri;
+}
+
+function normalizedHorizonSignal(horizon) {
+  if (!Number.isFinite(horizon) || horizon > YE) return 0;
+  return 1 - clamp((horizon - YS) / Math.max(1, YE - YS), 0, 1);
+}
+
+/**
+ * Continuous composite response for exploratory sensitivity.
+ * Combining GSI, compensatory threshold-share by 2035/2050, and normalized central horizon reduces discrete-year artefacts
+ * when compared with using a single threshold year alone. (screening-style composite response; heuristic variance target)
+ */
+function exploratorySensitivityTarget(enriched, params) {
+  const years = computeAggregateYears(enriched, params);
+  const gsi = calcGSI(enriched) / 100;
+  const share2035 = compensatoryShareByYear(enriched, 2035);
+  const share2050 = compensatoryShareByYear(enriched, 2050);
+  const horizon = normalizedHorizonSignal(years.comp);
+  return 0.35 * gsi + 0.20 * share2035 + 0.20 * share2050 + 0.25 * horizon;
+}
+
+/* Monte Carlo horizon ensemble. */
+let _cdfCurves = {};
+function buildCdf(sortedCrossings, n) {
+  const cdf = [];
+  let ptr = 0;
+  for (let yr = YS; yr <= YE; yr++) {
+    while (ptr < sortedCrossings.length && sortedCrossings[ptr] <= yr) ptr++;
+    cdf.push({ year: yr, prob: ptr / n });
+  }
+  return cdf;
+}
+
+function summarizeCrossings(crossing, nSim, rng) {
+  const sorted = [...crossing].sort((a, b) => a - b);
+  const cdf = buildCdf(sorted, nSim);
+  const bootstrapRng = rng || createRngContext(`${DEFAULT_MC_SEED}:bootstrap`);
+  const BS = 160;
+  const bsP50s = [];
+  const bsCdfs = [];
+  for (let b = 0; b < BS; b++) {
+    const sample = Array.from({ length: nSim }, () => sorted[0 | bootstrapRng.random01() * nSim]).sort((a, c) => a - c);
+    bsP50s.push(quantile(sample, 0.5));
+    bsCdfs.push(buildCdf(sample, nSim).map(x => x.prob));
+  }
+  bsP50s.sort((a, b) => a - b);
+  const bLo = [], bHi = [];
+  for (let yi = 0; yi < YR; yi++) {
+    const vals = bsCdfs.map(row => row[yi]).sort((a, b) => a - b);
+    bLo.push(quantile(vals, 0.10));
+    bHi.push(quantile(vals, 0.90));
+  }
+  const p10 = quantile(sorted, 0.10);
+  const p50 = quantile(sorted, 0.50);
+  const p90 = quantile(sorted, 0.90);
+  const mean = sorted.reduce((s, v) => s + v, 0) / sorted.length;
+  const samplingSigma = Math.sqrt(sorted.reduce((s, v) => s + (v - mean) ** 2, 0) / sorted.length);
+  const bsMean = bsP50s.reduce((sum, value) => sum + value, 0) / bsP50s.length;
+  const parameterSigma = Math.sqrt(bsP50s.reduce((sum, value) => sum + (value - bsMean) ** 2, 0) / (bsP50s.length - 1));
+  const censorFraction = sorted.filter(year => year > YE).length / sorted.length;
+  return {
+    crossing: sorted, cdf, bLo, bHi, p10, p50, p90, samplingSigma, parameterSigma,
+    censorFraction,
+    medianCensored: p50 > YE,
+    censorCodeYear: YE + 1,
+    estimand: 'horizon-coded crossing times; no crossing by YE is coded as YE + 1; dispersion and bootstrap precision describe these coded times, not unidentified actual crossing times',
+  };
+}
+
+/**
+ * Graph-weighted Gaussian aggregation score from latent z-scores and graph-derived correlations.
+ * This is a latent-normal graph aggregation heuristic rather than a full joint copula, and the UI describes it as a structural aggregation choice rather than an empirical truth. (latent-normal approximation; Nelsen 2006)
+ */
+function graphAggregationScoreForYear(enriched, yr) {
+  const weights = enriched.map(t => t.priority);
+  const totalW = weights.reduce((s, v) => s + v, 0) || 1;
+  const q = enriched.map(t => {
+    const crossed = t.horizon <= yr;
+    const ratio = clamp(t.priority / getThreatThreshold(t), 0, 1.4);
+    const u = crossed
+      ? clamp(0.58 + 0.28 * ratio, 0.58, 0.97)
+      : clamp(0.03 + 0.16 * ratio * ((yr - YS + 1) / YR), 0.03, 0.45);
+    return normInv(u);
+  });
+  let meanQ = 0;
+  let variance = 0;
+  for (let i = 0; i < enriched.length; i++) meanQ += (weights[i] / totalW) * q[i];
+  for (let i = 0; i < enriched.length; i++) {
+    for (let j = 0; j < enriched.length; j++) {
+      const graphI = DEP_GRAPH.idx[enriched[i].id];
+      const graphJ = DEP_GRAPH.idx[enriched[j].id];
+      const graphWeight = Number.isInteger(graphI) && Number.isInteger(graphJ) ? DEP_GRAPH.matrix[graphI][graphJ] : 0;
+      variance += (weights[i] / totalW) * (weights[j] / totalW) * graphWeight;
+    }
+  }
+  return normCdf(meanQ / Math.sqrt(Math.max(variance, 1e-6)));
+}
+
+/**
+ * Compensatory crossing year for a basket of threats under the current global threshold.
+ * The basket crosses once the share of weighted priorities with horizon <= year reaches the slider threshold.
+ * (weighted-share threshold crossing rule)
+ */
+function computeCompensatoryCrossing(enriched, threshold) {
+  const totalPri = enriched.reduce((s, t) => s + t.priority, 0) || 1;
+  for (let yr = YS; yr <= YE; yr++) {
+    const crossedW = enriched.reduce((s, t) => s + (t.horizon <= yr ? t.priority : 0), 0);
+    if (crossedW / totalPri >= threshold) return yr;
+  }
+  return YE + 1;
+}
+
+/**
+ * Structural ensemble of four aggregation rules over the same threat horizons.
+ * Compensatory = weighted-share threshold, Max-rule = earliest single-threat crossing, graph-weighted Gaussian = dependence-linked joint score threshold,
+ * Dynamic cascade = year-by-year dependency propagation.
+ * Running them in parallel exposes model-structure uncertainty rather than parameter uncertainty alone. (multi-model ensemble framing)
+ */
+function computeAggregateYears(enriched, params, cascadeResult) {
+  const comp = computeCompensatoryCrossing(enriched, params.threshold);
+  let graphWeighted = YE + 1;
+  const maxRule = enriched.reduce((m, t) => Math.min(m, t.horizon), YE + 1);
+  for (let yr = YS; yr <= YE; yr++) {
+    if (graphWeighted > YE && graphAggregationScoreForYear(enriched, yr) >= params.threshold) graphWeighted = yr;
+    if (graphWeighted <= YE) break;
+  }
+  const dynamicCascade = cascadeResult ? cascadeResult.year : computeDynamicCascadeCrossing(enriched, params);
+  return { comp, maxRule, graphWeighted, dynamicCascade };
+}
+
+function dependencyExposure(target, active, byId) {
+  const deps = (target.deps || []).filter(id => byId.has(id));
+  return clamp(deps.reduce((sum, id) => sum + (active.has(id) ? (target.dependency_weights?.[id] ?? 1 / Math.max(1, deps.length)) : 0), 0), 0, 1);
+}
+
+function cascadeVulnerability(t) {
+  // Ordinal capacity-loss susceptibility, not an estimated probability.
+  return clamp((muOf(t.interdependence) - 1) / 4, 0, 1) * (0.5 + 0.5 * clamp((muOf(t.gov_failure) - 1) / 4, 0, 1));
+}
+
+function cascadePressureRatio(t, year, params) {
+  // Use pre-network base pressure for susceptibility: avoid counting background depFactor again.
+  const base = Number.isFinite(t.bs) ? t.bs * domainWeightMultiplier(t.domain, params || P) : t.priority;
+  const threshold = t.threshold_value ?? getThreatThreshold(t, (params || P).thresholdPolicy);
+  const growth = t.growth_rate_effective ?? effectiveRiskGrowthForThreat(t, muOf(t.growth_rate));
+  return clamp(Math.max(0, base || 0) / threshold * Math.pow(1 + Math.max(0, growth), Math.max(0, year - NOW)), 0, 1);
+}
+
+function functionalCascadeNodes(enriched, params) {
+  const ids = new Set(enriched.map(t => t.id));
+  return enriched.map(t => {
+    const deps = (t.deps || []).filter(id => ids.has(id) && id !== t.id);
+    return { id: t.id, domain: t.domain, weight: t.functional_weight ?? 1, services: [...(t.critical_services || [])], overlapGroup: t.functional_overlap_group || t.id,
+      dependencies: deps.map(id => ({ id, weight: t.dependency_weights?.[id] ?? 1 / Math.max(1, (t.deps || []).length), lag: params?.propagationLagYears ?? t.dependency_lags?.[id] ?? 0 })),
+      inducible: t.functional_inducible ?? true,
+      pressureRatio: cascadePressureRatio(t, NOW, params),
+      growth: t.growth_rate_effective ?? effectiveRiskGrowthForThreat(t, muOf(t.growth_rate)),
+      vulnerability: cascadeVulnerability(t), spontaneousYear: Number.isFinite(t.horizon) ? t.horizon : YE + 1,
+      ...(Number.isFinite(t.pressure_turn_year) ? { turnYear: t.pressure_turn_year, recoveryDrop: t.pressure_recovery_drop ?? null } : {}) };
+  });
+}
+
+function configuredFunctionalCascadeNodes(enriched, params) {
+  params = params || P;
+  const nodes = functionalCascadeNodes(enriched, params);
+  if (params.functionalServiceRule === 'global_only') nodes.forEach(node => { node.services = []; });
+  if (params.functionalWeightRule === 'equal') nodes.forEach(node => { node.weight = 1; });
+  if (Number.isFinite(params.dependencyScale)) nodes.forEach(node => { node.vulnerability = clamp(node.vulnerability * params.dependencyScale, 0, 1); });
+  return nodes;
+}
+
+function simulateFunctionalCascade(enriched, params, options) {
+  params = params || P;
+  const nodes = configuredFunctionalCascadeNodes(enriched, params);
+  return FunctionalCascade.simulate({ nodes, startYear: YS, pressureYear: NOW, endYear: YE,
+    threshold: params.cascadeThreshold ?? 0.50, ...(options || {}) });
+}
+
+function computeDomainFunctionalCrossing(enriched, cascadeResult, domain, params) {
+  params = params || P;
+  return FunctionalCascade.firstCrossingFromActivationYears({
+    nodes: configuredFunctionalCascadeNodes(enriched, params),
+    activationYears: cascadeResult.firstActivationYears,
+    activationCauses: cascadeResult.activationCauses,
+    activeIntervals: cascadeResult.activeIntervals,
+    startYear: YS,
+    endYear: YE,
+    threshold: params.cascadeThreshold ?? 0.50,
+    domain,
+  }).year;
+}
+
+function activeTransmissionShare(enriched, active) {
+  let possible = 0;
+  let transmitted = 0;
+  const byId = new Map(enriched.map(t => [t.id, t]));
+  enriched.forEach(target => {
+    (target.deps || []).forEach(depId => {
+      const dep = byId.get(depId);
+      if (!dep) return;
+      const edgeWeight = Math.sqrt(Math.max(0.001, target.priority || 1) * Math.max(0.001, dep.priority || 1));
+      possible += edgeWeight;
+      if (active.has(dep.id) && active.has(target.id)) transmitted += edgeWeight;
+    });
+  });
+  return possible ? transmitted / possible : 0;
+}
+
+/**
+ * Year-by-year cascade propagation model.
+ * A dependency listed on target T is treated as an upstream pressure source for T:
+ * once enough upstream dependencies are active, vulnerable targets can be pulled
+ * forward before their standalone horizon. The cascade crossing year is the first
+ * year where weighted functional loss reaches the chosen threshold globally or
+ * within an essential-service basket. Domains, co-active edges and induced share
+ * are diagnostic, not vetoes. One seed may propagate to initially censored nodes.
+ */
+function computeDynamicCascadeCrossing(enriched, params) {
+  return simulateFunctionalCascade(enriched, params).year;
+}
+
+function explainCascadeCrossing(enriched, params) {
+  const result = simulateFunctionalCascade(enriched, params, { collectTrace: true });
+  // Compatibility diagnostics only: co-active edges are not proof of causal transmission.
+  return { ...result, transmissionShare: activeTransmissionShare(enriched, new Set(result.activeThreats)),
+    cascadeBoost: result.functionalLoss, cascadeBoostMeaning: 'legacy key: functional-loss score, no additive boost' };
+}
+
+/**
+ * Composite response target for quick sensitivity screens combines near-term crossing shares
+ * with a normalized central horizon so small but real probability shifts remain visible even
+ * when the median calendar year itself does not move. (screening-style scalar response target)
+ */
+function oatCompositeResponseFromYears(sortedYears, sampleSize) {
+  if (!sortedYears.length) return { p50: YE + 1, p2035: 0, p2050: 0, normalizedHorizon: 0, score: 0 };
+  const p50 = quantile(sortedYears, 0.5);
+  const p2035 = sortedYears.filter(year => year <= 2035).length / Math.max(1, sampleSize);
+  const p2050 = sortedYears.filter(year => year <= 2050).length / Math.max(1, sampleSize);
+  const normalizedHorizon = 1 - clamp((p50 - NOW) / Math.max(1, YE - NOW), 0, 1);
+  const score = 0.45 * p2035 + 0.45 * p2050 + 0.10 * normalizedHorizon;
+  return { p50, p2035, p2050, normalizedHorizon, score };
+}
+
+function pairedOatBootstrapStandardErrors(baseYears, upYears, dnYears, rng) {
+  const n = baseYears.length;
+  if (n < 2) return { upMcSe: 0, dnMcSe: 0 };
+  const upContrasts = [], dnContrasts = [];
+  for (let b = 0; b < 160; b++) {
+    const base = [], up = [], dn = [];
+    for (let i = 0; i < n; i++) {
+      const index = Math.floor(rng.random01() * n);
+      base.push(baseYears[index]); up.push(upYears[index]); dn.push(dnYears[index]);
+    }
+    const score = values => oatCompositeResponseFromYears(values.sort((a, c) => a - c), n).score;
+    const baseScore = score(base);
+    upContrasts.push((score(up) - baseScore) * 100);
+    dnContrasts.push((baseScore - score(dn)) * 100);
+  }
+  const standardDeviation = values => {
+    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+    return Math.sqrt(values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1));
+  };
+  return { upMcSe: standardDeviation(upContrasts), dnMcSe: standardDeviation(dnContrasts) };
+}
+
+function createMonteCarloAccumulator() {
+  return {
+    compCrossing: [],
+    maxCrossing: [],
+    graphCrossing: [],
+    cascadeCrossing: [],
+    cascadeAboveAtEnd: [],
+    cascadeBackBelowYear: [],
+    globalThresholdCascadeCrossing: [],
+    domainCrossing: {
+      civilization: [],
+      biosphere: [],
+      technology: [],
+    },
+    threatHorizonSamples: Object.fromEntries(THREATS.map(t => [t.id, []])),
+    functionalHorizonSamples: Object.fromEntries(THREATS.map(t => [t.id, []])),
+  };
+}
+
+function enrichMonteCarloThreats(sampled, params, rng) {
+  return sampled.map(t => {
+    const bs = baseScore(t, params.weights);
+    const priority = bs * depFactor(t, sampled, params) * domainWeightMultiplier(t.domain, params);
+    const threshold = getThreatThreshold(t, params.thresholdPolicy || THRESHOLD_POLICY);
+    const rawGrowth = t.growth_rate;
+    const effectiveGrowth = effectiveRiskGrowthForThreat(t, rawGrowth);
+    const horizon = computeThreatHorizon(priority, effectiveGrowth, threshold, t.process_type, true, rng, t.pressure_turn_year);
+
+    return {
+      ...t,
+      bs,
+      priority,
+      threshold_value: threshold,
+      growth_rate_raw: rawGrowth,
+      growth_rate_effective: effectiveGrowth,
+      horizon,
+    };
+  });
+}
+
+function applyGlobalThresholdToSample(enriched, rng) {
+  return enriched.map(t => {
+    const threshold = getThreatThreshold(t, 'global');
+    return {
+      ...t,
+      threshold_value: threshold,
+      horizon: computeThreatHorizon(t.priority, t.growth_rate_effective, threshold, t.process_type, true, rng, t.pressure_turn_year),
+    };
+  });
+}
+
+function recordMonteCarloSample(acc, enriched, globalThresholdEnriched, params) {
+  enriched.forEach(t => acc.threatHorizonSamples[t.id].push(t.horizon));
+
+  const functional = simulateFunctionalCascade(enriched, params, { collectAll: true });
+  enriched.forEach(t => acc.functionalHorizonSamples[t.id].push(functional.firstActivationYears[t.id]));
+  acc.cascadeAboveAtEnd.push(functional.aboveThresholdAtEnd);
+  acc.cascadeBackBelowYear.push(functional.backBelowYear);
+  const years = computeAggregateYears(enriched, params, functional);
+  acc.compCrossing.push(years.comp);
+  acc.maxCrossing.push(years.maxRule);
+  acc.graphCrossing.push(years.graphWeighted);
+  acc.cascadeCrossing.push(years.dynamicCascade);
+  acc.globalThresholdCascadeCrossing.push(computeAggregateYears(globalThresholdEnriched, params).dynamicCascade);
+
+  Object.keys(acc.domainCrossing).forEach(domain => {
+    acc.domainCrossing[domain].push(computeDomainFunctionalCrossing(enriched, functional, domain, params));
+  });
+}
+
+function summarizeThreatHorizonSamples(threatHorizonSamples) {
+  const threatStats = {};
+  THREATS.forEach(t => {
+    const samples = threatHorizonSamples[t.id].sort((a, b) => a - b);
+    threatStats[t.id] = {
+      p10: quantile(samples, 0.10),
+      p50: quantile(samples, 0.50),
+      p90: quantile(samples, 0.90),
+      p2050: samples.length ? samples.filter(s => s <= 2050).length / samples.length : 0,
+      censorFraction: samples.length ? samples.filter(s => s > YE).length / samples.length : 0,
+    };
+  });
+  return threatStats;
+}
+
+function pairedQuantileContrastStandardError(baseYears, alternativeYears, q, rng) {
+  const n = baseYears.length;
+  if (n < 2) return 0;
+  const contrasts = [];
+  for (let b = 0; b < 160; b++) {
+    const base = [], alternative = [];
+    for (let i = 0; i < n; i++) {
+      const index = Math.floor(rng.random01() * n);
+      base.push(baseYears[index]); alternative.push(alternativeYears[index]);
+    }
+    contrasts.push(quantile(alternative.sort((a, c) => a - c), q) - quantile(base.sort((a, c) => a - c), q));
+  }
+  const mean = contrasts.reduce((sum, value) => sum + value, 0) / contrasts.length;
+  return Math.sqrt(contrasts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (contrasts.length - 1));
+}
+
+/** How many Dynamic Cascade runs that reached the threshold are below it again in the last model year. */
+function summarizeCascadeRecovery(acc) {
+  let crossedRuns = 0;
+  let backBelowAtEnd = 0;
+  const firstBackBelow = [];
+  acc.cascadeCrossing.forEach((year, i) => {
+    if (year > YE) return;
+    crossedRuns++;
+    if (!acc.cascadeAboveAtEnd[i]) backBelowAtEnd++;
+    if (acc.cascadeBackBelowYear[i] <= YE) firstBackBelow.push(acc.cascadeBackBelowYear[i]);
+  });
+  firstBackBelow.sort((a, b) => a - b);
+  return {
+    crossedRuns,
+    backBelowAtEnd,
+    shareOfCrossed: crossedRuns ? backBelowAtEnd / crossedRuns : 0,
+    everBackBelow: firstBackBelow.length,
+    firstBackBelowP50: firstBackBelow.length ? quantile(firstBackBelow, 0.5) : null,
+    meaning: `Runs that reached the Dynamic Cascade threshold and are below it again in ${YE} because failed threats recovered after a pressure turn. The clocks still date the first crossing.`,
+  };
+}
+
+function summarizeMonteCarloAccumulator(acc, nSim, seed, thresholdPolicy = THRESHOLD_POLICY) {
+  const summaryRng = label => createRngContext(`${normalizeMonteCarloSeed(seed)}:bootstrap:${label}`);
+  const thresholdMcStandardError = pairedQuantileContrastStandardError(acc.cascadeCrossing,
+    acc.globalThresholdCascadeCrossing, 0.90, summaryRng('paired-threshold-contrast'));
+  const compSummary = summarizeCrossings(acc.compCrossing, nSim, summaryRng('compensatory'));
+  const maxSummary = summarizeCrossings(acc.maxCrossing, nSim, summaryRng('max-rule'));
+  const graphSummary = summarizeCrossings(acc.graphCrossing, nSim, summaryRng('graph'));
+  const cascadeSummary = summarizeCrossings(acc.cascadeCrossing, nSim, summaryRng('cascade'));
+  const globalThresholdCascadeSummary = summarizeCrossings(acc.globalThresholdCascadeCrossing, nSim, summaryRng('global-threshold-cascade'));
+  const domainStats = Object.fromEntries(
+    Object.entries(acc.domainCrossing).map(([domain, crossing]) => [domain, summarizeCrossings(crossing, nSim, summaryRng(`domain:${domain}`))])
+  );
+  const structuralSigma = Math.max(compSummary.p50, maxSummary.p50, graphSummary.p50, cascadeSummary.p50) - Math.min(compSummary.p50, maxSummary.p50, graphSummary.p50, cascadeSummary.p50);
+
+  return {
+    ...compSummary,
+    threatStats: summarizeThreatHorizonSamples(acc.threatHorizonSamples),
+    functionalStats: summarizeThreatHorizonSamples(acc.functionalHorizonSamples),
+    functionalStatsMeaning: 'First functional-threshold activation, spontaneous or induced. Not extinction, permanent failure or completion of collapse.',
+    domainStats,
+    cascadeRecovery: summarizeCascadeRecovery(acc),
+    domainStatsMeaning: 'Within-domain functional-loss first crossing after full-system directed propagation, using the same criticality, overlap, essential-service and cascade-threshold rules as the headline model, including each run’s sampled structure. Domain-specific denominators mean these are not additive parts of the system horizon.',
+    structuralSigma,
+    ensemble: {
+      compensatory: compSummary,
+      maxRule: maxSummary,
+      graphWeighted: graphSummary,
+      dynamicCascade: cascadeSummary,
+    },
+    thresholdRobustness: {
+      label: 'Threshold robustness check — diagnostic only, does not overwrite the main clock date.',
+      policy: thresholdPolicy,
+      globalThreshold: GLOBAL_THRESHOLD,
+      perThreatHeadline: cascadeSummary.p90,
+      globalHeadline: globalThresholdCascadeSummary.p90,
+      deltaYears: globalThresholdCascadeSummary.p90 - cascadeSummary.p90,
+      mcStandardErrorYears: thresholdMcStandardError,
+      mcErrorMethod: 'paired bootstrap standard deviation of the P90 contrast; 160 resamples',
+      pairedRandomInputs: true,
+      estimand: 'global minus current-policy P90 of horizon-coded times; not an identified actual-time contrast when either P90 is censored',
+      currentP90Censored: cascadeSummary.p90 > YE,
+      globalP90Censored: globalThresholdCascadeSummary.p90 > YE,
+      currentCensorFraction: cascadeSummary.censorFraction,
+      globalCensorFraction: globalThresholdCascadeSummary.censorFraction,
+    },
+  };
+}
+
+/**
+ * Structural uncertainty of the functional cascade (model 1.5.0). These choices are model
+ * judgments rather than measurements, so every main Monte Carlo run samples them around the
+ * dataset's declared values:
+ * - cascade threshold: uniform 0.40 to 0.60 (declared 0.50);
+ * - criticality levels 1/2/3: each level value uniform within ±0.5, so levels keep their order;
+ * - dependency weights: Dirichlet with the declared weights as mean, concentration 2 per edge;
+ * - dependency lags: whole years, uniform 0 to 5 (declared 1);
+ * - growth class: each threat moves one class down (25%), stays (50%) or moves up (25%) on the
+ *   ladder 0.003 / 0.01 / 0.02 / 0.03, continued beyond both ends by the adjacent step ratio.
+ *   The shifted growth still passes through effectiveRiskGrowthForThreat, whose caps can cut an
+ *   upward move short (Climate Breakdown and AI at their central growth).
+ * Structural draws use their own seeded streams, one per component, so a run's parameter and
+ * process draws are the same with structural sampling on or off. With
+ * params.structuralUncertainty === false the Monte Carlo reproduces model 1.3.0 exactly.
+ * Deterministic views and the sensitivity diagnostics keep the declared structure.
+ */
+const STRUCTURAL_UNCERTAINTY = Object.freeze({
+  cascadeThreshold: Object.freeze({ lo: 0.40, hi: 0.60 }),
+  criticalityLevelHalfWidth: 0.5,
+  dependencyWeightConcentration: 2,
+  dependencyLagYears: Object.freeze({ lo: 0, hi: 5 }),
+  growthClassLadder: Object.freeze([0.003, 0.01, 0.02, 0.03]),
+  growthClassShift: Object.freeze({ down: 0.25, up: 0.25 }),
+});
+const STRUCTURAL_COMPONENTS = Object.freeze(['threshold', 'criticality', 'dependencyWeights', 'lags', 'growthClass']);
+
+function structuralComponentsOf(params) {
+  if (!params || params.structuralUncertainty === false) return [];
+  const selected = params.structuralComponents;
+  return STRUCTURAL_COMPONENTS.filter(name => !selected || selected[name]);
+}
+
+function growthClassFactors(declaredMu) {
+  const ladder = STRUCTURAL_UNCERTAINTY.growthClassLadder;
+  const last = ladder.length - 1;
+  const extended = [ladder[0] * ladder[0] / ladder[1], ...ladder, ladder[last] * ladder[last] / ladder[last - 1]];
+  let index = 1;
+  for (let i = 2; i <= ladder.length; i++) {
+    if (Math.abs(Math.log(declaredMu / extended[i])) < Math.abs(Math.log(declaredMu / extended[index]))) index = i;
+  }
+  return { down: extended[index - 1] / extended[index], up: extended[index + 1] / extended[index] };
+}
+
+/** Per-run-series state for structural sampling, or null when it is switched off. */
+function createStructuralContext(params) {
+  const components = structuralComponentsOf(params);
+  if (!components.length) return null;
+  const base = `${normalizeMonteCarloSeed(params.seed || DEFAULT_MC_SEED)}:structure`;
+  const context = { growthFactors: new Map(THREATS.map(t => [t.id, growthClassFactors(muOf(t.growth_rate))])) };
+  STRUCTURAL_COMPONENTS.forEach(name => { context[name] = components.includes(name) ? createRngContext(`${base}:${name}`) : null; });
+  return context;
+}
+
+/** Draws one run's structural choices; returns the structured threats and the run's parameters. */
+function applyStructuralUncertainty(sampled, params, context) {
+  if (!context) return { threats: sampled, params };
+  const spec = STRUCTURAL_UNCERTAINTY;
+  const runParams = context.threshold
+    ? { ...params, cascadeThreshold: spec.cascadeThreshold.lo + context.threshold.random01() * (spec.cascadeThreshold.hi - spec.cascadeThreshold.lo) }
+    : params;
+  let levelValues = null;
+  if (context.criticality) {
+    const levels = [...new Set(sampled.map(t => t.functional_weight ?? 1))].sort((a, b) => a - b);
+    levelValues = new Map(levels.map(level => [level, level + (2 * context.criticality.random01() - 1) * spec.criticalityLevelHalfWidth]));
+  }
+  const lagSpan = spec.dependencyLagYears.hi - spec.dependencyLagYears.lo + 1;
+  const threats = sampled.map(t => {
+    const next = { ...t };
+    if (levelValues) next.functional_weight = levelValues.get(t.functional_weight ?? 1);
+    if (context.growthClass) {
+      const u = context.growthClass.random01();
+      const factors = context.growthFactors.get(t.id);
+      if (factors && u < spec.growthClassShift.down) next.growth_rate = t.growth_rate * factors.down;
+      else if (factors && u >= 1 - spec.growthClassShift.up) next.growth_rate = t.growth_rate * factors.up;
+    }
+    const deps = [...(t.deps || [])].sort();
+    if (context.dependencyWeights && deps.length) {
+      const declared = deps.map(id => t.dependency_weights?.[id] ?? 1 / deps.length);
+      const total = declared.reduce((sum, weight) => sum + weight, 0);
+      const draws = declared.map(weight => (total > 0 ? sampleGamma(spec.dependencyWeightConcentration * deps.length * weight / total, context.dependencyWeights) : 0));
+      const drawSum = draws.reduce((sum, value) => sum + value, 0);
+      if (drawSum > 0) next.dependency_weights = { ...t.dependency_weights, ...Object.fromEntries(deps.map((id, i) => [id, total * draws[i] / drawSum])) };
+    }
+    if (context.lags && deps.length) {
+      next.dependency_lags = { ...t.dependency_lags, ...Object.fromEntries(deps.map(id => [id, spec.dependencyLagYears.lo + Math.floor(context.lags.random01() * lagSpan)])) };
+    }
+    return next;
+  });
+  return { threats, params: runParams };
+}
+
+/**
+ * Pressure turns and recovery (model 1.5.0). The dataset's growth priors describe continued
+ * pressure and say nothing about whether or when a threat's pressure could peak and decline; no
+ * historical base rates are used. Each main Monte Carlo run therefore gives every threat,
+ * independently, an even chance of a turn by 2100, in a year drawn uniformly from 2027 to 2100.
+ * After the turn the pressure retraces its rise at the same rate, so a crossing that has not
+ * happened by the turn year never happens. After its turn, a failed cascade node recovers once its
+ * drive has fallen by recoveryDrop below its level at failure; the drop follows the declared
+ * reversibility class, and irreversible threats do not recover. Turn draws use their own seeded
+ * stream, two per threat per run, so parameter, structural and process draws stay paired. With
+ * params.pressureTurns === false the Monte Carlo reproduces the structural-sampling-only result exactly. Deterministic
+ * views and the sensitivity diagnostics keep the declared continued-pressure path.
+ */
+const PRESSURE_TURNS = Object.freeze({
+  probabilityBy2100: 0.5,
+  firstYear: NOW + 1,
+  lastYear: YE,
+  recoveryDrop: Object.freeze({ reversible: 0.25, partial: 0.5, irreversible: null }),
+});
+
+/** Per-run-series state for pressure turns, or null when they are switched off. */
+function createPressureTurnContext(params) {
+  if (!params || params.pressureTurns === false) return null;
+  return {
+    rng: createRngContext(`${normalizeMonteCarloSeed(params.seed || DEFAULT_MC_SEED)}:turn`),
+    recoveryDrop: new Map(THREATS.map(t => [t.id, PRESSURE_TURNS.recoveryDrop[reversibilityTypeForThreat(t)] ?? null])),
+  };
+}
+
+/** Draws one run's pressure turns; returns new objects for turned threats and leaves the inputs untouched. */
+function applyPressureTurns(threats, context) {
+  if (!context) return threats;
+  const spec = PRESSURE_TURNS;
+  const span = spec.lastYear - spec.firstYear + 1;
+  return threats.map(t => {
+    const turns = context.rng.random01() < spec.probabilityBy2100;
+    const turnYear = spec.firstYear + Math.floor(context.rng.random01() * span);
+    return turns ? { ...t, pressure_turn_year: turnYear, pressure_recovery_drop: context.recoveryDrop.get(t.id) ?? null } : t;
+  });
+}
+
+async function runMC(scKey, nSim, onProg, params) {
+  params = params || P;
+  const runRng = createRngContext(params.seed || DEFAULT_MC_SEED);
+  const structure = createStructuralContext(params);
+  const turns = createPressureTurnContext(params);
+  const sc = SC[scKey] || SC.baseline;
+  const spreadMult = params.uncMult * sc.uncWidthMult;
+  const scenarioThreats = THREATS.map(t => applyScenario(t, scKey));
+  const acc = createMonteCarloAccumulator();
+
+  const CHUNK = 60;
+  let done = 0;
+  while (done < nSim) {
+    const n = Math.min(CHUNK, nSim - done);
+    for (let i = 0; i < n; i++) {
+      const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult, runRng));
+      const run = applyStructuralUncertainty(sampled, params, structure);
+      const threats = applyPressureTurns(run.threats, turns);
+      const processDraws = [];
+      const enriched = enrichMonteCarloThreats(threats, run.params, { random01: () => {
+        const draw = runRng.random01();
+        processDraws.push(draw);
+        return draw;
+      } });
+      let replayIndex = 0;
+      const globalThresholdEnriched = applyGlobalThresholdToSample(enriched, { random01: () => {
+        if (replayIndex >= processDraws.length) throw new Error('Threshold-policy process draw pairing mismatch.');
+        return processDraws[replayIndex++];
+      } });
+      if (replayIndex !== processDraws.length) throw new Error('Threshold-policy process draw pairing mismatch.');
+      recordMonteCarloSample(acc, enriched, globalThresholdEnriched, run.params);
+    }
+    done += n;
+    if (onProg) onProg(done / nSim);
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  return summarizeMonteCarloAccumulator(acc, nSim, params.seed, params.thresholdPolicy || THRESHOLD_POLICY);
+}
+
+const CASCADE_SYSTEM_BASKET = 'system_wide';
+
+/**
+ * Reporting-basket structure for trigger attribution. Each basket is split into overlap
+ * groups counted once at their largest member weight, as FunctionalCascade.metrics does, and
+ * records the fewest groups whose failure reaches the cascade threshold.
+ */
+function cascadeBasketLayout(nodes, threshold) {
+  const baskets = Object.create(null);
+  const add = (key, node) => {
+    const basket = baskets[key] || (baskets[key] = { groups: Object.create(null) });
+    const group = basket.groups[node.overlapGroup] || (basket.groups[node.overlapGroup] = { id: node.overlapGroup, members: [], weight: 0 });
+    group.members.push(node.id);
+    group.weight = Math.max(group.weight, node.weight);
+  };
+  nodes.forEach(node => {
+    add(CASCADE_SYSTEM_BASKET, node);
+    node.services.forEach(service => add(service, node));
+  });
+  Object.values(baskets).forEach(basket => {
+    const weights = Object.values(basket.groups).map(group => group.weight).sort((a, b) => b - a);
+    const total = weights.reduce((sum, weight) => sum + weight, 0);
+    let lost = 0;
+    let needed = 0;
+    while (needed < weights.length && lost / total < threshold) lost += weights[needed++];
+    basket.groupCount = weights.length;
+    basket.minGroupsToCross = needed;
+  });
+  return baskets;
+}
+
+/**
+ * Which reporting basket triggers the Dynamic cascade clocks. Diagnostic only, not a model
+ * output. Replays runMC's draw streams (same scenario, seed, run count, call order and
+ * structural draws), so replayed run i is headline run i, and records every basket whose
+ * functional loss had reached that run's cascade threshold in the first-crossing year. If the
+ * replayed crossing years differ from the headline distribution the trace is marked
+ * inconsistent and must not be shown. Several baskets can reach the threshold in the same
+ * year, so basket shares can add up to more than 100%. groupsNeeded counts, over all runs, how
+ * many failing groups each basket needs to reach the run's sampled threshold.
+ */
+async function traceCascadeTriggers(inputs, headline, isCurrent) {
+  const { scKey, nSim, params } = inputs;
+  const runRng = createRngContext(params.seed || DEFAULT_MC_SEED);
+  const structure = createStructuralContext(params);
+  const turns = createPressureTurnContext(params);
+  const sc = SC[scKey] || SC.baseline;
+  const spreadMult = params.uncMult * sc.uncWidthMult;
+  const scenarioThreats = THREATS.map(t => applyScenario(t, scKey));
+  const crossings = [];
+  const counts = Object.create(null);
+  const groupsNeeded = Object.create(null);
+  let layout = null;
+  let crossedRuns = 0;
+  let multiBasketRuns = 0;
+
+  for (let i = 0; i < nSim; i++) {
+    const sampled = scenarioThreats.map(t => sampleThreatNumerics(t, spreadMult, runRng));
+    const run = applyStructuralUncertainty(sampled, params, structure);
+    const enriched = enrichMonteCarloThreats(applyPressureTurns(run.threats, turns), run.params, { random01: () => runRng.random01() });
+    const threshold = run.params.cascadeThreshold ?? 0.50;
+    layout = cascadeBasketLayout(configuredFunctionalCascadeNodes(enriched, run.params), threshold);
+    Object.entries(layout).forEach(([key, basket]) => {
+      const histogram = groupsNeeded[key] || (groupsNeeded[key] = Object.create(null));
+      histogram[basket.minGroupsToCross] = (histogram[basket.minGroupsToCross] || 0) + 1;
+    });
+    const result = simulateFunctionalCascade(enriched, run.params);
+    crossings.push(result.year);
+    if (result.year <= YE) {
+      crossedRuns++;
+      const reached = Object.keys(result.serviceLosses).filter(key => result.serviceLosses[key] >= threshold);
+      if (result.activeMass >= threshold) reached.push(CASCADE_SYSTEM_BASKET);
+      if (reached.length > 1) multiBasketRuns++;
+      const active = new Set(result.activeThreats);
+      reached.forEach(key => {
+        const count = counts[key] || (counts[key] = { runs: 0, groups: Object.create(null) });
+        count.runs++;
+        Object.values(layout[key].groups).forEach(group => {
+          if (group.members.some(id => active.has(id))) count.groups[group.id] = (count.groups[group.id] || 0) + 1;
+        });
+      });
+    }
+    if (i % 60 === 59) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      if (!isCurrent()) return null;
+    }
+  }
+
+  crossings.sort((a, b) => a - b);
+  const expected = (headline && headline.crossing) || [];
+  const consistent = crossings.length === expected.length && crossings.every((year, i) => year === expected[i]);
+  const baskets = Object.entries(counts).map(([key, count]) => ({
+    key,
+    runs: count.runs,
+    share: count.runs / crossedRuns,
+    groupCount: layout[key].groupCount,
+    groupsNeeded: Object.fromEntries(Object.entries(groupsNeeded[key]).map(([needed, runs]) => [needed, runs / nSim])),
+    groups: Object.values(layout[key].groups)
+      .map(group => ({ id: group.id, members: [...group.members], runs: count.groups[group.id] || 0, share: (count.groups[group.id] || 0) / count.runs }))
+      .sort((a, b) => b.runs - a.runs || a.id.localeCompare(b.id)),
+  })).sort((a, b) => b.runs - a.runs || a.key.localeCompare(b.key));
+  const declaredThreshold = params.cascadeThreshold ?? 0.50;
+  const threshold = structure && structure.threshold ? { ...STRUCTURAL_UNCERTAINTY.cascadeThreshold } : { lo: declaredThreshold, hi: declaredThreshold };
+  return { consistent, nSim, crossedRuns, multiBasketRuns, threshold, baskets };
+}
+
+/* One-at-a-time growth-rate sensitivity diagnostic. */
+let _sensData = null;
+let _exploratoryData = null;
+let _exploratoryPromise = null;
+const CALC_STEP_KIND = {
+  exact: {
+    key: 'exact',
+    label: 'Exact internal',
+    note: 'Deterministic arithmetic over current model inputs; valid inside model assumptions.',
+  },
+  mc: {
+    key: 'mc',
+    label: 'Monte Carlo estimate',
+    note: 'Sampling estimate from model distributions; precision improves with sample count.',
+  },
+  heuristic: {
+    key: 'heuristic',
+    label: 'Model heuristic',
+    note: 'Transparent model rule or reduced-order diagnostic, not an empirical proof.',
+  },
+  stress: {
+    key: 'stress',
+    label: 'Stress test',
+    note: 'Scenario diagnostic for alternative failure rules or tail shocks.',
+  },
+  report: {
+    key: 'report',
+    label: 'Report only',
+    note: 'Audit or rendering summary rather than a numerical model calculation.',
+  },
+};
+// Console steps in display order. core: sets the clocks; diagnostic: describes the result without
+// changing the clocks; optional: Model Diagnostics, run on request. async steps finish after the run.
+const CALC_STEPS = [
+  { group:'core', id:'scenario', kind:'exact', label:'Scenario conditioning', pending:'Scenario multipliers have not yet been applied.' },
+  { group:'core', id:'base', kind:'exact', label:'Base MCDA scoring', pending:'Weighted six-dimension base scores are waiting for a rerun.' },
+  { group:'core', id:'dependency', kind:'heuristic', label:'Dependency amplification', pending:'Dependency-adjusted priorities are waiting for a rerun.' },
+  { group:'core', id:'domainweights', kind:'exact', label:'Normalized domain weighting', pending:'Domain slider shares have not yet been normalized for scoring.' },
+  { group:'core', id:'horizon', kind:'heuristic', label:'Process-specific threat horizon model', pending:'Continuous, event, and regime horizons are not yet recomputed.' },
+  { group:'core', id:'gsi', kind:'exact', label:'Global Stress Index', pending:'Aggregate systemic stress has not yet been recomputed.' },
+  { group:'core', id:'priorityrank', kind:'exact', label:'Lead-threat priority ranking', pending:'Top-priority threat ranking is waiting for deterministic scores.' },
+  { group:'core', id:'structuresample', kind:'mc', label:'Structural uncertainty sampling', pending:'Cascade threshold, criticality levels, dependency weights and lags, and growth class are sampled in every run.' },
+  { group:'core', id:'turns', kind:'mc', label:'Pressure turns and recovery', pending:'Pressure turns and recovery by reversibility class are sampled in every run.' },
+  { group:'core', id:'montecarlo', kind:'mc', label:'Monte Carlo sampling and crossing simulation', pending:'Beta / log-normal parameter sampling and the crossing simulation have not started yet.' },
+  { group:'core', id:'compensatory', kind:'exact', label:'Compensatory aggregation', pending:'Weighted-share threshold aggregation is pending.' },
+  { group:'core', id:'maxrule', kind:'exact', label:'Non-compensatory max-rule aggregation', pending:'Earliest single-threat crossing aggregation is pending.' },
+  { group:'core', id:'cascade', kind:'heuristic', label:'Dynamic cascade propagation', pending:'Year-by-year dependency propagation is pending.' },
+  { group:'core', id:'domainmc', kind:'mc', label:'Domain functional-cascade distributions', pending:'Domain-specific functional first-crossing summaries are pending.' },
+  { group:'core', id:'structural', kind:'exact', label:'Aggregation-rule spread', pending:'Cross-aggregator structural spread has not yet been computed.' },
+  { group:'core', id:'bootstrap', kind:'mc', label:'Bootstrap interval estimation', pending:'Bootstrap uncertainty summaries are pending.' },
+  { group:'core', id:'recovery', kind:'exact', label:'Recovery check', pending:'Runs still below the threshold in 2100 and runs that fall back below it are counted after the simulation.' },
+  { group:'core', async:true, id:'triggers', kind:'mc', label:'Trigger attribution', pending:'The runs are replayed to find which essential-service basket sets the clocks off.' },
+  { group:'diagnostic', id:'graph', kind:'heuristic', label:'Graph-weighted heuristic index', pending:'Dependency-linked heuristic index is pending.' },
+  { group:'diagnostic', id:'weibull', kind:'heuristic', label:'Weibull survival analysis', pending:'Accelerating hazard diagnostics are pending.' },
+  { group:'diagnostic', id:'eigen', kind:'exact', label:'Network eigenvector centrality', pending:'Cascade hub centrality ranking is pending.' },
+  { group:'diagnostic', id:'poissonbinomial', kind:'exact', label:'Poisson-binomial convergence tail', pending:'Exact unequal-probability convergence tail is pending.' },
+  { group:'diagnostic', id:'entropy', kind:'exact', label:'Shannon entropy risk landscape', pending:'Risk concentration / spread entropy has not yet been computed.' },
+  { group:'optional', id:'oat', kind:'heuristic', label:'Fast OAT sensitivity', pending:'Idle. Use “Run diagnostics” to run OAT sensitivity.' },
+  { group:'optional', id:'sobol', kind:'mc', label:'Sobol low-discrepancy Jansen S1/ST'
