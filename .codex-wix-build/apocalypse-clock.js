@@ -1205,7 +1205,7 @@ const Highlight = window.Highlight;
 
 const _rerunAdvanced = (...args) => typeof window._rerunAdvanced === "function" ? window._rerunAdvanced(...args) : undefined;
 
-const WIX_RUNTIME_SOURCE_HASH_SHA256 = "2c78bffda8188c0ea05f0b2065d893fbd7064c87b7cbeda3392a5d76115cef7c";
+const WIX_RUNTIME_SOURCE_HASH_SHA256 = "3895af0031904d99dca7abef532455b8d3a39f9d05fde317a80b91c5c2a73d19";
 
 /* Generated from the deterministic 3,000-run reference configuration. */
 /* Do not hand-edit; regenerate with .codex-wix-build/generate-baseline-snapshot.cjs. */
@@ -1250,7 +1250,10 @@ function probabilityByDisplayedYear(summary, rawYear) {
 const AXIS_START = 2000, AXIS_END = 2100;
 const AXIS_YEARS = [2000,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100];
 const yearPos = y => clamp(((Math.min(y, AXIS_END) - AXIS_START) / (AXIS_END - AXIS_START)) * 100, 0, 100);
-const nowStamp = () => new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+// One formatter for all timeline rows: constructing a locale formatter per
+// toLocaleDateString call dominated the timeline render on slow phones.
+const NOW_STAMP_FORMAT = new Intl.DateTimeFormat('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+const nowStamp = () => NOW_STAMP_FORMAT.format(new Date());
 const fmtYearsLeft = y => {
   if (!Number.isFinite(y)) return ' ';
   if (y > YE) return 'No cross';
@@ -8617,8 +8620,13 @@ async function initApp() {
   initAiPresetSelector();
   initScientificPanelToggle();
   initFloatTip();
-  renderStaticBaseline();
-  if (!renderBundledBaseline()) {
+  // Render the page once. The verified snapshot fills every element the empty
+  // placeholder render would, so drawing the placeholder first only doubled the
+  // start-up work on phones; it remains the fallback when the snapshot fails.
+  if (renderBundledBaseline()) {
+    initNetwork(buildEnriched(currentScenario()));
+  } else {
+    renderStaticBaseline();
     const badge = document.getElementById('simBadge');
     if (badge) badge.innerHTML = '<span class="live-dot"></span>Run required';
     resetCalcConsole('The bundled reference result failed validation. Use “Run new data” to calculate a fresh result.', 'Run required');
