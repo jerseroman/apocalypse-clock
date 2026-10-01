@@ -1,5 +1,15 @@
 const { test, expect } = require('@playwright/test');
 
+test('validation notice closes on click and stays dismissed for this session', async ({ page }) => {
+  await page.goto('/index.html');
+  const notice = page.locator('.page > .validation-notice');
+  await expect(notice).toBeVisible();
+  await page.getByRole('button', { name: 'Hide this notice' }).click();
+  await expect(notice).toBeHidden();
+  await page.reload();
+  await expect(notice).toBeHidden();
+});
+
 // Left-hand section menu: every item opens only its own section, with visible content; the clock
 // column keeps its width; #section-all shows every section; charts are drawn at full size; the menu
 // links to GitHub, Facebook and Perplexity and has Share and Email buttons; the network panel shows the embedded canvas network.
