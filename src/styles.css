@@ -950,7 +950,8 @@ body.has-section-nav[data-nav-current="scenario-overview"] .main-grid .sidebar{g
 @media(max-width:1080px){body.has-section-nav[data-nav-current="scenario-overview"] .main-grid .sidebar{grid-template-columns:1fr}}
 @media print{body.has-section-nav .page > .site-header{display:block!important}}
 .validation-notice.is-dismissed{display:none!important}
-.validation-notice-close{appearance:none;border:0;background:transparent;color:#FF2A00;font-size:16px;line-height:1;padding:0 8px 0 0;cursor:pointer;align-self:center}
+.validation-notice-close{appearance:none;border:0;background:transparent;color:#FF2A00;font-size:16px;line-height:1;padding:0;cursor:pointer;align-self:center;display:inline-grid;place-items:center;flex:0 0 32px;width:32px;height:32px;margin:-7px 2px -7px -7px;position:relative;z-index:3;pointer-events:auto;touch-action:manipulation}
+.validation-notice-close::before{content:"";position:absolute;inset:-7px}
 .validation-notice-close:hover,.validation-notice-close:focus-visible{color:#fff}
 /* Page search at the top right of every section. */
 .section-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;margin:4px 0 18px}
@@ -1154,7 +1155,7 @@ body.has-section-nav #scientificPanelBody{display:block;padding:0}
   }
   .validation-notice strong{font-size:8.5px;line-height:1.2}
   .validation-detail{display:none}
-  .validation-notice-close{padding:0 3px 0 0;font-size:11px}
+  .validation-notice-close{font-size:13px;flex-basis:30px;width:30px;height:30px;margin:-8px 0 -8px -5px}
   .page-search-box{padding:3px 6px;border-radius:6px}
   .page-search-icon{width:12px;height:12px}
   .page-search-box input{font-size:12px;line-height:15px;height:15px}

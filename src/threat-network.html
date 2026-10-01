@@ -253,7 +253,10 @@
   const EMBEDDED = document.documentElement.classList.contains('embed')
     || new URLSearchParams(location.search).has('embed');
   if (EMBEDDED) document.documentElement.classList.add('embed');
-  const COMPACT_DEVICE = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+  // Performance mode follows the rendered layout width, not the pointer type. A desktop
+  // touchscreen can report a coarse pointer even while displaying the full PC layout.
+  const COMPACT_LAYOUT = window.matchMedia('(max-width: 760px)');
+  let COMPACT_DEVICE = COMPACT_LAYOUT.matches;
   // The 102-row register remains available from its summary, but must not make an embedded or phone
   // network thousands of pixels tall before the reader asks to open it.
   if (EMBEDDED || COMPACT_DEVICE) document.querySelector('.table-view').open = false;
@@ -375,9 +378,9 @@
   let W = 0, H = 0, DPR = 1, cx = 0, cy = 0, Rx = 0, Ry = 0, S = 1;
   let hovered = null, selected = null;
   let showLabels = true;
-  // Moving dots are a direction cue only. Keep the static arrows and labels on phones, and let readers
-  // opt into the costly continuous animation with the Flow checkbox when their device can afford it.
-  let showFlow = !COMPACT_DEVICE && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Moving dots are a direction cue only. They are enabled by default on desktop, as requested,
+  // while phones keep the costly continuous animation disabled for performance.
+  let showFlow = !COMPACT_DEVICE;
   let background = null;
   let rafId = 0;
   let lastFlowFrame = 0;
@@ -1050,7 +1053,27 @@
   document.getElementById('toggleLabels').addEventListener('change', e => { showLabels = e.target.checked; requestDraw(); });
   const flowToggle = document.getElementById('toggleFlow');
   flowToggle.checked = showFlow;
-  flowToggle.addEventListener('change', e => { showFlow = e.target.checked; lastFlowFrame = 0; requestDraw(); });
+  let flowWasSetByUser = false;
+  const syncFlowDefaultToLayout = () => {
+    COMPACT_DEVICE = COMPACT_LAYOUT.matches;
+    if (flowWasSetByUser) return;
+    showFlow = !COMPACT_DEVICE;
+    flowToggle.checked = showFlow;
+    lastFlowFrame = 0;
+    requestDraw();
+  };
+  // A Wix iframe can start at the browser default width (300 px) and widen only after
+  // the host has mounted. Re-read the live media query after mount and on each breakpoint
+  // change so the full PC layout reliably starts with Flow enabled.
+  syncFlowDefaultToLayout();
+  COMPACT_LAYOUT.addEventListener('change', syncFlowDefaultToLayout);
+  requestAnimationFrame(syncFlowDefaultToLayout);
+  flowToggle.addEventListener('change', e => {
+    flowWasSetByUser = true;
+    showFlow = e.target.checked;
+    lastFlowFrame = 0;
+    requestDraw();
+  });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && selected) { selected = null; focusSelect.value = ''; updateDetail(); requestDraw(); }
   });

@@ -110,6 +110,13 @@ const runtime = `
 ;(() => {
   'use strict';
 
+  // Wix's mobile-only HTML document owns its own scroll container. The old
+  // 13,250px canvas must not become a second outer scroller or add blank space.
+  // This stylesheet is inert in standalone embeds and on desktop.
+  const mobileEmbedShellStyle = window.document.createElement('style');
+  mobileEmbedShellStyle.textContent = '@media(max-width:760px){html:has(#comp-molz8s2u),html:has(#comp-molz8s2u) body{overflow:hidden!important;}html:has(#comp-molz8s2u) #SITE_HEADER,html:has(#comp-molz8s2u) #SITE_HEADER-placeholder,html:has(#comp-molz8s2u) #SITE_FOOTER,html:has(#comp-molz8s2u) #SITE_FOOTER_WRAPPER,html:has(#comp-molz8s2u) #comp-mtzl62z3{display:none!important;}#comp-molz8s2u{position:fixed!important;inset:0!important;left:0!important;top:0!important;width:100vw!important;max-width:none!important;height:100vh!important;height:100dvh!important;margin:0!important;transform:none!important;z-index:1000!important;}}';
+  window.document.head.appendChild(mobileEmbedShellStyle);
+
   const CLOCK_HTML = ${javascriptString(bodyHtml)};
   const CLOCK_CSS = ${javascriptString(css)};
   const NETWORK_HTML = ${javascriptString(read('src/threat-network.html').replace(
@@ -209,6 +216,7 @@ ${applicationSources}
 
   class ApocalypseClockElement extends HTMLElement {
     connectedCallback() {
+      if (window.matchMedia('(max-width:760px)').matches && window.document.getElementById('comp-molz8s2u')) return;
       if (this._apocalypseClockMounted) {
         this.installViewportBleed();
         this.installOuterShellSync();
@@ -241,6 +249,7 @@ ${applicationSources}
     }
 
     syncOuterShellHeight() {
+      if (window.matchMedia('(max-width:760px)').matches && window.document.getElementById('comp-molz8s2u')) return;
       const root = this.shadowRoot;
       const body = root && root.querySelector('.ac-body');
       const page = root && root.querySelector('.page');
@@ -366,6 +375,11 @@ ${applicationSources}
       const body = this.shadowRoot && this.shadowRoot.querySelector('.ac-body');
       const documentElement = window.document.documentElement;
       if (!body || !documentElement) return;
+      if (window.matchMedia('(max-width:760px)').matches && window.document.getElementById('comp-molz8s2u')) {
+        documentElement.style.setProperty('overflow', 'hidden', 'important');
+        window.document.body.style.setProperty('overflow', 'hidden', 'important');
+        return;
+      }
       const viewportWidth = documentElement.clientWidth;
       const hostLeft = this.getBoundingClientRect().left;
       if (!(viewportWidth > 0) || !Number.isFinite(hostLeft)) return;

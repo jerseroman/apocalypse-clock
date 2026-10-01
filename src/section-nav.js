@@ -164,12 +164,26 @@
       close.type = 'button';
       close.className = 'validation-notice-close';
       close.setAttribute('aria-label', 'Hide this notice');
+      close.setAttribute('title', 'Hide this notice');
       close.textContent = '×';
       notice.prepend(close);
-      close.addEventListener('click', () => {
+      const dismissNotice = event => {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
         notice.classList.add('is-dismissed');
+        close.setAttribute('aria-pressed', 'true');
         try { sessionStorage.setItem('validationNoticeHidden', '1'); } catch (error) { /* storage blocked */ }
-      });
+      };
+      // Dismiss on the initial primary pointer press. This avoids relying on a
+      // synthesized click after Wix/mobile iframe gesture handling; the native
+      // click listener remains for keyboard activation.
+      close.addEventListener('pointerdown', event => {
+        if (event.button !== 0 || notice.classList.contains('is-dismissed')) return;
+        dismissNotice(event);
+      }, { capture: true });
+      close.addEventListener('click', dismissNotice);
       if (dismissed) notice.classList.add('is-dismissed');
     }
 
