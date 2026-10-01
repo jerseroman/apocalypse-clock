@@ -179,10 +179,12 @@
       // Wix may consume the synthesized click from pointer input. Observe the
       // completed pointer gesture at document capture, including through a shadow
       // root; keep click for keyboard activation and assistive technology.
-      document.addEventListener('pointerup', event => {
-        if (event.button !== 0 || !event.composedPath().includes(close)) return;
+      const finishPointer = event => {
+        if (event.button !== undefined && event.button !== 0) return;
         dismissNotice();
-      }, true);
+      };
+      close.addEventListener('pointerup', finishPointer);
+      close.addEventListener('touchend', finishPointer, { passive: true });
       close.addEventListener('click', dismissNotice);
       if (dismissed) notice.classList.add('is-dismissed');
     }
