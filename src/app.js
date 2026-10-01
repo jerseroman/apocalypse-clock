@@ -3985,10 +3985,45 @@ function buildNarrative(scKey, enriched, mcRes) {
 
 const SOURCE_DATA_URL = './data_v1_9_0.json';
 
-function threatReadMoreLink(t) {
-  const url = SOURCE_DATA_URL;
+const THREAT_PAGE_BASE_URL = 'https://www.apocalypseclock.com/';
+const THREAT_PAGE_SLUGS = {
+  climate: 'climatebreakdown',
+  biodiversity: 'biodiversityloss',
+  soils: 'soilfoodsystem',
+  water: 'freshwaterstress',
+  oceans: 'oceandegradation',
+  pollution: 'toxicpollutionpfas',
+  pandemics: 'pandemicbiosecurity',
+  amr: 'antimicrobialresistance',
+  bioengineered: 'engineeredbiologicalevent',
+  nuclear: 'nuclearconflict',
+  supply: 'energysupplychains',
+  geopolitics: 'geopoliticalescalation',
+  fragmentation_gov: 'globalgovernancefragmentation',
+  economic: 'economicfracture',
+  debt: 'debtfinancialcontagion',
+  displacement: 'massdisplacement',
+  authoritarian: 'authoritariandrift',
+  epistemic: 'epistemicbreakdown',
+  ai: 'advancedaidestabilizer',
+  cyber: 'systemiccyberattacks',
+  autonomousw: 'autonomousweaponsescalation',
+  minerals: 'criticalmineralsbottleneck',
+  space: 'spaceinfrastructuredisruption',
+};
+
+// Links each threat to its page on apocalypseclock.com (same tab, so the
+// Wix custom element navigates the site itself); unknown ids fall back to
+// the source dataset.
+function threatReadMoreLink(t, className = 'threat-read-more', style = '') {
+  const slug = THREAT_PAGE_SLUGS[t?.id];
   const label = escapeHtml(t?.name || 'this threat');
-  return `<a class="threat-read-more" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="View source data for ${label}">VIEW SOURCE DATA</a>`;
+  const styleAttr = style ? ` style="${style}"` : '';
+  if (!slug) {
+    return `<a class="${className}" href="${escapeHtml(SOURCE_DATA_URL)}" target="_blank" rel="noopener noreferrer"${styleAttr} aria-label="View source data for ${label}">VIEW SOURCE DATA</a>`;
+  }
+  const url = THREAT_PAGE_BASE_URL + slug;
+  return `<a class="${className}" href="${escapeHtml(url)}" target="_top"${styleAttr} aria-label="Read more about ${label}">READ MORE</a>`;
 }
 
 function threatTableMetaHtml(t) {
@@ -4449,7 +4484,7 @@ function priorityThreatCardHtml(t, rank, enriched, mcRes) {
       <div class="t-interactions"><strong>Depends on:</strong> ${escapeHtml(vm.depNames.join('  ') || 'none recorded')}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap">
         <button class="a-chip" type="button" data-threat-action="watch">Watch</button>
-        <a class="a-chip" href="${escapeHtml(SOURCE_DATA_URL)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">VIEW SOURCE DATA</a>
+        ${threatReadMoreLink(t, 'a-chip', 'text-decoration:none')}
         <button class="a-chip" type="button" data-threat-action="toggle-collapse">${actionLabel}</button>
       </div>
     </div>
