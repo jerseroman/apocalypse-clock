@@ -184,6 +184,7 @@
         dismissNotice();
       };
       close.addEventListener('pointerup', finishPointer);
+      close.addEventListener('mouseup', finishPointer);
       close.addEventListener('touchend', finishPointer, { passive: true });
       close.addEventListener('click', dismissNotice);
       if (dismissed) notice.classList.add('is-dismissed');
