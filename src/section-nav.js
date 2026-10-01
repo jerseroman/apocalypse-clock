@@ -168,8 +168,6 @@
       close.textContent = '×';
       notice.prepend(close);
       const dismissNotice = event => {
-        // Do not cancel pointerdown: removing the button during that event can
-        // prevent the browser from completing the gesture as a click.
         if (event && event.type === 'click') {
           event.preventDefault();
           event.stopPropagation();
@@ -178,9 +176,13 @@
         close.setAttribute('aria-pressed', 'true');
         try { sessionStorage.setItem('validationNoticeHidden', '1'); } catch (error) { /* storage blocked */ }
       };
-      // Use the completed activation event (click) for mouse, touch and keyboard.
-      // Dismissing on pointerdown removes the target before some browsers/Wix
-      // wrappers dispatch the corresponding click, producing inconsistent UX.
+      // Wix may consume the synthesized click from pointer input. Observe the
+      // completed pointer gesture at document capture, including through a shadow
+      // root; keep click for keyboard activation and assistive technology.
+      document.addEventListener('pointerup', event => {
+        if (event.button !== 0 || !event.composedPath().includes(close)) return;
+        dismissNotice();
+      }, true);
       close.addEventListener('click', dismissNotice);
       if (dismissed) notice.classList.add('is-dismissed');
     }

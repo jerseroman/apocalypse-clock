@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test('validation notice closes on click and stays dismissed for this session', async ({ page }) => {
+test('validation notice closes on pointer and stays dismissed for this session', async ({ page }) => {
   await page.goto('/index.html');
   const notice = page.locator('.page > .validation-notice');
   await expect(notice).toBeVisible();
