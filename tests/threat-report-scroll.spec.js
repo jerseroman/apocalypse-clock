@@ -103,3 +103,16 @@ test('leaving a threat report restores the native footer for other Wix pages', a
   await page.locator('wix-default-custom-element').evaluate(element => element.remove());
   await expect(page.locator('#SITE_FOOTER')).toBeVisible();
 });
+
+test('footer typography and spacing are reduced 35 percent on desktop and phone', async ({page}) => {
+  await mount(page, 'climatebreakdown');
+  const sizes = () => page.locator('.report-footer').evaluate(element => {
+    const style = getComputedStyle(element);
+    return [parseFloat(style.fontSize), parseFloat(style.paddingTop), parseFloat(style.paddingBottom)];
+  });
+  expect(await sizes()).toEqual([7.15, 15.6, 20.8]);
+  await page.setViewportSize({width:1280,height:900});
+  await page.locator('#report').evaluate(element => {element.style.width='1120px';});
+  expect(await sizes()).toEqual([9.1, 23.4, 33.8]);
+  await expect(page.locator('.report-footer a')).toHaveCount(27);
+});

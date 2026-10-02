@@ -131,13 +131,13 @@ function render(it){
 
 const FOOTER_ORDER = ['climatebreakdown','geopoliticalescalation','advancedaidestabilizer','spaceinfrastructuredisruption','massdisplacement','biodiversityloss','freshwaterstress','nuclearconflict','pandemicbiosecurity','oceandegradation','authoritariandrift','globalgovernancefragmentation','engineeredbiologicalevent','debtfinancialcontagion','antimicrobialresistance','systemiccyberattacks','epistemicbreakdown','economicfracture','energysupplychains','soilfoodsystem','autonomousweaponsescalation','toxicpollutionpfas','criticalmineralsbottleneck'];
 const FOOTER_CSS = `
-.report-footer{background:#14181f;color:#536680;font:14px/1.55 Arial,Helvetica,sans-serif;text-align:center;padding:36px 14px 52px}
-.report-footer-inner{border-top:1px solid rgba(149,176,210,.12);padding-top:20px}
-.report-footer nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 22px;margin-bottom:16px}
+.report-footer{background:#14181f;color:#536680;font:9.1px/1.55 Arial,Helvetica,sans-serif;text-align:center;padding:23.4px 9.1px 33.8px}
+.report-footer-inner{border-top:1px solid rgba(149,176,210,.12);padding-top:13px}
+.report-footer nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:3.9px 14.3px;margin-bottom:10.4px}
 .report-footer a{color:#95afd1;text-decoration:none}
 .report-footer a:hover,.report-footer a:focus-visible{color:#e4eaf2;text-decoration:underline;text-underline-offset:3px}
-.report-footer p{margin:2px 0;overflow-wrap:anywhere}
-@container(max-width:560px){.report-footer{font-size:11px;padding:24px 14px 32px}.report-footer nav{gap:8px 14px}}
+.report-footer p{margin:1.3px 0;overflow-wrap:anywhere}
+@container(max-width:560px){.report-footer{font-size:7.15px;padding:15.6px 9.1px 20.8px}.report-footer nav{gap:5.2px 9.1px}}
 `;
 function renderFooter(){
   const links = FOOTER_ORDER.map(slug => ITEMS.find(item => item.slug === slug))
