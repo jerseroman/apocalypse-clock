@@ -129,6 +129,28 @@ function render(it){
 </main>`;
 }
 
+const FOOTER_ORDER = ['climatebreakdown','geopoliticalescalation','advancedaidestabilizer','spaceinfrastructuredisruption','massdisplacement','biodiversityloss','freshwaterstress','nuclearconflict','pandemicbiosecurity','oceandegradation','authoritariandrift','globalgovernancefragmentation','engineeredbiologicalevent','debtfinancialcontagion','antimicrobialresistance','systemiccyberattacks','epistemicbreakdown','economicfracture','energysupplychains','soilfoodsystem','autonomousweaponsescalation','toxicpollutionpfas','criticalmineralsbottleneck'];
+const FOOTER_CSS = `
+.report-footer{background:#14181f;color:#536680;font:14px/1.55 Arial,Helvetica,sans-serif;text-align:center;padding:36px 14px 52px}
+.report-footer-inner{border-top:1px solid rgba(149,176,210,.12);padding-top:20px}
+.report-footer nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 22px;margin-bottom:16px}
+.report-footer a{color:#95afd1;text-decoration:none}
+.report-footer a:hover,.report-footer a:focus-visible{color:#e4eaf2;text-decoration:underline;text-underline-offset:3px}
+.report-footer p{margin:2px 0;overflow-wrap:anywhere}
+@container(max-width:560px){.report-footer{font-size:11px;padding:24px 14px 32px}.report-footer nav{gap:8px 14px}}
+`;
+function renderFooter(){
+  const links = FOOTER_ORDER.map(slug => ITEMS.find(item => item.slug === slug))
+    .map(item => `<a href="https://www.apocalypseclock.com/${esc(item.slug)}">${esc(item.title)}</a>`).join('');
+  return `<footer class="report-footer"><div class="report-footer-inner">
+    <nav aria-label="Threat pages">${links}</nav>
+    <nav aria-label="Footer links"><a href="https://www.apocalypseclock.com/methodology">Full Methodology</a><a href="https://www.apocalypseclock.com/scoringmethodology">Scoring Methodology</a><a href="mailto:info@apocalypseclock.com?subject=General%20Inquiry%20">Report Problem</a><a href="https://www.apocalypseclock.com/legal">Legal &amp; Privacy</a></nav>
+    <p>Certain large data, summaries, and analytical materials were compiled with the assistance of Claude, Gemini, GPT and other based LLS systems.</p>
+    <p>Although extensive care has been taken, inaccuracies, omissions, or deviations may occur. The content is provided for informational purposes only, and no liability is accepted for errors or resulting consequences.</p>
+    <p>Apocalypse Clock © 2026. Text and visual content: CC BY-ND 4.0 unless otherwise stated. Code, data, model logic, brand assets, and third-party materials: all rights reserved.</p>
+  </div></footer>`;
+}
+
 function ensureFont(){
   const d = window.document;
   if (d.getElementById("tr-nunito")) return;
@@ -166,7 +188,7 @@ class ThreatReport extends HTMLElement {
     }
     this.setAttribute("data-state", "ready");
     this.setAttribute("data-slug", slug);
-    this.shadowRoot.innerHTML = `<style>${CSS}${MOBILE_FONT_CSS}</style><div class="tr-body"><div class="frame">${render(it)}</div></div>`;
+    this.shadowRoot.innerHTML = `<style>${CSS}${MOBILE_FONT_CSS}${FOOTER_CSS}</style><div class="tr-body"><div class="frame">${render(it)}${renderFooter()}</div></div>`;
     // contents links scroll inside the page instead of changing the Wix URL hash
     this.shadowRoot.querySelectorAll('a[href^="#s"]').forEach(a => a.addEventListener("click", e => {
       e.preventDefault();
@@ -174,6 +196,8 @@ class ThreatReport extends HTMLElement {
       if (t) t.scrollIntoView({behavior: "smooth", block: "start"});
     }));
     if (!this.hasAttribute("keep-legacy")) this.hideLegacyCopy(it);
+    const oldFooter = window.document.getElementById('SITE_FOOTER');
+    if (oldFooter) oldFooter.style.setProperty('display', 'none', 'important');
     this.startSync();
   }
 
@@ -216,6 +240,8 @@ class ThreatReport extends HTMLElement {
   syncHeight(){
     const body = this.shadowRoot && this.shadowRoot.querySelector(".tr-body");
     if (!body) return;
+    const oldFooter = window.document.getElementById('SITE_FOOTER');
+    if (oldFooter) this.setLayoutStyle(oldFooter, 'display', 'none');
     // Layout pixels, rather than a transformed/mobile-zoomed rectangle.
     const h = Math.max(1, body.offsetHeight, body.scrollHeight) + "px";
     this.setLayoutStyle(this, "height", h);

@@ -27,7 +27,7 @@ async function bounds(page) {
     const host = document.querySelector('wix-default-custom-element');
     const bottom = host.shadowRoot.querySelector('.pager').getBoundingClientRect().bottom + scrollY;
     return { bottom, pageBottom: document.querySelector('#PAGES_CONTAINER').getBoundingClientRect().bottom + scrollY,
-      footerTop: document.querySelector('#SITE_FOOTER').getBoundingClientRect().top + scrollY,
+      footerTop: host.shadowRoot.querySelector('.report-footer').getBoundingClientRect().top + scrollY,
       documentBottom: document.documentElement.scrollHeight, scrollY, viewport: innerHeight };
   });
 }
@@ -40,8 +40,10 @@ test('all 23 reports expand the clipped mobile page and leave the footer reachab
     const b = await bounds(page);
     expect(b.pageBottom, slug).toBeGreaterThanOrEqual(b.bottom - 1);
     expect(b.footerTop, slug).toBeGreaterThanOrEqual(b.bottom - 1);
-    await page.locator('#SITE_FOOTER').scrollIntoViewIfNeeded();
-    await expect(page.locator('#SITE_FOOTER'), slug).toBeInViewport();
+    await expect(page.locator('.report-footer nav[aria-label="Threat pages"] a'), slug).toHaveCount(23);
+    await expect(page.locator('#SITE_FOOTER'), slug).toBeHidden();
+    await page.locator('.report-footer').scrollIntoViewIfNeeded();
+    await expect(page.locator('.report-footer'), slug).toBeInViewport();
   }
 });
 
@@ -64,8 +66,8 @@ test('late Wix height resets and width changes cannot truncate the report', asyn
     await expect.poll(async () => {
       const b = await bounds(page); return b.footerTop >= b.bottom - 1;
     }).toBe(true);
-    await page.locator('#SITE_FOOTER').scrollIntoViewIfNeeded();
-    await expect(page.locator('#SITE_FOOTER')).toBeInViewport();
+    await page.locator('.report-footer').scrollIntoViewIfNeeded();
+    await expect(page.locator('.report-footer')).toBeInViewport();
   }
 });
 
@@ -83,4 +85,14 @@ test('phone type is 35 percent smaller and desktop type stays at its original si
   await page.locator('#report').evaluate(e => { e.style.width = '1120px'; });
   const desktop = await sizes();
   [46, 18, 16, 14, 13].forEach((size, i) => expect(desktop[i]).toBeCloseTo(size, 3));
+});
+
+test('head CSS hides legacy copy before report JS and does not hide other pages', async ({ page }) => {
+  const head = fs.readFileSync(path.join(__dirname, '../assets/threat-pages/wix-initial-display.html'), 'utf8');
+  await page.setContent(`${head}<div id="SITE_PAGES"><div id="tbozo"><div data-testid="richTextElement">Old article</div></div></div><footer id="SITE_FOOTER">Old footer</footer>`);
+  await expect(page.getByText('Old article')).toBeHidden();
+  await expect(page.locator('#SITE_FOOTER')).toBeHidden();
+  await page.setContent(`${head}<div id="SITE_PAGES"><div id="home"><div data-testid="richTextElement">Home content</div></div></div><footer id="SITE_FOOTER">Home footer</footer>`);
+  await expect(page.getByText('Home content')).toBeVisible();
+  await expect(page.locator('#SITE_FOOTER')).toBeVisible();
 });
