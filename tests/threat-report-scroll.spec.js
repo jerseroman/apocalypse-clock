@@ -96,3 +96,10 @@ test('head CSS hides legacy copy before report JS and does not hide other pages'
   await expect(page.getByText('Home content')).toBeVisible();
   await expect(page.locator('#SITE_FOOTER')).toBeVisible();
 });
+
+test('leaving a threat report restores the native footer for other Wix pages', async ({page}) => {
+  await mount(page, 'climatebreakdown');
+  await expect(page.locator('#SITE_FOOTER')).toBeHidden();
+  await page.locator('wix-default-custom-element').evaluate(element => element.remove());
+  await expect(page.locator('#SITE_FOOTER')).toBeVisible();
+});

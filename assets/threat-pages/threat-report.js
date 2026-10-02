@@ -168,7 +168,23 @@ class ThreatReport extends HTMLElement {
     this.renderPage();
   }
   attributeChangedCallback(){ if (this.shadowRoot) this.renderPage(); }
-  disconnectedCallback(){ this.stopSync(); }
+  disconnectedCallback(){
+    this.stopSync();
+    if (this._nativeFooter){
+      const {node, value, priority} = this._nativeFooter;
+      if (value) node.style.setProperty('display', value, priority);
+      else node.style.removeProperty('display');
+      this._nativeFooter = null;
+    }
+  }
+  hideNativeFooter(){
+    const node = window.document.getElementById('SITE_FOOTER');
+    if (!node) return;
+    if (!this._nativeFooter || this._nativeFooter.node !== node){
+      this._nativeFooter = {node, value:node.style.getPropertyValue('display'), priority:node.style.getPropertyPriority('display')};
+    }
+    this.setLayoutStyle(node, 'display', 'none');
+  }
 
   pageSlug(){
     const a = (this.getAttribute("slug") || "").trim().toLowerCase();
@@ -196,8 +212,7 @@ class ThreatReport extends HTMLElement {
       if (t) t.scrollIntoView({behavior: "smooth", block: "start"});
     }));
     if (!this.hasAttribute("keep-legacy")) this.hideLegacyCopy(it);
-    const oldFooter = window.document.getElementById('SITE_FOOTER');
-    if (oldFooter) oldFooter.style.setProperty('display', 'none', 'important');
+    this.hideNativeFooter();
     this.startSync();
   }
 
@@ -240,8 +255,7 @@ class ThreatReport extends HTMLElement {
   syncHeight(){
     const body = this.shadowRoot && this.shadowRoot.querySelector(".tr-body");
     if (!body) return;
-    const oldFooter = window.document.getElementById('SITE_FOOTER');
-    if (oldFooter) this.setLayoutStyle(oldFooter, 'display', 'none');
+    this.hideNativeFooter();
     // Layout pixels, rather than a transformed/mobile-zoomed rectangle.
     const h = Math.max(1, body.offsetHeight, body.scrollHeight) + "px";
     this.setLayoutStyle(this, "height", h);
