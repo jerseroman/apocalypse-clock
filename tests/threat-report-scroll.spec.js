@@ -71,7 +71,7 @@ test('late Wix height resets and width changes cannot truncate the report', asyn
   }
 });
 
-test('phone type is 35 percent smaller and desktop type stays at its original size', async ({ page }) => {
+test('phone type is unchanged and desktop type is 25 percent smaller', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await mount(page, 'climatebreakdown');
   const sizes = () => page.evaluate(() => {
@@ -84,7 +84,7 @@ test('phone type is 35 percent smaller and desktop type stays at its original si
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.locator('#report').evaluate(e => { e.style.width = '1120px'; });
   const desktop = await sizes();
-  [46, 18, 16, 14, 13].forEach((size, i) => expect(desktop[i]).toBeCloseTo(size, 3));
+  [46, 18, 16, 14, 13].forEach((size, i) => expect(desktop[i]).toBeCloseTo(size * 0.75, 3));
 });
 
 test('head CSS hides legacy copy before report JS and does not hide other pages', async ({ page }) => {
@@ -104,7 +104,7 @@ test('leaving a threat report restores the native footer for other Wix pages', a
   await expect(page.locator('#SITE_FOOTER')).toBeVisible();
 });
 
-test('footer type is raised 12 percent while compact spacing is unchanged', async ({page}) => {
+test('desktop footer type is 25 percent smaller while phone and spacing are unchanged', async ({page}) => {
   await mount(page, 'climatebreakdown');
   const sizes = () => page.locator('.report-footer').evaluate(element => {
     const style = getComputedStyle(element);
@@ -116,7 +116,7 @@ test('footer type is raised 12 percent while compact spacing is unchanged', asyn
   await page.setViewportSize({width:1280,height:900});
   await page.locator('#report').evaluate(element => {element.style.width='1120px';});
   const desktop = await sizes();
-  expect(desktop[0]).toBeCloseTo(9.1 * 1.12, 3);
+  expect(desktop[0]).toBeCloseTo(9.1 * 1.12 * 0.75, 3);
   expect(desktop.slice(1)).toEqual([23.4, 33.8]);
   await expect(page.locator('.report-footer a')).toHaveCount(27);
 });

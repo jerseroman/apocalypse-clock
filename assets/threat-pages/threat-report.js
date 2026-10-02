@@ -7,7 +7,7 @@ const CSS = "\n/* Layout: research-report threat page; one prose column + assess
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 // Derive phone-only overrides from the existing type rules, in the same cascade
 // order. This scales both base rules and their compact-phone overrides by 35%,
-// while keeping tablet/desktop typography and all report content unchanged.
+// independently of desktop typography, without changing report content.
 const MOBILE_FONT_SCALE = 0.65;
 const scaledTypeRules = Array.from(CSS.matchAll(/([^{}]+)\{([^{}]*)\}/g), match => {
   const selector = match[1].replace(/\/\*[\s\S]*?\*\//g, "").trim();
@@ -19,6 +19,21 @@ const MOBILE_FONT_CSS = `@container (max-width:560px){
   ${scaledTypeRules}
   svg text[font-size="12"]{font-size:${12 * MOBILE_FONT_SCALE}px}
   svg text[font-size="13"]{font-size:${13 * MOBILE_FONT_SCALE}px}
+}`;
+// Scale desktop text only. Exclude compact-phone rules from this cascade and
+// keep the existing mobile overrides exactly as they are.
+const DESKTOP_FONT_SCALE = 0.75;
+const desktopTypeRules = Array.from(CSS.split("/* tablet */")[0].matchAll(/([^{}]+)\{([^{}]*)\}/g), match => {
+  const selector = match[1].replace(/\/\*[\s\S]*?\*\//g, "").trim();
+  const size = match[2].match(/(?:^|;)\s*font(?:-size)?\s*:\s*[^;]*?([\d.]+)px/);
+  return size ? `${selector}{font-size:${Number(size[1]) * DESKTOP_FONT_SCALE}px}` : "";
+}).join("\n");
+const DESKTOP_FONT_CSS = `@container (min-width:560.01px){
+  .page{font-size:${16 * DESKTOP_FONT_SCALE}px}
+  ${desktopTypeRules}
+  svg text[font-size="12"]{font-size:${12 * DESKTOP_FONT_SCALE}px}
+  svg text[font-size="13"]{font-size:${13 * DESKTOP_FONT_SCALE}px}
+  .report-footer{font-size:${10.192 * DESKTOP_FONT_SCALE}px}
 }`;
 const SC = [["Severity","scale"],["Urgency","urgency"],["Cascade","acceleration"],["Interdependence","interdependence"],["Irreversibility","irreversibility"],["Gov. failure","govFailure"]];
 
@@ -204,7 +219,7 @@ class ThreatReport extends HTMLElement {
     }
     this.setAttribute("data-state", "ready");
     this.setAttribute("data-slug", slug);
-    this.shadowRoot.innerHTML = `<style>${CSS}${MOBILE_FONT_CSS}${FOOTER_CSS}</style><div class="tr-body"><div class="frame">${render(it)}${renderFooter()}</div></div>`;
+    this.shadowRoot.innerHTML = `<style>${CSS}${MOBILE_FONT_CSS}${FOOTER_CSS}${DESKTOP_FONT_CSS}</style><div class="tr-body"><div class="frame">${render(it)}${renderFooter()}</div></div>`;
     // contents links scroll inside the page instead of changing the Wix URL hash
     this.shadowRoot.querySelectorAll('a[href^="#s"]').forEach(a => a.addEventListener("click", e => {
       e.preventDefault();
