@@ -68,3 +68,19 @@ test('late Wix height resets and width changes cannot truncate the report', asyn
     await expect(page.locator('#SITE_FOOTER')).toBeInViewport();
   }
 });
+
+test('phone type is 35 percent smaller and desktop type stays at its original size', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await mount(page, 'climatebreakdown');
+  const sizes = () => page.evaluate(() => {
+    const root = document.querySelector('wix-default-custom-element').shadowRoot;
+    return ['h1', '.prose > p', '.findings ol', '.byline', 'svg text[font-size="13"]']
+      .map(selector => Number.parseFloat(getComputedStyle(root.querySelector(selector)).fontSize));
+  });
+  const phone = await sizes();
+  [29, 16.5, 15, 12.5, 13].forEach((size, i) => expect(phone[i]).toBeCloseTo(size * 0.65, 3));
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.locator('#report').evaluate(e => { e.style.width = '1120px'; });
+  const desktop = await sizes();
+  [46, 18, 16, 14, 13].forEach((size, i) => expect(desktop[i]).toBeCloseTo(size, 3));
+});
