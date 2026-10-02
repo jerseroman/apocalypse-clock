@@ -176,36 +176,79 @@ class ThreatReport extends HTMLElement {
     });
   }
 
-  // Wix gives a custom element a fixed height from the editor; size it (and its grid cell) to the content.
+  // Mobile Wix can restore a fixed page/mesh height after the element has rendered.
+  // Keep the active report's layout chain content-sized, including the page row
+  // above the footer. Only this report's ancestors are changed.
+  layoutNodes(){
+    const page = this.closest("#PAGES_CONTAINER");
+    if (!page) return [];
+    const nodes = [];
+    for (let node = this.parentElement; node; node = node.parentElement){
+      nodes.push(node);
+      if (node === page) break;
+    }
+    const master = page.closest("#masterPage");
+    const root = page.closest("#site-root");
+    if (master) nodes.push(master);
+    if (root) nodes.push(root);
+    return nodes;
+  }
+  setLayoutStyle(node, name, value){
+    if (node.style.getPropertyValue(name) !== value || node.style.getPropertyPriority(name) !== "important"){
+      node.style.setProperty(name, value, "important");
+    }
+  }
   syncHeight(){
     const body = this.shadowRoot && this.shadowRoot.querySelector(".tr-body");
     if (!body) return;
-    const h = Math.max(1, Math.ceil(body.getBoundingClientRect().height)) + "px";
-    if (h === this._lastHeight) return;
-    this._lastHeight = h;
-    this.style.setProperty("height", h, "important");
-    this.style.setProperty("min-height", h, "important");
+    // Layout pixels, rather than a transformed/mobile-zoomed rectangle.
+    const h = Math.max(1, body.offsetHeight, body.scrollHeight) + "px";
+    this.setLayoutStyle(this, "height", h);
+    this.setLayoutStyle(this, "min-height", h);
+    this.setLayoutStyle(this, "max-height", "none");
     const component = this.parentElement;
     if (component){
-      component.style.setProperty("--custom-element-height", h, "important");
-      component.style.setProperty("height", h, "important");
-      component.style.setProperty("min-height", "0px", "important");
+      this.setLayoutStyle(component, "--custom-element-height", h);
+      this.setLayoutStyle(component, "height", h);
+      this.setLayoutStyle(component, "min-height", "0px");
+      this.setLayoutStyle(component, "max-height", "none");
     }
+    for (const node of this.layoutNodes()){
+      if (node === component) continue;
+      this.setLayoutStyle(node, "height", "auto");
+      this.setLayoutStyle(node, "max-height", "none");
+      if (node.id !== "masterPage" && node.id !== "site-root"){
+        this.setLayoutStyle(node, "min-height", "0px");
+      }
+    }
+  }
+  scheduleSync(){
+    if (this._raf != null) return;
+    this._raf = window.requestAnimationFrame(() => {
+      this._raf = null;
+      if (this.isConnected) this.syncHeight();
+    });
   }
   startSync(){
     this.syncHeight();
     if (!this._ro && window.ResizeObserver){
-      this._ro = new window.ResizeObserver(() => {
-        if (this._raf != null) return;
-        this._raf = window.requestAnimationFrame(() => { this._raf = null; this.syncHeight(); });
-      });
+      this._ro = new window.ResizeObserver(() => this.scheduleSync());
       this._ro.observe(this.shadowRoot.querySelector(".tr-body"));
+    }
+    if (window.MutationObserver){
+      this._layoutObserver = new window.MutationObserver(() => this.scheduleSync());
+      [this, ...this.layoutNodes()].forEach(node => this._layoutObserver.observe(node, {
+        attributes: true, attributeFilter: ["style", "class"],
+      }));
     }
   }
   stopSync(){
     if (this._ro) this._ro.disconnect();
+    if (this._layoutObserver) this._layoutObserver.disconnect();
+    if (this._raf != null) window.cancelAnimationFrame(this._raf);
     this._ro = null;
-    this._lastHeight = null;
+    this._layoutObserver = null;
+    this._raf = null;
   }
 }
 if (!customElements.get(TAG)) customElements.define(TAG, ThreatReport);
